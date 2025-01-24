@@ -1,0 +1,8 @@
+{
+  "item.portal_gun.shoot": {
+    "subtitle": "subtitle.item.portal_gun.shoot",
+    "sounds": [
+        "ricksportalgun:item/portal_shoot"
+    ]
+  }
+}

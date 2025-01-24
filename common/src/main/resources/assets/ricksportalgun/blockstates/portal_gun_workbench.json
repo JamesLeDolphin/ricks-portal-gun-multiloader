@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ricksportalgun:block/portal_gun_workbench",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ricksportalgun:block/portal_gun_workbench"
+    },
+    "facing=south": {
+      "model": "ricksportalgun:block/portal_gun_workbench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ricksportalgun:block/portal_gun_workbench",
+      "y": 270
+    }
+  }
+}

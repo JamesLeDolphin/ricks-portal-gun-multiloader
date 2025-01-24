@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RPR",
+    "BNE",
+    "IR "
+  ],
+  "key": {
+    "R": "minecraft:redstone",
+    "B": "minecraft:stone_button",
+    "E": "minecraft:ender_pearl",
+    "N": "minecraft:netherite_ingot",
+    "I": "minecraft:gold_ingot",
+    "P": "ricksportalgun:portal_fluid"
+  },
+  "result": {
+    "id": "ricksportalgun:golden_portal_gun",
+    "count": 1
+  }
+}

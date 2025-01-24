@@ -1,0 +1,10 @@
+{
+  "name": "item.portalgun.translation_text",
+  "id": "color:colourful",
+  "color": {
+      "red": 255,
+      "green": 0,
+      "blue": 255
+    },
+  "model": "color:colourful"
+}
