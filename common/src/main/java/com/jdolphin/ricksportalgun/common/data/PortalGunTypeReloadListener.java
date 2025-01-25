@@ -19,14 +19,9 @@ public class PortalGunTypeReloadListener extends SimpleJsonResourceReloadListene
     @Override
     protected void apply(Map<ResourceLocation, PortalGunType> gunTypeMap, ResourceManager manager, ProfilerFiller profiler) {
         PortalGunTypeRegistry.PORTAL_GUN_TYPES.clear();
-        System.out.println("WABADA");
         for (Map.Entry<ResourceLocation, PortalGunType> entry : gunTypeMap.entrySet()) {
             PortalGunType type = entry.getValue();
             if (type != null) {
-                System.out.println(type.name());
-                System.out.println(type.id());
-                System.out.println(type.color().getRGB());
-                System.out.println(type.model());
                 PortalGunTypeRegistry.add(type);
             }
         }

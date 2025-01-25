@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.util.helpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
@@ -12,7 +13,9 @@ public class GuiHelper {
 
     public static void renderWidgets(GuiGraphics stack, int pMouseX, int pMouseY, float pPartialTick, AbstractWidget... widgets) {
         for (AbstractWidget widget : widgets) {
-            widget.render(stack, pMouseX, pMouseY, pPartialTick);
+            if (widget != null) {
+                widget.render(stack, pMouseX, pMouseY, pPartialTick);
+            }
         }
     }
 
@@ -30,6 +33,12 @@ public class GuiHelper {
 
     public static void drawWhiteCenteredString(GuiGraphics stack, String text, int x, int y) {
         stack.drawCenteredString(Minecraft.getInstance().font, text, x, y, Color.WHITE.getRGB());
+    }
+
+    public static void setTooltip(AbstractWidget widget, Tooltip tooltip) {
+        if (widget != null && tooltip != null) {
+            widget.setTooltip(tooltip);
+        }
     }
 
     public static void renderTooltip(GuiGraphics stack, Component component, AbstractWidget widget) {

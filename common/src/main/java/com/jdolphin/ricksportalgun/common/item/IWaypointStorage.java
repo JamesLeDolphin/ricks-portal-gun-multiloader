@@ -10,7 +10,9 @@ import java.util.List;
 public interface IWaypointStorage {
 
     static List<Waypoint> getWaypoints(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
+        List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
+        if (!list.isEmpty()) System.out.println(list.getFirst().getName());
+        return list;
     }
 
     static void addWaypoint(ItemStack stack, Waypoint waypoint) {

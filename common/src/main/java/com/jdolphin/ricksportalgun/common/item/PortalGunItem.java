@@ -32,7 +32,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PortalGunItem extends Item implements IWaypointStorage {
@@ -87,7 +86,10 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public void setPortalGunType(ItemStack stack, PortalGunType type) {
-
+        stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
+        stack.set(DataComponents.ITEM_MODEL, type.model());
+        stack.set(DataComponents.ITEM_NAME, type.name());
+        setDefaultColor(stack, type.color().getRGB());
     }
 
     @Override
@@ -95,7 +97,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         ItemStack stack = player.getItemInHand(hand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer) {
-
             migrateDamage(stack);
             if ((stack.getOrDefault(PGDataComponents.LOCK, false) &&
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||

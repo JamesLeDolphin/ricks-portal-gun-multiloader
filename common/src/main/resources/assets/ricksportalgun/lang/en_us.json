@@ -83,5 +83,7 @@
   "notice.ricksportalgun.player_locator.player_not_found": "Error 404: Player %p not found!",
   "notice.ricksportalgun.settings.applied": "Applied new portal gun settings",
   "notice.ricksportalgun.settings.player_not_found": "Error 404: Player not found!",
-  "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench"
+  "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
+  "item.ricksportalgun.datacard.tooltip": "Stored Waypoints: %s",
+  "item.ricksportalgun.data_card": "Data Card"
 }

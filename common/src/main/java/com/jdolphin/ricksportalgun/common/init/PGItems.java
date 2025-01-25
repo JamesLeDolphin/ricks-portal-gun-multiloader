@@ -11,5 +11,7 @@ public class PGItems {
     public static Item BOOTLEG_PORTAL_FLUID;
     public static Item QUANTUM_LEAP_ELIXIR;
 
+    public static Item DATA_CARD;
+
     public static Item PORTAL_GUN_WORKBENCH;
 }

@@ -17,21 +17,19 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractContainerWidget {
+public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractContainerWidget {
     private static final ResourceLocation MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/menu_list_background.png");
     private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
     protected final Minecraft minecraft;
     protected final int itemHeight;
-    private final List<E> children;
+    private final TrackedList children;
     protected boolean centerListVertically;
-    private boolean renderHeader;
     protected int headerHeight;
     @Nullable
     private E selected;
@@ -44,12 +42,6 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         this.centerListVertically = true;
         this.minecraft = minecraft;
         this.itemHeight = itemHeight;
-    }
-
-    public ScrollableList(Minecraft minecraft, int width, int height, int x, int y, int itemHeight, int headerHeight) {
-        this(minecraft, width, height, x, y, itemHeight);
-        this.renderHeader = true;
-        this.headerHeight = headerHeight;
     }
 
     @Nullable
@@ -76,10 +68,10 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
 
     @Nullable
     public E getFocused() {
-        return (E)(super.getFocused());
+        return (E) super.getFocused();
     }
 
-    public final List<E> children() {
+    public final @NotNull List<E> children() {
         return this.children;
     }
 
@@ -104,7 +96,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
 
     protected void addEntryToTop(E entry) {
         double d0 = (double)this.maxScrollAmount() - this.scrollAmount();
-        this.children.add(0, entry);
+        this.children.addFirst(entry);
         this.setScrollAmount((double)this.maxScrollAmount() - d0);
     }
 
@@ -148,27 +140,16 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         return this.getItemCount() * this.itemHeight + this.headerHeight + 4;
     }
 
-    protected void renderHeader(GuiGraphics guiGraphics, int x, int y) {
-    }
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
+        this.enableScissor(graphics);
 
-    protected void renderDecorations(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-    }
+        this.renderListBackground(graphics);
+        this.renderListSeparators(graphics);
+        this.renderListItems(graphics, mouseX, mouseY, delta);
+        graphics.disableScissor();
 
-    public void renderWidget(GuiGraphics p_282708_, int p_283242_, int p_282891_, float p_283683_) {
-        this.hovered = this.isMouseOver(p_283242_, p_282891_) ? this.getEntryAtPosition(p_283242_, p_282891_) : null;
-        this.renderListBackground(p_282708_);
-        this.enableScissor(p_282708_);
-        if (this.renderHeader) {
-            int i = this.getRowLeft();
-            int j = this.getY() + 4 - (int)this.scrollAmount();
-            this.renderHeader(p_282708_, i, j);
-        }
-
-        this.renderListItems(p_282708_, p_283242_, p_282891_, p_283683_);
-        p_282708_.disableScissor();
-        this.renderListSeparators(p_282708_);
-        this.renderScrollbar(p_282708_);
-        this.renderDecorations(p_282708_, p_283242_, p_282891_);
+        this.renderScrollbar(graphics);
     }
 
     protected void renderListSeparators(GuiGraphics guiGraphics) {
@@ -180,7 +161,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
 
     protected void renderListBackground(GuiGraphics guiGraphics) {
         ResourceLocation resourcelocation = this.minecraft.level == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND;
-        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), (float)this.getRight(), (float)(this.getBottom() + (int)this.scrollAmount()), this.getWidth(), this.getHeight(), 32, 32);
+        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), (float)this.getX(), (float)(this.getBottom() + (int)this.scrollAmount()), this.getWidth(), this.getHeight(), 32, 32);
     }
 
     protected void enableScissor(GuiGraphics guiGraphics) {
@@ -217,20 +198,20 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         return this.getRowRight() + 6 + 2;
     }
 
-    public Optional<GuiEventListener> getChildAt(double p_386910_, double p_387686_) {
-        return Optional.ofNullable(this.getEntryAtPosition(p_386910_, p_387686_));
+    public @NotNull Optional<GuiEventListener> getChildAt(double mouseX, double mouseY) {
+        return Optional.ofNullable(this.getEntryAtPosition(mouseX, mouseY));
     }
 
-    public void setFocused(@Nullable GuiEventListener p_265738_) {
+    public void setFocused(@Nullable GuiEventListener listener) {
         E e = this.getFocused();
-        if (e != p_265738_ && e instanceof ContainerEventHandler containereventhandler) {
+        if (e != listener && e instanceof ContainerEventHandler containereventhandler) {
             containereventhandler.setFocused(null);
         }
 
-        super.setFocused(p_265738_);
-        int i = this.children.indexOf(p_265738_);
+        super.setFocused(listener);
+        int i = this.children.indexOf(listener);
         if (i >= 0) {
-            E e1 = (E)(this.children.get(i));
+            E e1 = this.children.get(i);
             this.setSelected(e1);
             if (this.minecraft.getLastInputType().isKeyboard()) {
                 this.ensureVisible(e1);
@@ -241,33 +222,22 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
 
     @Nullable
     protected E nextEntry(ScreenDirection direction) {
-        return (E)this.nextEntry(direction, (p_93510_) -> true);
+        return this.nextEntry(direction, (p_93510_) -> true);
     }
 
     @Nullable
     protected E nextEntry(ScreenDirection direction, Predicate<E> predicate) {
-        return (E)this.nextEntry(direction, predicate, this.getSelected());
+        return this.nextEntry(direction, predicate, this.getSelected());
     }
 
     @Nullable
     protected E nextEntry(ScreenDirection direction, Predicate<E> predicate, @Nullable E selected) {
-        byte var10000;
-        switch (direction) {
-            case RIGHT:
-            case LEFT:
-                var10000 = 0;
-                break;
-            case UP:
-                var10000 = -1;
-                break;
-            case DOWN:
-                var10000 = 1;
-                break;
-            default:
-                throw new MatchException(null, null);
-        }
 
-        int i = var10000;
+        int i = switch (direction) {
+            case RIGHT, LEFT -> 0;
+            case UP -> -1;
+            case DOWN -> 1;
+        };
         if (!this.children().isEmpty() && i != 0) {
             int j;
             if (selected == null) {
@@ -277,7 +247,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
             }
 
             for(int k = j; k >= 0 && k < this.children.size(); k += i) {
-                E e = (E)(this.children().get(k));
+                E e = this.children().get(k);
                 if (predicate.test(e)) {
                     return e;
                 }
@@ -293,7 +263,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         int k = this.itemHeight - 4;
         int l = this.getItemCount();
 
-        for(int i1 = 0; i1 < l; ++i1) {
+        for (int i1 = 0; i1 < l; ++i1) {
             int j1 = this.getRowTop(i1);
             int k1 = this.getRowBottom(i1);
             if (k1 >= this.getY() && j1 <= this.getBottom()) {
@@ -341,7 +311,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         return 220;
     }
 
-    public NarratableEntry.NarrationPriority narrationPriority() {
+    public NarratableEntry.@NotNull NarrationPriority narrationPriority() {
         if (this.isFocused()) {
             return NarrationPriority.FOCUSED;
         } else {
@@ -350,7 +320,7 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
 
     }
 
@@ -389,7 +359,6 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
 
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected abstract static class Entry<E extends ScrollableList.Entry<E>> implements GuiEventListener {
         /** @deprecated */
         @Deprecated
@@ -415,7 +384,6 @@ public class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractC
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     class TrackedList extends AbstractList<E> {
         private final List<E> delegate = Lists.newArrayList();
 

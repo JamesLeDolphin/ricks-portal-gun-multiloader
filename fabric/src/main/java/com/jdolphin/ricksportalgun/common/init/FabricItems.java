@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
+import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
@@ -25,6 +26,8 @@ public class FabricItems {
         PGItems.PORTAL_FLUID = registerFluid("portal_fluid");
         PGItems.BOOTLEG_PORTAL_FLUID = registerFluid("bootleg_portal_fluid");
         PGItems.QUANTUM_LEAP_ELIXIR = registerFluid("quantum_leap_elixir");
+
+        PGItems.DATA_CARD = registerItem("data_card", DataCardItem::new, new Item.Properties());
 
         PGItems.PORTAL_GUN_WORKBENCH = registerItem("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties), new Item.Properties());
     }

@@ -30,7 +30,7 @@ public class SuggestionTextFieldWidget extends EditBox {
         super(screen.getFont(), x, y, width, height, text);
         this.suggestions = suggestions;
         this.suggestionListWidget = screen.addRenderableWidget(new SuggestionList(Minecraft.getInstance(),
-                screen.width / 2 + x / 2 + width * 2 - 24, y / 2 - 6, x, height + y, 14, this));
+                width, height * 3, x, y + height, 14, this));
     }
 
     public List<String> getSuggestions() {
@@ -38,11 +38,12 @@ public class SuggestionTextFieldWidget extends EditBox {
     }
 
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        if (this.isActive()) {
-            this.suggestionListWidget.active = true;
-            this.suggestionListWidget.render(context, mouseX, mouseY, delta);
+        if (!this.isFocused()) {
+            this.suggestionListWidget.visible = false;
+
         } else {
-            this.suggestionListWidget.active = false;
+            this.suggestionListWidget.visible = true;
+            this.suggestionListWidget.render(context, mouseX, mouseY, delta);
         }
         super.renderWidget(context, mouseX, mouseY, delta);
     }
@@ -124,33 +125,24 @@ public class SuggestionTextFieldWidget extends EditBox {
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput output) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
             output.add(NarratedElementType.USAGE, Component.translatable("narration.selection.usage"));
         }
 
-        public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-            Screen screen = Minecraft.getInstance().screen;
-            int x1 = this.widget.getX();
-            int y1 = this.widget.getY() + this.widget.height;
-            int x2 = this.widget.width;
-            int y2 = this.height + 2;
-            context.enableScissor(x1, y1, x1 + x2, y1 + y2);
-            context.fill(0, 0, screen.width, screen.height, -805306368);
-            context.disableScissor();
-            context.renderOutline(x1, y1, x2, y2, Color.WHITE.getRGB());
-            super.renderWidget(context, mouseX, mouseY, delta);
+        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            int x1 = this.getX();
+            int y1 = this.getY();
+            int x2 = this.getRight();
+            int y2 = this.getBottom();
+            graphics.enableScissor(x1, y1, x2, y2);
+            graphics.fill(x1, y1, x2, y2, -805306368);
+            graphics.disableScissor();
+            graphics.renderOutline(x1, y1, this.getWidth(), this.getHeight(), Color.WHITE.getRGB());
+            super.renderWidget(graphics, mouseX, mouseY, delta);
         }
 
-        protected void renderHeader(GuiGraphics context, int x, int y) {}
-
-        protected void renderDecorations(GuiGraphics context, int mouseX, int mouseY) {}
-
-        protected void drawHeaderAndFooterSeparators(GuiGraphics context) {}
-
-        protected void drawMenuListBackground(GuiGraphics context) {}
-
         public int getRowWidth() {
-            return super.getRowWidth() - 136;
+            return this.width - 6;
         }
 
         public static class SuggestionEntry extends ScrollableList.Entry<SuggestionEntry> {
@@ -165,7 +157,7 @@ public class SuggestionTextFieldWidget extends EditBox {
                 this.list = list;
                 widget = list.widget;
 
-                this.button =  new PlainTextButton(0, 0, widget.width, list.itemHeight, Component.literal(suggestion),
+                this.button =  new PlainTextButton(0, 0, this.list.width - 6, list.itemHeight, Component.literal(suggestion),
                         (pButton -> {
                             widget.setValue(suggestion);
                             widget.setFocused(false);
@@ -176,7 +168,7 @@ public class SuggestionTextFieldWidget extends EditBox {
             public void render(@NotNull GuiGraphics context, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 SuggestionList wpList = this.list;
                 if (top > wpList.headerHeight ) {
-                    this.button.setX(wpList.width / 2 - 64);
+                    this.button.setX(wpList.getX() + 2);
                     this.button.setY(top);
                     this.button.setMessage(Component.literal(this.string));
                     button.render(context, mouseX, mouseY, tickDelta);

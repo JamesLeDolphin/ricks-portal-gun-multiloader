@@ -36,7 +36,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
             case COORD_CHECK -> ClientPlayNetworking.send(new SBCoordCheckerPacket((String) packet.getArg1()));
             case LOCATE_PLAYER -> ClientPlayNetworking.send(new SBLocatePlayerPacket((String) packet.getArg1()));
             case CHANGE_GUN_TYPE -> ClientPlayNetworking.send(new SBChangePortalGunTypePacket((PortalGunType) packet.getArg1()));
-            case DESTINATION_SET -> ClientPlayNetworking.send(new SBSetDestinationPacket((BlockPos) packet.getArg1(), (ResourceLocation) packet.getArg2()));
+            case DESTINATION_SET -> ClientPlayNetworking.send(new SBSetDestinationPacket((BlockPos) packet.getArg1(), (String) packet.getArg2()));
             case MANAGE_WAYPOINTS -> ClientPlayNetworking.send(new SBManageWaypointsPacket((String) packet.getArg1(), (Boolean) packet.getArg2()));
         }
     }

@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packets;
 
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
@@ -25,11 +26,11 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
         Waypoint wp = Waypoint.getWaypoint(waypoint);
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
-            PortalGunItem item = (PortalGunItem) stack.getItem();
             if (wp != null) {
-                if (!remove) item.addWaypoint(stack, wp);
+                System.out.println("Not null in packet");
+                if (!remove) IWaypointStorage.addWaypoint(stack, wp);
 
-                if (remove) item.deleteWaypoint(stack, wp);
+                if (remove) IWaypointStorage.deleteWaypoint(stack, wp);
             }
         }
     }

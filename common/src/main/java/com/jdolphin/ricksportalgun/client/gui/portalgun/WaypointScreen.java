@@ -13,8 +13,12 @@ import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -82,14 +86,14 @@ public class WaypointScreen extends AbstractBaseScreen {
         super.render(stack, pMouseX, pMouseY, pPartialTick);
     }
 
-    public static class WaypointList extends ScrollableList<WaypointList.WaypointEntry> {
+    public static class WaypointList extends AbstractSelectionList<WaypointList.WaypointEntry> {
 
         public final ItemStack stack;
         public final PortalGunItem item;
         public final WaypointScreen screen;
 
         public WaypointList(WaypointScreen waypointScreen, Minecraft minecraft, ItemStack stack) {
-            super(minecraft, waypointScreen.width, waypointScreen.height, 58, waypointScreen.height - 32, 24);
+            super(minecraft, waypointScreen.width, (waypointScreen.height / 3) * 2, waypointScreen.height / 3 - 30, 21);
 
 
             this.stack = stack;
@@ -106,16 +110,19 @@ public class WaypointScreen extends AbstractBaseScreen {
             screen.waypointCache = waypoints;
 
             for (Waypoint waypoint : waypoints) {
-
                 if (waypoint != null) {
                     this.addEntry(new WaypointEntry(waypoint, this));
-                }
-                LogManager.getLogger().warn("Failed to get Waypoint: {}", waypoint);
+                } else LogManager.getLogger().warn("Failed to get Waypoint: {}", waypoint);
             }
         }
 
         public int getRowWidth() {
             return super.getRowWidth() - 32;
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+            narrationElementOutput.add(NarratedElementType.USAGE, Component.empty());
         }
 
         public static class WaypointEntry extends Entry<WaypointEntry> {
@@ -144,7 +151,7 @@ public class WaypointScreen extends AbstractBaseScreen {
             @Override
             public void render(@NotNull GuiGraphics pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
                 WaypointList wpList = this.list;
-                if (pTop > wpList.headerHeight && (pTop + wpList.itemHeight) < (wpList.height - wpList.itemHeight)){
+                if (pTop > wpList.headerHeight ) {
                     this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
                     this.button.setX(wpList.getWidth() / 2 - 64);
                     this.button.setY(pTop);
