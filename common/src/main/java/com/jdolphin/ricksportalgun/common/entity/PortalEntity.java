@@ -3,6 +3,7 @@ import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helpers.LevelHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -26,8 +28,10 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public class PortalEntity extends Entity {
@@ -143,6 +147,30 @@ public class PortalEntity extends Entity {
         tag.putInt(TAG_COOLDOWN, this.delay);
     }
 
+    protected final void recalculateBoundingBox() {
+        this.getDirection();
+        AABB aabb = this.calculateBoundingBox(this.blockPosition(), this.getDirection());
+        Vec3 vec3 = aabb.getCenter();
+        this.setPosRaw(vec3.x, vec3.y, vec3.z);
+        this.setBoundingBox(aabb);
+    }
+
+    protected AABB calculateBoundingBox(BlockPos pos, Direction dir) {
+        Vec3 vec3 = Vec3.atBottomCenterOf(pos).relative(Direction.UP, 0.99);
+        Direction.Axis direction$axis = dir.getAxis();
+        double d2 = direction$axis == Direction.Axis.X ? (double)0.0625F : 1;
+        double d3 = 2;
+        double d4 = direction$axis == Direction.Axis.Z ? (double)0.0625F : 1;
+
+        return AABB.ofSize(vec3, d2, d3, d4);
+    }
+
+    @Override
+    public void setPos(double x, double y, double z) {
+        this.setPosRaw(x, y, z);
+        this.recalculateBoundingBox();
+    }
+
     public static List<Entity> getEntitiesNearby(Entity entity, double range) {
         if (!entity.level().isClientSide()) {
             AABB boundingBox = entity.getBoundingBox().inflate(range);
@@ -192,7 +220,9 @@ public class PortalEntity extends Entity {
                                     Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
                                     double dx = (double) pos.getX() + look.x * 2d;
                                     double dz = (double) pos.getZ() + look.z * 2d;
-                                    nearby.teleportTo(serverlevel, dx, pos.getY(), dz, Relative.ALL, nearby.getYRot(), nearby.getXRot(), false);
+                                    Set<Relative> relativeSet = new HashSet<>();
+                                    relativeSet.add(Relative.Y_ROT);
+                                    nearby.teleportTo(serverlevel, dx, pos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot(), false);
 
                                     nearby.setPortalCooldown();
                                 } else return;

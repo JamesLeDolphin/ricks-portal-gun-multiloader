@@ -31,7 +31,6 @@ public class ForgeClientMain {
                 ItemStack gun = player.getMainHandItem();
 
                 if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    System.out.println("Presseth button");
                     SBOpenGuiPacket packet = new SBOpenGuiPacket(player.getStringUUID());
                     Helper.sendPacketToServer(packet);
                 }

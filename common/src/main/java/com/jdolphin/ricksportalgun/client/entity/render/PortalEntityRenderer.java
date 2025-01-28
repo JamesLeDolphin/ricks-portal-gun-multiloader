@@ -64,6 +64,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
 
         scale(state, stack);
 
+        stack.translate(0, -1, 0);
         stack.mulPose(Axis.YN.rotationDegrees(state.yRot));
         VertexConsumer vertexconsumer = source.getBuffer(RenderType.entityTranslucent(PORTAL_TEXTURE));
 

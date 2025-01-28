@@ -16,6 +16,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -55,9 +56,15 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.colour.reset"), (button) -> {
                     Color colour = new Color(stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, stack.is(PGItems.GOLDEN_PORTAL_GUN) ? Color.YELLOW.getRGB() : Color.GREEN.getRGB()));
-                    this.r.setValue(colour.getRed());
-                    this.g.setValue(colour.getGreen());
-                    this.b.setValue(colour.getBlue());
+                    int rgb = colour.getRGB();
+                    try {
+
+                        this.r.setValue(ARGB.redFloat(rgb));
+                        this.g.setValue(ARGB.greenFloat(rgb));
+                        this.b.setValue(ARGB.blueFloat(rgb));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }).pos(this.width / 2 + 72, this.height / 2 + 8).size(64, 20).build());
     }
 

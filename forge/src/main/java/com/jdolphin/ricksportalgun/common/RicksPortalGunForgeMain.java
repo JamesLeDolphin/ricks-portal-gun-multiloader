@@ -4,8 +4,15 @@ import com.jdolphin.ricksportalgun.Constants;
 import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.tints.PortalColourTint;
+import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -24,6 +31,7 @@ public class RicksPortalGunForgeMain {
         ForgeDataComponents.COMPONENTS.register(bus);
         ForgeItems.ITEMS.register(bus);
         ForgeEntities.ENTITIES.register(bus);
+        ItemTintSources.ID_MAPPER.put(Helper.createLocation("portal_color"), PortalColourTint.CODEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -56,5 +64,37 @@ public class RicksPortalGunForgeMain {
         PGDataComponents.OWNER = ForgeDataComponents.OWNER.get();
         PGDataComponents.FUEL = ForgeDataComponents.FUEL.get();
         PGDataComponents.PORTAL_COLOUR = ForgeDataComponents.PORTAL_COLOUR.get();
+    }
+
+    public void buildContents(BuildCreativeModeTabContentsEvent event) {
+        ResourceKey<CreativeModeTab> key = event.getTabKey();
+        if (key.equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
+            event.accept(ForgeItems.PORTAL_FLUID_BOTTLE.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.accept(ForgeItems.QUANTUM_LEAP_ELIXIR.get());
+            event.accept(ForgeItems.BOOTLEG_PORTAL_FLUID_BOTTLE.get());
+        }
+        //if (event.getTab().equals(PGCreativeTabs.UPGRADE_TAB.get())) {
+        //    event.accept(PGItems.UPGRADE_TEMPLATE.get());
+        //    event.accept(PGItems.DIM_1_UPGRADE.get());
+        //    event.accept(PGItems.DIM_2_UPGRADE.get());
+        //    event.accept(PGItems.WAYPOINT_UPGRADE.get());
+        //    event.accept(PGItems.FUEL_UPGRADE.get());
+        //    event.accept(PGItems.SETTINGS_UPGRADE.get());
+        //    event.accept(PGItems.PLAYER_LOCATOR_UPGRADE.get());
+        //    event.accept(PGItems.BIOME_LOCATOR_UPGRADE.get());
+        //    event.accept(PGItems.RANDOMIZER_UPGRADE.get());
+        //}
+        if (key.equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
+            event.accept(ForgeItems.PORTAL_GUN.get());
+            event.accept(ForgeItems.PRIME_PORTAL_GUN.get());
+            event.accept(ForgeItems.GOLDEN_PORTAL_GUN.get());
+        }
+        if (key.equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
+            //event.accept(ForgeItems.WORKBENCH_ITEM.get());
+        }
+        if (key.equals(CreativeModeTabs.INGREDIENTS)) {
+            //event.accept(PGItems.DATA_CARD.get());
+        }
+
     }
 }
