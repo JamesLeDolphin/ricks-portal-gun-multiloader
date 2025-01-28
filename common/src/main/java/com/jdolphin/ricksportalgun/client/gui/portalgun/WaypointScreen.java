@@ -2,18 +2,15 @@ package com.jdolphin.ricksportalgun.client.gui.portalgun;
 
 import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.gui.widget.BetterImageButton;
-import com.jdolphin.ricksportalgun.client.gui.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -137,8 +134,8 @@ public class WaypointScreen extends AbstractBaseScreen {
 
                 this.button = Button.builder(Component.literal(waypoint.getName()),
                         (pButton -> {
-
-                            Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.DESTINATION_SET, waypoint.getBlockPos(), waypoint.getDim()));
+                            SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDim());
+                            Helper.sendPacketToServer(packet);
                             list.minecraft.setScreen(null);
                         })).pos(16, 0).size(128, 20).build();
 

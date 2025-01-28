@@ -2,9 +2,9 @@ package com.jdolphin.ricksportalgun.client.gui.portalgun;
 
 import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBSettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -34,8 +34,9 @@ public class SettingsScreen extends AbstractBaseScreen {
 
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.settings.done"), (button) -> {
-            Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.SETTINGS, lock, owner));
-            this.onClose();
+                    SBSettingsPacket packet = new SBSettingsPacket(lock, owner);
+                    Helper.sendPacketToServer(packet);
+                    this.onClose();
 
         }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose())

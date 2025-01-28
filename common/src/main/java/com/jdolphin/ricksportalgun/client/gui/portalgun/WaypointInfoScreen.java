@@ -2,10 +2,11 @@ package com.jdolphin.ricksportalgun.client.gui.portalgun;
 
 import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
+import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -43,7 +44,8 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
             Player player = minecraft.player;
             ItemStack itemStack = player.getMainHandItem();
             if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
-                Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.DESTINATION_SET, wp.getBlockPos(), wp.getDim()));
+                SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDim());
+                Helper.sendPacketToServer(packet);
                 this.onClose();
             }
         }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
@@ -51,7 +53,8 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
             Player player = minecraft.player;
             ItemStack itemStack = player.getMainHandItem();
             if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
-                Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.MANAGE_WAYPOINTS, wp.getWaypointString(), true));
+                SBManageWaypointsPacket packet = new SBManageWaypointsPacket(wp.getWaypointString(), true);
+                Helper.sendPacketToServer(packet);
                 minecraft.setScreen(new WaypointScreen());
                 player.displayClientMessage(Component.translatable("notice.ricksportalgun.waypoint.deleted", wp.getName()).withStyle(ChatFormatting.GREEN), false);
             }

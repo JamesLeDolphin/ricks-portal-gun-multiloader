@@ -6,9 +6,9 @@ import com.jdolphin.ricksportalgun.client.gui.widget.Slider;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -44,7 +44,8 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.colour.select"), (button) -> {
             if (stack.is(PGTags.Items.PORTAL_GUNS)) {
-                Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.COLOUR, getColor()));
+                SBColourPacket packet = new SBColourPacket(getColor());
+                Helper.sendPacketToServer(packet);
                 this.onClose();
             }
         }).size(128, 20).pos(this.width / 2 - 136, this.height / 2 + 32).build());
@@ -99,7 +100,8 @@ public class ColourPickingScreen extends AbstractBaseScreen {
             case GLFW.GLFW_KEY_KP_ENTER:
                 if (this.getFocused() instanceof Button)
                     return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-                Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.COLOUR, getColor()));
+                SBColourPacket packet = new SBColourPacket(getColor());
+                Helper.sendPacketToServer(packet);
                 break;
         }
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);

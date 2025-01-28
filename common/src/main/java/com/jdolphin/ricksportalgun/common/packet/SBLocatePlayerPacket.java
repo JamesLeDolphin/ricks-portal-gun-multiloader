@@ -1,12 +1,11 @@
-package com.jdolphin.ricksportalgun.common.packets;
+package com.jdolphin.ricksportalgun.common.packet;
 
-import com.jdolphin.ricksportalgun.common.config.Config;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import com.jdolphin.ricksportalgun.common.util.helpers.LevelHelper;
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,14 +20,25 @@ import net.minecraft.world.item.ItemStack;
 public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBLocatePlayerPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SBLocatePlayerPacket::name, SBLocatePlayerPacket::new);
-    public static final CustomPacketPayload.Type<SBLocatePlayerPacket> ID = new CustomPacketPayload.Type<>(Helper.createLocation("locate"));
+    public static final Type<SBLocatePlayerPacket> ID = new Type<>(Helper.createLocation("locate"));
 
-    public void handle(ServerPlayNetworking.Context context) {
-        ServerPlayer player = context.player();
-        MinecraftServer server = context.server();
+    public SBLocatePlayerPacket(String name) {
+        this.name = name;
+    }
+
+    public SBLocatePlayerPacket(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
+
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(this.name);
+    }
+
+    public void handle(ServerPlayer player) {
+        MinecraftServer server = player.server;
 
         ServerLevel world = player.serverLevel();
-        if(!Config.getInstance().ALLOW_PLAYER_LOCATING) {
+        if(true /*TODO: figure out proper configs*/) {
             //TODO: use translatable strings for these messages
             player.sendSystemMessage(Component.literal("Error 403: Player locating not allowed in this world").withStyle(ChatFormatting.RED), false);
             return;

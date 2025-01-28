@@ -1,7 +1,9 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.packets.*;
+import com.jdolphin.ricksportalgun.client.gui.portalgun.CoordTravelScreen;
+import com.jdolphin.ricksportalgun.common.packet.*;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
@@ -17,42 +19,48 @@ public class ForgePackets {
         INSTANCE.messageBuilder(SBSettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBSettingsPacket::encode)
                 .decoder(SBSettingsPacket::new)
-                .consumerMainThread(SBSettingsPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBSetDestinationPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBSetDestinationPacket::encode)
                 .decoder(SBSetDestinationPacket::new)
-                .consumerMainThread(SBSetDestinationPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBLocatePlayerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBLocatePlayerPacket::encode)
                 .decoder(SBLocatePlayerPacket::new)
-                .consumerMainThread(SBLocatePlayerPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBCoordCheckerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBCoordCheckerPacket::encode)
                 .decoder(SBCoordCheckerPacket::new)
-                .consumerMainThread(SBCoordCheckerPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBColourPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBColourPacket::encode)
                 .decoder(SBColourPacket::new)
-                .consumerMainThread(SBColourPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBManageWaypointsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBManageWaypointsPacket::encode)
                 .decoder(SBManageWaypointsPacket::new)
-                .consumerMainThread(SBManageWaypointsPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(SBOpenGuiPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBOpenGuiPacket::encode)
                 .decoder(SBOpenGuiPacket::new)
-                .consumerMainThread(SBOpenGuiPacket::handle)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
         INSTANCE.messageBuilder(CBOpenGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(CBOpenGuiPacket::encode)
                 .decoder(CBOpenGuiPacket::new)
-                .consumerMainThread(CBOpenGuiPacket::handle)
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new CoordTravelScreen(packet.strings()));
+                }).add();
+        INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SBChangePortalGunTypePacket::encode)
+                .decoder(SBChangePortalGunTypePacket::new)
+                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
     }
 

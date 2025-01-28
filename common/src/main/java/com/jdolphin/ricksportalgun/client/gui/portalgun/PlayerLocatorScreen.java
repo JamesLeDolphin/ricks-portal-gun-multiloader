@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.client.gui.portalgun;
 
 import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBLocatePlayerPacket;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -54,7 +54,8 @@ public class PlayerLocatorScreen extends AbstractBaseScreen {
     }
 
     public void setCoords() {
-        Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.LOCATE_PLAYER, playerInput.getValue()));
+        SBLocatePlayerPacket packet = new SBLocatePlayerPacket(playerInput.getValue());
+        Helper.sendPacketToServer(packet);
     }
 
     @Override

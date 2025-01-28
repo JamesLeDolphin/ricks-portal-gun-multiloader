@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 

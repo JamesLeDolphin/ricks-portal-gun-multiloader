@@ -4,8 +4,7 @@ import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.gui.widget.BetterImageButton;
 import com.jdolphin.ricksportalgun.client.gui.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import com.jdolphin.ricksportalgun.common.util.helpers.LevelHelper;
@@ -87,7 +86,8 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
                         Level level = player.level();
                         String dim = this.dimInput.getValue().isEmpty() ? level.dimension().location().toString() : this.dimInput.getValue();
-                        Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.DESTINATION_SET, player.blockPosition(), dim));
+                        SBSetDestinationPacket packet = new SBSetDestinationPacket(player.blockPosition(), dim);
+                        Helper.sendPacketToServer(packet);
                         this.onClose();
                     }
                 }, 20, 18, RANDOMIZER_TEXTURES));
@@ -199,9 +199,10 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             if (dimInput.getValue().equals("end")) dimInput.setValue("the_end");
             if (dimInput.getValue().equals("nether")) dimInput.setValue("the_nether");
             ResourceLocation resourceLocation =
-                    ResourceLocation.tryParse(dimInput.getValue().isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : dimInput.getValue());
+                    ResourceLocation.parse(dimInput.getValue().isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : dimInput.getValue());
 
-            Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.DESTINATION_SET, getCoords(player), resourceLocation));
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
+            Helper.sendPacketToServer(packet);
             this.onClose();
         } catch (Exception error) {
             dimInput.setSuggestion(" §c" + error.getLocalizedMessage());

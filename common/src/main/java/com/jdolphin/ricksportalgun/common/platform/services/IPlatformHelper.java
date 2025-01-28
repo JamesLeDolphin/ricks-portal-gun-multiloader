@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.platform.services;
 
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface IPlatformHelper {
 
@@ -27,7 +27,9 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
-    void sendPacketToServer(PGPacketType type);
+    <P extends CustomPacketPayload> void sendPacketToServer(P packet);
+
+    <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet);
 
     /**
      * Gets the name of the environment type as a string.

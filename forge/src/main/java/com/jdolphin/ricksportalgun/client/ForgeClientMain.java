@@ -6,8 +6,8 @@ import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.init.ForgeEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBOpenGuiPacket;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,8 @@ public class ForgeClientMain {
 
                 if (gun.is(PGTags.Items.PORTAL_GUNS)) {
                     System.out.println("Presseth button");
-                    Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.OPEN_GUI, player.getStringUUID()));
+                    SBOpenGuiPacket packet = new SBOpenGuiPacket(player.getStringUUID());
+                    Helper.sendPacketToServer(packet);
                 }
             }
         }

@@ -1,13 +1,13 @@
-package com.jdolphin.ricksportalgun.common.packets;
+package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,7 +26,19 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
-    public static final CustomPacketPayload.Type<SBCoordCheckerPacket> ID = new CustomPacketPayload.Type<>(Helper.createLocation("coord_check"));
+    public static final Type<SBCoordCheckerPacket> ID = new Type<>(Helper.createLocation("coord_check"));
+
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(this.dim);
+    }
+
+    public SBCoordCheckerPacket(String dim) {
+        this.dim = dim;
+    }
+
+    public SBCoordCheckerPacket(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
 
     private BlockPos getRandoCoord(ServerLevel level) {
         WorldBorder border = level.getWorldBorder();
@@ -38,9 +50,8 @@ public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
         return new BlockPos(xCoord, yCoord + 1, zCoord);
     }
 
-    public void handle(ServerPlayNetworking.Context context) {
-        ServerPlayer player = context.player();
-        MinecraftServer server = context.server();
+    public void handle(ServerPlayer player) {
+        MinecraftServer server = player.server;
 
         BlockPos bPos = getRandoCoord(player.serverLevel());
         ResourceLocation dim = ResourceLocation.parse(this.dim);

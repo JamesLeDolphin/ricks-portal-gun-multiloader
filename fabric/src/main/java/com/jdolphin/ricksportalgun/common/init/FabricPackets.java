@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.packets.*;
+import com.jdolphin.ricksportalgun.common.packet.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,19 +17,19 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBOpenGuiPacket.ID, SBOpenGuiPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC);
 
-        ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, SBColourPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, SBCoordCheckerPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBLocatePlayerPacket.ID, SBLocatePlayerPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBManageWaypointsPacket.ID, SBManageWaypointsPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBSetDestinationPacket.ID, SBSetDestinationPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBSettingsPacket.ID, SBSettingsPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBOpenGuiPacket.ID, SBOpenGuiPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBLocatePlayerPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBManageWaypointsPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBSetDestinationPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBSettingsPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBOpenGuiPacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBChangePortalGunTypePacket.ID, (packet, context) -> packet.handle(context.player()));
     }
 
     public static void registerS2CPackets() {
         PayloadTypeRegistry.playS2C().register(CBOpenGuiPacket.ID, CBOpenGuiPacket.PACKET_CODEC);
 
-        ClientPlayNetworking.registerGlobalReceiver(CBOpenGuiPacket.ID, CBOpenGuiPacket::handle);
+        ClientPlayNetworking.registerGlobalReceiver(CBOpenGuiPacket.ID, ((packet, context) -> packet.handle(context.client())));
     }
 }

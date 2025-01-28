@@ -1,6 +1,27 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "ricksportalgun:item/portal_gun"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "ricksportalgun:item/gun_body/default_body",
+        "tints": [
+          {
+            "type": "minecraft:dye",
+            "default": 3720921
+          }
+        ]
+      },
+      {
+        "type": "minecraft:model",
+        "model": "ricksportalgun:item/gun_fuel_tube/default_fuel_tube",
+        "tints": [
+          {
+            "type": "ricksportalgun:portal_color",
+            "default": 0
+          }
+        ]
+      }
+    ]
   }
 }

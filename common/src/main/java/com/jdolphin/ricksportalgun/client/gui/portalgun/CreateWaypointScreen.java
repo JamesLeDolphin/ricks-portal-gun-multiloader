@@ -2,10 +2,10 @@ package com.jdolphin.ricksportalgun.client.gui.portalgun;
 
 import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.platform.Services;
-import com.jdolphin.ricksportalgun.common.util.PGPacketType;
+import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import com.jdolphin.ricksportalgun.common.util.helpers.LevelHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -70,7 +70,8 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
             BlockPos pos = player.blockPosition();
             if (waypointName.getValue().isEmpty()) return;
             Waypoint waypoint = new Waypoint(pos, LevelHelper.getPlayerDimensionLocation(player).toString(), waypointName.getValue());
-            Services.PLATFORM.sendPacketToServer(new PGPacketType(PGPacketType.PacketType.MANAGE_WAYPOINTS, waypoint.getWaypointString(), false));
+            SBManageWaypointsPacket packet = new SBManageWaypointsPacket(waypoint.getWaypointString(), false);
+            Helper.sendPacketToServer(packet);
             this.minecraft.setScreen(new WaypointScreen());
         }
     }

@@ -1,8 +1,8 @@
-package com.jdolphin.ricksportalgun.common.packets;
+package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -16,10 +16,21 @@ import java.util.List;
 
 public record SBOpenGuiPacket(String playerUUID) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBOpenGuiPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBOpenGuiPacket::playerUUID, SBOpenGuiPacket::new);
-    public static final CustomPacketPayload.Type<SBOpenGuiPacket> ID = new CustomPacketPayload.Type<>(Helper.createLocation("open_menu"));
+    public static final Type<SBOpenGuiPacket> ID = new Type<>(Helper.createLocation("open_menu"));
 
-    public void handle(ServerPlayNetworking.Context context) {
-        ServerPlayer player = context.player();
+    public SBOpenGuiPacket(String playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
+    public SBOpenGuiPacket(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
+
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(this.playerUUID);
+    }
+
+    public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         Iterable<ServerLevel> worlds = server.getAllLevels();
         List<String> worldList = new ArrayList<>();
@@ -30,7 +41,8 @@ public record SBOpenGuiPacket(String playerUUID) implements CustomPacketPayload 
                 if (!s.isEmpty()) worldList.add(s);
             }
         });
-        ServerPlayNetworking.send(player, new CBOpenGuiPacket(worldList));
+
+        Helper.sendPacketToClient(player, new CBOpenGuiPacket(worldList));
     }
 
     @Override

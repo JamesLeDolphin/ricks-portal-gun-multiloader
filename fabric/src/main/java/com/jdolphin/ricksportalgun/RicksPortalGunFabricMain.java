@@ -2,10 +2,13 @@ package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.tints.PortalColourTint;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -22,7 +25,6 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         FabricEntities.register();
         FabricDataComponents.register();
         FabricPackets.registerC2SPackets();
-
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
@@ -32,7 +34,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         });
 
 
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(content -> {
             content.accept(PGItems.PORTAL_FLUID);
             content.accept(PGItems.BOOTLEG_PORTAL_FLUID);
             content.accept(PGItems.QUANTUM_LEAP_ELIXIR);
