@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.gui.widget;
+package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;

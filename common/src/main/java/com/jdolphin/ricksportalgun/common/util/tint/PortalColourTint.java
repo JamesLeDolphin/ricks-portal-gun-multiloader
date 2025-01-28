@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util.tints;
+package com.jdolphin.ricksportalgun.common.util.tint;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.mojang.serialization.MapCodec;

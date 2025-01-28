@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.Constants;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;

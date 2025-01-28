@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

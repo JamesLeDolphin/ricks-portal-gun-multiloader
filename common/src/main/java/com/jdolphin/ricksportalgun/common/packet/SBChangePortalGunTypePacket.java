@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

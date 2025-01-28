@@ -8,6 +8,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+
 import java.awt.*;
 
 public record PortalGunType(Component name, ResourceLocation id, Color color, ResourceLocation model) {

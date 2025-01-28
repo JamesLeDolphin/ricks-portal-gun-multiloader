@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util.helpers;
+package com.jdolphin.ricksportalgun.common.util.helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

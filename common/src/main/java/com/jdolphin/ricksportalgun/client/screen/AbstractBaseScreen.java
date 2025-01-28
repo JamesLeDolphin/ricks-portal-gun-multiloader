@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.gui;
+package com.jdolphin.ricksportalgun.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;

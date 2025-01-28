@@ -1,12 +1,12 @@
-package com.jdolphin.ricksportalgun.client.gui.portalgun;
+package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
-import com.jdolphin.ricksportalgun.client.gui.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
-import com.jdolphin.ricksportalgun.common.util.helpers.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
-import com.jdolphin.ricksportalgun.common.util.helpers.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;

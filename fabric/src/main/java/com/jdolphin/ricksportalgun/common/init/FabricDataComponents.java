@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.component.WaypointComponent;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;

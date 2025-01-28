@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import net.minecraft.sounds.SoundEvent;
 
 public class PGSounds {

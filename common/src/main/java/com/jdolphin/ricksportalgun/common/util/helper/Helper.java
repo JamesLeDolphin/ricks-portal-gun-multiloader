@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util.helpers;
+package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.jdolphin.ricksportalgun.Constants;
 import com.jdolphin.ricksportalgun.common.init.PGTags;

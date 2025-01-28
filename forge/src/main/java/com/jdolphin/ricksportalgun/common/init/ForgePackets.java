@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.client.gui.portalgun.CoordTravelScreen;
+import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
 import com.jdolphin.ricksportalgun.common.packet.*;
-import com.jdolphin.ricksportalgun.common.util.helpers.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.ChannelBuilder;

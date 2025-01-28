@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PortalGunTypeRegistry {
     public static final ArrayList<PortalGunType> PORTAL_GUN_TYPES = Lists.newArrayList();

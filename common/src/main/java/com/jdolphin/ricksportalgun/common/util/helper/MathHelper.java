@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util.helpers;
+package com.jdolphin.ricksportalgun.common.util.helper;
 
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3d;
