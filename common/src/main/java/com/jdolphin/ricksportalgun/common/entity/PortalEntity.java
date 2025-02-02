@@ -52,7 +52,7 @@ public class PortalEntity extends Entity {
     private int delay = 0;
     public int lifetime = 20 * 10;
 
-    private final UseOnContext context;
+    private final Direction direction;
 
     public boolean exists() {
         return exists;
@@ -60,13 +60,13 @@ public class PortalEntity extends Entity {
 
     public PortalEntity(EntityType<PortalEntity> type, Level level) {
         super(type, level);
-        this.context = null;
+        this.direction = Direction.SOUTH;
         System.out.println("WHY");
     }
 
-    public PortalEntity(Level pLevel, Vec3 pos, UseOnContext context) {
+    public PortalEntity(Level pLevel, Vec3 pos, Direction direction) {
         super(PGEntities.PORTAL, pLevel);
-        this.context = context;
+        this.direction = direction;
         this.setPos(pos);
     }
 
@@ -159,8 +159,8 @@ public class PortalEntity extends Entity {
     }
 
     protected final void recalculateBoundingBox() {
-        System.out.println("Null? " + context != null);
-        AABB aabb = this.calculateBoundingBox(this.pos, this.context.getClickedFace());
+        System.out.println("Null? " + direction == null);
+        AABB aabb = this.calculateBoundingBox(this.pos, this.direction);
         Vec3 vec3 = aabb.getCenter();
         this.setPosRaw(vec3.x, vec3.y, vec3.z);
         this.setBoundingBox(aabb);

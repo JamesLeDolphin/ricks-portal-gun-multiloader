@@ -144,9 +144,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                     Direction direction = hitResult.getDirection();
                     System.out.println(direction);
-                    UseOnContext context = new UseOnContext(player, hand, hitResult);
-                    PortalEntity portal =new PortalEntity(level, newLoc, context);
-                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), context);
+                    PortalEntity portal =new PortalEntity(level, newLoc, hitResult.getDirection());
+                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), hitResult.getDirection());
 
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
