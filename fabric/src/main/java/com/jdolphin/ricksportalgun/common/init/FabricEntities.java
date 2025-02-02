@@ -13,7 +13,7 @@ public class FabricEntities {
 
     public static void register() {
         PGEntities.PORTAL = Registry.register(BuiltInRegistries.ENTITY_TYPE, "portal",
-                EntityType.Builder.of(PortalEntity::new, MobCategory.MISC).sized(1.0f, 2.0f)
+                EntityType.Builder.<PortalEntity>of(PortalEntity::new, MobCategory.MISC).sized(1.0f, 2.0f)
                         .build(ResourceKey.create(Registries.ENTITY_TYPE, Helper.createLocation("portal"))));
     }
 }

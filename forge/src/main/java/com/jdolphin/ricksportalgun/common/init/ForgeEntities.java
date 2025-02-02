@@ -15,6 +15,6 @@ public class ForgeEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Constants.MODID);
 
     public static final RegistryObject<EntityType<PortalEntity>> PORTAL = ENTITIES.register("portal",
-            () -> EntityType.Builder.of(PortalEntity::new, MobCategory.MISC).sized(1.0f, 2.0f)
+            () -> EntityType.Builder.<PortalEntity>of(PortalEntity::new, MobCategory.MISC).sized(1.0f, 2.0f)
                     .build(ResourceKey.create(Registries.ENTITY_TYPE, Helper.createLocation("portal"))));
 }

@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun;
 
-import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
 import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
@@ -9,16 +8,18 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTabs;
 
 public class RicksPortalGunFabricMain implements ModInitializer {
 
-    public static final MenuType<PortalDispenserMenu> BOX_SCREEN_HANDLER =
-            Registry.register(Registries.MENU, Helper.createLocation("box_block"), new MenuType<>(PortalDispenserScreen::new, FeatureFlagSet.of()));
+    //public static final MenuType<PortalDispenserMenu> BOX_SCREEN_HANDLER =
+    //        Registry.register(BuiltInRegistries.MENU, Helper.createLocation("box_block"), new MenuType<>((PortalDispenserMenu::new), FeatureFlags.DEFAULT_FLAGS));
 
     @Override
     public void onInitialize() {

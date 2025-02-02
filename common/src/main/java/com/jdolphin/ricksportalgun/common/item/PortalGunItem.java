@@ -2,7 +2,6 @@ package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
@@ -20,17 +19,16 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -94,7 +92,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer) {
@@ -103,56 +101,53 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
                     !stack.getOrDefault(PGDataComponents.LOCK, false)) {
 
-                if (player.getOffhandItem().getItem() instanceof DyeItem dye && player.isCrouching()) {
-                    stack.set(DataComponents.DYED_COLOR, new DyedItemColor(dye.getDyeColor().getTextureDiffuseColor(), true));
-                    return InteractionResult.SUCCESS;
-                }
-
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
 
-
-                    PortalEntity portal = new PortalEntity(PGEntities.PORTAL, level);
-                    PortalEntity exPortal = new PortalEntity(PGEntities.PORTAL, level);
-
-                    exPortal.setPos(getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ());
                     Vec3 loc = hitResult.getLocation();
-
+                    Vec3 newLoc = loc;
                     if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
                         Direction dir = hitResult.getDirection();
                         BlockPos bPos = hitResult.getBlockPos();
 
-                        if (level.getBlockState(bPos.above()).is(Blocks.AIR) && (dir == Direction.UP)) {
-                            portal.setPos(loc.x(), loc.y(), loc.z());
+                        if (isAir(level, bPos.above()) && (dir == Direction.UP)) {
+                            newLoc = new Vec3(loc.x(), loc.y(), loc.z());
                         }
-                        if (level.getBlockState(bPos.below()).is(Blocks.AIR) && (dir == Direction.DOWN)) {
-                            portal.setPos(loc.x(), loc.y() - 2, loc.z());
+                        if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
+                            newLoc = new Vec3(loc.x(), loc.y() - 2, loc.z());
                         }
 
                         switch (dir) {
                             case NORTH -> {
                                 if (isAir(level, bPos.north())) {
-                                    portal.setPos(bPos.getX() + 0.5, bPos.getY() - 1, bPos.getZ() - 0.5);
-                                } else portal.setPos(loc.x(), bPos.getY() - 1, loc.z());
+                                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY() - 1, bPos.getZ() - 0.5);
+                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
                             }
                             case SOUTH -> {
                                 if (isAir(level, bPos.south())) {
-                                    portal.setPos(bPos.getX() + 0.5, bPos.getY() - 1, bPos.getZ() + 1.5);
-                                } else portal.setPos(loc.x(), bPos.getY() - 1, loc.z());
+                                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY() - 1, bPos.getZ() + 1.5);
+                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
                             }
                             case WEST -> {
                                 if (isAir(level, bPos.west())) {
-                                    portal.setPos(bPos.getX() - 0.5, bPos.getY() - 1, bPos.getZ() + 0.5);
-                                } else portal.setPos(loc.x(), bPos.getY() - 1, loc.z());
+                                    newLoc = new Vec3(bPos.getX() - 0.5, bPos.getY() - 1, bPos.getZ() + 0.5);
+                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
                             }
                             case EAST -> {
                                 if (isAir(level, bPos.east())) {
-                                    portal.setPos(bPos.getX() + 1.5, bPos.getY() - 1, bPos.getZ() + 0.5);
-                                } else portal.setPos(loc.x(), bPos.getY() - 1, loc.z());
+                                    newLoc = new Vec3(bPos.getX() + 1.5, bPos.getY() - 1, bPos.getZ() + 0.5);
+                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
                             }
                         }
                     } else {
-                        portal.setPos(loc.x(), loc.y() - 1, loc.z());
+                        newLoc = new Vec3(loc.x(), loc.y() - 1, loc.z());
                     }
+
+                    Direction direction = hitResult.getDirection();
+                    System.out.println(direction);
+                    UseOnContext context = new UseOnContext(player, hand, hitResult);
+                    PortalEntity portal =new PortalEntity(level, newLoc, context);
+                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), context);
+
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
@@ -160,20 +155,17 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), new BlockPos((int) portal.getX(), (int) portal.getY(), (int) portal.getZ()));
 
-                    portal.getOnPos();
-                    exPortal.getOnPos();
-
                     portal.setColor(this.getColor(stack));
                     exPortal.setColor(this.getColor(stack));
 
                     if (stack.getOrDefault(PGDataComponents.BOOTLEG, false)) {
-                        portal.setAcid(true);
-                        exPortal.setAcid(true);
+                        portal.setBootleg(true);
+                        exPortal.setBootleg(true);
                     }
 
                     if (!stack.getOrDefault(PGDataComponents.BOOTLEG, false)) {
-                        portal.setAcid(false);
-                        exPortal.setAcid(false);
+                        portal.setBootleg(false);
+                        exPortal.setBootleg(false);
                     }
 
                     if (serverlevel != null) {
@@ -202,7 +194,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, List<Component> pTooltipComponents, @NotNull TooltipFlag pTooltipFlag) {
         pTooltipComponents.add(Component.translatable("item.ricksportalgun.portal_gun.tooltip.destination",
                 getHopCoords(pStack).getX(), getHopCoords(pStack).getY(), getHopCoords(pStack).getZ()).withStyle(ChatFormatting.GRAY));
         pTooltipComponents.add(Component.translatable("item.ricksportalgun.portal_gun.tooltip.dimension", getHopDimension(pStack).toString())
@@ -210,17 +202,17 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     @Override
-    public int getBarColor(ItemStack stack) {
+    public int getBarColor(@NotNull ItemStack stack) {
         return getColor(stack);
     }
 
     @Override
-    public boolean isBarVisible(ItemStack stack) {
+    public boolean isBarVisible(@NotNull ItemStack stack) {
         return getFuel(stack) < getMaxFuel(stack);
     }
 
     @Override
-    public int getBarWidth(ItemStack stack) {
+    public int getBarWidth(@NotNull ItemStack stack) {
         return Math.round((float)getFuel(stack) * 13.0F / (float)getMaxFuel(stack));
     }
 

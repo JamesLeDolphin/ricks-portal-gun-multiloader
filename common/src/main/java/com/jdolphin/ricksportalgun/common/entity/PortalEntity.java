@@ -1,4 +1,7 @@
 package com.jdolphin.ricksportalgun.common.entity;
+
+import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
+import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -21,16 +24,14 @@ import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 
 public class PortalEntity extends Entity {
@@ -41,21 +42,32 @@ public class PortalEntity extends Entity {
     public static final String TAG_NEW = "isSpawned";
     public static final String TAG_COOLDOWN = "Cooldown";
 
-    private Optional<BlockPos> bPos;
-    private boolean acid;
+    private Optional<BlockPos> targetPos;
+    private boolean bootleg;
     private int maxLifeTime;
     private boolean exists;
 
-    private String dim;
+    private Vec3 pos;
+    private String targetDim;
     private int delay = 0;
     public int lifetime = 20 * 10;
+
+    private final UseOnContext context;
 
     public boolean exists() {
         return exists;
     }
 
-    public PortalEntity(EntityType<? extends PortalEntity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public PortalEntity(EntityType<PortalEntity> type, Level level) {
+        super(type, level);
+        this.context = null;
+        System.out.println("WHY");
+    }
+
+    public PortalEntity(Level pLevel, Vec3 pos, UseOnContext context) {
+        super(PGEntities.PORTAL, pLevel);
+        this.context = context;
+        this.setPos(pos);
     }
 
     public void setMaxLifeTime(int lifetime) {
@@ -74,16 +86,16 @@ public class PortalEntity extends Entity {
         return this.entityData.get(DATA_COLOR_ID);
     }
 
-    public boolean isAcid() {
-        return acid;
+    public boolean isBootleg() {
+        return bootleg;
     }
 
     public void setPos(BlockPos pos) {
         this.setPos(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public void setAcid(boolean acid) {
-        this.acid = acid;
+    public void setBootleg(boolean bootleg) {
+        this.bootleg = bootleg;
     }
 
 
@@ -107,28 +119,28 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float v) {
+    public boolean hurtServer(@NotNull ServerLevel serverLevel, @NotNull DamageSource damageSource, float v) {
         return false;
     }
 
     public void setHopLocation(ResourceLocation dimension, BlockPos pos) {
-        this.dim = dimension.toString();
-        this.bPos = Optional.of(pos);
+        this.targetDim = dimension.toString();
+        this.targetPos = Optional.of(pos);
     }
 
     public BlockPos getHopLoc() {
-        return this.bPos.orElse(BlockPos.ZERO);
+        return this.targetPos.orElse(BlockPos.ZERO);
     }
 
     public String getHopDim() {
-        return this.dim == null ? "minecraft:overworld" : this.dim;
+        return this.targetDim == null ? "minecraft:overworld" : this.targetDim;
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.acid = tag.getBoolean(PortalGunItem.TAG_ACIDIC);
-        this.dim = tag.getString(TAG_DIMENSION);
-        this.bPos = NbtUtils.readBlockPos(tag, TAG_BPOS);
+        this.bootleg = tag.getBoolean(PortalGunItem.TAG_ACIDIC);
+        this.targetDim = tag.getString(TAG_DIMENSION);
+        this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS);
         this.setColor(tag.getInt(PortalGunItem.TAG_COLOR));
         this.lifetime = tag.getInt(TAG_OPEN);
         this.delay = tag.getInt(TAG_COOLDOWN);
@@ -137,7 +149,7 @@ public class PortalEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putBoolean(PortalGunItem.TAG_ACIDIC, this.acid);
+        tag.putBoolean(PortalGunItem.TAG_ACIDIC, this.bootleg);
         tag.putBoolean(TAG_NEW, this.exists);
         tag.putString(TAG_DIMENSION, getHopDim());
         tag.put(TAG_BPOS, NbtUtils.writeBlockPos(getHopLoc()));
@@ -147,25 +159,28 @@ public class PortalEntity extends Entity {
     }
 
     protected final void recalculateBoundingBox() {
-        this.getDirection();
-        AABB aabb = this.calculateBoundingBox(this.blockPosition(), this.getDirection());
+        System.out.println("Null? " + context != null);
+        AABB aabb = this.calculateBoundingBox(this.pos, this.context.getClickedFace());
         Vec3 vec3 = aabb.getCenter();
         this.setPosRaw(vec3.x, vec3.y, vec3.z);
         this.setBoundingBox(aabb);
     }
 
-    protected AABB calculateBoundingBox(BlockPos pos, Direction dir) {
-        Vec3 vec3 = Vec3.atBottomCenterOf(pos).relative(Direction.UP, 0.99);
-        Direction.Axis direction$axis = dir.getAxis();
-        double d2 = direction$axis == Direction.Axis.X ? (double)0.0625F : 1;
-        double d3 = 2;
-        double d4 = direction$axis == Direction.Axis.Z ? (double)0.0625F : 1;
+    protected AABB calculateBoundingBox(Vec3 vec3, Direction dir) {
+        Direction.Axis axis = dir.getAxis();
+        boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
 
-        return AABB.ofSize(vec3, d2, d3, d4);
+        System.out.println("Also: " + flat);
+        double d0 = axis == Direction.Axis.X  && !flat ? 0.0625F : 1;
+        double d1 = flat ? 0.0625F : 2;
+        double d2 = axis == Direction.Axis.Z   && !flat ? 0.0625F : 1;
+
+        return AABB.ofSize(vec3, d0, d1, d2);
     }
 
     @Override
     public void setPos(double x, double y, double z) {
+        this.pos = new Vec3(x, y, z);
         this.setPosRaw(x, y, z);
         this.recalculateBoundingBox();
     }
@@ -198,37 +213,44 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide()) {
+            ServerLevel serverLevel = (ServerLevel) this.level();
             if (!exists) LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
             this.exists = true;
             if (lifetime > 0) lifetime--;
             if (delay > 0) delay--;
             if (!firstTick && lifetime == 0) {
-                this.kill((ServerLevel) level());
+                this.kill(serverLevel);
                 return;
             }
             List<Entity> entityList = getEntitiesNearby(this, 0.3D);
             if (entityList != null) {
                 for (Entity nearby : entityList) {
-                    if (!this.acid) {
+                    ServerLevel destinationDim;
+                    BlockPos destinationPos;
+                    if (!this.bootleg) {
                         ResourceKey<Level> key = LevelHelper.getWorldKey(ResourceLocation.parse(getHopDim()));
-                        ServerLevel serverlevel = LevelHelper.getServerWorld(this.level(), key);
-                        BlockPos pos = getHopLoc();
-                        if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
-                            if (serverlevel != null && !serverlevel.isClientSide()) {
-                                if (nearby.canUsePortal(false) && delay == 0) {
-                                    Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
-                                    double dx = (double) pos.getX() + look.x * 2d;
-                                    double dz = (double) pos.getZ() + look.z * 2d;
-                                    Set<Relative> relativeSet = new HashSet<>();
-                                    relativeSet.add(Relative.Y_ROT);
-                                    nearby.teleportTo(serverlevel, dx, pos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot(), false);
+                        destinationDim = LevelHelper.getServerWorld(this.level(), key);
+                        destinationPos = getHopLoc();
+                    } else {
+                        destinationDim = LevelHelper.getRandomServerLevel(serverLevel.getServer());
+                        destinationPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 5000), serverLevel);
+                    }
+                    if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
+                        if (this.bootleg) {
+                            nearby.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, PGDamageTypes.BOOTLEG), this.random.nextInt(10) == 1 ? Integer.MAX_VALUE : 5);
+                        }
+                        if (destinationDim != null && !destinationDim.isClientSide()) {
+                            if (nearby.canUsePortal(false) && delay == 0) {
+                                Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
+                                double dx = (double) destinationPos.getX() + look.x * 2d;
+                                double dz = (double) destinationPos.getZ() + look.z * 2d;
+                                Set<Relative> relativeSet = new HashSet<>();
+                                relativeSet.add(Relative.Y_ROT);
+                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot(), false);
 
-                                    nearby.setPortalCooldown();
-                                } else return;
+                                nearby.setPortalCooldown();
                             }
                         }
-                    } else {
-                        nearby.kill((ServerLevel) level());
                     }
                 }
             }

@@ -35,7 +35,8 @@ public class PortalDispenserBlock extends Block implements EntityBlock {
     }
 
     protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((id, inv, player) -> new PortalDispenserMenu(id), Component.translatable("menu.ricksportalgun.portal_dispenser"));
+        return new SimpleMenuProvider((id, inv, player) -> new PortalDispenserMenu(id, inv, ((PortalDispenserBlockEntity)level.getBlockEntity(pos))),
+                Component.translatable("menu.ricksportalgun.portal_dispenser"));
     }
 
     @Override

@@ -7,8 +7,8 @@
         "model": "ricksportalgun:item/gun_body/default_body",
         "tints": [
           {
-            "type": "minecraft:dye",
-            "default": 3720921
+            "type": "minecraft:constant",
+            "value": 3720921
           }
         ]
       },
