@@ -152,7 +152,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
-                    exPortal.setHopLocation(level.dimension().location(), new BlockPos((int) portal.getX(), (int) portal.getY(), (int) portal.getZ()));
+                    exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
                     portal.setColor(this.getColor(stack));
                     exPortal.setColor(this.getColor(stack));

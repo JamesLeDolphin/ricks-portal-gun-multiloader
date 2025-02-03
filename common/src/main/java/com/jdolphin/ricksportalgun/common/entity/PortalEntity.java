@@ -159,23 +159,27 @@ public class PortalEntity extends Entity {
     }
 
     protected final void recalculateBoundingBox() {
-        System.out.println("Null? " + direction == null);
-        AABB aabb = this.calculateBoundingBox(this.pos, this.direction);
-        Vec3 vec3 = aabb.getCenter();
-        this.setPosRaw(vec3.x, vec3.y, vec3.z);
-        this.setBoundingBox(aabb);
+            AABB aabb = this.calculateBoundingBox(this.pos, this.direction);
+            Vec3 vec3 = aabb.getCenter();
+            this.setPosRaw(vec3.x, vec3.y, vec3.z);
+            this.setBoundingBox(aabb);
     }
 
     protected AABB calculateBoundingBox(Vec3 vec3, Direction dir) {
-        Direction.Axis axis = dir.getAxis();
-        boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
+        System.out.println("Null? " + dir == null);
+        if (!this.level().isClientSide) {
+            System.out.println("Null on server? " + dir == null);
+            Direction.Axis axis = dir.getAxis();
+            boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
 
-        System.out.println("Also: " + flat);
-        double d0 = axis == Direction.Axis.X  && !flat ? 0.0625F : 1;
-        double d1 = flat ? 0.0625F : 2;
-        double d2 = axis == Direction.Axis.Z   && !flat ? 0.0625F : 1;
+            System.out.println("Also: " + flat);
+            double d0 = axis == Direction.Axis.X && !flat ? 0.0625F : 1;
+            double d1 = flat ? 0.0625F : 2;
+            double d2 = axis == Direction.Axis.Z && !flat ? 0.0625F : 1;
 
-        return AABB.ofSize(vec3, d0, d1, d2);
+            return AABB.ofSize(vec3, d0, d1, d2);
+        }
+        return this.getBoundingBox();
     }
 
     @Override
