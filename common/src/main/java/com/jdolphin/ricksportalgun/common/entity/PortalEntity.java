@@ -51,8 +51,9 @@ public class PortalEntity extends Entity {
     private String targetDim;
     private int delay = 0;
     public int lifetime = 20 * 10;
+    private boolean flat;
 
-    private final Direction direction;
+    private Direction direction;
 
     public boolean exists() {
         return exists;
@@ -60,8 +61,6 @@ public class PortalEntity extends Entity {
 
     public PortalEntity(EntityType<PortalEntity> type, Level level) {
         super(type, level);
-        this.direction = Direction.SOUTH;
-        System.out.println("WHY");
     }
 
     public PortalEntity(Level pLevel, Vec3 pos, Direction direction) {
@@ -97,7 +96,6 @@ public class PortalEntity extends Entity {
     public void setBootleg(boolean bootleg) {
         this.bootleg = bootleg;
     }
-
 
     public static boolean colliding(Entity entity1, Entity entity2) {
         return entity1.getBoundingBox().intersects(entity2.getBoundingBox());
@@ -158,6 +156,15 @@ public class PortalEntity extends Entity {
         tag.putInt(TAG_COOLDOWN, this.delay);
     }
 
+    public boolean isFlat() {
+        return this.flat;
+    }
+
+    public void setFlat(boolean flat) {
+        this.flat = flat;
+        this.recalculateBoundingBox();
+    }
+
     protected final void recalculateBoundingBox() {
             AABB aabb = this.calculateBoundingBox(this.pos, this.direction);
             Vec3 vec3 = aabb.getCenter();
@@ -166,27 +173,21 @@ public class PortalEntity extends Entity {
     }
 
     protected AABB calculateBoundingBox(Vec3 vec3, Direction dir) {
-        System.out.println("Null? " + dir == null);
-        if (!this.level().isClientSide) {
-            System.out.println("Null on server? " + dir == null);
-            Direction.Axis axis = dir.getAxis();
-            boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
+        Direction.Axis axis = dir.getAxis();
+        boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
 
-            System.out.println("Also: " + flat);
-            double d0 = axis == Direction.Axis.X && !flat ? 0.0625F : 1;
-            double d1 = flat ? 0.0625F : 2;
-            double d2 = axis == Direction.Axis.Z && !flat ? 0.0625F : 1;
-
-            return AABB.ofSize(vec3, d0, d1, d2);
-        }
-        return this.getBoundingBox();
+        double d0 = axis == Direction.Axis.X ? 0.1F : 1;
+        double d1 = this.flat ? 0.0625F : 2;
+        double d2 = axis == Direction.Axis.Z ? 0.1F : 1;
+        System.out.printf("%s, %s, %s%n", d0, d1, d2);
+        return AABB.ofSize(vec3, d0, d1, d2);
     }
 
     @Override
     public void setPos(double x, double y, double z) {
         this.pos = new Vec3(x, y, z);
         this.setPosRaw(x, y, z);
-        this.recalculateBoundingBox();
+        if (direction != null) this.recalculateBoundingBox();
     }
 
     public static List<Entity> getEntitiesNearby(Entity entity, double range) {

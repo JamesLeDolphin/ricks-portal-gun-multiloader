@@ -8,6 +8,7 @@ public class PortalEntityRenderState extends EntityRenderState {
     public boolean closing;
     public float yRot;
     public boolean isNew;
+    public boolean flat;
 
     public PortalEntityRenderState() {}
 }

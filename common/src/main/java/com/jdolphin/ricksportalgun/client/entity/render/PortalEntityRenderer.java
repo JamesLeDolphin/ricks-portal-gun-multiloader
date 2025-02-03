@@ -38,6 +38,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         state.isNew = !portal.exists();
         state.closing = portal.tickCount > 9 * 20;
         state.opening = portal.tickCount < 20;
+        state.flat = portal.isFlat();
     }
 
     protected void scale(PortalEntityRenderState state, PoseStack stack) {
@@ -66,6 +67,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
 
         stack.translate(0, -1, 0);
         stack.mulPose(Axis.YN.rotationDegrees(state.yRot));
+        stack.mulPose(Axis.XN.rotation(state.flat ? 90 : 0));
         VertexConsumer vertexconsumer = source.getBuffer(RenderType.entityTranslucent(PORTAL_TEXTURE));
 
         this.model.renderToBuffer(stack, vertexconsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);

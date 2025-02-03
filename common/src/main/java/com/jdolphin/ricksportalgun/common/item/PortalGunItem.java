@@ -142,14 +142,16 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                         newLoc = new Vec3(loc.x(), loc.y() - 1, loc.z());
                     }
 
-                    Direction direction = hitResult.getDirection();
-                    System.out.println(direction);
-                    PortalEntity portal =new PortalEntity(level, newLoc, hitResult.getDirection());
-                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), hitResult.getDirection());
-
+                    Direction dir = hitResult.getDirection();
+                    boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
+                    PortalEntity portal = new PortalEntity(level, newLoc, dir);
+                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir);
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
+
+                    portal.setFlat(flat);
+                    exPortal.setFlat(flat);
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
