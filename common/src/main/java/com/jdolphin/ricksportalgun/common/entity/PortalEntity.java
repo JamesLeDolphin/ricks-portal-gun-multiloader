@@ -7,6 +7,8 @@ import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -179,7 +181,7 @@ public class PortalEntity extends Entity {
         double d0 = axis == Direction.Axis.X ? 0.1F : 1;
         double d1 = this.flat ? 0.0625F : 2;
         double d2 = axis == Direction.Axis.Z ? 0.1F : 1;
-        System.out.printf("%s, %s, %s%n", d0, d1, d2);
+        System.out.println(vec3);
         return AABB.ofSize(vec3, d0, d1, d2);
     }
 
@@ -217,6 +219,7 @@ public class PortalEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        level().addParticle(ParticleTypes.DRIPPING_OBSIDIAN_TEAR, this.getX(), this.getY() + 1, this.getZ(), 1, 1, 1); //Temp
         if (!this.level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             if (!exists) LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);

@@ -38,7 +38,7 @@ public class PortalFluidItem extends Item {
     }
 
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-        if (!level.isClientSide && entity instanceof Player player) {
+        if (!level.isClientSide && entity instanceof ServerPlayer player) {
             if (!player.isCreative()) {
                 stack.consume(1, entity);
                 player.addItem(stack.getItem().getCraftingRemainder());
@@ -47,11 +47,7 @@ public class PortalFluidItem extends Item {
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 2, 2));
             ServerLevel serverLevel = (ServerLevel) level;
             player.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, PGDamageTypes.TELEPORT), 3);
-            ServerLevel destination = LevelHelper.getRandomServerLevel(serverLevel.getServer());
-            LevelHelper.teleportEntity(player,
-                    destination,
-                    LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 500), destination));
-
+            LevelHelper.randomTP(player, 500);
         }
         return stack;
     }

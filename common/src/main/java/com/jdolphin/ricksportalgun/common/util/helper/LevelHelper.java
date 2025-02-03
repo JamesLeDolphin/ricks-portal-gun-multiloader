@@ -60,6 +60,12 @@ public class LevelHelper {
         return worldList.get(random.nextInt(worldList.size()));
     }
 
+    public static void randomTP(ServerPlayer player, int radius) {
+        ServerLevel level = player.serverLevel();
+        ServerLevel dest = getRandomServerLevel(player.server);
+        teleportEntity(player, dest, getSafePos(getRandomCoord(dest, radius), level));
+    }
+
     public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
         ChunkAccess chunk = level.getChunk(bPos);
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);
