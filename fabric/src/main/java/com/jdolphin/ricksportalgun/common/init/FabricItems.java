@@ -47,6 +47,7 @@ public class FabricItems {
                 .component(PGDataComponents.BOOTLEG, false)
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.MAX_FUEL, 16)
+                .component(PGDataComponents.GUN_DYE, 16777215)
                 .component(PGDataComponents.FUEL, 16)
                 .component(PGDataComponents.LOCK, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)

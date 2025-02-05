@@ -11,11 +11,15 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -61,8 +65,22 @@ public class PortalEntity extends Entity {
         return exists;
     }
 
+    public boolean shouldRender(double x, double y, double z) {
+        return true;
+    }
+
     public PortalEntity(EntityType<PortalEntity> type, Level level) {
         super(type, level);
+    }
+
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+        return new ClientboundAddEntityPacket(this, this.direction.get3DDataValue(), this.blockPosition());
+    }
+
+    public boolean shouldRenderAtSqrDistance(double distance) {
+        double d0 = (double)16.0F;
+        d0 *= (double)64.0F * getViewScale();
+        return distance < d0 * d0;
     }
 
     public PortalEntity(Level pLevel, Vec3 pos, Direction direction) {

@@ -10,18 +10,22 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -101,6 +105,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
                     !stack.getOrDefault(PGDataComponents.LOCK, false)) {
 
+                if (player.getOffhandItem().getItem() instanceof DyeItem dye) {
+                    stack.set(PGDataComponents.GUN_DYE, dye.getDyeColor().getTextureDiffuseColor());
+                    return InteractionResult.SUCCESS;
+                }
+
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
 
                     Vec3 loc = hitResult.getLocation();
@@ -172,8 +181,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     if (serverlevel != null) {
                         portal.setYRot(player.getYRot());
                         exPortal.setYRot(player.getYRot());
-                        portal.setXRot(0);
-                        exPortal.setXRot(0);
+                        //portal.setXRot(0);
+                        //exPortal.setXRot(0);
                         serverlevel.addFreshEntity(exPortal);
                         level.addFreshEntity(portal);
 

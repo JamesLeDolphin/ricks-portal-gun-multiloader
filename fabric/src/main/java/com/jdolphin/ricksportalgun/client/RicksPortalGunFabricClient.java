@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.SBOpenGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
+import com.jdolphin.ricksportalgun.common.util.tint.PortalGunDyeTint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -25,6 +26,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 
         ItemTintSources.ID_MAPPER.put(Helper.createLocation("portal_color"), PortalColourTint.CODEC);
+        ItemTintSources.ID_MAPPER.put(Helper.createLocation("gun_dye"), PortalGunDyeTint.CODEC);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {

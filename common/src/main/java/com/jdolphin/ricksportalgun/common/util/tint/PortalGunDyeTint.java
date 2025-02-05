@@ -9,26 +9,27 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-public record PortalColourTint(int defaultColor) implements ItemTintSource {
+public record PortalGunDyeTint(int defaultColor) implements ItemTintSource {
 
-    public static MapCodec<PortalColourTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("default", Color.GREEN.getRGB()).forGetter(PortalColourTint::defaultColor)).apply(instance, PortalColourTint::new));
+    public static MapCodec<PortalGunDyeTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
+            instance.group(ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("default", Color.GREEN.getRGB()).forGetter(PortalGunDyeTint::defaultColor)).apply(instance, PortalGunDyeTint::new));
 
-    public PortalColourTint(int defaultColor) {
+    public PortalGunDyeTint(int defaultColor) {
         this.defaultColor = defaultColor;
     }
 
     @Override
     public int calculate(ItemStack stack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
-        return ARGB.opaque(stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, this.defaultColor));
+        return stack.has(PGDataComponents.GUN_DYE) ? stack.get(PGDataComponents.GUN_DYE) : defaultColor;
     }
 
     @Override
-    public MapCodec<? extends ItemTintSource> type() {
+    public @NotNull MapCodec<? extends ItemTintSource> type() {
         return CODEC;
     }
 }

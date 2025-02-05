@@ -62,7 +62,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     @Override
     public void render(@NotNull PortalEntityRenderState state, PoseStack stack, MultiBufferSource source, int pPackedLight) {
         stack.pushPose();
-
+        System.out.println("Git rendered idot");
         scale(state, stack);
 
         stack.translate(0, -1, 0);
