@@ -7,19 +7,14 @@ import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -30,7 +25,6 @@ import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.warden.Warden;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
@@ -42,11 +36,15 @@ import java.util.List;
 
 public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_COLOR_ID = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
+    private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
     public static final String TAG_OPEN = "Open";
     public static final String TAG_NEW = "isSpawned";
     public static final String TAG_COOLDOWN = "Cooldown";
+    public static final String TAG_DIR = "Direction";
+    public static final String TAG_FACING = "Facing";
 
     private Optional<BlockPos> targetPos;
     private boolean bootleg;
@@ -57,9 +55,6 @@ public class PortalEntity extends Entity {
     private String targetDim;
     private int delay = 0;
     public int lifetime = 20 * 10;
-    private boolean flat;
-
-    private Direction direction;
 
     public boolean exists() {
         return exists;
@@ -73,20 +68,12 @@ public class PortalEntity extends Entity {
         super(type, level);
     }
 
-    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
-        return new ClientboundAddEntityPacket(this, this.direction.get3DDataValue(), this.blockPosition());
-    }
-
-    public boolean shouldRenderAtSqrDistance(double distance) {
-        double d0 = (double)16.0F;
-        d0 *= (double)64.0F * getViewScale();
-        return distance < d0 * d0;
-    }
-
-    public PortalEntity(Level pLevel, Vec3 pos, Direction direction) {
+    public PortalEntity(Level pLevel, Vec3 pos, Direction direction, Direction facing) {
         super(PGEntities.PORTAL, pLevel);
-        this.direction = direction;
         this.setPos(pos);
+        setPortalDirection(direction);
+        setPortalFacing(facing);
+        this.pos = pos;
     }
 
     public void setMaxLifeTime(int lifetime) {
@@ -101,6 +88,22 @@ public class PortalEntity extends Entity {
         this.entityData.set(DATA_COLOR_ID, color);
     }
 
+    public void setPortalDirection(Direction direction) {
+        this.entityData.set(DATA_DIR, direction);
+    }
+
+    public void setPortalFacing(Direction direction) {
+        this.entityData.set(DATA_FACING, direction);
+    }
+
+    public Direction getPortalFacing() {
+        return this.entityData.get(DATA_FACING);
+    }
+
+    public Direction getPortalDirection() {
+        return this.entityData.get(DATA_DIR);
+    }
+
     public int getColor() {
         return this.entityData.get(DATA_COLOR_ID);
     }
@@ -109,9 +112,6 @@ public class PortalEntity extends Entity {
         return bootleg;
     }
 
-    public void setPos(BlockPos pos) {
-        this.setPos(pos.getX(), pos.getY(), pos.getZ());
-    }
 
     public void setBootleg(boolean bootleg) {
         this.bootleg = bootleg;
@@ -163,6 +163,8 @@ public class PortalEntity extends Entity {
         this.lifetime = tag.getInt(TAG_OPEN);
         this.delay = tag.getInt(TAG_COOLDOWN);
         this.exists = tag.getBoolean(TAG_NEW);
+        setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
+        setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
     }
 
     @Override
@@ -174,40 +176,40 @@ public class PortalEntity extends Entity {
         tag.putInt(PortalGunItem.TAG_COLOR, this.getColor());
         tag.putInt(TAG_OPEN, this.lifetime);
         tag.putInt(TAG_COOLDOWN, this.delay);
-    }
-
-    public boolean isFlat() {
-        return this.flat;
-    }
-
-    public void setFlat(boolean flat) {
-        this.flat = flat;
-        this.recalculateBoundingBox();
-    }
-
-    protected final void recalculateBoundingBox() {
-            AABB aabb = this.calculateBoundingBox(this.pos, this.direction);
-            Vec3 vec3 = aabb.getCenter();
-            this.setPosRaw(vec3.x, vec3.y, vec3.z);
-            this.setBoundingBox(aabb);
-    }
-
-    protected AABB calculateBoundingBox(Vec3 vec3, Direction dir) {
-        Direction.Axis axis = dir.getAxis();
-        boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
-
-        double d0 = axis == Direction.Axis.X ? 0.1F : 1;
-        double d1 = this.flat ? 0.0625F : 2;
-        double d2 = axis == Direction.Axis.Z ? 0.1F : 1;
-        System.out.println(vec3);
-        return AABB.ofSize(vec3, d0, d1, d2);
+        tag.putString(TAG_DIR, getPortalDirection().getName());
+        tag.putString(TAG_FACING, getPortalFacing().getName());
     }
 
     @Override
     public void setPos(double x, double y, double z) {
         this.pos = new Vec3(x, y, z);
         this.setPosRaw(x, y, z);
-        if (direction != null) this.recalculateBoundingBox();
+        recalculateBoundingBox();
+    }
+
+    protected final void recalculateBoundingBox() {
+        Direction direction = this.entityData.get(DATA_DIR);
+        Direction facing = this.entityData.get(DATA_FACING);
+            AABB aabb = calculateBoundingBox(this.pos, direction, facing);
+            Vec3 vec3 = aabb.getCenter();
+            this.setPosRaw(vec3.x, vec3.y, vec3.z);
+            this.setBoundingBox(aabb);
+    }
+
+    protected static AABB calculateBoundingBox(Vec3 vec3, Direction dir, Direction facing) {
+        Direction.Axis axis = dir.getAxis();
+        boolean flat = axis.equals(Direction.Axis.Y);
+
+        double d0 = axis.equals(Direction.Axis.X) ? 0.1 : 1;
+        double d1 = flat ? 0.1 : 2;
+        double d2 = axis.equals(Direction.Axis.Z) ? 0.1 : 1;
+
+        if (flat) {
+            Direction.Axis axis2d = facing.getAxis();
+            d0 = axis2d.equals(Direction.Axis.X) ? 2 : 1;
+            d2 = axis2d.equals(Direction.Axis.Z) ? 2 : 1;
+        }
+        return AABB.ofSize(vec3, d0, d1, d2);
     }
 
     public static List<Entity> getEntitiesNearby(Entity entity, double range) {
@@ -232,16 +234,19 @@ public class PortalEntity extends Entity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_COLOR_ID, Color.GREEN.getRGB());
+        builder.define(DATA_DIR, Direction.SOUTH);
+        builder.define(DATA_FACING, Direction.SOUTH);
     }
 
     @Override
     public void tick() {
         super.tick();
-        level().addParticle(ParticleTypes.DRIPPING_OBSIDIAN_TEAR, this.getX(), this.getY() + 1, this.getZ(), 1, 1, 1); //Temp
         if (!this.level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            if (!exists) LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
-            this.exists = true;
+            if (!exists) {
+                LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
+                this.exists = true;
+            }
             if (lifetime > 0) lifetime--;
             if (delay > 0) delay--;
             if (!firstTick && lifetime == 0) {

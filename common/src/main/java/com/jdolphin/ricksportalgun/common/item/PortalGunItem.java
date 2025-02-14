@@ -152,15 +152,13 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     }
 
                     Direction dir = hitResult.getDirection();
+                    Direction facing = player.getDirection();
                     boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
-                    PortalEntity portal = new PortalEntity(level, newLoc, dir);
-                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir);
+                    PortalEntity portal = new PortalEntity(level, newLoc, dir, facing);
+                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir, facing);
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
-
-                    portal.setFlat(flat);
-                    exPortal.setFlat(flat);
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
@@ -179,10 +177,10 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     }
 
                     if (serverlevel != null) {
-                        portal.setYRot(player.getYRot());
-                        exPortal.setYRot(player.getYRot());
-                        //portal.setXRot(0);
-                        //exPortal.setXRot(0);
+                        if (!flat) {
+                            portal.setYRot(player.getYRot());
+                            exPortal.setYRot(player.getYRot());
+                        }
                         serverlevel.addFreshEntity(exPortal);
                         level.addFreshEntity(portal);
 

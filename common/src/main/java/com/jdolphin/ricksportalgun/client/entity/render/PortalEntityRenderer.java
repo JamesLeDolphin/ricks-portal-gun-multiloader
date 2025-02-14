@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,8 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         state.isNew = !portal.exists();
         state.closing = portal.tickCount > 9 * 20;
         state.opening = portal.tickCount < 20;
-        state.flat = portal.isFlat();
+        state.direction = portal.getPortalDirection();
+        state.facing = portal.getPortalFacing();
     }
 
     protected void scale(PortalEntityRenderState state, PoseStack stack) {
@@ -62,12 +64,35 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     @Override
     public void render(@NotNull PortalEntityRenderState state, PoseStack stack, MultiBufferSource source, int pPackedLight) {
         stack.pushPose();
-        System.out.println("Git rendered idot");
         scale(state, stack);
-
+        Direction direction = state.direction;
+        Direction facing = state.facing;
         stack.translate(0, -1, 0);
-        stack.mulPose(Axis.YN.rotationDegrees(state.yRot));
-        stack.mulPose(Axis.XN.rotation(state.flat ? 90 : 0));
+        if (direction != null) {
+            Direction.Axis axis = facing.getAxis();
+
+        float zRot = 0;
+        float yRot = 0;
+        float xRot = 0;
+           if (direction.getAxis().isVertical()) {
+               if (axis.equals(Direction.Axis.Z)) {
+                   zRot = 180;
+                   yRot = 180;
+                   xRot = 90;
+                   stack.translate(0, 1.1, -1);
+               }
+               if (axis.equals(Direction.Axis.X)) {
+                   xRot = 0;
+                   yRot = 270;
+                   zRot = 90;
+                   stack.translate(-1, 1.1, 0);
+               }
+           }
+            stack.mulPose(Axis.XN.rotationDegrees(xRot));
+            stack.mulPose(Axis.ZN.rotationDegrees(zRot));
+            stack.mulPose(Axis.YN.rotationDegrees(direction.getAxis().isVertical() ? yRot : state.yRot));
+        }
+
         VertexConsumer vertexconsumer = source.getBuffer(RenderType.entityTranslucent(PORTAL_TEXTURE));
 
         this.model.renderToBuffer(stack, vertexconsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);
