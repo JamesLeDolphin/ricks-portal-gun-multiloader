@@ -11,5 +11,7 @@ public class PortalEntityRenderState extends EntityRenderState {
     public boolean isNew;
     public Direction direction;
     public Direction facing;
+    public float width;
+
     public PortalEntityRenderState() {}
 }

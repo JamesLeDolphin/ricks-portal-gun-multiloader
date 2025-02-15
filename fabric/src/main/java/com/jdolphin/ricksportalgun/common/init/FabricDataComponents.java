@@ -29,6 +29,7 @@ public class FabricDataComponents {
         PGDataComponents.FUEL = registerComponent("fuel", typeBuilder -> typeBuilder.persistent(Codec.INT));
         PGDataComponents.MAX_FUEL = registerComponent("max_fuel", typeBuilder -> typeBuilder.persistent(Codec.INT));
         PGDataComponents.GUN_DYE = registerComponent("gun_dye", typeBuilder -> typeBuilder.persistent(Codec.INT));
+        PGDataComponents.PORTAL_SIZE = registerComponent("portal_size", typeBuilder -> typeBuilder.persistent(Codec.FLOAT));
         PGDataComponents.LOCK = registerComponent("lock", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
         PGDataComponents.OWNER = registerComponent("owner", typeBuilder -> typeBuilder.persistent(Codec.STRING));
         PGDataComponents.WAYPOINTS = registerComponent("waypoints", typeBuilder -> typeBuilder

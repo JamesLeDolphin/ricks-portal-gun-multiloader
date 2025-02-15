@@ -41,9 +41,10 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         state.opening = portal.tickCount < 20;
         state.direction = portal.getPortalDirection();
         state.facing = portal.getPortalFacing();
+        state.width = portal.getSize();
     }
 
-    protected void scale(PortalEntityRenderState state, PoseStack stack) {
+    protected void openAnimation(PortalEntityRenderState state, PoseStack stack) {
         float f;
         if (state.isNew && state.opening) {
             f = Mth.lerp(state.ageInTicks / 20, 0.0f, 1.0f);
@@ -64,7 +65,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     @Override
     public void render(@NotNull PortalEntityRenderState state, PoseStack stack, MultiBufferSource source, int pPackedLight) {
         stack.pushPose();
-        scale(state, stack);
+        openAnimation(state, stack);
         Direction direction = state.direction;
         Direction facing = state.facing;
         stack.translate(0, -1, 0);
@@ -76,17 +77,21 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         float xRot = 0;
            if (direction.getAxis().isVertical()) {
                if (axis.equals(Direction.Axis.Z)) {
+                   stack.scale(state.width, 1, 1);
                    zRot = 180;
                    yRot = 180;
                    xRot = 90;
                    stack.translate(0, 1.1, -1);
                }
                if (axis.equals(Direction.Axis.X)) {
+                   stack.scale(1, 1,  state.width);
                    xRot = 0;
                    yRot = 270;
                    zRot = 90;
                    stack.translate(-1, 1.1, 0);
                }
+           } else {
+               stack.scale(state.width, 1, state.width);
            }
             stack.mulPose(Axis.XN.rotationDegrees(xRot));
             stack.mulPose(Axis.ZN.rotationDegrees(zRot));

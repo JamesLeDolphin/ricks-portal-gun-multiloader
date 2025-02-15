@@ -38,6 +38,7 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_COLOR_ID = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
+    private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
     public static final String TAG_OPEN = "Open";
@@ -45,6 +46,7 @@ public class PortalEntity extends Entity {
     public static final String TAG_COOLDOWN = "Cooldown";
     public static final String TAG_DIR = "Direction";
     public static final String TAG_FACING = "Facing";
+    public static final String TAG_SIZE = "Size";
 
     private Optional<BlockPos> targetPos;
     private boolean bootleg;
@@ -68,11 +70,12 @@ public class PortalEntity extends Entity {
         super(type, level);
     }
 
-    public PortalEntity(Level pLevel, Vec3 pos, Direction direction, Direction facing) {
+    public PortalEntity(Level pLevel, Vec3 pos, Direction direction, Direction facing, float size) {
         super(PGEntities.PORTAL, pLevel);
         this.setPos(pos);
         setPortalDirection(direction);
         setPortalFacing(facing);
+        setSize(size);
         this.pos = pos;
     }
 
@@ -108,10 +111,17 @@ public class PortalEntity extends Entity {
         return this.entityData.get(DATA_COLOR_ID);
     }
 
+    public float getSize() {
+        return this.entityData.get(DATA_SIZE);
+    }
+
+    public void setSize(float size) {
+        this.entityData.set(DATA_SIZE, size);
+    }
+
     public boolean isBootleg() {
         return bootleg;
     }
-
 
     public void setBootleg(boolean bootleg) {
         this.bootleg = bootleg;
@@ -165,6 +175,7 @@ public class PortalEntity extends Entity {
         this.exists = tag.getBoolean(TAG_NEW);
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
+        setSize(tag.getFloat(TAG_SIZE));
     }
 
     @Override
@@ -178,6 +189,7 @@ public class PortalEntity extends Entity {
         tag.putInt(TAG_COOLDOWN, this.delay);
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
+        tag.putFloat(TAG_SIZE, getSize());
     }
 
     @Override
@@ -196,18 +208,18 @@ public class PortalEntity extends Entity {
             this.setBoundingBox(aabb);
     }
 
-    protected static AABB calculateBoundingBox(Vec3 vec3, Direction dir, Direction facing) {
+    protected AABB calculateBoundingBox(Vec3 vec3, Direction dir, Direction facing) {
         Direction.Axis axis = dir.getAxis();
         boolean flat = axis.equals(Direction.Axis.Y);
 
-        double d0 = axis.equals(Direction.Axis.X) ? 0.1 : 1;
+        double d0 = axis.equals(Direction.Axis.X) ? 0.1 : this.getSize();
         double d1 = flat ? 0.1 : 2;
-        double d2 = axis.equals(Direction.Axis.Z) ? 0.1 : 1;
+        double d2 = axis.equals(Direction.Axis.Z) ? 0.1 : this.getSize();
 
         if (flat) {
             Direction.Axis axis2d = facing.getAxis();
-            d0 = axis2d.equals(Direction.Axis.X) ? 2 : 1;
-            d2 = axis2d.equals(Direction.Axis.Z) ? 2 : 1;
+            d0 = axis2d.equals(Direction.Axis.X) ? 2 : this.getSize();
+            d2 = axis2d.equals(Direction.Axis.Z) ? 2 : this.getSize();
         }
         return AABB.ofSize(vec3, d0, d1, d2);
     }
@@ -236,6 +248,7 @@ public class PortalEntity extends Entity {
         builder.define(DATA_COLOR_ID, Color.GREEN.getRGB());
         builder.define(DATA_DIR, Direction.SOUTH);
         builder.define(DATA_FACING, Direction.SOUTH);
+        builder.define(DATA_SIZE, 1.0f);
     }
 
     @Override

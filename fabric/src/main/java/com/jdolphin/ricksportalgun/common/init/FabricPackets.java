@@ -1,6 +1,8 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.packet.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,6 +18,7 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSettingsPacket.ID, SBSettingsPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBOpenGuiPacket.ID, SBOpenGuiPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(CBOpenGuiPacket.ID, CBOpenGuiPacket.PACKET_CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, (packet, context) -> packet.handle(context.player()));
         ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, (packet, context) -> packet.handle(context.player()));
@@ -25,11 +28,10 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSettingsPacket.ID, (packet, context) -> packet.handle(context.player()));
         ServerPlayNetworking.registerGlobalReceiver(SBOpenGuiPacket.ID, (packet, context) -> packet.handle(context.player()));
         ServerPlayNetworking.registerGlobalReceiver(SBChangePortalGunTypePacket.ID, (packet, context) -> packet.handle(context.player()));
+
     }
 
     public static void registerS2CPackets() {
-        PayloadTypeRegistry.playS2C().register(CBOpenGuiPacket.ID, CBOpenGuiPacket.PACKET_CODEC);
-
         ClientPlayNetworking.registerGlobalReceiver(CBOpenGuiPacket.ID, ((packet, context) -> packet.handle(context.client())));
     }
 }
