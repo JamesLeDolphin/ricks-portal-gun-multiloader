@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,7 @@ public class FabricItems {
 
     public static void register() {
         PGItems.PORTAL_GUN = registerGun("portal_gun");
-        PGItems.GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun");
+        PGItems.GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW);
         PGItems.PRIME_PORTAL_GUN = registerGun("prime_portal_gun");
 
         PGItems.PORTAL_FLUID = registerFluid("portal_fluid");
@@ -47,9 +48,9 @@ public class FabricItems {
                 .component(PGDataComponents.BOOTLEG, false)
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.PORTAL_SIZE, 1.0f)
-                .component(PGDataComponents.MAX_FUEL, 16)
-                .component(PGDataComponents.GUN_DYE, Color.LIGHT_GRAY.getRGB())
-                .component(PGDataComponents.FUEL, 16)
+                .component(PGDataComponents.MAX_FUEL, 64)
+                .component(PGDataComponents.GUN_DYE, DyeColor.WHITE.getTextureDiffuseColor())
+                .component(PGDataComponents.FUEL, 64)
                 .component(PGDataComponents.LOCK, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
                 .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.registry()));

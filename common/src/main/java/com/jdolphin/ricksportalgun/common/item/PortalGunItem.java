@@ -46,11 +46,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public static int getMaxFuel(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.MAX_FUEL, 16);
+        return stack.getOrDefault(PGDataComponents.MAX_FUEL, 64);
     }
 
     public static int getFuel(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.FUEL, 16);
+        return stack.getOrDefault(PGDataComponents.FUEL, 64);
     }
 
     public static void lowerFuel(ItemStack stack, int amount) {

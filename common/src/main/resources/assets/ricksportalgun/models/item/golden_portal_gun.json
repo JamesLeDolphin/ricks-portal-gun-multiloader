@@ -1,7 +1,8 @@
 {
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "ricksportalgun:item/golden_portal_gun"
+		"1": "ricksportalgun:item/golden_portal_gun",
+		"particle": "ricksportalgun:item/golden_portal_gun"
 	},
 	"elements": [
 		{
