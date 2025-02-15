@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.tint;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.color.item.ItemTintSource;
@@ -16,7 +17,7 @@ import java.awt.*;
 public record PortalColourTint(int defaultColor) implements ItemTintSource {
 
     public static MapCodec<PortalColourTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("default", Color.GREEN.getRGB()).forGetter(PortalColourTint::defaultColor)).apply(instance, PortalColourTint::new));
+            instance.group(Codec.INT.optionalFieldOf("default", Color.GREEN.getRGB()).forGetter(PortalColourTint::defaultColor)).apply(instance, PortalColourTint::new));
 
     public PortalColourTint(int defaultColor) {
         this.defaultColor = defaultColor;
