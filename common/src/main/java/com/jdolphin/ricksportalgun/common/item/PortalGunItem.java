@@ -38,8 +38,6 @@ import java.awt.*;
 import java.util.List;
 
 public class PortalGunItem extends Item implements IWaypointStorage {
-    public static final String TAG_ACIDIC = "Bootleg";
-    public static final String TAG_COLOR = "Color";
 
     public PortalGunItem(Properties properties) {
         super(properties);
@@ -122,7 +120,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             newLoc = new Vec3(loc.x(), loc.y(), loc.z());
                         }
                         if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
-                            newLoc = new Vec3(loc.x(), loc.y() - 2, loc.z());
+                            newLoc = new Vec3(loc.x(), loc.y() - 0.2, loc.z());
                         }
 
                         switch (dir) {

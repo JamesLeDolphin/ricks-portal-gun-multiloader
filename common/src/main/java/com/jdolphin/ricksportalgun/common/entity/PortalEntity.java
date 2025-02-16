@@ -47,6 +47,8 @@ public class PortalEntity extends Entity {
     public static final String TAG_DIR = "Direction";
     public static final String TAG_FACING = "Facing";
     public static final String TAG_SIZE = "Size";
+    public static final String TAG_ACIDIC = "Bootleg";
+    public static final String TAG_COLOR = "Color";
 
     private Optional<BlockPos> targetPos;
     private boolean bootleg;
@@ -166,10 +168,10 @@ public class PortalEntity extends Entity {
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.bootleg = tag.getBoolean(PortalGunItem.TAG_ACIDIC);
+        this.bootleg = tag.getBoolean(TAG_ACIDIC);
         this.targetDim = tag.getString(TAG_DIMENSION);
         this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS);
-        this.setColor(tag.getInt(PortalGunItem.TAG_COLOR));
+        this.setColor(tag.getInt(TAG_COLOR));
         this.lifetime = tag.getInt(TAG_OPEN);
         this.delay = tag.getInt(TAG_COOLDOWN);
         this.exists = tag.getBoolean(TAG_NEW);
@@ -180,11 +182,11 @@ public class PortalEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putBoolean(PortalGunItem.TAG_ACIDIC, this.bootleg);
+        tag.putBoolean(TAG_ACIDIC, this.bootleg);
         tag.putBoolean(TAG_NEW, this.exists);
         tag.putString(TAG_DIMENSION, getHopDim());
         tag.put(TAG_BPOS, NbtUtils.writeBlockPos(getHopLoc()));
-        tag.putInt(PortalGunItem.TAG_COLOR, this.getColor());
+        tag.putInt(TAG_COLOR, this.getColor());
         tag.putInt(TAG_OPEN, this.lifetime);
         tag.putInt(TAG_COOLDOWN, this.delay);
         tag.putString(TAG_DIR, getPortalDirection().getName());
@@ -211,15 +213,15 @@ public class PortalEntity extends Entity {
     protected AABB calculateBoundingBox(Vec3 vec3, Direction dir, Direction facing) {
         Direction.Axis axis = dir.getAxis();
         boolean flat = axis.equals(Direction.Axis.Y);
-
+        double height = this.getSize() > 2 ? this.getSize() : 2;
         double d0 = axis.equals(Direction.Axis.X) ? 0.1 : this.getSize();
-        double d1 = flat ? 0.1 : 2;
+        double d1 = flat ? 0.1 : height;
         double d2 = axis.equals(Direction.Axis.Z) ? 0.1 : this.getSize();
 
         if (flat) {
             Direction.Axis axis2d = facing.getAxis();
-            d0 = axis2d.equals(Direction.Axis.X) ? 2 : this.getSize();
-            d2 = axis2d.equals(Direction.Axis.Z) ? 2 : this.getSize();
+            d0 = axis2d.equals(Direction.Axis.X) ? height : this.getSize();
+            d2 = axis2d.equals(Direction.Axis.Z) ? height : this.getSize();
         }
         return AABB.ofSize(vec3, d0, d1, d2);
     }

@@ -86,5 +86,6 @@
   "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
   "item.ricksportalgun.datacard.tooltip": "Stored Waypoints: %s",
   "item.ricksportalgun.data_card": "Data Card",
-  "death.attack.teleport": "%s couldn't handle the interdimensional travel"
+  "death.attack.teleport": "%s couldn't handle the interdimensional travel",
+  "ricksportalgun.button.portal_size": "Change portal size"
 }

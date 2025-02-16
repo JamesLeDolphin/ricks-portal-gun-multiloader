@@ -48,10 +48,10 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.lockButton = this.addRenderableWidget(Button.builder(Component.translatable(lock ? sTrue : sFalse), (button) -> {
             lock = !lock;
             lockButton.setMessage(Component.translatable(lock ? sTrue : sFalse));
-        }).size(64, 20).pos(this.width / 2 + 72, this.height / 2 - 74).build());
+        }).size(64, 20).pos(this.width / 2 + 70, this.height / 2 - 74).build());
 
-        this.portalSize = this.addRenderableWidget(new Slider(this.width / 2, this.height / 2 - 36, 36, 20,
-                Component.empty(), size, 1.0f, 2.0f, true));
+        this.portalSize = this.addRenderableWidget(new Slider(this.width / 2 + 92, this.height / 2 - 28, 42, 18,
+                Component.empty(), size, 1.0f, 3.0f, true));
 
         this.playerInput = this.addWidget(new EditBox(this.font, this.width / 2 + 54, this.height / 2 - 50, 80, 16,
                 Component.translatable("chat.editBox")));
@@ -65,6 +65,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("ricksportalgun.button.settings"), this.width / 2, this.height / 10);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4);
         GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, pPartialTick, lockButton, playerInput, portalSize);
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {

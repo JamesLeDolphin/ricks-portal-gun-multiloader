@@ -38,7 +38,6 @@ public record SBSettingsPacket(boolean lock, String name, float size) implements
         MinecraftServer server = player.server;
 
         ItemStack stack = player.getMainHandItem();
-        System.out.println("Packet");
         stack.set(PGDataComponents.LOCK, lock);
         stack.set(PGDataComponents.PORTAL_SIZE, size);
         if (!name.isEmpty()) {

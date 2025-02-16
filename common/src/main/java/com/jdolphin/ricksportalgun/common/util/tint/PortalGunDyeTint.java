@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ public record PortalGunDyeTint(int defaultColor) implements ItemTintSource {
 
     @Override
     public int calculate(ItemStack stack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
-        return stack.getOrDefault(PGDataComponents.GUN_DYE, defaultColor);
+        return ARGB.opaque(stack.getOrDefault(PGDataComponents.GUN_DYE, defaultColor));
     }
 
     @Override
