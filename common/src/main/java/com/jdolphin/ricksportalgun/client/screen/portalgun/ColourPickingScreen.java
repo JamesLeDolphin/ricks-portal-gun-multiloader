@@ -4,7 +4,6 @@ import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.Slider;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;

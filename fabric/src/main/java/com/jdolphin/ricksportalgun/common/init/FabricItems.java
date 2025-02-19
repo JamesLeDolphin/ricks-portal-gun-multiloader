@@ -31,6 +31,7 @@ public class FabricItems {
         PGItems.DATA_CARD = registerItem("data_card", DataCardItem::new, new Item.Properties());
 
         PGItems.PORTAL_GUN_WORKBENCH = registerItem("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties), new Item.Properties());
+        PGItems.PORTAL_DISPENSER = registerItem("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties), new Item.Properties());
     }
 
     private static Item registerFluid(String name) {

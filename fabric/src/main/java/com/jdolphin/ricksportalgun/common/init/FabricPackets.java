@@ -1,8 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.packet.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

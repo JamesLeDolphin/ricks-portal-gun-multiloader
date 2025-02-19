@@ -14,4 +14,5 @@ public class PGItems {
     public static Item DATA_CARD;
 
     public static Item PORTAL_GUN_WORKBENCH;
+    public static Item PORTAL_DISPENSER;
 }

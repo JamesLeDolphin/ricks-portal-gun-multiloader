@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.SBOpenGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.Helper;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
@@ -22,7 +24,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
-
+        MenuScreens.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 
         ItemTintSources.ID_MAPPER.put(Helper.createLocation("gun_dye"), PortalGunDyeTint.CODEC);

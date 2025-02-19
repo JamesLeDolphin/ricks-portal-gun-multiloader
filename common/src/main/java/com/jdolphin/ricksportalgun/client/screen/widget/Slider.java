@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.client.screen.widget;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 

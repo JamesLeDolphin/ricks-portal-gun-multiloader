@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
-import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.Helper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -18,12 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.chunk.ChunkAccess;
 
 public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);

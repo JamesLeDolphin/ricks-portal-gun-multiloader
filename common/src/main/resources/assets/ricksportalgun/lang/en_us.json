@@ -87,5 +87,6 @@
   "item.ricksportalgun.datacard.tooltip": "Stored Waypoints: %s",
   "item.ricksportalgun.data_card": "Data Card",
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
-  "ricksportalgun.button.portal_size": "Change portal size"
+  "ricksportalgun.button.portal_size": "Change portal size",
+  "menu.ricksportalgun.portal_dispenser": "Portal Dispenser"
 }

@@ -3,11 +3,9 @@ package com.jdolphin.ricksportalgun.common.entity;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -26,12 +24,16 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 public class PortalEntity extends Entity {
@@ -235,6 +237,7 @@ public class PortalEntity extends Entity {
             entities.removeIf(e -> e instanceof EnderDragon);
             entities.removeIf(e -> e instanceof WitherBoss);
             entities.removeIf(e -> e instanceof Warden);
+//            entities.removeIf(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
             entities.removeIf(e -> {
                 if (e instanceof ServerPlayer player) {
                     return player.isOnPortalCooldown() || player.isChangingDimension() || !player.canUsePortal(false);
