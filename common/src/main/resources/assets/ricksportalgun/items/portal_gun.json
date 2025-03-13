@@ -4,7 +4,7 @@
     "model": "ricksportalgun:item/portal_gun",
     "tints": [
       {
-        "type": "ricksportalgun:gun_dye",
+        "type": "ricksportalgun:primary_dye",
         "default": 15989755
       },
       {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class PortalGunTypeRegistry {
     public static final ArrayList<PortalGunType> PORTAL_GUN_TYPES = Lists.newArrayList();
+    public static final ArrayList<PortalGunType> CLIENT_TYPES = Lists.newArrayList();
 
     public static PortalGunType getPortalGunType(ItemStack stack) {
         return stack.getOrDefault(PGDataComponents.PORTAL_GUN_TYPE, PORTAL_GUN_TYPES.getFirst());

@@ -2,11 +2,19 @@ package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.packet.CBSyncDimensionListPacket;
+import com.jdolphin.ricksportalgun.common.packet.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTabs;
+
+import java.util.List;
 
 public class RicksPortalGunFabricMain implements ModInitializer {
 
@@ -20,7 +28,20 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         FabricDataComponents.register();
         FabricMenuTypes.register();
         FabricPackets.registerC2SPackets();
+
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            List<String> strings = LevelHelper.getDimensionsAsString(server.getAllLevels());
+            LevelHelper.addDimensions(strings);
+        });
+
+        ServerPlayConnectionEvents.JOIN.register((listener, sender, server) -> {
+            CBSyncDimensionListPacket dimPacket = new CBSyncDimensionListPacket(LevelHelper.getDimensionsAsString(server.getAllLevels()));
+            CBSyncGunTypesPacket typesPacket = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
+            PGHelper.sendPacketToClient(listener.player, dimPacket);
+            PGHelper.sendPacketToClient(listener.player, typesPacket);
+        });
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
             content.accept(PGItems.PORTAL_GUN);

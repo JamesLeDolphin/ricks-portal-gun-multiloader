@@ -31,6 +31,8 @@ public interface IPlatformHelper {
 
     <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet);
 
+    void openScreen(ServerPlayer player, int id);
+
     /**
      * Gets the name of the environment type as a string.
      *

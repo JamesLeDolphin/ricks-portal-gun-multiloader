@@ -1,10 +1,10 @@
 package com.jdolphin.ricksportalgun.common;
 
-import com.jdolphin.ricksportalgun.Constants;
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.resources.ResourceKey;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(Constants.MODID)
+@Mod(PGConstants.MODID)
 public class RicksPortalGunForgeMain {
 
     public RicksPortalGunForgeMain(FMLJavaModLoadingContext modLoadingContext) {
@@ -31,7 +31,7 @@ public class RicksPortalGunForgeMain {
         ForgeDataComponents.COMPONENTS.register(bus);
         ForgeItems.ITEMS.register(bus);
         ForgeEntities.ENTITIES.register(bus);
-        ItemTintSources.ID_MAPPER.put(Helper.createLocation("portal_color"), PortalColourTint.CODEC);
+        ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("portal_color"), PortalColourTint.CODEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

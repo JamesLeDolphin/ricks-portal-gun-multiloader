@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.data;
 
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 
@@ -8,6 +8,6 @@ public class FabricPortalGunTypeReloadListener extends PortalGunTypeReloadListen
 
     @Override
     public ResourceLocation getFabricId() {
-        return Helper.createLocation("portal_guns");
+        return PGHelper.createLocation("portal_guns");
     }
 }

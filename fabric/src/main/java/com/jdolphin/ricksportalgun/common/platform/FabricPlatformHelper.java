@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.packets.CBOpenGuiPacketFabric;
 import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -32,6 +33,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
         ServerPlayNetworking.send(player, packet);
+    }
+
+    @Override
+    public void openScreen(ServerPlayer player, int id) {
+        sendPacketToClient(player, new CBOpenGuiPacketFabric(id));
     }
 
 }

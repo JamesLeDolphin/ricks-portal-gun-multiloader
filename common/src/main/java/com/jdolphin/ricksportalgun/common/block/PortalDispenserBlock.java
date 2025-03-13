@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,11 +25,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PortalDispenserBlock extends DirectionalBlock implements EntityBlock {
-    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;;
+    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
+
     public PortalDispenserBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(TRIGGERED, false));
@@ -51,14 +55,34 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        System.out.println("Dispensed");
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof PortalDispenserBlockEntity blockEntity) {
+            blockEntity.onActivation(level, pos);
+        }
     }
 
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof PortalDispenserBlockEntity) {
+                if (level instanceof ServerLevel) {
+                    Containers.dropContents(level, pos, (PortalDispenserBlockEntity) blockEntity);
+                }
+
+                super.onRemove(state, level, pos, newState, movedByPiston);
+                level.updateNeighbourForOutputSignal(pos, this);
+            } else {
+                super.onRemove(state, level, pos, newState, movedByPiston);
+            }
+
+        }
+    }
+
+        protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
         boolean bl = level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.above());
         boolean bl2 = state.getValue(TRIGGERED);
         if (bl && !bl2) {
@@ -74,15 +98,11 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
        BlockEntity entity = level.getBlockEntity(pos);
        if (entity instanceof PortalDispenserBlockEntity block) {
+
             player.openMenu(block);
             return InteractionResult.SUCCESS;
        }
        return InteractionResult.PASS;
-    }
-
-    protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((id, inv, player) -> new PortalDispenserMenu(id, inv, ((PortalDispenserBlockEntity)level.getBlockEntity(pos))),
-                Component.translatable("menu.ricksportalgun.portal_dispenser"));
     }
 
     @Override

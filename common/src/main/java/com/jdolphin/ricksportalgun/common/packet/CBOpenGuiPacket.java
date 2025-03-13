@@ -1,35 +1,33 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
-import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.util.List;
+public class CBOpenGuiPacket implements CustomPacketPayload {
+    public int id;
+    public static final Type<CBOpenCoordGuiPacket> ID = new Type<>(PGHelper.createLocation("open_menu"));
+    public static final StreamCodec<ByteBuf, CBOpenGuiPacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT,
+            CBOpenGuiPacket::getId, CBOpenGuiPacket::new);
 
-public record CBOpenGuiPacket(List<String> strings) implements CustomPacketPayload {
-    public static final Type<CBOpenGuiPacket> ID = new Type<>(Helper.createLocation("open_client_menu"));
-    public static final StreamCodec<ByteBuf, CBOpenGuiPacket> PACKET_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
-            CBOpenGuiPacket::strings, CBOpenGuiPacket::new);
-
-    public CBOpenGuiPacket(List<String> strings) {
-        this.strings = strings;
+    public CBOpenGuiPacket(int screenId) {
+        id = screenId;
     }
 
-    public CBOpenGuiPacket(FriendlyByteBuf buf) {
-        this(buf.readList(ByteBufCodecs.STRING_UTF8));
+    public int getId() {
+        return id;
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeCollection(this.strings, ByteBufCodecs.STRING_UTF8);
-    }
-
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void handle(Minecraft client) {
-        client.setScreen(new CoordTravelScreen(strings));
+        switch (id) {
+            case 0: client.setScreen(new SubetherBarrierScreen());
+        }
     }
 
     @Override

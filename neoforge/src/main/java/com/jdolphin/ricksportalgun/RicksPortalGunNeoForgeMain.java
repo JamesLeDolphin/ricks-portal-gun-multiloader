@@ -4,7 +4,7 @@ package com.jdolphin.ricksportalgun;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
-@Mod(Constants.MODID)
+@Mod(PGConstants.MODID)
 public class RicksPortalGunNeoForgeMain {
 
     public RicksPortalGunNeoForgeMain(IEventBus eventBus) {
@@ -14,7 +14,7 @@ public class RicksPortalGunNeoForgeMain {
         // project.
 
         // Use NeoForge to bootstrap the Common mod.
-        Constants.LOGGER.info("Hello NeoForge world!");
+        PGConstants.LOGGER.info("Hello NeoForge world!");
         RicksPortalGunCommonMain.init();
 
     }

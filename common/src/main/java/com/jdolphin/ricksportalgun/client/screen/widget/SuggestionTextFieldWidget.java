@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.widget;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.IScreenBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -24,8 +25,8 @@ public class SuggestionTextFieldWidget extends EditBox {
     private final List<String> suggestions;
     private final SuggestionList suggestionListWidget;
 
-    public SuggestionTextFieldWidget(AbstractBaseScreen screen, int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
-        super(screen.getFont(), x, y, width, height, text);
+    public SuggestionTextFieldWidget(IScreenBase screen, int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
+        super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
         this.suggestionListWidget = screen.addRenderableWidget(new SuggestionList(Minecraft.getInstance(),
                 width, height * 3, x, y + height, 14, this));
@@ -81,7 +82,7 @@ public class SuggestionTextFieldWidget extends EditBox {
         } else {
             int i = 0;
 
-            for(Matcher matcher = Pattern.compile("(\\s+)").matcher(input); matcher.find(); i = matcher.end()) {}
+            for (Matcher matcher = Pattern.compile("(\\s+)").matcher(input); matcher.find(); i = matcher.end()) {}
 
             return i;
         }

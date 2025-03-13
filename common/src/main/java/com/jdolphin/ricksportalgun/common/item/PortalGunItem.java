@@ -100,7 +100,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     !stack.getOrDefault(PGDataComponents.LOCK, false)) {
 
                 if (player.getOffhandItem().getItem() instanceof DyeItem dye) {
-                    stack.set(PGDataComponents.GUN_DYE, dye.getDyeColor().getTextureDiffuseColor());
+                    stack.set(PGDataComponents.PRIMARY_DYE, dye.getDyeColor().getTextureDiffuseColor());
                     return InteractionResult.SUCCESS;
                 }
 

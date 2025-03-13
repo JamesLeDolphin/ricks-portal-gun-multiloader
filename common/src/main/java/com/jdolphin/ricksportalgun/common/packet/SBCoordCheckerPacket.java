@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
-    public static final Type<SBCoordCheckerPacket> ID = new Type<>(Helper.createLocation("coord_check"));
+    public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.createLocation("coord_check"));
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeUtf(this.dim);
@@ -46,7 +46,7 @@ public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
         if (level == null) level = player.serverLevel();
 
         ItemStack stack = player.getMainHandItem();
-        PortalGunItem item = Helper.getPortalGun(stack);
+        PortalGunItem item = PGHelper.getPortalGun(stack);
 
         item.setHopLocation(stack, level.dimension().location(), bPos);
         player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));

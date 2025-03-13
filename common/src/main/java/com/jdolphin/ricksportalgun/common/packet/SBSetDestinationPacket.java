@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBSetDestinationPacket(BlockPos pos, String dim) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBSetDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDestinationPacket::pos,
             ByteBufCodecs.STRING_UTF8, SBSetDestinationPacket::dim, SBSetDestinationPacket::new);
-    public static final Type<SBSetDestinationPacket> ID = new Type<>(Helper.createLocation("destination"));
+    public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.createLocation("destination"));
 
     public SBSetDestinationPacket(BlockPos pos, String dim) {
         this.pos = pos;
@@ -35,7 +35,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements Custom
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();
-        PortalGunItem item = Helper.getPortalGun(stack);
+        PortalGunItem item = PGHelper.getPortalGun(stack);
         if (/*!Config.getInstance().getBlacklistedDimensions().contains(dim) TODO: Figure out configs*/ true) {
             item.setHopLocation(stack, ResourceLocation.parse(dim), pos);
         } else player.sendSystemMessage(Component.translatable("notice.ricksportalgun.dimension_disabled").withStyle(ChatFormatting.RED), false);

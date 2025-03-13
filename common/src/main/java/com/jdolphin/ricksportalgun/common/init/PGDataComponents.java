@@ -20,6 +20,7 @@ public class PGDataComponents {
     public static DataComponentType<String> OWNER;
     public static DataComponentType<List<Waypoint>> WAYPOINTS;
     public static DataComponentType<PortalGunType> PORTAL_GUN_TYPE;
-    public static DataComponentType<Integer> GUN_DYE;
+    public static DataComponentType<Integer> PRIMARY_DYE;
+    public static DataComponentType<Integer> SECONDARY_DYE;
     public static DataComponentType<Float> PORTAL_SIZE;
 }

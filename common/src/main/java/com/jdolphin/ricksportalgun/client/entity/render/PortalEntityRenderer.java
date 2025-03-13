@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.client.entity.render;
 import com.jdolphin.ricksportalgun.client.entity.PortalEntityRenderState;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEntityRenderState> {
-    public static final ResourceLocation PORTAL_TEXTURE = Helper.createLocation("textures/entity/portal.png");
+    public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
     public PortalEntityModel model;
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);

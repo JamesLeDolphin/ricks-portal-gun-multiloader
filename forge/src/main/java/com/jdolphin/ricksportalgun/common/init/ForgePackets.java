@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
 import com.jdolphin.ricksportalgun.common.packet.*;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.ChannelBuilder;
@@ -13,7 +13,7 @@ import net.minecraftforge.network.SimpleChannel;
 public class ForgePackets {
 
     static int index = 0;
-    public static final SimpleChannel INSTANCE = ChannelBuilder.named(Helper.createLocation("main")).simpleChannel();
+    public static final SimpleChannel INSTANCE = ChannelBuilder.named(PGHelper.createLocation("main")).simpleChannel();
 
     public static void init() {
         INSTANCE.messageBuilder(SBSettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
@@ -46,16 +46,16 @@ public class ForgePackets {
                 .decoder(SBManageWaypointsPacket::new)
                 .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
-        INSTANCE.messageBuilder(SBOpenGuiPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBOpenGuiPacket::encode)
-                .decoder(SBOpenGuiPacket::new)
+        INSTANCE.messageBuilder(SBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SBOpenCoordGuiPacket::encode)
+                .decoder(SBOpenCoordGuiPacket::new)
                 .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
                 .add();
-        INSTANCE.messageBuilder(CBOpenGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CBOpenGuiPacket::encode)
-                .decoder(CBOpenGuiPacket::new)
+        INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CBOpenCoordGuiPacket::encode)
+                .decoder(CBOpenCoordGuiPacket::new)
                 .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new CoordTravelScreen(packet.strings()));
+                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new CoordTravelScreen(packet.getSuggestions()));
                 }).add();
         INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBChangePortalGunTypePacket::encode)

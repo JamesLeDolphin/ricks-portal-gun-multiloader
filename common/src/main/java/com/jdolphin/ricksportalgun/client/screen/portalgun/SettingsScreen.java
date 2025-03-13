@@ -1,11 +1,15 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.Slider;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
+import com.jdolphin.ricksportalgun.common.packet.SBChangePortalGunTypePacket;
 import com.jdolphin.ricksportalgun.common.packet.SBSettingsPacket;
+import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -36,7 +40,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.settings.done"), (button) -> {
                     SBSettingsPacket packet = new SBSettingsPacket(lock, playerInput.getValue(), (float) this.portalSize.getValue());
-                    Helper.sendPacketToServer(packet);
+                    PGHelper.sendPacketToServer(packet);
                     this.onClose();
 
         }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
@@ -55,6 +59,13 @@ public class SettingsScreen extends AbstractBaseScreen {
 
         this.playerInput = this.addWidget(new EditBox(this.font, this.width / 2 + 54, this.height / 2 - 50, 80, 16,
                 Component.translatable("chat.editBox")));
+
+        this.addRenderableWidget(Button.builder(Component.literal("Types"), button -> {
+            PortalGunType type = PortalGunTypeRegistry.PORTAL_GUN_TYPES.get(PGConstants.RANDOM.nextInt(PortalGunTypeRegistry.PORTAL_GUN_TYPES.size()));
+            System.out.println(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
+            SBChangePortalGunTypePacket packet = new SBChangePortalGunTypePacket(type);
+            PGHelper.sendPacketToServer(packet);
+        }).size(20, 20).pos(this.width / 2 + 70, this.height / 2).build());
 
         this.playerInput.setBordered(true);
         this.playerInput.setMaxLength(256);

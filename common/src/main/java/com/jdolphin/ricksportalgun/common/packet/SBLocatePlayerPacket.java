@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBLocatePlayerPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SBLocatePlayerPacket::name, SBLocatePlayerPacket::new);
-    public static final Type<SBLocatePlayerPacket> ID = new Type<>(Helper.createLocation("locate"));
+    public static final Type<SBLocatePlayerPacket> ID = new Type<>(PGHelper.createLocation("locate"));
 
     public SBLocatePlayerPacket(String name) {
         this.name = name;
@@ -47,7 +47,7 @@ public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
         ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
         if (targetPlayer != null) {
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-            PortalGunItem item = Helper.getPortalGun(stack);
+            PortalGunItem item = PGHelper.getPortalGun(stack);
             item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition());
             player.sendSystemMessage(Component.literal("Coordinates set!").withStyle(ChatFormatting.GREEN), false);
 

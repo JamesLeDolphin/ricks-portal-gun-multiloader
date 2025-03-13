@@ -6,7 +6,7 @@ import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -45,7 +45,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
             ItemStack itemStack = player.getMainHandItem();
             if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
                 SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDim());
-                Helper.sendPacketToServer(packet);
+                PGHelper.sendPacketToServer(packet);
                 this.onClose();
             }
         }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
@@ -54,7 +54,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
             ItemStack itemStack = player.getMainHandItem();
             if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
                 SBManageWaypointsPacket packet = new SBManageWaypointsPacket(wp.getWaypointString(), true);
-                Helper.sendPacketToServer(packet);
+                PGHelper.sendPacketToServer(packet);
                 minecraft.setScreen(new WaypointScreen());
                 player.displayClientMessage(Component.translatable("notice.ricksportalgun.waypoint.deleted", wp.getName()).withStyle(ChatFormatting.GREEN), false);
             }

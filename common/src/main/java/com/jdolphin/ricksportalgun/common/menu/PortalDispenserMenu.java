@@ -1,37 +1,58 @@
 package com.jdolphin.ricksportalgun.common.menu;
 
-import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
+import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class PortalDispenserMenu extends AbstractContainerMenu {
     private final Container dispenser;
+    private final ContainerData data;
 
     public PortalDispenserMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new SimpleContainer(1));
+        this(containerId, playerInventory, new SimpleContainer(1), new SimpleContainerData(3));
     }
 
-    public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container) {
+    public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container, ContainerData data) {
         super(PGMenuTypes.PORTAL_DISPENSER, containerId);
         checkContainerSize(container, 1);
+        checkContainerDataCount(data, 3);
+        this.data = data;
         this.dispenser = container;
         container.startOpen(playerInventory.player);
-        this.addSlot(new Slot(container, 0, 26, 52));
+        this.addSlot(new Slot(container, 0, 26, 52) {
+
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.is(PGItems.PORTAL_FLUID);
+            }
+        });
+        this.addDataSlots(data);
         this.addStandardInventorySlots(playerInventory, 8, 84);
+    }
+
+    public int getFuel() {
+        return this.data.get(0);
+    }
+
+    public int getMaxFuel() {
+        return this.data.get(1);
+    }
+
+    public int getColor() {
+        return this.data.get(2);
     }
 
     public boolean stillValid(Player player) {
         return this.dispenser.stillValid(player);
-    }
-
-    public PortalDispenserBlockEntity getDispenser() {
-        return (PortalDispenserBlockEntity) this.dispenser;
     }
 
     @Override

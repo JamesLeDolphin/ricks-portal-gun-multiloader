@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBSettingsPacket(boolean lock, String name, float size) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSettingsPacket::lock,
             ByteBufCodecs.STRING_UTF8, SBSettingsPacket::name, ByteBufCodecs.FLOAT, SBSettingsPacket::size, SBSettingsPacket::new);
-    public static final Type<SBSettingsPacket> ID = new Type<>(Helper.createLocation("settings"));
+    public static final Type<SBSettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
 
     public SBSettingsPacket(boolean lock, String name, float size) {
         this.lock = lock;

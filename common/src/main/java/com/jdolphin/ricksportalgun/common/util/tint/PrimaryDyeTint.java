@@ -14,18 +14,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-public record PortalGunDyeTint(int defaultColor) implements ItemTintSource {
+public record PrimaryDyeTint(int defaultColor) implements ItemTintSource {
 
-    public static MapCodec<PortalGunDyeTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(Codec.INT.optionalFieldOf("default", Color.WHITE.getRGB()).forGetter(PortalGunDyeTint::defaultColor)).apply(instance, PortalGunDyeTint::new));
+    public static MapCodec<PrimaryDyeTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
+            instance.group(Codec.INT.optionalFieldOf("default", Color.WHITE.getRGB()).forGetter(PrimaryDyeTint::defaultColor)).apply(instance, PrimaryDyeTint::new));
 
-    public PortalGunDyeTint(int defaultColor) {
+    public PrimaryDyeTint(int defaultColor) {
         this.defaultColor = defaultColor;
     }
 
     @Override
     public int calculate(ItemStack stack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
-        return ARGB.opaque(stack.getOrDefault(PGDataComponents.GUN_DYE, defaultColor));
+        return ARGB.opaque(stack.getOrDefault(PGDataComponents.PRIMARY_DYE, defaultColor));
     }
 
     @Override

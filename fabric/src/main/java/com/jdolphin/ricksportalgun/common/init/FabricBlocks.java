@@ -2,7 +2,8 @@ package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.block.GunWorkbenchBlock;
 import com.jdolphin.ricksportalgun.common.block.PortalDispenserBlock;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.block.SubetherBarrierBlock;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,9 @@ public class FabricBlocks {
 
         PGBlocks.PORTAL_DISPENSER = registerBlock("portal_dispenser", PortalDispenserBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.COLOR_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
+
+        PGBlocks.SUBETHER_BARRIER = registerBlock("subether_barrier", SubetherBarrierBlock::new, BlockBehaviour.Properties.of()
+                .mapColor(MapColor.COLOR_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
     }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
@@ -28,7 +32,7 @@ public class FabricBlocks {
     }
 
     private static ResourceKey<Block> keyOf(String id) {
-        return ResourceKey.create(Registries.BLOCK, Helper.createLocation(id));
+        return ResourceKey.create(Registries.BLOCK, PGHelper.createLocation(id));
     }
 
 }

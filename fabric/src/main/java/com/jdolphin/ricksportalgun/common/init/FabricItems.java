@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -50,7 +50,7 @@ public class FabricItems {
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.PORTAL_SIZE, 1.0f)
                 .component(PGDataComponents.MAX_FUEL, 64)
-                .component(PGDataComponents.GUN_DYE, DyeColor.WHITE.getTextureDiffuseColor())
+                .component(PGDataComponents.PRIMARY_DYE, DyeColor.WHITE.getTextureDiffuseColor())
                 .component(PGDataComponents.FUEL, 64)
                 .component(PGDataComponents.LOCK, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
@@ -58,7 +58,7 @@ public class FabricItems {
     }
 
     private static ResourceKey<Item> keyOf(String id) {
-        return ResourceKey.create(Registries.ITEM, Helper.createLocation(id));
+        return ResourceKey.create(Registries.ITEM, PGHelper.createLocation(id));
     }
 
     private static Item registerGun(String name) {

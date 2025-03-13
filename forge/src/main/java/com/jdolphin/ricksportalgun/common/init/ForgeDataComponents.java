@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.Constants;
-import com.jdolphin.ricksportalgun.common.component.WaypointComponent;
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.mojang.serialization.Codec;
@@ -18,7 +17,7 @@ import java.util.function.UnaryOperator;
 
 public class ForgeDataComponents {
 
-    public static final DeferredRegister<DataComponentType<?>> COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, Constants.MODID);
+    public static final DeferredRegister<DataComponentType<?>> COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, PGConstants.MODID);
 
     public static final RegistryObject<DataComponentType<BlockPos>> PORTAL_POS = register("portal_pos", builder -> builder.persistent(BlockPos.CODEC));
     public static final RegistryObject<DataComponentType<ResourceLocation>> PORTAL_DIM = register("portal_dim", typeBuilder -> typeBuilder.persistent(ResourceLocation.CODEC));

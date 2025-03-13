@@ -1,13 +1,13 @@
 package com.jdolphin.ricksportalgun.client;
 
-import com.jdolphin.ricksportalgun.Constants;
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.init.ForgeEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.packet.SBOpenGuiPacket;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.packet.SBOpenCoordGuiPacket;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 
 public class ForgeClientMain {
 
-    @Mod.EventBusSubscriber(modid = Constants.MODID, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
 
         @SubscribeEvent
@@ -31,14 +31,14 @@ public class ForgeClientMain {
                 ItemStack gun = player.getMainHandItem();
 
                 if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenGuiPacket packet = new SBOpenGuiPacket(player.getStringUUID());
-                    Helper.sendPacketToServer(packet);
+                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket(player.getStringUUID());
+                    PGHelper.sendPacketToServer(packet);
                 }
             }
         }
     }
 
-    @Mod.EventBusSubscriber(modid = Constants.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModBusEvents {
 
         @SubscribeEvent

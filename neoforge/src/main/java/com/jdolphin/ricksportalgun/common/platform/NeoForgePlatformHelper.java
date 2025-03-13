@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.packet.CBOpenGuiPacket;
 import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,5 +32,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
 
+    }
+
+    @Override
+    public void openScreen(ServerPlayer player, int id) {
+        sendPacketToClient(player, new CBOpenGuiPacket(id));
     }
 }

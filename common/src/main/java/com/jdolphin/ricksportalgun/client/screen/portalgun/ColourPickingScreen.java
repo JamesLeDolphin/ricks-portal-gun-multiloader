@@ -7,7 +7,7 @@ import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -45,7 +45,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.colour.select"), (button) -> {
             if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                 SBColourPacket packet = new SBColourPacket(getColor());
-                Helper.sendPacketToServer(packet);
+                PGHelper.sendPacketToServer(packet);
                 this.onClose();
             }
         }).size(128, 20).pos(this.width / 2 - 136, this.height / 2 + 32).build());
@@ -106,7 +106,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                 if (this.getFocused() instanceof Button)
                     return super.keyPressed(pKeyCode, pScanCode, pModifiers);
                 SBColourPacket packet = new SBColourPacket(getColor());
-                Helper.sendPacketToServer(packet);
+                PGHelper.sendPacketToServer(packet);
                 break;
         }
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);

@@ -52,7 +52,7 @@ public class PortalEntity extends Entity {
     public static final String TAG_ACIDIC = "Bootleg";
     public static final String TAG_COLOR = "Color";
 
-    private Optional<BlockPos> targetPos;
+    private BlockPos targetPos;
     private boolean bootleg;
     private int maxLifeTime;
     private boolean exists;
@@ -157,11 +157,11 @@ public class PortalEntity extends Entity {
 
     public void setHopLocation(ResourceLocation dimension, BlockPos pos) {
         this.targetDim = dimension.toString();
-        this.targetPos = Optional.of(pos);
+        this.targetPos = pos;
     }
 
     public BlockPos getHopLoc() {
-        return this.targetPos.orElse(BlockPos.ZERO);
+        return this.targetPos == null ? BlockPos.ZERO : targetPos;
     }
 
     public String getHopDim() {
@@ -172,7 +172,7 @@ public class PortalEntity extends Entity {
     protected void readAdditionalSaveData(CompoundTag tag) {
         this.bootleg = tag.getBoolean(TAG_ACIDIC);
         this.targetDim = tag.getString(TAG_DIMENSION);
-        this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS);
+        this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS).orElse(BlockPos.ZERO);
         this.setColor(tag.getInt(TAG_COLOR));
         this.lifetime = tag.getInt(TAG_OPEN);
         this.delay = tag.getInt(TAG_COOLDOWN);

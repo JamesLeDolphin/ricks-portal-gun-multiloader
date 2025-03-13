@@ -5,7 +5,7 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -71,7 +71,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
             if (waypointName.getValue().isEmpty()) return;
             Waypoint waypoint = new Waypoint(pos, LevelHelper.getPlayerDimensionLocation(player).toString(), waypointName.getValue());
             SBManageWaypointsPacket packet = new SBManageWaypointsPacket(waypoint.getWaypointString(), false);
-            Helper.sendPacketToServer(packet);
+            PGHelper.sendPacketToServer(packet);
             this.minecraft.setScreen(new WaypointScreen());
         }
     }

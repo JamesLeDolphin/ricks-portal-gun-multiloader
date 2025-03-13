@@ -1,5 +1,7 @@
 {
-  "name": "Square Pordal Gum",
-  "id": "ricksportalgun:square",
-  "model": "test:test_portal_gun"
+  "name": {
+    "translate": "item.ricksportalgun.square_portal_gun"
+  },
+  "id": "ricksportalgun:square_portal_gun",
+  "model": "ricksportalgun:square_portal_gun"
 }

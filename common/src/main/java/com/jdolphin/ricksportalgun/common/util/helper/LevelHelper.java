@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
 
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +25,33 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import java.util.*;
 
 public class LevelHelper {
+    public static List<String> DIMENSIONS = new ArrayList<>();
+    public static List<String> CLIENT_DIMENSIONS = new ArrayList<>();
+
+    /**Adds a dimension to the list, does not register a new one**/
+    public static void addDimension(String dim) {
+        if (!DIMENSIONS.contains(dim)) DIMENSIONS.add(dim);
+    }
+
+    public static void addDimensions(List<String> dims) {
+        for (String s : dims) {
+            addDimension(s);
+        }
+    }
+
+    public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels, List<String> list) {
+        levels.forEach(world -> {
+            ResourceLocation worldKey = world.dimension().location();
+            String s = worldKey.toString();
+            if (!s.isEmpty() && !list.contains(s)) list.add(s);
+        });
+        return list;
+    }
+
+    public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels) {
+        return getDimensionsAsString(levels, new ArrayList<>());
+    }
+
 
     public static ResourceKey<Level> getWorldKey(ResourceLocation dimension) {
         return ResourceKey.create(Registries.DIMENSION, dimension);
@@ -47,13 +75,12 @@ public class LevelHelper {
     }
 
     public static ServerLevel getRandomServerLevel(MinecraftServer server) {
-        Random random = new Random();
         Iterable<ServerLevel> worlds = server.getAllLevels();
         List<ServerLevel> worldList = new ArrayList<>();
         worlds.forEach(world -> {
                 if (world != null) worldList.add(world);
         });
-        return worldList.get(random.nextInt(worldList.size()));
+        return worldList.get(PGConstants.RANDOM.nextInt(worldList.size()));
     }
 
     public static void randomTP(ServerPlayer player, int radius) {

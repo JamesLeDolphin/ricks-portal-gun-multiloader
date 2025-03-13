@@ -22,10 +22,6 @@
             "com.jdolphin.ricksportalgun.client.RicksPortalGunFabricClient"
         ]
     },
-    "mixins": [
-        "ricksportalgun.mixins.json",
-        "ricksportalgun.fabric.mixins.json"
-    ],
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",

@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.Constants;
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import net.minecraft.core.BlockPos;
@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.List;
 
 public class ForgeItems {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, PGConstants.MODID);
 
     public static final RegistryObject<Item> PORTAL_GUN = registerGun("portal_gun");
     public static final RegistryObject<Item> GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW);

@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBManageWaypointsPacket(String waypoint, boolean remove) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBManageWaypointsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBManageWaypointsPacket::waypoint,
             ByteBufCodecs.BOOL, SBManageWaypointsPacket::remove, SBManageWaypointsPacket::new);
-    public static final Type<SBManageWaypointsPacket> ID = new Type<>(Helper.createLocation("manage_waypoint"));
+    public static final Type<SBManageWaypointsPacket> ID = new Type<>(PGHelper.createLocation("manage_waypoint"));
 
     public SBManageWaypointsPacket(String waypoint, boolean remove) {
         this.waypoint = waypoint;
@@ -37,7 +37,6 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
             if (wp != null) {
-                System.out.println("Not null in packet");
                 if (!remove) IWaypointStorage.addWaypoint(stack, wp);
                 if (remove) IWaypointStorage.deleteWaypoint(stack, wp);
             }

@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.config;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jdolphin.ricksportalgun.Constants;
+import com.jdolphin.ricksportalgun.PGConstants;
 import net.fabricmc.fabric.api.util.TriState;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
@@ -64,7 +64,7 @@ public class Config {
 	public void save() {
 		File configDir = FabricLoader.getInstance().getConfigDir().resolve("ricksportalgun").toFile();
 		if (!configDir.exists()) {
-			if (!configDir.mkdir()) Constants.LOGGER.warn("Couldn't create config directory: " + configDir.getAbsolutePath());
+			if (!configDir.mkdir()) PGConstants.LOGGER.warn("Couldn't create config directory: " + configDir.getAbsolutePath());
 		}
 		File configFile = new File(configDir, "ricksportalgun-common.properties");
 		Properties properties = new Properties();
@@ -73,7 +73,7 @@ public class Config {
 			try (FileInputStream stream = new FileInputStream(configFile)) {
 				properties.load(stream);
 			} catch (IOException e) {
-				Constants.LOGGER.warn("Couldn't read config file '" + configFile.getAbsolutePath() + "'", e);
+				PGConstants.LOGGER.warn("Couldn't read config file '" + configFile.getAbsolutePath() + "'", e);
 			}
 		}
 		ALLOW_PLAYER_LOCATING = asBoolean((String) properties.computeIfAbsent("allow_player_locating", (a) -> "true"), true);
@@ -82,7 +82,7 @@ public class Config {
 		try (FileOutputStream stream = new FileOutputStream(configFile)) {
 			properties.store(stream, "Rick's Portal Gun configuration file");
 		} catch (IOException e) {
-			Constants.LOGGER.warn("Couldn't save config file '" + configFile.getAbsolutePath() + "'", e);
+			PGConstants.LOGGER.warn("Couldn't save config file '" + configFile.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class Config {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)));
 			return gson.fromJson(reader, Config.class);
 		} catch (Exception e) {
-			Constants.LOGGER.warn("Exception loading config file: " + e.getLocalizedMessage());
+			PGConstants.LOGGER.warn("Exception loading config file: " + e.getLocalizedMessage());
 			return null;
 		}
 	}
@@ -126,7 +126,7 @@ public class Config {
 			String replace1 = replace.replace("]","");
             return new ArrayList<>(Arrays.asList(replace1.split(",")));
 		} catch (Exception e) {
-			Constants.LOGGER.warn("Exception getting blacklisted dimension list: " + e.getLocalizedMessage());
+			PGConstants.LOGGER.warn("Exception getting blacklisted dimension list: " + e.getLocalizedMessage());
 		}
 		return defValue;
 	}
@@ -136,7 +136,7 @@ public class Config {
 		else try {
 				return Integer.parseInt(property);
 			} catch (NumberFormatException exception) {
-			Constants.LOGGER.warn("Error reading config value: " + exception.getLocalizedMessage());
+			PGConstants.LOGGER.warn("Error reading config value: " + exception.getLocalizedMessage());
 			return defValue;
 		}
 	}

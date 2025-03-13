@@ -6,7 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidge
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.Helper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -34,11 +34,11 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     private SuggestionTextFieldWidget dimInput;
     private List<String> dimSuggestions;
 
-    public static ResourceLocation WAYPOINT_TEXTURES = Helper.createLocation("icon/waypoint");
-    public static ResourceLocation PLAYER_LOC_TEXTURES = Helper.createLocation("icon/player_locating");
-    public static ResourceLocation RANDOMIZER_TEXTURES = Helper.createLocation("icon/randomizer");
-    public static ResourceLocation COLOR_TEXTURES = Helper.createLocation("icon/color_selection");
-    public static ResourceLocation SETTINGS_TEXTURES = Helper.createLocation("icon/settings");
+    public static ResourceLocation WAYPOINT_TEXTURES = PGHelper.createLocation("icon/waypoint");
+    public static ResourceLocation PLAYER_LOC_TEXTURES = PGHelper.createLocation("icon/player_locating");
+    public static ResourceLocation RANDOMIZER_TEXTURES = PGHelper.createLocation("icon/randomizer");
+    public static ResourceLocation COLOR_TEXTURES = PGHelper.createLocation("icon/color_selection");
+    public static ResourceLocation SETTINGS_TEXTURES = PGHelper.createLocation("icon/settings");
 
 
     public CoordTravelScreen(List<String> suggestions) {
@@ -87,7 +87,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                         Level level = player.level();
                         String dim = this.dimInput.getValue().isEmpty() ? level.dimension().location().toString() : this.dimInput.getValue();
                         SBSetDestinationPacket packet = new SBSetDestinationPacket(player.blockPosition(), dim);
-                        Helper.sendPacketToServer(packet);
+                        PGHelper.sendPacketToServer(packet);
                         this.onClose();
                     }
                 }, 20, 18, RANDOMIZER_TEXTURES));
@@ -202,7 +202,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     ResourceLocation.parse(dimInput.getValue().isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : dimInput.getValue());
 
             SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
-            Helper.sendPacketToServer(packet);
+            PGHelper.sendPacketToServer(packet);
             this.onClose();
         } catch (Exception error) {
             dimInput.setSuggestion(" §c" + error.getLocalizedMessage());

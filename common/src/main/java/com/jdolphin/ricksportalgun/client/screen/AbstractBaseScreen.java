@@ -7,7 +7,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public abstract class AbstractBaseScreen extends Screen {
+public abstract class AbstractBaseScreen extends Screen implements IScreenBase {
 
     protected AbstractBaseScreen(Component title) {
         super(title);
@@ -21,7 +21,7 @@ public abstract class AbstractBaseScreen extends Screen {
         this.renderMenuBackground(context);
     }
 
-    public  <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
         return super.addRenderableWidget(widget);
     }
 }
