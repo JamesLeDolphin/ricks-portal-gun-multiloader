@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -36,8 +37,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void openScreen(ServerPlayer player, int id) {
-        sendPacketToClient(player, new CBOpenGuiPacketFabric(id));
+    public void openBarrierScreen(ServerPlayer player, BlockPos pos) {
+        sendPacketToClient(player, new CBOpenGuiPacketFabric(pos));
     }
 
 }

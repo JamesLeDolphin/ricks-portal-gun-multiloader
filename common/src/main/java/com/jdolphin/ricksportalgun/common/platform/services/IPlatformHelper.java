@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform.services;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -31,7 +32,7 @@ public interface IPlatformHelper {
 
     <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet);
 
-    void openScreen(ServerPlayer player, int id);
+    void openBarrierScreen(ServerPlayer player, BlockPos pos);
 
     /**
      * Gets the name of the environment type as a string.

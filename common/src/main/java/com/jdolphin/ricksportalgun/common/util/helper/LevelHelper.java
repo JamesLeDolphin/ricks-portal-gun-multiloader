@@ -1,13 +1,21 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
 
+import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.common.block.SubetherBarrierBlock;
+import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
+import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
+import com.jdolphin.ricksportalgun.common.init.PGBlocks;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -17,12 +25,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class LevelHelper {
     public static List<String> DIMENSIONS = new ArrayList<>();
@@ -38,7 +52,6 @@ public class LevelHelper {
             addDimension(s);
         }
     }
-
     public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels, List<String> list) {
         levels.forEach(world -> {
             ResourceLocation worldKey = world.dimension().location();
@@ -52,6 +65,27 @@ public class LevelHelper {
         return getDimensionsAsString(levels, new ArrayList<>());
     }
 
+    public static List<BlockEntity> getBlockEntitiesInChunks(ServerLevel level, ChunkPos pos, int radius) {
+        List<BlockEntity> list = new ArrayList<>();
+        for(int x = -radius; x <= radius; ++x) {
+            for(int z = -radius; z <= radius; ++z) {
+                list.addAll(level.getChunk(pos.x + x, pos.z + z).getBlockEntities().values());
+            }
+        }
+        return list;
+    }
+
+    public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
+        String code = stack.getOrDefault(PGDataComponents.CODE, "");
+        List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
+
+        for (BlockEntity be : blockEntities) {
+            if (be instanceof SubetherBarrierBlockEntity barrier) {
+                return !barrier.canBlockPortal(level, barrier.getBlockPos(), code);
+            }
+        }
+        return true;
+    }
 
     public static ResourceKey<Level> getWorldKey(ResourceLocation dimension) {
         return ResourceKey.create(Registries.DIMENSION, dimension);

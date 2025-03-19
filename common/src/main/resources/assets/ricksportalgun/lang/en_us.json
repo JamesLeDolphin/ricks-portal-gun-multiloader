@@ -88,5 +88,8 @@
   "item.ricksportalgun.data_card": "Data Card",
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "ricksportalgun.button.portal_size": "Change portal size",
-  "menu.ricksportalgun.portal_dispenser": "Portal Dispenser"
+  "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
+  "notice.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
+  "menu.ricksportalgun.sub_ether_barrier": "Sub Ether Barrier",
+  "menu.ricksportalgun.barrier_code": "Code: "
 }

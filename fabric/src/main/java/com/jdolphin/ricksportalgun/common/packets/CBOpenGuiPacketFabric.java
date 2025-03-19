@@ -7,30 +7,23 @@ import io.netty.buffer.ByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public class CBOpenGuiPacketFabric implements CustomPacketPayload {
-    public int id;
-    public static final Type<CBOpenGuiPacketFabric> ID = new Type<>(PGHelper.createLocation("open_menu"));
-    public static final StreamCodec<ByteBuf, CBOpenGuiPacketFabric> CODEC = StreamCodec.composite(ByteBufCodecs.INT,
-            CBOpenGuiPacketFabric::getId, CBOpenGuiPacketFabric::new);
+public record CBOpenGuiPacketFabric(BlockPos pos) implements CustomPacketPayload {
+    public static final Type<CBOpenGuiPacketFabric> ID = new Type<>(PGHelper.createLocation("open_barrier_menu"));
+    public static final StreamCodec<ByteBuf, CBOpenGuiPacketFabric> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
+            CBOpenGuiPacketFabric::pos, CBOpenGuiPacketFabric::new);
 
-    public CBOpenGuiPacketFabric(int screenId) {
-        id = screenId;
-    }
-
-    public int getId() {
-        return id;
+    public CBOpenGuiPacketFabric(BlockPos pos) {
+        this.pos = pos;
     }
 
     @Environment(EnvType.CLIENT)
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void handle(Minecraft client) {
-        switch (id) {
-            case 0: client.setScreen(new SubetherBarrierScreen());
-        }
+        client.setScreen(new SubetherBarrierScreen(this.pos));
     }
 
     @Override

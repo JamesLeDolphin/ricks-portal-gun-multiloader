@@ -33,6 +33,7 @@ public class FabricDataComponents {
         PGDataComponents.PORTAL_SIZE = registerComponent("portal_size", typeBuilder -> typeBuilder.persistent(Codec.FLOAT));
         PGDataComponents.LOCK = registerComponent("lock", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
         PGDataComponents.OWNER = registerComponent("owner", typeBuilder -> typeBuilder.persistent(Codec.STRING));
+        PGDataComponents.CODE = registerComponent("code", typeBuilder -> typeBuilder.persistent(Codec.STRING));
         PGDataComponents.WAYPOINTS = registerComponent("waypoints", typeBuilder -> typeBuilder
                 .persistent(Waypoint.CODEC.listOf()).networkSynchronized(Waypoint.PACKET_CODEC.apply(ByteBufCodecs.list())).cacheEncoding());
 

@@ -23,4 +23,5 @@ public class PGDataComponents {
     public static DataComponentType<Integer> PRIMARY_DYE;
     public static DataComponentType<Integer> SECONDARY_DYE;
     public static DataComponentType<Float> PORTAL_SIZE;
+    public static DataComponentType<String> CODE;
 }

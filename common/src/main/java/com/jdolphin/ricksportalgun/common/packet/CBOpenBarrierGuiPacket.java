@@ -4,30 +4,22 @@ import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public class CBOpenGuiPacket implements CustomPacketPayload {
-    public int id;
+public record CBOpenBarrierGuiPacket(BlockPos pos) implements CustomPacketPayload {
     public static final Type<CBOpenCoordGuiPacket> ID = new Type<>(PGHelper.createLocation("open_menu"));
-    public static final StreamCodec<ByteBuf, CBOpenGuiPacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT,
-            CBOpenGuiPacket::getId, CBOpenGuiPacket::new);
+    public static final StreamCodec<ByteBuf, CBOpenBarrierGuiPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
+            CBOpenBarrierGuiPacket::pos, CBOpenBarrierGuiPacket::new);
 
-    public CBOpenGuiPacket(int screenId) {
-        id = screenId;
+    public CBOpenBarrierGuiPacket(BlockPos pos) {
+        this.pos = pos;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void handle(Minecraft client) {
-        switch (id) {
-            case 0: client.setScreen(new SubetherBarrierScreen());
-        }
+        client.setScreen(new SubetherBarrierScreen(this.pos));
     }
 
     @Override

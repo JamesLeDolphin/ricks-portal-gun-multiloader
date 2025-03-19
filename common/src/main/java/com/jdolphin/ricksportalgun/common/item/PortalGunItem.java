@@ -52,6 +52,14 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         stack.set(PGDataComponents.FUEL, Math.max(0, i - amount));
     }
 
+    public static void setCode(ItemStack stack, String code) {
+        stack.set(PGDataComponents.CODE, code);
+    }
+
+    public static String getCode(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.CODE, "");
+    }
+
     public static void refillFuel(ItemStack stack) {
         stack.set(PGDataComponents.FUEL, getMaxFuel(stack));
     }
@@ -172,17 +180,22 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     }
 
                     if (serverlevel != null) {
-                        if (!flat) {
-                            portal.setYRot(player.getYRot());
-                            exPortal.setYRot(player.getYRot());
-                        }
-                        serverlevel.addFreshEntity(exPortal);
-                        level.addFreshEntity(portal);
+                        if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
+                            if (!flat) {
+                                portal.setYRot(player.getYRot());
+                                exPortal.setYRot(player.getYRot());
+                            }
+                            serverlevel.addFreshEntity(exPortal);
+                            level.addFreshEntity(portal);
 
-                        player.awardStat(Stats.ITEM_USED.get(this));
-                        player.getCooldowns().addCooldown(stack, 20 * 3);
-                        if (!player.getAbilities().instabuild) {
-                            lowerFuel(stack, 1);
+                            player.awardStat(Stats.ITEM_USED.get(this));
+                            player.getCooldowns().addCooldown(stack, 20 * 3);
+                            if (!player.getAbilities().instabuild) {
+                                lowerFuel(stack, 1);
+                            }
+                        } else {
+                            ((ServerPlayer) player).sendSystemMessage(Component.translatable("notice.ricksportalgun.destination_unreachable").withStyle(ChatFormatting.RED));
+                            return InteractionResult.FAIL;
                         }
                     } else
                         ((ServerPlayer) player).sendSystemMessage(Component.translatable("notice.ricksportalgun.destination_not_found").withStyle(ChatFormatting.RED));

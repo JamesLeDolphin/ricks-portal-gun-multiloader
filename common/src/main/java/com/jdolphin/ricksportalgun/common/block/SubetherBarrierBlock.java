@@ -1,13 +1,12 @@
 package com.jdolphin.ricksportalgun.common.block;
 
-import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
-import com.jdolphin.ricksportalgun.common.packet.CBOpenGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +34,26 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
         builder.add(ACTIVE);
     }
 
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        if (!level.isClientSide) {
+            boolean flag = state.getValue(ACTIVE);
+            if (flag != level.hasNeighborSignal(pos)) {
+                if (flag) {
+                    level.scheduleTick(pos, this, 4);
+                } else {
+                    level.setBlock(pos, state.cycle(ACTIVE), 2);
+                }
+            }
+        }
+
+    }
+
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
+        if (state.getValue(ACTIVE) && !level.hasNeighborSignal(pos)) {
+            level.setBlock(pos, state.cycle(ACTIVE), 2);
+        }
+    }
+
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return simpleCodec(SubetherBarrierBlock::new);
@@ -42,15 +62,9 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            PGHelper.openScreen(serverPlayer, 0);
-
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
-    }
-
-    public boolean canBlockPortal(Level level, BlockPos pos) {
-        return level.hasNeighborSignal(pos);
+            PGHelper.openBarrierScreen(serverPlayer, pos);
+            return InteractionResult.SUCCESS_SERVER;
+        } else return InteractionResult.CONSUME;
     }
 
     @Override

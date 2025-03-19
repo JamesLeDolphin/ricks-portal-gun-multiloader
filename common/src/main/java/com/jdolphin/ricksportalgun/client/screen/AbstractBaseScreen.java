@@ -13,6 +13,10 @@ public abstract class AbstractBaseScreen extends Screen implements IScreenBase {
         super(title);
     }
 
+    protected AbstractBaseScreen(String title) {
+        this(Component.translatable(title));
+    }
+
     public boolean isPauseScreen() {
         return false;
     }
