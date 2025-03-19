@@ -26,7 +26,7 @@ public class SubetherBarrierScreen extends AbstractBaseScreen {
         this.codeBox = this.addWidget(new EditBox(this.font, this.width / 2 - 64, this.height / 2 - 40,
                 128, 20, Component.translatable("chat.editBox")));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.coord.select"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             this.setCode();
             this.onClose();
 

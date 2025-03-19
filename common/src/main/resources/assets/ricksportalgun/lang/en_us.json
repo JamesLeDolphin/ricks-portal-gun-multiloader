@@ -91,5 +91,6 @@
   "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "notice.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
   "menu.ricksportalgun.sub_ether_barrier": "Sub Ether Barrier",
-  "menu.ricksportalgun.barrier_code": "Code: "
+  "menu.ricksportalgun.barrier_code": "Code: ",
+  "ricksportalgun.button.select": "Select"
 }
