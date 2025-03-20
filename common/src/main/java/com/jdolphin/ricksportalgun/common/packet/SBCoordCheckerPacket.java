@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -37,8 +38,8 @@ public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW));
-        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), 1000), player.serverLevel()); //TODO: Config the radius
+        player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
+        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGCommonConfig.INSTANCE.getRandomizerMax()), player.serverLevel());
 
         ResourceLocation dim = ResourceLocation.parse(this.dim);
         ServerLevel level;

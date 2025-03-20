@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -35,6 +36,7 @@ public class RicksPortalGunForgeMain {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        PGCommonConfig.INSTANCE = new PGCommonConfig();
         event.enqueueWork(ForgePackets::init);
     }
 

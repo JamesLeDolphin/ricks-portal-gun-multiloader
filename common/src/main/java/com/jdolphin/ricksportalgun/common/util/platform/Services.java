@@ -1,7 +1,7 @@
-package com.jdolphin.ricksportalgun.common.platform;
+package com.jdolphin.ricksportalgun.common.util.platform;
 
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
+import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;
 

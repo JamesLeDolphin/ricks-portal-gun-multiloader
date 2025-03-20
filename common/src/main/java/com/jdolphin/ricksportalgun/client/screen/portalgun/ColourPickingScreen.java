@@ -79,9 +79,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.red", ""), this.width / 2 - 80, this.height / 2 - 48);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.green", ""), this.width / 2 - 80, this.height / 2 - 32);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.blue", ""), this.width / 2 - 80, this.height / 2 - 14);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 80, this.height / 2 - 55);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 80, this.height / 2 - 32);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.blue", ""), this.width / 2 - 80, this.height / 2 - 7);
 
         GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select"),
                 this.width / 2, 30);

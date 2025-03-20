@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -38,8 +39,7 @@ public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
         MinecraftServer server = player.server;
 
         ServerLevel world = player.serverLevel();
-        if(true /*TODO: figure out proper configs*/) {
-            //TODO: use translatable strings for these messages
+        if (PGCommonConfig.INSTANCE.disableLocating()) {
             player.sendSystemMessage(Component.translatable("error.ricksportalgun.player_locating_disabled").withStyle(ChatFormatting.RED), false);
             return;
         }

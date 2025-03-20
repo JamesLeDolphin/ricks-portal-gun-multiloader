@@ -2,11 +2,12 @@ package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.packet.CBOpenBarrierGuiPacket;
-import com.jdolphin.ricksportalgun.common.platform.services.IPlatformHelper;
+import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 public class ForgePlatformHelper implements IPlatformHelper {
@@ -34,6 +35,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
         ForgePackets.sendToPlayer(packet, player);
+    }
+
+    @Override
+    public String getConfigPath() {
+        return FMLConfig.defaultConfigPath();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
@@ -36,7 +37,8 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements Custom
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();
         PortalGunItem item = PGHelper.getPortalGun(stack);
-        if (/*!Config.getInstance().getBlacklistedDimensions().contains(dim) TODO: Figure out configs*/ true) {
+        System.out.println(PGCommonConfig.INSTANCE.getRandomizerMax() );
+        if (!PGCommonConfig.INSTANCE.getDisabledDimensions().contains(dim)) {
             item.setHopLocation(stack, ResourceLocation.parse(dim), pos);
         } else player.sendSystemMessage(Component.translatable("notice.ricksportalgun.dimension_disabled").withStyle(ChatFormatting.RED), false);
     }
