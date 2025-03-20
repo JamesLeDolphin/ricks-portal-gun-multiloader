@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -22,6 +23,7 @@ public record SBSetBarrierCodePacket(String code, BlockPos pos) implements Custo
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof SubetherBarrierBlockEntity barrier) {
             barrier.setCode(code);
+            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.barrier.code_set"));
         }
     }
 

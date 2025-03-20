@@ -5,7 +5,9 @@ import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -38,7 +40,10 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
             if (wp != null) {
                 if (!remove) IWaypointStorage.addWaypoint(stack, wp);
-                if (remove) IWaypointStorage.deleteWaypoint(stack, wp);
+                if (remove) {
+                    IWaypointStorage.deleteWaypoint(stack, wp);
+                    player.displayClientMessage(Component.translatable("ricksportalgun.deleted", wp.getName()).withStyle(ChatFormatting.GREEN), false);
+                }
             }
         }
     }

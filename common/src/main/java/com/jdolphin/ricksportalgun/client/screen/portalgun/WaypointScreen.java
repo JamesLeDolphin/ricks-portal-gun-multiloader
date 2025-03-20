@@ -37,7 +37,7 @@ public class WaypointScreen extends AbstractBaseScreen {
     protected List<Waypoint> waypointCache;
 
     public WaypointScreen() {
-        super(Component.translatable("menu.ricksportalgun.waypoints"));
+        super("menu.ricksportalgun.waypoints");
     }
 
     @Override

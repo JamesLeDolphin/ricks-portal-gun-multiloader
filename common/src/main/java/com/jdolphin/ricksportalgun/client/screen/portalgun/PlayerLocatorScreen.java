@@ -16,7 +16,7 @@ public class PlayerLocatorScreen extends AbstractBaseScreen {
     private EditBox playerInput;
 
     protected PlayerLocatorScreen() {
-        super(Component.translatable("menu.ricksportalgun.player_locator"));
+        super("menu.ricksportalgun.player_locator");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PlayerLocatorScreen extends AbstractBaseScreen {
         this.playerInput = new EditBox(this.font,
                 this.width / 2 - 64, this.height / 2 - 64, 128, 24,
                 Component.translatable("chat.editBox"));
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.player_locator.select"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             this.setCoords();
             this.onClose();
 

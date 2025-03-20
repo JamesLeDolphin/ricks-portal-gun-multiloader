@@ -45,9 +45,9 @@ public record SBSettingsPacket(boolean lock, String name, float size) implements
             if (newOwner != null) {
                 stack.set(PGDataComponents.OWNER, newOwner.getStringUUID());
             } else {
-                player.sendSystemMessage(Component.literal("Error 404: Player not found").withStyle(ChatFormatting.RED), false);
+                player.sendSystemMessage(Component.translatable("error.ricksportalgun.player_not_found", name).withStyle(ChatFormatting.RED), false);
             }
-            player.sendSystemMessage(Component.literal("Applied new portal gun settings").withStyle(ChatFormatting.GREEN), false);
+            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.settings.applied").withStyle(ChatFormatting.GREEN), false);
         }
     }
 

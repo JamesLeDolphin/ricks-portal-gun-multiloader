@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ public class SettingsScreen extends AbstractBaseScreen {
     private boolean lock;
     private EditBox playerInput;
     public SettingsScreen() {
-        super(Component.translatable("menu.ricksportalgun.settings"));
+        super("menu.ricksportalgun.settings");
     }
 
     @Override
@@ -38,7 +39,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
 
         this.addRenderableWidget(Button.builder(
-                Component.translatable("ricksportalgun.button.settings.done"), (button) -> {
+                Component.translatable("ricksportalgun.button.select"), (button) -> {
                     SBSettingsPacket packet = new SBSettingsPacket(lock, playerInput.getValue(), (float) this.portalSize.getValue());
                     PGHelper.sendPacketToServer(packet);
                     this.onClose();
@@ -47,11 +48,12 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose())
                 .pos(this.width / 2 + 8, this.height / 2 + 32).size(128, 20).build());
 
-        String sTrue = "ricksportalgun.button.true";
-        String sFalse = "ricksportalgun.button.false";
-        this.lockButton = this.addRenderableWidget(Button.builder(Component.translatable(lock ? sTrue : sFalse), (button) -> {
+        MutableComponent sTrue = Component.translatable("ricksportalgun.button.true");
+        MutableComponent sFalse = Component.translatable("ricksportalgun.button.false");
+        MutableComponent component = lock ? sTrue : sFalse;
+        this.lockButton = this.addRenderableWidget(Button.builder(component, (button) -> {
             lock = !lock;
-            lockButton.setMessage(Component.translatable(lock ? sTrue : sFalse));
+            lockButton.setMessage(component);
         }).size(64, 20).pos(this.width / 2 + 70, this.height / 2 - 74).build());
 
         this.portalSize = this.addRenderableWidget(new Slider(this.width / 2 + 92, this.height / 2 - 28, 42, 18,
@@ -60,6 +62,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.playerInput = this.addWidget(new EditBox(this.font, this.width / 2 + 54, this.height / 2 - 50, 80, 16,
                 Component.translatable("chat.editBox")));
 
+        //Temp
         this.addRenderableWidget(Button.builder(Component.literal("Types"), button -> {
             PortalGunType type = PortalGunTypeRegistry.PORTAL_GUN_TYPES.get(PGConstants.RANDOM.nextInt(PortalGunTypeRegistry.PORTAL_GUN_TYPES.size()));
             System.out.println(PortalGunTypeRegistry.PORTAL_GUN_TYPES);

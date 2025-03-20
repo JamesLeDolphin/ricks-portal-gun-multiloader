@@ -22,7 +22,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
     private EditBox waypointName;
 
     public CreateWaypointScreen() {
-        super(Component.translatable("menu.ricksportalgun.waypoints.new"));
+        super("menu.ricksportalgun.waypoints.new");
     }
 
     @Override
@@ -46,11 +46,11 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         Player player = minecraft.player;
         if (player != null) {
-            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.new.name"), this.width / 2 - 96, this.height / 2 - 56);
-            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.new.x", player.getBlockX()), this.width / 2 - 96, this.height / 2 - 36);
-            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.new.y", player.getBlockY()), this.width / 2 - 96, this.height / 2 - 16);
-            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.new.z", player.getBlockZ()), this.width / 2 - 96, this.height / 2);
-            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.new.dimension", player.level().dimension().location().toString()), this.width / 2 - 96,
+            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.name", ""), this.width / 2 - 96, this.height / 2 - 56);
+            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.x", player.getBlockX()), this.width / 2 - 96, this.height / 2 - 36);
+            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.y", player.getBlockY()), this.width / 2 - 96, this.height / 2 - 16);
+            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.z", player.getBlockZ()), this.width / 2 - 96, this.height / 2);
+            GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.dimension", player.level().dimension().location().toString()), this.width / 2 - 96,
                     this.height / 2 + 16);
         }
         this.waypointName.render(pPoseStack, pMouseX, pMouseY, pPartialTick);

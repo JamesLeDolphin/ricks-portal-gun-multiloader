@@ -38,7 +38,7 @@ public class SubetherBarrierScreen extends AbstractBaseScreen {
 
     public void render(@NotNull GuiGraphics stack, int pMouseX, int pMouseY, float pPartialTick) {
         GuiHelper.drawWhiteCenteredString(stack, Component.translatable("menu.ricksportalgun.sub_ether_barrier"), this.width / 2, 30);
-        GuiHelper.drawWhiteCenteredString(stack, Component.translatable("menu.ricksportalgun.barrier_code"), this.width / 2, this.codeBox.getY() - 16);
+        GuiHelper.drawWhiteCenteredString(stack, Component.translatable("ricksportalgun.barrier_code"), this.width / 2, this.codeBox.getY() - 16);
         this.codeBox.render(stack, pMouseX, pMouseY, pPartialTick);
 
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);

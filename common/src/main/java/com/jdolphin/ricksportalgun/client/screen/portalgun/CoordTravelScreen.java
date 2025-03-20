@@ -32,7 +32,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     private String dS, xS, yS, zS; //Suggestions
     private EditBox xInput, yInput, zInput;
     private SuggestionTextFieldWidget dimInput;
-    private List<String> dimSuggestions;
+    private final List<String> dimSuggestions;
 
     public static ResourceLocation WAYPOINT_TEXTURES = PGHelper.createLocation("icon/waypoint");
     public static ResourceLocation PLAYER_LOC_TEXTURES = PGHelper.createLocation("icon/player_locating");
@@ -42,7 +42,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
 
     public CoordTravelScreen(List<String> suggestions) {
-        super(Component.translatable("menu.ricksportalgun.coord"));
+        super("menu.ricksportalgun.coord");
         this.dimSuggestions = suggestions;
     }
 
@@ -63,7 +63,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 this.width / 2 - 32, this.height / 2 + 16, 64, 12,
                 Component.translatable("chat.editBox")));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.coord.select"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             this.setCoords();
             this.onClose();
 
@@ -144,10 +144,10 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
     @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float delta) {
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.coord.x"), this.width / 2 - 88, this.height / 2 - 16);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.coord.y"), this.width / 2 - 88, this.height / 2);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.coord.z"), this.width / 2 - 88, this.height / 2 + 16);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.coord.dimension"), this.width / 2 - 88, this.height / 2 - 32);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.height / 2 - 16);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.height / 2);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.z", ""), this.width / 2 - 88, this.height / 2 + 16);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.height / 2 - 32);
 
         GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, delta, waypoints, xInput, yInput, zInput, randomise, player_loc, colour, settings);
         dimInput.render(pPoseStack, pMouseX, pMouseY, delta);

@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
+import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -101,7 +102,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
-        if (!level.isClientSide() && player instanceof ServerPlayer) {
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             migrateDamage(stack);
             if ((stack.getOrDefault(PGDataComponents.LOCK, false) &&
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
@@ -194,11 +195,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                 lowerFuel(stack, 1);
                             }
                         } else {
-                            ((ServerPlayer) player).sendSystemMessage(Component.translatable("notice.ricksportalgun.destination_unreachable").withStyle(ChatFormatting.RED));
+                            serverPlayer.sendSystemMessage(Component.translatable("error.ricksportalgun.destination_unreachable").withStyle(ChatFormatting.RED));
                             return InteractionResult.FAIL;
                         }
                     } else
-                        ((ServerPlayer) player).sendSystemMessage(Component.translatable("notice.ricksportalgun.destination_not_found").withStyle(ChatFormatting.RED));
+                        serverPlayer.sendSystemMessage(Component.translatable("error.ricksportalgun.destination_not_found").withStyle(ChatFormatting.RED));
                 }
             }
             return InteractionResult.SUCCESS;
@@ -210,11 +211,14 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, List<Component> pTooltipComponents, @NotNull TooltipFlag pTooltipFlag) {
-        pTooltipComponents.add(Component.translatable("item.ricksportalgun.portal_gun.tooltip.destination",
-                getHopCoords(pStack).getX(), getHopCoords(pStack).getY(), getHopCoords(pStack).getZ()).withStyle(ChatFormatting.GRAY));
-        pTooltipComponents.add(Component.translatable("item.ricksportalgun.portal_gun.tooltip.dimension", getHopDimension(pStack).toString())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pContext, List<Component> toolTips, @NotNull TooltipFlag pTooltipFlag) {
+        List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
+        toolTips.add(Component.translatable("ricksportalgun.destination",
+                getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
+        toolTips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack).toString())
                 .withStyle(ChatFormatting.GRAY));
+        toolTips.add(Component.translatable("tooltip.ricksportalgun.datacard", list.size()).withStyle(ChatFormatting.DARK_GRAY));
+
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         this.b = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
                 Component.empty(), (double) color.getBlue() / 255, 0, 1, false));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.colour.select"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                 SBColourPacket packet = new SBColourPacket(getColor());
                 PGHelper.sendPacketToServer(packet);
@@ -71,7 +71,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
             return new Color((float) this.r.getValue(), (float)this.g.getValue(), (float)this.b.getValue()).getRGB();
         } catch (NumberFormatException e) {
             GuiHelper.drawWhiteCenteredString(new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource()),
-                    Component.translatable("notice.ricksportalgun.color.error") + e.getMessage().toLowerCase(),
+                    Component.translatable("error.ricksportalgun.color", e.getMessage().toLowerCase()),
                     this.width / 2, 55);
         }
         return 0x000000;
@@ -79,9 +79,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.red"), this.width / 2 - 80, this.height / 2 - 48);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.green"), this.width / 2 - 80, this.height / 2 - 32);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.blue"), this.width / 2 - 80, this.height / 2 - 14);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.red", ""), this.width / 2 - 80, this.height / 2 - 48);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.green", ""), this.width / 2 - 80, this.height / 2 - 32);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select.blue", ""), this.width / 2 - 80, this.height / 2 - 14);
 
         GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select"),
                 this.width / 2, 30);

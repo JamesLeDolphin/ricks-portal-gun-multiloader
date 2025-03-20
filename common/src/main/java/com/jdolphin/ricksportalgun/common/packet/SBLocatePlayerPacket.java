@@ -40,7 +40,7 @@ public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
         ServerLevel world = player.serverLevel();
         if(true /*TODO: figure out proper configs*/) {
             //TODO: use translatable strings for these messages
-            player.sendSystemMessage(Component.literal("Error 403: Player locating not allowed in this world").withStyle(ChatFormatting.RED), false);
+            player.sendSystemMessage(Component.translatable("error.ricksportalgun.player_locating_disabled").withStyle(ChatFormatting.RED), false);
             return;
         }
 
@@ -49,9 +49,9 @@ public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             PortalGunItem item = PGHelper.getPortalGun(stack);
             item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition());
-            player.sendSystemMessage(Component.literal("Coordinates set!").withStyle(ChatFormatting.GREEN), false);
+            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.destination.set").withStyle(ChatFormatting.GREEN), false);
 
-        } else player.sendSystemMessage(Component.literal("Error 404: Player not found").withStyle(ChatFormatting.RED), false);
+        } else player.sendSystemMessage(Component.translatable("error.ricksportalgun.player_not_found", name).withStyle(ChatFormatting.RED), false);
     }
 
     @Override
