@@ -36,6 +36,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public String getConfigPath() {
+        return "";
+    }
+
+    @Override
     public void openBarrierScreen(ServerPlayer player, BlockPos pos) {
         sendPacketToClient(player, new CBOpenBarrierGuiPacket(pos));
     }

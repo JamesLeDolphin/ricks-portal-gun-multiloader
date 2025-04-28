@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/orientable_vertical",
+  "textures": {
+    "front": "ricksportalgun:block/portal_dispenser_front_vertical_active",
+    "side": "minecraft:block/furnace_top"
+  }
+}

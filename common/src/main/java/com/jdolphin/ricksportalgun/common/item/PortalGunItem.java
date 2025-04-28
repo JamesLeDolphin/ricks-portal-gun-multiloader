@@ -156,7 +156,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                     Direction dir = hitResult.getDirection();
                     Direction facing = player.getDirection();
-                    boolean flat = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
                     float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
                     PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
                     PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir, facing, size);
@@ -167,22 +166,18 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
-                    portal.setColor(this.getColor(stack));
-                    exPortal.setColor(this.getColor(stack));
+                    int color = this.getColor(stack);
+                    portal.setColor(color);
+                    exPortal.setColor(color);
 
-                    if (stack.getOrDefault(PGDataComponents.BOOTLEG, false)) {
-                        portal.setBootleg(true);
-                        exPortal.setBootleg(true);
-                    }
+                    boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
+                    portal.setBootleg(bootleg);
+                    exPortal.setBootleg(bootleg);
 
-                    if (!stack.getOrDefault(PGDataComponents.BOOTLEG, false)) {
-                        portal.setBootleg(false);
-                        exPortal.setBootleg(false);
-                    }
 
                     if (serverlevel != null) {
                         if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                            if (!flat) {
+                            if (!portal.isFlat()) {
                                 portal.setYRot(player.getYRot());
                                 exPortal.setYRot(player.getYRot());
                             }

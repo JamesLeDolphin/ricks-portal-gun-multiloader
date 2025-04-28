@@ -196,10 +196,11 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         try {
             assert minecraft != null && minecraft.player != null;
             LocalPlayer player = minecraft.player;
-            if (dimInput.getValue().equals("end")) dimInput.setValue("the_end");
-            if (dimInput.getValue().equals("nether")) dimInput.setValue("the_nether");
+            String value = dimInput.getValue();
+            if (value.equals("end")) dimInput.setValue("the_end");
+            if (value.equals("nether")) dimInput.setValue("the_nether");
             ResourceLocation resourceLocation =
-                    ResourceLocation.parse(dimInput.getValue().isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : dimInput.getValue());
+                    ResourceLocation.parse(value.isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : value);
 
             SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
             PGHelper.sendPacketToServer(packet);
@@ -209,14 +210,14 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         }
     }
 
-    private @NotNull BlockPos getCoords(LocalPlayer player) {
-        int x = Integer.parseInt(xInput.getValue().isEmpty() ? String.valueOf(((int) player.getX())) : xInput.getValue());
-        int y = Integer.parseInt(yInput.getValue().isEmpty() ? String.valueOf(((int) player.getY())) : yInput.getValue());
-        int z = Integer.parseInt(zInput.getValue().isEmpty() ? String.valueOf(((int) player.getZ())) : zInput.getValue());
+    private int getInt(EditBox box, int fallback) {
+        return box.getValue().isEmpty() ? fallback : Integer.parseInt(box.getValue());
+    }
 
-        ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(PGTags.Items.PORTAL_GUNS))
-            throw new NullPointerException("Portal gun can't be null!");
+    private @NotNull BlockPos getCoords(LocalPlayer player) {
+        int x = getInt(xInput, (int) player.getX());
+        int y = getInt(yInput, (int) player.getY());
+        int z = getInt(zInput, (int) player.getZ());
         return new BlockPos(x, y, z);
     }
 

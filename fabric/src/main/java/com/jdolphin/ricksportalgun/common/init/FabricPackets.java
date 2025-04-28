@@ -20,6 +20,7 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBOpenCoordGuiPacketFabric.ID, SBOpenCoordGuiPacketFabric.CODEC);
         PayloadTypeRegistry.playC2S().register(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacketFabric.ID, CBOpenCoordGuiPacketFabric.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
@@ -35,6 +36,7 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBOpenCoordGuiPacketFabric.ID, (packet, context) -> packet.handle(context.player()));
         ServerPlayNetworking.registerGlobalReceiver(SBChangePortalGunTypePacket.ID, (packet, context) -> packet.handle(context.player()));
         ServerPlayNetworking.registerGlobalReceiver(SBSetBarrierCodePacket.ID, (packet, context) -> packet.handle(context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(SBSetDispenserDestinationPacket.ID, (packet, context) -> packet.handle(context.player()));
     }
 
     public static void registerS2CPackets() {

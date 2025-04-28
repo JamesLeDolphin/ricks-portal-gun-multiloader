@@ -33,6 +33,11 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
 
+        runEvents();
+    }
+
+
+    private void runEvents() {
         ClientLifecycleEvents.CLIENT_STARTED.register(mc -> PGCommonConfig.INSTANCE = new PGCommonConfig());
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {

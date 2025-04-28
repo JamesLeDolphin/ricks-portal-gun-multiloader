@@ -10,6 +10,7 @@
   "item.ricksportalgun.portal_fluid_bottle": "Portal Fluid Bottle",
   "item.ricksportalgun.bootleg_portal_fluid_bottle": "Bootleg Portal Fluid",
   "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
+  "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "item.ricksportalgun.data_card": "Data Card",
 
   "menu.ricksportalgun.coord": "Portal Gun Coordinate Travel",
@@ -22,6 +23,7 @@
   "menu.ricksportalgun.settings": "Settings",
   "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "menu.ricksportalgun.waypoints.info": "Waypoint Info",
+  "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s/%s",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",

@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=down,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser_vertical",
+      "x": 180
+    },
+    "facing=east,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser",
+      "y": 90
+    },
+    "facing=north,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser"
+    },
+    "facing=south,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser",
+      "y": 180
+    },
+    "facing=up,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser_vertical"
+    },
+    "facing=west,triggered=false": {
+      "model": "ricksportalgun:block/portal_dispenser",
+      "y": 270
+    },
+
+    "facing=down,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_vertical_active",
+      "x": 180
+    },
+    "facing=east,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_active",
+      "y": 90
+    },
+    "facing=north,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_active"
+    },
+    "facing=south,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_active",
+      "y": 180
+    },
+    "facing=up,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_vertical_active"
+    },
+    "facing=west,triggered=true": {
+      "model": "ricksportalgun:block/portal_dispenser_active",
+      "y": 270
+    }
+  }
+}

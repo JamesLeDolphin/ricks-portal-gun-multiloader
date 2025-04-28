@@ -155,6 +155,11 @@ public class PortalEntity extends Entity {
         return false;
     }
 
+    public boolean isFlat() {
+        Direction direction = this.entityData.get(DATA_DIR);
+        return direction.equals(Direction.UP) || direction.equals(Direction.DOWN);
+    }
+
     public void setHopLocation(ResourceLocation dimension, BlockPos pos) {
         this.targetDim = dimension.toString();
         this.targetPos = pos;

@@ -3,22 +3,24 @@ package com.jdolphin.ricksportalgun.client.screen;
 import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
+import com.jdolphin.ricksportalgun.common.packet.SBSetDispenserDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.ItemSlotMouseAction;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,27 +70,48 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         this.imageWidth = 176;
         this.imageHeight = 166;
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-        System.out.println(dimSuggestions);
-        this.dimInput = new SuggestionTextFieldWidget(this, this.width / 2 - 32, this.height / 2 - 64, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
-        this.dimInput.setCanLoseFocus(true);
-        this.dimInput.setTextColor(-1);
-        this.dimInput.update();
-        this.dimInput.setTextColorUneditable(-1);
-        this.dimInput.setBordered(true);
-        this.dimInput.setMaxLength(50);
-        this.dimInput.setValue("");
-        this.dimInput.setResponder(this::onEdited);
-        this.addWidget(this.dimInput);
 
         this.xInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2 - 16, 64, 12,
+                this.width / 2 - 32,this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
         this.yInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2, 64, 12,
+                this.width / 2 + 8, this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
         this.zInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2 + 16, 64, 12,
+                this.width / 2 + 48, this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
+
+        this.dimInput = new SuggestionTextFieldWidget(this, this.width / 2 - 32,this.height / 2 - 48, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
+        dimInput.update();
+        setupSuggestionBox(dimInput);
+
+        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
+            try {
+                int x = Integer.parseInt(this.xInput.getValue());
+                int y = Integer.parseInt(this.yInput.getValue());
+                int z = Integer.parseInt(this.zInput.getValue());
+                String dim = dimInput.getValue();
+                BlockPos pos = new BlockPos(x, y, z);
+                SBSetDispenserDestinationPacket packet = new SBSetDispenserDestinationPacket(pos, dim, this.menu.containerId);
+                PGHelper.sendPacketToServer(packet);
+
+            } catch (Exception e) {
+                dimInput.setSuggestion(" §c" + e.getLocalizedMessage());
+            }
+            this.onClose();
+
+        }).pos(this.width / 2 - 32, this.height / 2 - 32).size(112, 16).build());
+    }
+
+    private void setupSuggestionBox(EditBox box) {
+        box.setCanLoseFocus(true);
+        box.setTextColor(-1);
+        box.setTextColorUneditable(-1);
+        box.setBordered(true);
+        box.setMaxLength(50);
+        box.setValue("");
+        box.setResponder(this::onEdited);
+        this.addWidget(box);
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
@@ -102,12 +125,21 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         super.render(graphics, mouseX, mouseY, delta);
         this.renderTooltip(graphics, mouseX, mouseY);
         this.dimInput.render(graphics, mouseX, mouseY, delta);
+        this.xInput.render(graphics, mouseX, mouseY, delta);
+        this.yInput.render(graphics, mouseX, mouseY, delta);
+        this.zInput.render(graphics, mouseX, mouseY, delta);
 
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
         int maxFuel = Math.max(menu.getMaxFuel(), 1); //Prevent dividing by zero
         int percentage = (52 * menu.getFuel()) / maxFuel;
-        graphics.fill(i + 8, j + 68, i + 23, j + 68 - percentage, menu.getColor());
+        int minX = x + 8;
+        int minY = y + 68;
+        int maxX = x + 23;
+        graphics.fill(minX, minY, maxX, minY - percentage, Color.GREEN.getRGB());
+        if ((mouseX >= minX && mouseX <= maxX) && (mouseY >= minY - 4 * maxFuel + 12 && mouseY <= minY)) {
+            graphics.renderTooltip(this.font, Component.translatable("menu.ricksportalgun.portal_dispenser.fuel", menu.getFuel(), maxFuel), mouseX, mouseY);
+        }
     }
 
     @Override
