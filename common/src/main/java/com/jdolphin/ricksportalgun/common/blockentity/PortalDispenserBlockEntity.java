@@ -143,6 +143,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.fuel = Math.max(0, this.fuel - amount);
     }
 
+    //TODO: Check for barrier
     public void onActivation(Level level, BlockPos pos) {
         if (!level.isClientSide) {
             BlockState state = level.getBlockState(pos);
