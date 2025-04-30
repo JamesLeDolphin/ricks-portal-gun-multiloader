@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.IScreenBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,12 +1,8 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
 
-import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.common.block.SubetherBarrierBlock;
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
-import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
-import com.jdolphin.ricksportalgun.common.init.PGBlocks;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import net.minecraft.core.BlockPos;
@@ -14,8 +10,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ChunkLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -32,11 +26,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.phys.AABB;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LevelHelper {
     public static List<String> DIMENSIONS = new ArrayList<>();

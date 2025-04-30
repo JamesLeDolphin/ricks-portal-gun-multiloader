@@ -1,14 +1,12 @@
 package com.jdolphin.ricksportalgun.common.packets;
 
 import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
-import com.jdolphin.ricksportalgun.common.packet.CBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 

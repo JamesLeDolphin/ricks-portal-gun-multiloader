@@ -4,11 +4,8 @@ import com.jdolphin.ricksportalgun.common.block.PortalDispenserBlock;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
-import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.MathHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -25,12 +22,9 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import java.awt.*;
 
 public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     public static final String TAG_FUEL = "Fuel";

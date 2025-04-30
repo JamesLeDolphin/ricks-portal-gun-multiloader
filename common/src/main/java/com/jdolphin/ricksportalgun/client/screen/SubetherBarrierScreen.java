@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.client.screen;
 
-import com.jdolphin.ricksportalgun.common.packet.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.packet.SBSetBarrierCodePacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;

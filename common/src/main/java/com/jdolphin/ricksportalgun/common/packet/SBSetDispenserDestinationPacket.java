@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet;
 
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
@@ -12,10 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 
 public record SBSetDispenserDestinationPacket(BlockPos pos, String dim, int id) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, SBSetDispenserDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDispenserDestinationPacket::pos,
