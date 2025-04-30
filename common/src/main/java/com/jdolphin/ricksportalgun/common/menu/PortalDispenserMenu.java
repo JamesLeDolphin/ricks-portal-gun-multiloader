@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +26,7 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
     public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container, ContainerData data, ContainerLevelAccess access) {
         super(PGMenuTypes.PORTAL_DISPENSER, containerId);
         checkContainerSize(container, 1);
-        checkContainerDataCount(data, 3);
+        checkContainerDataCount(data, 2);
         this.data = data;
         this.access = access;
         this.dispenser = container;

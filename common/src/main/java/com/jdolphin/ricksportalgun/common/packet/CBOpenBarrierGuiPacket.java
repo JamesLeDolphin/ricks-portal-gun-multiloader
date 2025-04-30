@@ -5,6 +5,8 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -20,6 +22,14 @@ public record CBOpenBarrierGuiPacket(BlockPos pos) implements CustomPacketPayloa
 
     public void handle(Minecraft client) {
         client.setScreen(new SubetherBarrierScreen(this.pos));
+    }
+
+    public CBOpenBarrierGuiPacket(FriendlyByteBuf buf) {
+        this(buf.readBlockPos());
+    }
+
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
     }
 
     @Override

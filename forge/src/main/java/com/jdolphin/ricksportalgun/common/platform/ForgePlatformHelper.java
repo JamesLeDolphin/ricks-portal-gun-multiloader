@@ -4,11 +4,28 @@ import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.packet.CBOpenBarrierGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
+import org.apache.commons.lang3.function.TriFunction;
+
+import java.util.Set;
+import java.util.function.BiFunction;
 
 public class ForgePlatformHelper implements IPlatformHelper {
 
@@ -47,5 +64,13 @@ public class ForgePlatformHelper implements IPlatformHelper {
         sendPacketToClient(player, new CBOpenBarrierGuiPacket(pos));
     }
 
+    @Override
+    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
+        return new BlockEntityType<>(func::apply, Set.of(blocks));
+    }
 
+    @Override
+    public <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor) {
+        return new MenuType<>(constructor::apply, FeatureFlags.DEFAULT_FLAGS);
+    }
 }

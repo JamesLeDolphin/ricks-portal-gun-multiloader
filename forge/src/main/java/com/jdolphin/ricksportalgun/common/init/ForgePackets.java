@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
+import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
 import com.jdolphin.ricksportalgun.common.packet.*;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -56,6 +57,12 @@ public class ForgePackets {
                 .decoder(CBOpenCoordGuiPacket::new)
                 .consumerMainThread((packet, context) -> {
                     if (context.isClientSide()) Minecraft.getInstance().setScreen(new CoordTravelScreen(packet.getSuggestions()));
+                }).add();
+        INSTANCE.messageBuilder(CBOpenBarrierGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CBOpenBarrierGuiPacket::encode)
+                .decoder(CBOpenBarrierGuiPacket::new)
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new SubetherBarrierScreen(packet.pos()));
                 }).add();
         INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SBChangePortalGunTypePacket::encode)
