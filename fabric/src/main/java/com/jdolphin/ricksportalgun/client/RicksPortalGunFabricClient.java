@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
 import com.jdolphin.ricksportalgun.common.init.*;
-import com.jdolphin.ricksportalgun.common.packets.SBOpenCoordGuiPacketFabric;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
 import com.jdolphin.ricksportalgun.common.util.tint.PrimaryDyeTint;
@@ -35,7 +35,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
-                SBOpenCoordGuiPacketFabric packet = new SBOpenCoordGuiPacketFabric();
+                SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                 ClientPlayNetworking.send(packet);
             }
         });

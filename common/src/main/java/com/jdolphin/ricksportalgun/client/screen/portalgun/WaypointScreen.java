@@ -5,7 +5,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.BetterImageButton;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;

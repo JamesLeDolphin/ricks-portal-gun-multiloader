@@ -1,11 +1,15 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
-import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
-import com.jdolphin.ricksportalgun.common.packet.*;
+import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
@@ -17,58 +21,65 @@ public class ForgePackets {
     public static final SimpleChannel INSTANCE = ChannelBuilder.named(PGHelper.createLocation("main")).simpleChannel();
 
     public static void init() {
+        //Server bound
         INSTANCE.messageBuilder(SBSettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBSettingsPacket::encode)
-                .decoder(SBSettingsPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBSettingsPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBSetDestinationPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBSetDestinationPacket::encode)
-                .decoder(SBSetDestinationPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBSetDestinationPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBLocatePlayerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBLocatePlayerPacket::encode)
-                .decoder(SBLocatePlayerPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBLocatePlayerPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBCoordCheckerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBCoordCheckerPacket::encode)
-                .decoder(SBCoordCheckerPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBCoordCheckerPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBColourPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBColourPacket::encode)
-                .decoder(SBColourPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBColourPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBManageWaypointsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBManageWaypointsPacket::encode)
-                .decoder(SBManageWaypointsPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBManageWaypointsPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBOpenCoordGuiPacket::encode)
-                .decoder(SBOpenCoordGuiPacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
+                .codec(SBOpenCoordGuiPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBChangePortalGunTypePacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
+
+        //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CBOpenCoordGuiPacket::encode)
-                .decoder(CBOpenCoordGuiPacket::new)
+                .codec(CBOpenCoordGuiPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new CoordTravelScreen(packet.getSuggestions()));
+                    if (context.isClientSide()) ClientPacketHandler.openCoordTravelScreen(packet.strings);
                 }).add();
         INSTANCE.messageBuilder(CBOpenBarrierGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CBOpenBarrierGuiPacket::encode)
-                .decoder(CBOpenBarrierGuiPacket::new)
+                .codec(CBOpenBarrierGuiPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) Minecraft.getInstance().setScreen(new SubetherBarrierScreen(packet.pos()));
+                    if (context.isClientSide()) ClientPacketHandler.openBarrierGui(packet.pos());
                 }).add();
-        INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SBChangePortalGunTypePacket::encode)
-                .decoder(SBChangePortalGunTypePacket::new)
-                .consumerMainThread((packet, context) -> packet.handle(context.getSender()))
-                .add();
+        INSTANCE.messageBuilder(CBSyncGunTypesPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(CBSyncGunTypesPacket.CODEC.cast())
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) ClientPacketHandler.syncGunTypes(packet.types());
+                }).add();
+        INSTANCE.messageBuilder(CBSyncDimensionListPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(CBSyncDimensionListPacket.CODEC.cast())
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) ClientPacketHandler.syncClientDimensions(packet.dimensions());
+                }).add();
+    }
+
+    private static  <P extends PGPayload> void handle(P packet, CustomPayloadEvent.Context context) {
+        packet.handle(context.getSender());
     }
 
     public static void sendToServer(Object msg) {

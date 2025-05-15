@@ -1,9 +1,9 @@
-package com.jdolphin.ricksportalgun.common.packet;
+package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,24 +15,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetDestinationPacket(BlockPos pos, String dim) implements CustomPacketPayload {
-    public static final StreamCodec<ByteBuf, SBSetDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDestinationPacket::pos,
+public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayload {
+    public static final StreamCodec<FriendlyByteBuf, SBSetDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDestinationPacket::pos,
             ByteBufCodecs.STRING_UTF8, SBSetDestinationPacket::dim, SBSetDestinationPacket::new);
     public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.createLocation("destination"));
-
-    public SBSetDestinationPacket(BlockPos pos, String dim) {
-        this.pos = pos;
-        this.dim = dim;
-    }
-
-    public SBSetDestinationPacket(FriendlyByteBuf buf) {
-        this(buf.readBlockPos(), buf.readUtf());
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.dim);
-        buf.writeBlockPos(this.pos);
-    }
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();

@@ -27,8 +27,6 @@ public interface IPlatformHelper {
 
     String getConfigPath();
 
-    void openBarrierScreen(ServerPlayer player, BlockPos pos);
-
     default String getEnvironmentName() {
         return isDevelopmentEnvironment() ? "development" : "production";
     }

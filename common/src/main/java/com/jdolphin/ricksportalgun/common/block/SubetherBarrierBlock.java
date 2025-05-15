@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -62,7 +63,7 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            PGHelper.openBarrierScreen(serverPlayer, pos);
+            PGHelper.sendPacketToClient(serverPlayer, new CBOpenBarrierGuiPacket(pos));
             return InteractionResult.SUCCESS_SERVER;
         } else return InteractionResult.CONSUME;
     }

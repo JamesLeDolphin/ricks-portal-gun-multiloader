@@ -3,12 +3,11 @@ package com.jdolphin.ricksportalgun;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
-import com.jdolphin.ricksportalgun.common.packet.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.packet.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -47,7 +46,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
 
     private void initEvents() {
-        ClientLifecycleEvents.CLIENT_STARTED.register(mc -> PGCommonConfig.INSTANCE = new PGCommonConfig());
+        //ClientLifecycleEvents.CLIENT_STARTED.register(mc -> PGCommonConfig.INSTANCE = new PGCommonConfig());
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             PGCommonConfig.INSTANCE = new PGCommonConfig();

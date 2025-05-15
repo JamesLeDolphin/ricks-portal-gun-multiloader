@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common;
 
+
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import net.minecraft.core.Registry;
@@ -11,28 +11,27 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Mod(PGConstants.MODID)
-public class RicksPortalGunForgeMain {
+public class RicksPortalGunNeoForgeMain {
 
-    public RicksPortalGunForgeMain(FMLJavaModLoadingContext context) {
-        IEventBus bus = context.getModEventBus();
+    public RicksPortalGunNeoForgeMain(IEventBus bus) {
         RicksPortalGunCommonMain.init();
-        MinecraftForge.EVENT_BUS.addListener(this::reloadListenerAddEvent);
-        //bus.addListener(this::clientSetup);
-        bus.addListener(this::commonSetup);
+
+        NeoForge.EVENT_BUS.addListener(this::reloadListenerAddEvent);
         bus.addListener(this::buildContents);
+        bus.addListener(this::registerPackets);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
         bind(bus, Registries.BLOCK, PGBlocks::init);
         bind(bus, Registries.ITEM, PGItems::init);
@@ -41,19 +40,17 @@ public class RicksPortalGunForgeMain {
         bind(bus, Registries.MENU, PGMenuTypes::init);
     }
 
+    public void registerPackets(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        NeoForgePackets.init(registrar);
+    }
+
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {
         bus.addListener((RegisterEvent event) -> {
             if (registry.equals(event.getRegistryKey())) {
                 source.accept((t, rl) -> event.register(registry, rl, () -> t));
             }
         });
-    }
-
-
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        PGCommonConfig.INSTANCE = new PGCommonConfig();
-        event.enqueueWork(ForgePackets::init);
     }
 
     public void reloadListenerAddEvent(AddReloadListenerEvent event) {

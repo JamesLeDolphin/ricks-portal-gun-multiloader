@@ -1,8 +1,8 @@
-package com.jdolphin.ricksportalgun.common.packet;
+package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -14,25 +14,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSettingsPacket(boolean lock, String name, float size) implements CustomPacketPayload {
-    public static final StreamCodec<ByteBuf, SBSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSettingsPacket::lock,
+public record SBSettingsPacket(boolean lock, String name, float size) implements PGPayload {
+    public static final StreamCodec<FriendlyByteBuf, SBSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSettingsPacket::lock,
             ByteBufCodecs.STRING_UTF8, SBSettingsPacket::name, ByteBufCodecs.FLOAT, SBSettingsPacket::size, SBSettingsPacket::new);
     public static final Type<SBSettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
-
-    public SBSettingsPacket(boolean lock, String name, float size) {
-        this.lock = lock;
-        this.name = name;
-        this.size = size;
-    }
-
-    public SBSettingsPacket(FriendlyByteBuf buf) {
-        this(buf.readBoolean(), buf.readUtf(), buf.readFloat());
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeBoolean(this.lock);
-        buf.writeUtf(this.name);
-    }
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

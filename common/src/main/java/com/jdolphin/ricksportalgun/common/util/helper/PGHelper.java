@@ -4,7 +4,6 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.platform.Services;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,10 +18,6 @@ public class PGHelper {
 
     public static <P extends CustomPacketPayload> void sendPacketToServer(P packet) {
         Services.PLATFORM.sendPacketToServer(packet);
-    }
-
-    public static void openBarrierScreen(ServerPlayer player, BlockPos pos) {
-        Services.PLATFORM.openBarrierScreen(player, pos);
     }
 
     public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {

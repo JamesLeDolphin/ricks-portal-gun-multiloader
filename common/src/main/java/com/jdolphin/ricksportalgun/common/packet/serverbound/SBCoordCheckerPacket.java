@@ -1,10 +1,10 @@
-package com.jdolphin.ricksportalgun.common.packet;
+package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -20,21 +20,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBCoordCheckerPacket(String dim) implements CustomPacketPayload {
-    public static final StreamCodec<ByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
+public record SBCoordCheckerPacket(String dim) implements PGPayload {
+    public static final StreamCodec<FriendlyByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
     public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.createLocation("coord_check"));
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.dim);
-    }
-
-    public SBCoordCheckerPacket(String dim) {
-        this.dim = dim;
-    }
-
-    public SBCoordCheckerPacket(FriendlyByteBuf buf) {
-        this(buf.readUtf());
-    }
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

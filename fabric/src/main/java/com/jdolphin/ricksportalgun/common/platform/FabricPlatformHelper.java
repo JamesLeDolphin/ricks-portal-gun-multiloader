@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
-import com.jdolphin.ricksportalgun.common.packets.CBOpenGuiPacketFabric;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -50,11 +49,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public String getConfigPath() {
         return FabricLoader.getInstance().getConfigDir().toString();
-    }
-
-    @Override
-    public void openBarrierScreen(ServerPlayer player, BlockPos pos) {
-        sendPacketToClient(player, new CBOpenGuiPacketFabric(pos));
     }
 
     @Override

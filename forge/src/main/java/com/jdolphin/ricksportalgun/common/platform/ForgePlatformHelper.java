@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
-import com.jdolphin.ricksportalgun.common.packet.CBOpenBarrierGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -51,11 +50,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public String getConfigPath() {
         return FMLConfig.defaultConfigPath();
-    }
-
-    @Override
-    public void openBarrierScreen(ServerPlayer player, BlockPos pos) {
-        sendPacketToClient(player, new CBOpenBarrierGuiPacket(pos));
     }
 
     @Override

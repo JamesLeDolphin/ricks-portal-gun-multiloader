@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.client.screen;
 import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
-import com.jdolphin.ricksportalgun.common.packet.SBSetDispenserDestinationPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDispenserDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;

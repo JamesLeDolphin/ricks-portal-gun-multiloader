@@ -1,10 +1,10 @@
-package com.jdolphin.ricksportalgun.common.packet;
+package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -18,22 +18,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 
-public record SBLocatePlayerPacket(String name) implements CustomPacketPayload {
-    public static final StreamCodec<ByteBuf, SBLocatePlayerPacket> CODEC = StreamCodec.composite(
+public record SBLocatePlayerPacket(String name) implements PGPayload {
+    public static final StreamCodec<FriendlyByteBuf, SBLocatePlayerPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SBLocatePlayerPacket::name, SBLocatePlayerPacket::new);
     public static final Type<SBLocatePlayerPacket> ID = new Type<>(PGHelper.createLocation("locate"));
-
-    public SBLocatePlayerPacket(String name) {
-        this.name = name;
-    }
-
-    public SBLocatePlayerPacket(FriendlyByteBuf buf) {
-        this(buf.readUtf());
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.name);
-    }
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

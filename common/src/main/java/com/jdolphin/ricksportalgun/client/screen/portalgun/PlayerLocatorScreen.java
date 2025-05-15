@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.common.packet.SBLocatePlayerPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBLocatePlayerPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

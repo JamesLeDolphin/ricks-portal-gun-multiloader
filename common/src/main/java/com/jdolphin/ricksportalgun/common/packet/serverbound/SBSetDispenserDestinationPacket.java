@@ -1,7 +1,8 @@
-package com.jdolphin.ricksportalgun.common.packet;
+package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
@@ -13,7 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
-public record SBSetDispenserDestinationPacket(BlockPos pos, String dim, int id) implements CustomPacketPayload {
+public record SBSetDispenserDestinationPacket(BlockPos pos, String dim, int id) implements PGPayload {
     public static final StreamCodec<ByteBuf, SBSetDispenserDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDispenserDestinationPacket::pos,
             ByteBufCodecs.STRING_UTF8, SBSetDispenserDestinationPacket::dim, ByteBufCodecs.INT, SBSetDispenserDestinationPacket::id, SBSetDispenserDestinationPacket::new);
     public static final Type<SBSetDispenserDestinationPacket> ID = new Type<>(PGHelper.createLocation("dispenser_destination"));

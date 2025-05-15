@@ -2,8 +2,8 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.packet.SBManageWaypointsPacket;
-import com.jdolphin.ricksportalgun.common.packet.SBSetDestinationPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBManageWaypointsPacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
