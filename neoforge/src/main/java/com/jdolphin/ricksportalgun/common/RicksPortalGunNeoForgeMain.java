@@ -14,7 +14,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -53,8 +53,9 @@ public class RicksPortalGunNeoForgeMain {
         });
     }
 
-    public void reloadListenerAddEvent(AddReloadListenerEvent event) {
-        event.addListener(new PortalGunTypeReloadListener());
+    public void reloadListenerAddEvent(AddServerReloadListenersEvent event) {
+        PortalGunTypeReloadListener listener = new PortalGunTypeReloadListener();
+        event.addListener(listener.getID(), listener);
     }
 
     public void buildContents(BuildCreativeModeTabContentsEvent event) {

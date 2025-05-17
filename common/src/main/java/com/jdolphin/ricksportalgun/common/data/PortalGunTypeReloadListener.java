@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.data;
 
 import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -14,6 +15,10 @@ public class PortalGunTypeReloadListener extends SimpleJsonResourceReloadListene
 
     public PortalGunTypeReloadListener() {
         super(PortalGunType.CODEC, FileToIdConverter.json("portal_guns"));
+    }
+
+    public ResourceLocation getID() {
+        return PGHelper.createLocation("portal_guns");
     }
 
     @Override

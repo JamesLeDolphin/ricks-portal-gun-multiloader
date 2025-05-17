@@ -27,6 +27,7 @@ import java.util.Optional;
 public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> implements IScreenBase {
     public static final ResourceLocation CONTAINER_LOCATION = PGHelper.createLocation("textures/gui/container/portal_dispenser.png");
     private EditBox xInput, yInput, zInput;
+    private Button selectButton;
     private SuggestionTextFieldWidget dimInput;
     private final List<String> dimSuggestions;
 
@@ -85,7 +86,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         dimInput.update();
         setupSuggestionBox(dimInput);
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
+        this.selectButton = this.addWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             try {
                 int x = Integer.parseInt(this.xInput.getValue());
                 int y = Integer.parseInt(this.yInput.getValue());
@@ -128,7 +129,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         this.xInput.render(graphics, mouseX, mouseY, delta);
         this.yInput.render(graphics, mouseX, mouseY, delta);
         this.zInput.render(graphics, mouseX, mouseY, delta);
-
+        if (!this.dimInput.isFocused()) this.selectButton.render(graphics, mouseX, mouseY, delta);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
         int maxFuel = Math.max(menu.getMaxFuel(), 1); //Prevent dividing by zero

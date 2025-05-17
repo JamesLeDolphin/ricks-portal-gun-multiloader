@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEntityRenderState> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
     public PortalEntityModel model;
+    private int textureRot = 0;
+    int tickTimer = 0;
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
         this.model = new PortalEntityModel(pContext.bakeLayer(PortalEntityModel.LAYER_LOCATION));
@@ -30,6 +32,10 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     @Override
     public @NotNull PortalEntityRenderState createRenderState() {
         return new PortalEntityRenderState();
+    }
+
+    public ResourceLocation getPortalTexture(int i) {
+        return PGHelper.createLocation("textures/entity/portal_" + i + ".png");
     }
 
     public void extractRenderState(PortalEntity portal, PortalEntityRenderState state, float pPartialTick) {
@@ -99,11 +105,22 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
             stack.mulPose(Axis.YN.rotationDegrees(direction.getAxis().isVertical() ? yRot : state.yRot));
         }
 
-        VertexConsumer vertexconsumer = source.getBuffer(RenderType.entityTranslucent(PORTAL_TEXTURE));
+        tickTexture();
+        VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureRot)));
 
-        this.model.renderToBuffer(stack, vertexconsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);
+        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);
 
         stack.popPose();
         super.render(state, stack, source, pPackedLight);
+    }
+
+
+    public void tickTexture() {
+        tickTimer++;
+
+        if (tickTimer >= 40) {
+            tickTimer = 0;
+            textureRot = (textureRot + 1) % 4;
+        }
     }
 }
