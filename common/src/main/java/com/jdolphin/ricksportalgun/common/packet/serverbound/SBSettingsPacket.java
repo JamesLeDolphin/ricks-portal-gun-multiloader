@@ -14,9 +14,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSettingsPacket(boolean lock, String name, float size) implements PGPayload {
+public record SBSettingsPacket(boolean lock, String name, float size, int lifetime) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSettingsPacket::lock,
-            ByteBufCodecs.STRING_UTF8, SBSettingsPacket::name, ByteBufCodecs.FLOAT, SBSettingsPacket::size, SBSettingsPacket::new);
+            ByteBufCodecs.STRING_UTF8, SBSettingsPacket::name, ByteBufCodecs.FLOAT, SBSettingsPacket::size, ByteBufCodecs.INT, SBSettingsPacket::lifetime, SBSettingsPacket::new);
     public static final Type<SBSettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
 
     public void handle(ServerPlayer player) {
@@ -25,6 +25,8 @@ public record SBSettingsPacket(boolean lock, String name, float size) implements
         ItemStack stack = player.getMainHandItem();
         stack.set(PGDataComponents.LOCK, lock);
         stack.set(PGDataComponents.PORTAL_SIZE, size);
+        stack.set(PGDataComponents.PORTAL_LIFETIME, this.lifetime);
+
         if (!name.isEmpty()) {
             Player newOwner = server.getPlayerList().getPlayerByName(name);
             if (newOwner != null) {

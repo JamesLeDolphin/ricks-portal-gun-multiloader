@@ -27,7 +27,7 @@ public class PGDataComponents {
     public static final DataComponentType<Integer> MAX_FUEL = registerComponent("max_fuel", typeBuilder -> typeBuilder.persistent(Codec.INT));
     public static final DataComponentType<Boolean> LOCK = registerComponent("lock", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
     public static final DataComponentType<String> OWNER = registerComponent("owner", typeBuilder -> typeBuilder.persistent(Codec.STRING));
-
+    public static final DataComponentType<Integer> PORTAL_LIFETIME = registerComponent("size", typeBuilder -> typeBuilder.persistent(Codec.INT));
     public static final DataComponentType<List<Waypoint>> WAYPOINTS = registerComponent("waypoints", typeBuilder -> typeBuilder
             .persistent(Waypoint.CODEC.listOf()).networkSynchronized(Waypoint.PACKET_CODEC.apply(ByteBufCodecs.list())).cacheEncoding());
 

@@ -43,8 +43,8 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         state.rgb = portal.getColor();
         state.yRot = portal.getYRot();
         state.isNew = !portal.exists();
-        state.closing = portal.tickCount > 9 * 20;
-        state.opening = portal.tickCount < 20;
+        state.closing = portal.tickCount > portal.getLifetime() * 0.9;
+        state.opening = portal.tickCount < portal.getLifetime() * 0.1;
         state.direction = portal.getPortalDirection();
         state.facing = portal.getPortalFacing();
         state.width = portal.getSize();
@@ -61,7 +61,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         }
         if (state.closing) {
             f = Mth.lerp(state.ageInTicks / 20, 1.0f, 0.0f);
-            f = Mth.clamp(f, 0.0f, 1.0f);
+            f = Mth.clamp(f, 1.0f, 0.0f);
             f *= f;
             f *= f;
             stack.scale(f, f, f);
@@ -81,6 +81,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         float zRot = 0;
         float yRot = 0;
         float xRot = 0;
+
             float height = state.width > 2 ? state.width / 2 : 1;
            if (direction.getAxis().isVertical()) {
                if (axis.equals(Direction.Axis.Z)) {

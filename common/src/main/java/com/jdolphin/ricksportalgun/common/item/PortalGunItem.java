@@ -95,7 +95,41 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
         stack.set(DataComponents.ITEM_MODEL, type.model());
         stack.set(DataComponents.ITEM_NAME, type.name());
-        setDefaultColor(stack, type.color().getRGB());
+        setDefaultColor(stack, type.color());
+    }
+
+    private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
+        Vec3 newLoc = loc;
+        if (isAir(level, bPos.above()) && (dir == Direction.UP)) {
+            newLoc = new Vec3(loc.x(), loc.y(), loc.z());
+        }
+        if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
+            newLoc = new Vec3(loc.x(), loc.y() - 0.2, loc.z());
+        }
+
+        switch (dir) {
+            case NORTH -> {
+                if (isAir(level, bPos.north())) {
+                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() - 0.5);
+                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+            }
+            case SOUTH -> {
+                if (isAir(level, bPos.south())) {
+                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() + 1.5);
+                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+            }
+            case WEST -> {
+                if (isAir(level, bPos.west())) {
+                    newLoc = new Vec3(bPos.getX() - 0.5, bPos.getY(), bPos.getZ() + 0.5);
+                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+            }
+            case EAST -> {
+                if (isAir(level, bPos.east())) {
+                    newLoc = new Vec3(bPos.getX() + 1.5, bPos.getY(), bPos.getZ() + 0.5);
+                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+            }
+        }
+        return newLoc;
     }
 
     @Override
@@ -121,47 +155,22 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                         Direction dir = hitResult.getDirection();
                         BlockPos bPos = hitResult.getBlockPos();
 
-                        if (isAir(level, bPos.above()) && (dir == Direction.UP)) {
-                            newLoc = new Vec3(loc.x(), loc.y(), loc.z());
-                        }
-                        if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
-                            newLoc = new Vec3(loc.x(), loc.y() - 0.2, loc.z());
-                        }
-
-                        switch (dir) {
-                            case NORTH -> {
-                                if (isAir(level, bPos.north())) {
-                                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() - 0.5);
-                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
-                            }
-                            case SOUTH -> {
-                                if (isAir(level, bPos.south())) {
-                                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() + 1.5);
-                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
-                            }
-                            case WEST -> {
-                                if (isAir(level, bPos.west())) {
-                                    newLoc = new Vec3(bPos.getX() - 0.5, bPos.getY(), bPos.getZ() + 0.5);
-                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
-                            }
-                            case EAST -> {
-                                if (isAir(level, bPos.east())) {
-                                    newLoc = new Vec3(bPos.getX() + 1.5, bPos.getY(), bPos.getZ() + 0.5);
-                                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
-                            }
-                        }
-                    } else {
-                        newLoc = new Vec3(loc.x(), loc.y(), loc.z());
+                        newLoc = getLocation(level, bPos, dir, loc);
                     }
 
                     Direction dir = hitResult.getDirection();
                     Direction facing = player.getDirection();
                     float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
+                    int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
+
                     PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
                     PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir, facing, size);
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
+
+                    portal.setLifetime(age);
+                    exPortal.setLifetime(age);
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());

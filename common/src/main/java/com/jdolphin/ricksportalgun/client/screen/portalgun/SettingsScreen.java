@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SettingsScreen extends AbstractBaseScreen {
     private Button lockButton;
-    private Slider portalSize;
+    private Slider portalSize, portalAge;
     private boolean lock;
     private EditBox playerInput;
     public SettingsScreen() {
@@ -37,10 +37,11 @@ public class SettingsScreen extends AbstractBaseScreen {
 
         lock = stack.getOrDefault(PGDataComponents.LOCK, false);
         float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
+        int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
 
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
-                    SBSettingsPacket packet = new SBSettingsPacket(lock, playerInput.getValue(), (float) this.portalSize.getValue());
+                    SBSettingsPacket packet = new SBSettingsPacket(lock, playerInput.getValue(), (float) this.portalSize.getValue(), this.portalAge.getValueInt());
                     PGHelper.sendPacketToServer(packet);
                     this.onClose();
 
@@ -62,10 +63,13 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.playerInput = this.addWidget(new EditBox(this.font, this.width / 2 + 54, this.height / 2 - 50, 80, 16,
                 Component.translatable("chat.editBox")));
 
+        this.portalAge = this.addRenderableWidget(new Slider(this.width / 2 + 92, this.height / 2 - 8, 42, 18,
+                Component.empty(), age, 5, 20, true));
+
         //Temp
         this.addRenderableWidget(Button.builder(Component.literal("Types"), button -> {
-            PortalGunType type = PortalGunTypeRegistry.PORTAL_GUN_TYPES.get(PGConstants.RANDOM.nextInt(PortalGunTypeRegistry.PORTAL_GUN_TYPES.size()));
-            System.out.println(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
+            PortalGunType type = PortalGunTypeRegistry.CLIENT_TYPES.get(PGConstants.RANDOM.nextInt(PortalGunTypeRegistry.CLIENT_TYPES.size()));
+            System.out.println(PortalGunTypeRegistry.CLIENT_TYPES);
             SBChangePortalGunTypePacket packet = new SBChangePortalGunTypePacket(type);
             PGHelper.sendPacketToServer(packet);
         }).size(20, 20).pos(this.width / 2 + 70, this.height / 2).build());
@@ -80,6 +84,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4);
+        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.portal_age"), this.width / 4 - 16, this.portalAge.getY() + 4);
         GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, pPartialTick, lockButton, playerInput, portalSize);
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {

@@ -40,6 +40,7 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
+
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
     public static final String TAG_OPEN = "Open";
@@ -80,6 +81,14 @@ public class PortalEntity extends Entity {
         setPortalFacing(facing);
         setSize(size);
         this.pos = pos;
+    }
+
+    public void setLifetime(int lifetime) {
+        this.lifetime = lifetime * 20;
+    }
+
+    public int getLifetime() {
+        return lifetime;
     }
 
     public void setMaxLifeTime(int lifetime) {

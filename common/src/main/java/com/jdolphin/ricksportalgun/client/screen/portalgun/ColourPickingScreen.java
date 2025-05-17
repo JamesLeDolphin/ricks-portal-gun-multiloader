@@ -32,15 +32,15 @@ public class ColourPickingScreen extends AbstractBaseScreen {
     protected void init() {
         LocalPlayer player = minecraft.player;
         ItemStack stack = player.getMainHandItem();
-        Color color = new Color(stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB()));
+        int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
         this.r = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
-                Component.empty(), (double) color.getRed() / 255, 0, 1, false));
+                Component.empty(), ARGB.redFloat(color), 0, 1, false));
 
         this.g = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 36, 36, 20,
-                Component.empty(), (double) color.getGreen() / 255, 0, 1, false));
+                Component.empty(), ARGB.greenFloat(color), 0, 1, false));
 
         this.b = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
-                Component.empty(), (double) color.getBlue() / 255, 0, 1, false));
+                Component.empty(), ARGB.blueFloat(color), 0, 1, false));
 
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             if (stack.is(PGTags.Items.PORTAL_GUNS)) {
@@ -54,8 +54,8 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.colour.reset"), (button) -> {
-                    Color colour = new Color(stack.getOrDefault(PGDataComponents.DEFAULT_COLOUR, Color.GREEN.getRGB()));
-                    int rgb = colour.getRGB();
+                    int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_COLOUR, Color.GREEN.getRGB());
+
                     try {
                         this.r.setValue(ARGB.redFloat(rgb));
                         this.g.setValue(ARGB.greenFloat(rgb));
@@ -68,7 +68,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     public int getColor() {
         try {
-            return new Color((float) this.r.getValue(), (float)this.g.getValue(), (float)this.b.getValue()).getRGB();
+            return ARGB.color(this.r.getValueInt(), this.g.getValueInt(), this.b.getValueInt());
         } catch (NumberFormatException e) {
             GuiHelper.drawWhiteCenteredString(new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource()),
                     Component.translatable("error.ricksportalgun.color", e.getMessage().toLowerCase()),

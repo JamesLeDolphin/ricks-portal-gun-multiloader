@@ -84,5 +84,6 @@
   "entity.ricksportalgun.portal": "Portal",
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
   "tooltip.ricksportalgun.datacard": "Stored Waypoints: %s",
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "ricksportalgun.button.portal_age": "Change portal open time"
 }
