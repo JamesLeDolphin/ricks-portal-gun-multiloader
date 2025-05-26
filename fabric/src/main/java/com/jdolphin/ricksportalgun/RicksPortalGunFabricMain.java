@@ -51,6 +51,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             PGCommonConfig.INSTANCE = new PGCommonConfig();
             List<String> strings = LevelHelper.getDimensionsAsString(server.getAllLevels());
+            if (!strings.contains(PGHelper.createLocation("blender").toString())) strings.add(PGHelper.createLocation("blender").toString());
             LevelHelper.addDimensions(strings);
         });
 

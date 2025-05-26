@@ -5,21 +5,32 @@ import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -30,7 +41,7 @@ public class RicksPortalGunForgeMain {
         IEventBus bus = context.getModEventBus();
         RicksPortalGunCommonMain.init();
         MinecraftForge.EVENT_BUS.addListener(this::reloadListenerAddEvent);
-        //bus.addListener(this::clientSetup);
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
         bus.addListener(this::commonSetup);
         bus.addListener(this::buildContents);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
@@ -49,6 +60,20 @@ public class RicksPortalGunForgeMain {
         });
     }
 
+
+    private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer serverPlayer) {
+            MinecraftServer server = serverPlayer.getServer();
+            if (server != null) {
+                List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
+                if (!dims.contains(PGHelper.createLocation("blender").toString())) dims.add(PGHelper.createLocation("blender").toString());
+                CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
+                CBSyncGunTypesPacket typeSync = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
+                ForgePackets.sendToPlayer(serverPlayer, dimSync, typeSync);
+            }
+        }
+    }
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {

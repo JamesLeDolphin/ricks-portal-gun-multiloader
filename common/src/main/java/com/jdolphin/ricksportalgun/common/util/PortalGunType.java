@@ -32,7 +32,7 @@ public record PortalGunType(Component name, ResourceLocation id, int color, Reso
         CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(ComponentSerialization.CODEC.fieldOf("name").forGetter(PortalGunType::name),
                         ResourceLocation.CODEC.fieldOf("id").forGetter(PortalGunType::id),
-                                ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("color", Color.GREEN.getRGB()).forGetter(PortalGunType::color),
+                                ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("color", Color.GREEN.getRGB()).forGetter(PortalGunType::color),
                                 ResourceLocation.CODEC.fieldOf("model").forGetter(PortalGunType::model))
                         .apply(instance, PortalGunType::new));
 

@@ -13,8 +13,6 @@ public record CBSyncDimensionListPacket(List<String> dimensions) implements Cust
     public static final StreamCodec<FriendlyByteBuf, CBSyncDimensionListPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
             CBSyncDimensionListPacket::dimensions, CBSyncDimensionListPacket::new);
 
-
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return ID;

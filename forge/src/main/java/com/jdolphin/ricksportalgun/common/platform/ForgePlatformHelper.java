@@ -44,7 +44,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
-        ForgePackets.sendToPlayer(packet, player);
+        ForgePackets.sendToPlayer(player, packet);
     }
 
     @Override

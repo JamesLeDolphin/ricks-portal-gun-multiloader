@@ -1,6 +1,9 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
+import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
+import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
+import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.platform.Services;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +21,13 @@ public class PGMenuTypes {
 
     public static MenuType<PortalDispenserMenu> PORTAL_DISPENSER = register("portal_dispenser",
             PortalDispenserMenu::new);
+
+    public static MenuType<WorkbenchCraftingMenu> WORKBENCH_CRAFTING = register("workbench_crafting",
+            WorkbenchCraftingMenu::new);
+    public static MenuType<SkinSelectorMenu> WORKBENCH_SKIN_SELECTOR = register("skin_selector",
+            SkinSelectorMenu::new);
+    public static MenuType<WaypointTransferMenu> WORKBENCH_WAYPOINT_TRANSFER = register("waypoint_transfer",
+            WaypointTransferMenu::new);
 
     private static <M extends AbstractContainerMenu> MenuType<M> register(String name, BiFunction<Integer, Inventory, M> constructor) {
         MenuType<M> menu = Services.PLATFORM.createMenuType(constructor);

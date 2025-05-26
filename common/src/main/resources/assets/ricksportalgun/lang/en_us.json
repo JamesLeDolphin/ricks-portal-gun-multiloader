@@ -24,6 +24,7 @@
   "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "menu.ricksportalgun.waypoints.info": "Waypoint Info",
   "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s/%s",
+  "menu.ricksportalgun.workbench": "Portal Gun Workbench",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
@@ -39,6 +40,7 @@
   "ricksportalgun.button.settings": "Portal Gun Settings",
   "ricksportalgun.button.ownership": "Transfer portal gun ownership to:",
   "ricksportalgun.button.portal_size": "Change portal size",
+  "ricksportalgun.button.portal_age": "Change portal open time",
 
   "ricksportalgun.button.cancel": "Cancel",
   "ricksportalgun.button.true": "True",
@@ -72,8 +74,12 @@
   "ricksportalgun.barrier_code": "Code: %s",
   "ricksportalgun.deleted": "Deleted %s",
 
+  "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
+  "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
+
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
+  "death.attack.blender": "%s stepped into the blender dimension",
 
   "gamerule.allowPlayerLocating": "Allow locating players",
   "gamerule.randomiserMax": "Randomizer maximum area",
@@ -83,7 +89,8 @@
 
   "entity.ricksportalgun.portal": "Portal",
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
-  "tooltip.ricksportalgun.datacard": "Stored Waypoints: %s",
+
   "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "ricksportalgun.button.portal_age": "Change portal open time"
+  "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s"
+
 }

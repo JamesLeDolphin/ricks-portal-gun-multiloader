@@ -45,12 +45,11 @@ public class PGItems {
     private static Item registerGun(String name, Color color) {
         return register(name, PortalGunItem::new, new Item.Properties().stacksTo(1)
                 .component(PGDataComponents.PORTAL_COLOUR, color.getRGB())
-                .component(PGDataComponents.DEFAULT_COLOUR, color.getRGB())
+                .component(PGDataComponents.DEFAULT_PORTAL_COLOUR, color.getRGB())
                 .component(PGDataComponents.BOOTLEG, false)
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.PORTAL_SIZE, 1.0f)
                 .component(PGDataComponents.MAX_FUEL, 64)
-                .component(PGDataComponents.PRIMARY_DYE, DyeColor.WHITE.getTextureDiffuseColor())
                 .component(PGDataComponents.FUEL, 64)
                 .component(PGDataComponents.LOCK, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)

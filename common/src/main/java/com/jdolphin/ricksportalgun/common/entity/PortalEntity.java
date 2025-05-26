@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -289,7 +290,7 @@ public class PortalEntity extends Entity {
                 for (Entity nearby : entityList) {
                     ServerLevel destinationDim;
                     BlockPos destinationPos;
-                    if (!this.bootleg) {
+                    if (!this.bootleg && !LevelHelper.isBlenderDestination(getHopDim())) {
                         ResourceKey<Level> key = LevelHelper.getWorldKey(ResourceLocation.parse(getHopDim()));
                         destinationDim = LevelHelper.getServerWorld(this.level(), key);
                         destinationPos = getHopLoc();
@@ -298,8 +299,8 @@ public class PortalEntity extends Entity {
                         destinationPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 5000), serverLevel);
                     }
                     if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
-                        if (this.bootleg) {
-                            nearby.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, PGDamageTypes.BOOTLEG), this.random.nextInt(10) == 1 ? Integer.MAX_VALUE : 5);
+                        if (this.bootleg || LevelHelper.isBlenderDestination(getHopDim())) {
+                            nearby.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Integer.MAX_VALUE);
                         }
                         if (destinationDim != null && !destinationDim.isClientSide()) {
                             if (nearby.canUsePortal(false) && delay == 0) {

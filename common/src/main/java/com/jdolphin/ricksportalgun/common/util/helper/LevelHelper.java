@@ -46,6 +46,10 @@ public class LevelHelper {
             addDimension(s);
         }
     }
+
+    public static boolean isBlenderDestination(String s) {
+        return PGHelper.createLocation("blender").toString().equals(s);
+    }
     public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels, List<String> list) {
         levels.forEach(world -> {
             ResourceLocation worldKey = world.dimension().location();

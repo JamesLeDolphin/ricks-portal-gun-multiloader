@@ -23,8 +23,6 @@ public class CBOpenCoordGuiPacket implements CustomPacketPayload {
     }
 
 
-
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return ID;

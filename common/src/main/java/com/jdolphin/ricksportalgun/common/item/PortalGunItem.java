@@ -12,19 +12,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -33,6 +36,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.IntFunction;
 
 public class PortalGunItem extends Item implements IWaypointStorage {
 
@@ -183,8 +188,14 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setBootleg(bootleg);
                     exPortal.setBootleg(bootleg);
 
-
-                    if (serverlevel != null) {
+                    if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                        level.addFreshEntity(portal);
+                        if (!player.isCreative()) {
+                            lowerFuel(stack, 1);
+                            player.awardStat(Stats.ITEM_USED.get(this));
+                            player.getCooldowns().addCooldown(stack, 20 * 3);
+                        }
+                    } else if (serverlevel != null) {
                         if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
                             if (!portal.isFlat()) {
                                 portal.setYRot(player.getYRot());
@@ -195,7 +206,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                             player.awardStat(Stats.ITEM_USED.get(this));
                             player.getCooldowns().addCooldown(stack, 20 * 3);
-                            if (!player.getAbilities().instabuild) {
+                            if (!player.isCreative()) {
                                 lowerFuel(stack, 1);
                             }
                         } else {
@@ -221,8 +232,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
         toolTips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack).toString())
                 .withStyle(ChatFormatting.GRAY));
-        toolTips.add(Component.translatable("tooltip.ricksportalgun.datacard", list.size()).withStyle(ChatFormatting.DARK_GRAY));
-
+        toolTips.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.DARK_GRAY));
     }
 
     @Override
@@ -245,7 +255,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public void setDefaultColor(ItemStack stack, int color) {
-        stack.set(PGDataComponents.DEFAULT_COLOUR, color);
+        stack.set(PGDataComponents.DEFAULT_PORTAL_COLOUR, color);
     }
 
     public void setColor(ItemStack stack, int color) {

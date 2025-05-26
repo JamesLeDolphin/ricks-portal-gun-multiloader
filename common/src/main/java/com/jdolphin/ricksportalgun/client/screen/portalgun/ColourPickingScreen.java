@@ -54,7 +54,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         this.addRenderableWidget(Button.builder(
                 Component.translatable("ricksportalgun.button.colour.reset"), (button) -> {
-                    int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_COLOUR, Color.GREEN.getRGB());
+                    int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
 
                     try {
                         this.r.setValue(ARGB.redFloat(rgb));
@@ -68,7 +68,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     public int getColor() {
         try {
-            return ARGB.color(this.r.getValueInt(), this.g.getValueInt(), this.b.getValueInt());
+            return ARGB.colorFromFloat(1.0f, (float) this.r.getValue(), (float) this.g.getValue(), (float) this.b.getValue());
         } catch (NumberFormatException e) {
             GuiHelper.drawWhiteCenteredString(new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource()),
                     Component.translatable("error.ricksportalgun.color", e.getMessage().toLowerCase()),

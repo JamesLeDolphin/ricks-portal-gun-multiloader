@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 public class PGBlocks {
     private static final Map<ResourceLocation, Block> ALL = new HashMap<>();
+
     public static final Block GUN_WORKBENCH = register("portal_gun_workbench", GunWorkbenchBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).sound(SoundType.COPPER).strength(1.5F, 6.0F));
 

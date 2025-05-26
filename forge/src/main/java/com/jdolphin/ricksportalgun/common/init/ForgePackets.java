@@ -86,7 +86,9 @@ public class ForgePackets {
         INSTANCE.send(msg, PacketDistributor.SERVER.noArg());
     }
 
-    public static void sendToPlayer(Object msg, ServerPlayer player) {
-        INSTANCE.send(msg, PacketDistributor.PLAYER.with(player));
+    public static void sendToPlayer(ServerPlayer player, Object... messages) {
+        for (Object obj : messages) {
+            INSTANCE.send(obj, PacketDistributor.PLAYER.with(player));
+        }
     }
 }
