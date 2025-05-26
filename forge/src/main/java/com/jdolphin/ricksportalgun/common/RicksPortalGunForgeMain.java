@@ -9,8 +9,6 @@ import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionList
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
-import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
