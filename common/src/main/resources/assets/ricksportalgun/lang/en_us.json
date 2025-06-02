@@ -76,6 +76,8 @@
 
   "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
+  "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s",
+  "tooltip.ricksportalgun.upgrade": "Upgrade: ",
 
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
@@ -90,7 +92,5 @@
   "entity.ricksportalgun.portal": "Portal",
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s"
-
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
 }

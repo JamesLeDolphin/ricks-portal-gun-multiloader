@@ -29,7 +29,7 @@ public class WorkbenchCraftingScreen extends AbstractContainerScreen<WorkbenchCr
         super.init();
 
         this.addRenderableWidget(Button.builder(Component.literal("TEst"), button -> {
-            SBSetWorkbenchTypePacket packet = new SBSetWorkbenchTypePacket(1);
+            SBSetWorkbenchTypePacket packet = new SBSetWorkbenchTypePacket(0);
             PGHelper.sendPacketToServer(packet);
         }).bounds(this.imageWidth / 2, this.imageHeight / 2, 16, 16).build());
     }

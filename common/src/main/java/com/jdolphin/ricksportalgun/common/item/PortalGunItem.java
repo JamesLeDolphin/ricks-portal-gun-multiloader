@@ -134,7 +134,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     @Override
     public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
+        ItemStack stack = player.getMainHandItem();
+        ItemStack offhandStack = player.getOffhandItem();
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             migrateDamage(stack);
@@ -142,9 +143,12 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
                     !stack.getOrDefault(PGDataComponents.LOCK, false)) {
 
-                if (player.getOffhandItem().getItem() instanceof DyeItem dye) {
+                if (offhandStack.getItem() instanceof DyeItem dye) {
                     stack.set(PGDataComponents.PRIMARY_DYE, dye.getDyeColor().getTextureDiffuseColor());
                     return InteractionResult.SUCCESS;
+                }
+                if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
+                    upgrade.getUpgradeType().consumer.accept(stack);
                 }
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {

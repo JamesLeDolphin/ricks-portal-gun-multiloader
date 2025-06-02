@@ -34,6 +34,7 @@ public class WaypointTransferScreen extends AbstractContainerScreen<WaypointTran
 
         LocalPlayer player = minecraft.player;
         ItemStack stack = player.getMainHandItem();
+
         this.leftWaypointList = this.addRenderableWidget(new WaypointListWidget(this, this.imageWidth / 3, this.imageHeight / 2, this.imageWidth / 3,
                 50, 16, stack, false, 60, 16));
     }
