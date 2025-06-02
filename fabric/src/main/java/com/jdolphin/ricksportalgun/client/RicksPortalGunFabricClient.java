@@ -3,6 +3,9 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.SkinSelectingScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WaypointTransferScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -25,7 +28,11 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
+
         MenuScreens.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
+        MenuScreens.register(PGMenuTypes.WORKBENCH_CRAFTING, WorkbenchCraftingScreen::new);
+        MenuScreens.register(PGMenuTypes.WORKBENCH_SKIN_SELECTOR, SkinSelectingScreen::new);
+        MenuScreens.register(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, WaypointTransferScreen::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 

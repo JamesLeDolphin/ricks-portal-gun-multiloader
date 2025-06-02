@@ -38,6 +38,8 @@ public class RicksPortalGunNeoForgeMain {
         bind(bus, Registries.BLOCK_ENTITY_TYPE, PGBlockEntities::init);
         bind(bus, Registries.ENTITY_TYPE, PGEntities::init);
         bind(bus, Registries.MENU, PGMenuTypes::init);
+        bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
+        bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
     }
 
     public void registerPackets(final RegisterPayloadHandlersEvent event) {

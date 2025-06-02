@@ -33,6 +33,8 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGEntities.init(bind(BuiltInRegistries.ENTITY_TYPE));
         PGDataComponents.init(bind(BuiltInRegistries.DATA_COMPONENT_TYPE));
         PGMenuTypes.init(bind(BuiltInRegistries.MENU));
+        PGRecipeSerializers.init(bind(BuiltInRegistries.RECIPE_SERIALIZER));
+        PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());

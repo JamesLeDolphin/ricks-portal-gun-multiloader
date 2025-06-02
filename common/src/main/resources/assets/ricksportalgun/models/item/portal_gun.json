@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "portal_gun",
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "ricksportalgun:item/portal_gun",

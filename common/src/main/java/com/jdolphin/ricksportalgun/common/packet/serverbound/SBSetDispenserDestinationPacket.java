@@ -14,26 +14,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
-public record SBSetDispenserDestinationPacket(BlockPos pos, String dim, int id) implements PGPayload {
+public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implements PGPayload {
     public static final StreamCodec<ByteBuf, SBSetDispenserDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDispenserDestinationPacket::pos,
-            ByteBufCodecs.STRING_UTF8, SBSetDispenserDestinationPacket::dim, ByteBufCodecs.INT, SBSetDispenserDestinationPacket::id, SBSetDispenserDestinationPacket::new);
+            ByteBufCodecs.STRING_UTF8, SBSetDispenserDestinationPacket::dim, SBSetDispenserDestinationPacket::new);
     public static final Type<SBSetDispenserDestinationPacket> ID = new Type<>(PGHelper.createLocation("dispenser_destination"));
-
-    public SBSetDispenserDestinationPacket(BlockPos pos, String dim, int id) {
-        this.pos = pos;
-        this.dim = dim;
-        this.id = id;
-    }
-
-    public SBSetDispenserDestinationPacket(FriendlyByteBuf buf) {
-        this(buf.readBlockPos(), buf.readUtf(), buf.readInt());
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.dim);
-        buf.writeBlockPos(this.pos);
-        buf.writeInt(this.id);
-    }
 
     public void handle(ServerPlayer player) {
         if (player.containerMenu instanceof PortalDispenserMenu menu) {

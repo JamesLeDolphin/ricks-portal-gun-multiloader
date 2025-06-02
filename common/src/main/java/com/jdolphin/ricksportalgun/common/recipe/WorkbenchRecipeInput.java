@@ -19,7 +19,8 @@ public class WorkbenchRecipeInput implements RecipeInput {
         for (ItemStack itemstack : stacks) {
             if (!itemstack.isEmpty()) {
                 ++i;
-                this.stackedContents.accountStack(itemstack, 1);
+
+                this.stackedContents.accountStack(itemstack);
             }
         }
         ingredientCount = i;

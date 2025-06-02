@@ -19,7 +19,7 @@ public class DataCardItem extends Item implements IWaypointStorage {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
-        tooltipComponents.add(Component.translatable("tooltip.ricksportalgun.datacard", list.size()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltipComponents.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.DARK_GRAY));
     }
 
 }

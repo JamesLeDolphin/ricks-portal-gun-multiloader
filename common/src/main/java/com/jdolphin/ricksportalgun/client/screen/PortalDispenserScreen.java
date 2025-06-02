@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> implements IScreenBase {
-    public static final ResourceLocation CONTAINER_LOCATION = PGHelper.createLocation("textures/gui/container/portal_dispenser.png");
+    public static final ResourceLocation CONTAINER_LOCATION = PGHelper.createLocation("textures/gui/dispenser/portal_dispenser.png");
     private EditBox xInput, yInput, zInput;
     private Button selectButton;
     private SuggestionTextFieldWidget dimInput;
@@ -93,7 +93,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
                 int z = Integer.parseInt(this.zInput.getValue());
                 String dim = dimInput.getValue();
                 BlockPos pos = new BlockPos(x, y, z);
-                SBSetDispenserDestinationPacket packet = new SBSetDispenserDestinationPacket(pos, dim, this.menu.containerId);
+                SBSetDispenserDestinationPacket packet = new SBSetDispenserDestinationPacket(pos, dim);
                 PGHelper.sendPacketToServer(packet);
 
             } catch (Exception e) {

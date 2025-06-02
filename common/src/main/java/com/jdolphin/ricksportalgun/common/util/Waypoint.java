@@ -18,7 +18,7 @@ public class Waypoint implements Comparable<Waypoint> {
     private int z;
     private String dim;
     private String name;
-    private String allDatMixed;
+    private final String waypointString;
 
     public Waypoint(int X, int Y, int Z, String dimension, String name) {
         this.x = X;
@@ -26,7 +26,7 @@ public class Waypoint implements Comparable<Waypoint> {
         this.z = Z;
         this.dim = dimension;
         this.name = name;
-        this.allDatMixed = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
+        this.waypointString = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
     }
 
     public Waypoint(BlockPos pos, String dimension, String name) {
@@ -35,7 +35,7 @@ public class Waypoint implements Comparable<Waypoint> {
         this.z = pos.getZ();
         this.dim = dimension;
         this.name = name;
-        this.allDatMixed = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
+        this.waypointString = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
     }
     public BlockPos getBlockPos() {
         return new BlockPos(this.x, this.y, this.z);
@@ -54,7 +54,7 @@ public class Waypoint implements Comparable<Waypoint> {
     }
 
     public String getWaypointString() {
-        return allDatMixed;
+        return waypointString;
     }
 
     public static Waypoint getWaypoint(String waypointString) {

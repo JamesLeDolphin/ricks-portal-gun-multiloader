@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public class WaypointInfoScreen extends AbstractBaseScreen {
     private final Waypoint wp;
 
-    protected WaypointInfoScreen(Waypoint waypoint) {
+    public WaypointInfoScreen(Waypoint waypoint) {
         super("menu.ricksportalgun.waypoints.info");
         this.wp = waypoint;
     }

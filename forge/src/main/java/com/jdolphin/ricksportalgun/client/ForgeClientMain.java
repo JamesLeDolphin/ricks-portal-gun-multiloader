@@ -4,6 +4,9 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.SkinSelectingScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WaypointTransferScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
@@ -62,11 +65,16 @@ public class ForgeClientMain {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void clientSetup(FMLClientSetupEvent event) {
-            event.enqueueWork(() -> MenuScreens.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new));
+            event.enqueueWork(() -> {
+                MenuScreens.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
+                MenuScreens.register(PGMenuTypes.WORKBENCH_CRAFTING, WorkbenchCraftingScreen::new);
+                MenuScreens.register(PGMenuTypes.WORKBENCH_SKIN_SELECTOR, SkinSelectingScreen::new);
+                MenuScreens.register(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, WaypointTransferScreen::new);
+            });
         }
 
         @SubscribeEvent
-        public static void a(FMLConstructModEvent event) {
+        public static void constructEvent(FMLConstructModEvent event) {
             ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("primary_dye"), PrimaryDyeTint.CODEC);
             ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("secondary_dye"), SecondaryDyeTint.CODEC);
             ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("portal_color"), PortalColourTint.CODEC);

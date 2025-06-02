@@ -48,6 +48,8 @@ public class RicksPortalGunForgeMain {
         bind(bus, Registries.BLOCK_ENTITY_TYPE, PGBlockEntities::init);
         bind(bus, Registries.ENTITY_TYPE, PGEntities::init);
         bind(bus, Registries.MENU, PGMenuTypes::init);
+        bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
+        bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

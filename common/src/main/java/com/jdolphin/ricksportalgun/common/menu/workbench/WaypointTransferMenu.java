@@ -14,17 +14,20 @@ public class WaypointTransferMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
     public WaypointTransferMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new SimpleContainer(1), new SimpleContainerData(2), ContainerLevelAccess.NULL);
+        this(containerId, playerInventory, new SimpleContainer(5), new SimpleContainerData(2), ContainerLevelAccess.NULL);
     }
 
     public WaypointTransferMenu(int i, Inventory inventory, Container container, ContainerData data, ContainerLevelAccess access) {
         super(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, i);
-        checkContainerSize(container, 1);
-        checkContainerDataCount(data, 2);
         this.data = data;
         this.access = access;
         this.container = container;
-        container.startOpen(inventory.player);
+        this.addDataSlots(data);
+        checkContainerSize(container, 5);
+        checkContainerDataCount(data, 2);
+
+        addInventoryExtendedSlots(inventory, 25, 129);
+        addInventoryHotbarSlots(inventory, 25, 187);
     }
 
     @Override

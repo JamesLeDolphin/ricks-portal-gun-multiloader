@@ -22,7 +22,8 @@ import org.jetbrains.annotations.NotNull;
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEntityRenderState> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
     public PortalEntityModel model;
-    private int textureRot = 0;
+    private int textureFrame = 0;
+    private int frames = 8;
     int tickTimer = 0;
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -107,7 +108,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         }
 
         tickTexture();
-        VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureRot)));
+        VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
 
         this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);
 
@@ -119,9 +120,9 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     public void tickTexture() {
         tickTimer++;
 
-        if (tickTimer >= 40) {
+        if (tickTimer >= 30) {
             tickTimer = 0;
-            textureRot = (textureRot + 1) % 4;
+            textureFrame = (textureFrame + 1) % frames;
         }
     }
 }

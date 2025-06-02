@@ -1,5 +1,7 @@
 package com.jdolphin.ricksportalgun.common.recipe;
 
+import com.jdolphin.ricksportalgun.common.init.PGRecipeSerializers;
+import com.jdolphin.ricksportalgun.common.init.PGRecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -10,26 +12,45 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
-    private final List<Ingredient> ingredients;
+    private final List<ItemStack> items;
     final ItemStack result;
     private PlacementInfo placementInfo;
 
-    public PortalGunWorkbenchRecipe(List<Ingredient> ingredients, ItemStack result) {
-        this.ingredients = ingredients;
+    public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result) {
+        this.items = itemStacks; //Temp
         this.result = result;
     }
 
+    public ItemStack getResult() {
+        return result;
+    }
+
+    public List<ItemStack> getInputs() {
+        return this.items;
+    }
 
     @Override
     public boolean matches(WorkbenchRecipeInput input, Level level) {
-        if (input.ingredientCount() != this.ingredients.size()) return false;
-        else {
-            return input.size() == 1 && this.ingredients.size() == 1 ?
-                    this.ingredients.getFirst().test(input.getItem(0)) : input.stackedContents().canCraft(this, null);
+        if (!level.isClientSide) {
+            if (input.ingredientCount() == this.items.size()) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    ItemStack stack = input.getItem(i);
+                    ItemStack ingredient = this.items.get(i);;
+                    if (stack.getCount() < ingredient.getCount()) {
+                        return false;
+                    }
+                    if (!ItemStack.isSameItemSameComponents(stack, ingredient)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
+        return false;
     }
 
     @Override
@@ -39,18 +60,20 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
 
     @Override
     public RecipeSerializer<? extends Recipe<WorkbenchRecipeInput>> getSerializer() {
-        return Serializer.INSTANCE;
+        return PGRecipeSerializers.WORKBENCH_SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<WorkbenchRecipeInput>> getType() {
-        return Type.INSTANCE;
+        return PGRecipeTypes.WORKBENCH_TYPE;
     }
 
     @Override
     public PlacementInfo placementInfo() {
         if (this.placementInfo == null) {
-            this.placementInfo = PlacementInfo.create(this.ingredients);
+            List<Ingredient> ingredientList = new ArrayList<>();
+            this.items.forEach(stack -> ingredientList.add(Ingredient.of(stack.getItem())));
+            this.placementInfo = PlacementInfo.create(ingredientList);
         }
 
         return this.placementInfo;
@@ -61,17 +84,11 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
         return RecipeBookCategories.CRAFTING_MISC;
     }
 
-
-    public static class Type implements RecipeType<PortalGunWorkbenchRecipe> {
-        public static final Type INSTANCE = new Type();
-    }
-
     public static class Serializer implements RecipeSerializer<PortalGunWorkbenchRecipe> {
-        public static final Serializer INSTANCE = new Serializer();
 
         private static final MapCodec<PortalGunWorkbenchRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-                instance.group(Ingredient.CODEC.listOf(1, 4).fieldOf("ingredients").forGetter((recipe) -> recipe.ingredients),
-                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter((recipe) -> recipe.result))
+                instance.group(ItemStack.STRICT_CODEC.listOf(1, 4).fieldOf("ingredients").forGetter((recipe) -> recipe.items),
+                                ItemStack.CODEC.fieldOf("result").forGetter((recipe) -> recipe.result))
                         .apply(instance, PortalGunWorkbenchRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, PortalGunWorkbenchRecipe> STREAM_CODEC;
@@ -89,7 +106,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
         }
 
         static {
-            STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), (recipe) -> recipe.ingredients,
+            STREAM_CODEC = StreamCodec.composite(ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), (recipe) -> recipe.items,
                     ItemStack.STREAM_CODEC, (recipe) -> recipe.result, PortalGunWorkbenchRecipe::new);
 
         }

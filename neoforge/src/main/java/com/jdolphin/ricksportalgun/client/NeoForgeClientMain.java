@@ -4,6 +4,9 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.SkinSelectingScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WaypointTransferScreen;
+import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
@@ -26,7 +29,10 @@ public class NeoForgeClientMain {
 
     @SubscribeEvent
     public static void clientSetup(RegisterMenuScreensEvent event) {
-                event.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
+        event.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
+        event.register(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, WaypointTransferScreen::new);
+        event.register(PGMenuTypes.WORKBENCH_CRAFTING, WorkbenchCraftingScreen::new);
+        event.register(PGMenuTypes.WORKBENCH_SKIN_SELECTOR, SkinSelectingScreen::new);
     }
 
     @SubscribeEvent
