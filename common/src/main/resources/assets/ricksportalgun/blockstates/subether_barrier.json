@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=true": {
+      "model": "ricksportalgun:block/subether_barrier"
+    },
+    "active=false": {
+      "model": "ricksportalgun:block/subether_barrier"
+    }
+  }
+}

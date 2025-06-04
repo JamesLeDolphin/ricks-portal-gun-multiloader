@@ -92,5 +92,7 @@
   "entity.ricksportalgun.portal": "Portal",
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
+  "tooltip.ricksportalgun.hold_shift": "Hold \\u00a79[\\u00a76Shift\\u00a79]"
 }

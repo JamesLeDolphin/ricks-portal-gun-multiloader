@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/orientable_vertical",
+  "textures": {
+    "front": "ricksportalgun:block/subether_barrier_top",
+    "side": "ricksportalgun:block/subether_barrier_side"
+  }
+}

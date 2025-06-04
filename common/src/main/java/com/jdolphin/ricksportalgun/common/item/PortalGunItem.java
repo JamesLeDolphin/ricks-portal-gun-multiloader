@@ -8,6 +8,7 @@ import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -148,7 +149,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     return InteractionResult.SUCCESS;
                 }
                 if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
-                    upgrade.getUpgradeType().consumer.accept(stack);
+                    upgrade.getUpgradeType().applyUpgrade(stack, this);
                 }
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
@@ -175,6 +176,12 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                     portal.setLifetime(age);
                     exPortal.setLifetime(age);
+
+                    Component customName = stack.getCustomName();
+                    if (customName != null) {
+                        portal.setCustomName(customName);
+                        exPortal.setCustomName(customName);
+                    }
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
@@ -227,11 +234,20 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pContext, List<Component> toolTips, @NotNull TooltipFlag pTooltipFlag) {
         List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
+        if (!Screen.hasShiftDown()) {
         toolTips.add(Component.translatable("ricksportalgun.destination",
                 getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
         toolTips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack).toString())
                 .withStyle(ChatFormatting.GRAY));
-        toolTips.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.DARK_GRAY));
+        toolTips.add(Component.translatable("tooltip.ricksportalgun.fuel", getFuel(stack), getMaxFuel(stack)).withStyle(ChatFormatting.GRAY));
+
+            toolTips.add(Component.translatable("").withStyle(ChatFormatting.GRAY));
+        } else {
+            toolTips.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.GRAY));
+            if (stack.has(PGDataComponents.PRIMARY_DYE) || stack.has(PGDataComponents.SECONDARY_DYE)) {
+                toolTips.add(Component.translatable("item.dyed", list.size()).withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+            }
+        }
     }
 
     @Override

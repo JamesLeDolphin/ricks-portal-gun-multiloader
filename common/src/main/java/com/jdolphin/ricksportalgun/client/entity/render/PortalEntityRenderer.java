@@ -15,15 +15,22 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEntityRenderState> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
     public PortalEntityModel model;
     private int textureFrame = 0;
-    private int frames = 8;
+    private final int frames = 8;
+    private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
     int tickTimer = 0;
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -49,6 +56,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         state.direction = portal.getPortalDirection();
         state.facing = portal.getPortalFacing();
         state.width = portal.getSize();
+        state.name = portal.getName();
     }
 
     protected void openAnimation(PortalEntityRenderState state, PoseStack stack) {
@@ -109,8 +117,20 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
 
         tickTexture();
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
-
-        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, state.rgb);
+        int i = state.rgb;
+        if (state.name != null && names.contains(state.name.getString())) {
+            int j = 25;
+            int k = Mth.floor(state.ageInTicks);
+            int l = k / 25;
+            int i1 = DyeColor.values().length;
+            int j1 = l % i1;
+            int k1 = (l + 1) % i1;
+            float f = ((float)(k % 25) + Mth.frac(state.ageInTicks)) / 25.0F;
+            int l1 = Sheep.getColor(DyeColor.byId(j1));
+            int i2 = Sheep.getColor(DyeColor.byId(k1));
+            i = ARGB.lerp(f, l1, i2);
+        }
+        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, i);
 
         stack.popPose();
         super.render(state, stack, source, pPackedLight);
@@ -120,7 +140,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     public void tickTexture() {
         tickTimer++;
 
-        if (tickTimer >= 30) {
+        if (tickTimer >= 40) {
             tickTimer = 0;
             textureFrame = (textureFrame + 1) % frames;
         }
