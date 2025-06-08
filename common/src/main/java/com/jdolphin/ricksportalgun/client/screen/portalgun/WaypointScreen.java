@@ -1,13 +1,12 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.BetterImageButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class WaypointScreen extends AbstractBaseScreen {
 
     public WaypointListWidget waypointList;
-    public Button addWaypoint;
+    public PGImageButton addWaypoint;
 
     public static ResourceLocation NEW_WAYPOINT_TEXTURES = PGHelper.createLocation("icon/new_waypoint");
 
@@ -34,7 +33,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.screen != null && minecraft.player != null;
 
         LocalPlayer player = minecraft.player;
-        this.addWaypoint = this.addRenderableWidget(new BetterImageButton(this.width / 2 + 68, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
+        this.addWaypoint = this.addRenderableWidget(new PGImageButton(this.width / 2 + 68, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
                 (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES ));
         ItemStack stack = player.getMainHandItem();
         if (stack.is(PGTags.Items.PORTAL_GUNS))

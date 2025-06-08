@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 
 import java.text.DecimalFormat;
 
-public class Slider extends AbstractSliderButton {
+public class PGSlider extends AbstractSliderButton {
     protected Component msg;
     protected double minValue;
     protected double maxValue;
@@ -14,7 +14,7 @@ public class Slider extends AbstractSliderButton {
     protected boolean drawString;
     private final DecimalFormat format;
 
-    public Slider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, double stepSize, int precision, boolean drawString) {
+    public PGSlider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, double stepSize, int precision, boolean drawString) {
         super(x, y, width, height, Component.empty(), 0.0F);
         this.msg = message;
         this.minValue = minValue;
@@ -22,7 +22,7 @@ public class Slider extends AbstractSliderButton {
         this.stepSize = Math.abs(stepSize);
         this.value = this.snapToNearest((currentValue - minValue) / (maxValue - minValue));
         this.drawString = drawString;
-        if (stepSize == (double)0.0F) {
+        if (stepSize == 0.0) {
             precision = Math.min(precision, 4);
             StringBuilder builder = new StringBuilder("0");
             if (precision > 0) {
@@ -43,7 +43,7 @@ public class Slider extends AbstractSliderButton {
         this.updateMessage();
     }
 
-    public Slider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, boolean drawString) {
+    public PGSlider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, boolean drawString) {
         this(x, y, width, height, message, currentValue, minValue, maxValue, 0.1F, 0, drawString);
     }
 

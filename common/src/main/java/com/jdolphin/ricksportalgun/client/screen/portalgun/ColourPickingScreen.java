@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.Slider;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBColourPacket;
@@ -22,7 +22,7 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 
 public class ColourPickingScreen extends AbstractBaseScreen {
-    private Slider r, g, b;
+    private PGSlider r, g, b;
 
     protected ColourPickingScreen() {
         super(Component.translatable("menu.ricksportalgun.colour_select"));
@@ -33,13 +33,13 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         LocalPlayer player = minecraft.player;
         ItemStack stack = player.getMainHandItem();
         int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
-        this.r = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
+        this.r = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
                 Component.empty(), ARGB.redFloat(color), 0, 1, false));
 
-        this.g = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 36, 36, 20,
+        this.g = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 36, 36, 20,
                 Component.empty(), ARGB.greenFloat(color), 0, 1, false));
 
-        this.b = this.addRenderableWidget(new Slider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
+        this.b = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
                 Component.empty(), ARGB.blueFloat(color), 0, 1, false));
 
         this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {

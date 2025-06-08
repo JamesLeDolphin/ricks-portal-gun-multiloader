@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen;
 
-import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDispenserDestinationPacket;
@@ -9,9 +9,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -24,7 +22,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> implements IScreenBase {
+public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> {
     public static final ResourceLocation CONTAINER_LOCATION = PGHelper.createLocation("textures/gui/dispenser/portal_dispenser.png");
     private EditBox xInput, yInput, zInput;
     private Button selectButton;
@@ -59,7 +57,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
     public boolean mouseScrolled(double d, double d1, double d2, double d3) {
         Optional<GuiEventListener> optional = this.getChildAt(d, d1);
         if (optional.isPresent()) {
-            if (optional.get() instanceof ScrollableList<?> list) {
+            if (optional.get() instanceof PGScrollableWidget<?> list) {
                 return list.mouseScrolled(d, d1, d2, d3);
             }
         }
@@ -85,6 +83,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         this.dimInput = new SuggestionTextFieldWidget(this, this.width / 2 - 32,this.height / 2 - 48, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
         dimInput.update();
         setupSuggestionBox(dimInput);
+        this.addWidget(dimInput.getSuggestionList());
 
         this.selectButton = this.addWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             try {
@@ -148,10 +147,5 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         int i2 = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         graphics.blit(RenderType::guiTextured, CONTAINER_LOCATION, i2, j, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
-    }
-
-    @Override
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
-        return super.addRenderableWidget(widget);
     }
 }

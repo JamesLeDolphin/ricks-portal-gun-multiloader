@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends AbstractContainerWidget {
+public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> extends AbstractContainerWidget {
     private static final ResourceLocation MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/menu_list_background.png");
     private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
     protected final Minecraft minecraft;
@@ -36,9 +36,9 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
     @Nullable
     private E hovered;
 
-    public ScrollableList(Minecraft minecraft, int width, int height, int x, int y, int itemHeight) {
+    public PGScrollableWidget(Minecraft minecraft, int width, int height, int x, int y, int itemHeight) {
         super(x, y, width, height, CommonComponents.EMPTY);
-        this.children = new ScrollableList.TrackedList();
+        this.children = new PGScrollableWidget.TrackedList();
         this.centerListVertically = true;
         this.minecraft = minecraft;
         this.itemHeight = itemHeight;
@@ -63,7 +63,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
     }
 
     public E getFirstElement() {
-        return this.children.get(0);
+        return this.children.getFirst();
     }
 
     @Nullable
@@ -123,7 +123,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         int l = j + i;
         int i1 = Mth.floor(mouseY - (double)this.getY()) - this.headerHeight + (int)this.scrollAmount() - 4;
         int j1 = i1 / this.itemHeight;
-        return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (ScrollableList.Entry)this.children().get(j1) : null);
+        return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (PGScrollableWidget.Entry)this.children().get(j1) : null);
     }
 
     public void updateSize(int width, HeaderAndFooterLayout layout) {
@@ -344,7 +344,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         return this.hovered;
     }
 
-    void bindEntryToSelf(ScrollableList.Entry<E> entry) {
+    void bindEntryToSelf(PGScrollableWidget.Entry<E> entry) {
         entry.list = this;
     }
 
@@ -359,10 +359,10 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
 
     }
 
-    protected abstract static class Entry<E extends ScrollableList.Entry<E>> implements GuiEventListener {
+    protected abstract static class Entry<E extends PGScrollableWidget.Entry<E>> implements GuiEventListener {
         /** @deprecated */
         @Deprecated
-        protected ScrollableList<E> list;
+        protected PGScrollableWidget<E> list;
 
         protected Entry() {
         }
@@ -400,13 +400,13 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
 
         public E set(int index, E entry) {
             E e = this.delegate.set(index, entry);
-            ScrollableList.this.bindEntryToSelf(entry);
+            PGScrollableWidget.this.bindEntryToSelf(entry);
             return e;
         }
 
         public void add(int index, E entry) {
             this.delegate.add(index, entry);
-            ScrollableList.this.bindEntryToSelf(entry);
+            PGScrollableWidget.this.bindEntryToSelf(entry);
         }
 
         public E remove(int index) {

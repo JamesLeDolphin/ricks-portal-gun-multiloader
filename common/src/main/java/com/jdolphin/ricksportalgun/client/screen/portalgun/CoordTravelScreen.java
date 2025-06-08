@@ -1,7 +1,8 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.BetterImageButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
@@ -14,10 +15,12 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,11 +31,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class CoordTravelScreen extends AbstractBaseScreen {
-    private BetterImageButton waypoints, randomise, player_loc, colour, settings;
+    private PGImageButton waypoints, randomise, player_loc, colour, settings;
     private String dS, xS, yS, zS; //Suggestions
     private EditBox xInput, yInput, zInput;
     private SuggestionTextFieldWidget dimInput;
     private final List<String> dimSuggestions;
+    private PGTextButton select, cancel;
 
     public static ResourceLocation WAYPOINT_TEXTURES = PGHelper.createLocation("icon/waypoint");
     public static ResourceLocation PLAYER_LOC_TEXTURES = PGHelper.createLocation("icon/player_locating");
@@ -51,35 +55,36 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         super.init();
 
         this.dimInput = this.addWidget(new SuggestionTextFieldWidget(this,
-                this.width / 2 - 32, this.height / 2 - 32, 112, 12,
+                this.width / 2 - 32, this.height / 2 - 64, 112, 16,
                 Component.translatable("chat.editBox"), dimSuggestions));
+        this.addWidget(this.dimInput.getSuggestionList());
+
         this.xInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2 - 16, 64, 12,
+                this.width / 2 - 32, this.height / 2 - 40, 64, 16,
                 Component.translatable("chat.editBox")));
         this.yInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2, 64, 12,
+                this.width / 2 - 32, this.height / 2 - 16, 64, 16,
                 Component.translatable("chat.editBox")));
         this.zInput = this.addWidget(new EditBox(this.font,
-                this.width / 2 - 32, this.height / 2 + 16, 64, 12,
+                this.width / 2 - 32, this.height / 2 + 8, 64, 16,
                 Component.translatable("chat.editBox")));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
+        this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 32, 128, 20, Component.translatable("ricksportalgun.button.select"), (button) -> {
             this.setCoords();
             this.onClose();
 
-        }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.cancel"), (button) -> {
-            this.onClose();
-        }).size(128, 20).pos(this.width / 2 + 8, this.height / 2 + 32).build());
+        }, this.font));
+        this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 32, 128, 20,
+                Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
-        this.waypoints = this.addRenderableWidget(new BetterImageButton(this.width / 2 - 90, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
+        this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 90, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
                 button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURES));
 
 
-        this.player_loc = this.addRenderableWidget(new BetterImageButton(this.width / 2 - 64, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.player_locator"),
+        this.player_loc = this.addRenderableWidget(new PGImageButton(this.width / 2 - 64, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.player_locator"),
                 (button) -> this.minecraft.setScreen(new PlayerLocatorScreen()), 20, 18, PLAYER_LOC_TEXTURES));
 
-        this.randomise = this.addRenderableWidget(new BetterImageButton(this.width / 2 - 38, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.randomise"),
+        this.randomise = this.addRenderableWidget(new PGImageButton(this.width / 2 - 38, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.randomise"),
                 (button) -> {
                     Player player = minecraft.player;
                     ItemStack itemStack = player.getMainHandItem();
@@ -92,14 +97,14 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     }
                 }, 20, 18, RANDOMIZER_TEXTURES));
 
-        this.colour = this.addWidget(new BetterImageButton(this.width / 2 - 12, this.height / 2 + 64, 20, 18,
+        this.colour = this.addRenderableWidget(new PGImageButton(this.width / 2 - 12, this.height / 2 + 64, 20, 18,
                 Component.translatable("ricksportalgun.button.colour"), (button) -> this.minecraft.setScreen(new ColourPickingScreen()), 20, 18, COLOR_TEXTURES));
 
-        this.settings = this.addWidget(new BetterImageButton(this.width / 2 + 14, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.settings"),
+        this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 + 14, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.settings"),
                 (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURES));
 
         this.dimInput.setMaxLength(256);
-        this.dimInput.setBordered(true);
+        this.dimInput.getSuggestionList().setBorderColor(ARGB.color(255, 0, 0));
         LocalPlayer player = minecraft.player;
         if (player != null) {
             ResourceLocation location = player.level().dimension().location();
@@ -143,14 +148,26 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float delta) {
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.height / 2 - 16);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.height / 2);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.z", ""), this.width / 2 - 88, this.height / 2 + 16);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.height / 2 - 32);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float delta) {
+        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, BG_RED);
 
-        GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, delta, waypoints, xInput, yInput, zInput, randomise, player_loc, colour, settings);
-        dimInput.render(pPoseStack, pMouseX, pMouseY, delta);
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 4 - 32, TEXT_RED);
+
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.xInput.getY(), TEXT_RED);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.yInput.getY(), TEXT_RED);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.z", ""), this.width / 2 - 88, this.zInput.getY(), TEXT_RED);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.dimInput.getY(), TEXT_RED);
+
+        GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, delta, xInput, yInput, zInput);
+        dimInput.render(graphics, pMouseX, pMouseY, delta);
+
+        graphics.renderOutline(dimInput.getX(), dimInput.getY(), dimInput.getWidth(), dimInput.getHeight(), TEXT_RED);
+        graphics.renderOutline(xInput.getX(), xInput.getY(), xInput.getWidth(), xInput.getHeight(), TEXT_RED);
+        graphics.renderOutline(yInput.getX(), yInput.getY(), yInput.getWidth(), yInput.getHeight(), TEXT_RED);
+        graphics.renderOutline(zInput.getX(), zInput.getY(), zInput.getWidth(), zInput.getHeight(), TEXT_RED);
+
+        graphics.renderOutline(select.getX(), select.getY(), select.getWidth(), select.getHeight(), select.isHoveredOrFocused() ? HIGHLIGHT_RED : TEXT_RED);
+        graphics.renderOutline(cancel.getX(), cancel.getY(), cancel.getWidth(), cancel.getHeight(), cancel.isHoveredOrFocused() ? HIGHLIGHT_RED : TEXT_RED);
 
         GuiHelper.setTooltip(waypoints, Tooltip.create(Component.translatable("ricksportalgun.button.waypoint")));
         GuiHelper.setTooltip(player_loc, Tooltip.create(Component.translatable("ricksportalgun.button.player_locator")));
@@ -158,11 +175,14 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.setTooltip(colour, Tooltip.create(Component.translatable("ricksportalgun.button.colour")));
         GuiHelper.setTooltip(settings, Tooltip.create(Component.translatable("ricksportalgun.button.settings")));
 
+
+
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {
-            this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, delta);
+            this.renderWithTooltip(graphics, pMouseX, pMouseY, delta);
         }
-        super.render(pPoseStack, pMouseX, pMouseY, delta);
+        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        super.render(graphics, pMouseX, pMouseY, delta);
     }
 
     private void onEdited(String string) {
@@ -185,10 +205,11 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             this.zInput.setSuggestion(this.zS.substring(zValue.length()));
         } else this.zInput.setSuggestion("");
 
-        xInput.setTextColor(0xffffff);
-        yInput.setTextColor(0xffffff);
-        zInput.setTextColor(0xffffff);
-        dimInput.setTextColor(0xffffff);
+        int color = ARGB.color(199, 12, 6);
+        xInput.setTextColor(color);
+        yInput.setTextColor(color);
+        zInput.setTextColor(color);
+        dimInput.setTextColor(color);
 
     }
 

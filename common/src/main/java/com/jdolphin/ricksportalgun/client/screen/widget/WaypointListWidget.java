@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class WaypointListWidget extends ScrollableList<WaypointListWidget.WaypointEntry> {
+public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.WaypointEntry> {
     public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.createLocation("icon/waypoint_info");
 
     public final ItemStack stack;
@@ -68,7 +68,8 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
     public static class WaypointEntry extends Entry<WaypointListWidget.WaypointEntry> {
 
         private final Waypoint waypoint;
-        private final Button button, infoButton;
+        private final Button button;
+        private final PGImageButton infoButton;
         protected WaypointListWidget list;
         private final boolean showInfo;
 
@@ -83,7 +84,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
                         PGHelper.sendPacketToServer(packet);
                         Minecraft.getInstance().setScreen(null);
                     })).pos(16, 0).size(list.buttonWidth, list.buttonHeight).build();
-                this.infoButton = new BetterImageButton(0, 0, 20, 20, Component.translatable("ricksportalgun.button.waypoint.info"),
+                this.infoButton = new PGImageButton(0, 0, 20, 20, Component.translatable("ricksportalgun.button.waypoint.info"),
                         (button) ->
                                 Minecraft.getInstance().setScreen(new WaypointInfoScreen(waypoint)), 20, 20, WAYPOINT_INFO_TEXTURES);
         }

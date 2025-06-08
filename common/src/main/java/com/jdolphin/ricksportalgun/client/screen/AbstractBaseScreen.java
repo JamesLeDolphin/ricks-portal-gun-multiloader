@@ -1,13 +1,17 @@
 package com.jdolphin.ricksportalgun.client.screen;
 
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 
-public abstract class AbstractBaseScreen extends Screen implements IScreenBase {
+public abstract class AbstractBaseScreen extends Screen {
+    public static ResourceLocation BG_LOCATION = PGHelper.createLocation("textures/gui/pg_background.png");
+    public static int TEXT_RED = ARGB.color(200, 0, 0);
+    public static int HIGHLIGHT_RED = ARGB.color(255, 0, 0);
+    public static int BG_RED = ARGB.color(100, 0, 0);
 
     protected AbstractBaseScreen(Component title) {
         super(title);
@@ -23,9 +27,5 @@ public abstract class AbstractBaseScreen extends Screen implements IScreenBase {
 
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderMenuBackground(context);
-    }
-
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
-        return super.addRenderableWidget(widget);
     }
 }

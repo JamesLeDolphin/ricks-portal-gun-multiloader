@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.Slider;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBChangePortalGunTypePacket;
@@ -14,15 +14,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class SettingsScreen extends AbstractBaseScreen {
     private Button lockButton;
-    private Slider portalSize, portalAge;
+    private PGSlider portalSize, portalAge;
     private boolean lock;
     private EditBox playerInput;
     public SettingsScreen() {
@@ -57,13 +59,13 @@ public class SettingsScreen extends AbstractBaseScreen {
             lockButton.setMessage(component);
         }).size(64, 20).pos(this.width / 2 + 70, this.height / 2 - 74).build());
 
-        this.portalSize = this.addRenderableWidget(new Slider(this.width / 2 + 92, this.height / 2 - 28, 42, 18,
+        this.portalSize = this.addRenderableWidget(new PGSlider(this.width / 2 + 92, this.height / 2 - 28, 42, 18,
                 Component.empty(), size, 1.0f, 3.0f, true));
 
         this.playerInput = this.addWidget(new EditBox(this.font, this.width / 2 + 54, this.height / 2 - 50, 80, 16,
                 Component.translatable("chat.editBox")));
 
-        this.portalAge = this.addRenderableWidget(new Slider(this.width / 2 + 92, this.height / 2 - 8, 42, 18,
+        this.portalAge = this.addRenderableWidget(new PGSlider(this.width / 2 + 92, this.height / 2 - 8, 42, 18,
                 Component.empty(), age, 5, 20, true));
 
         //Temp
@@ -79,18 +81,23 @@ public class SettingsScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("ricksportalgun.button.settings"), this.width / 2, this.height / 10);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.button.portal_age"), this.width / 4 - 16, this.portalAge.getY() + 4);
-        GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, pPartialTick, lockButton, playerInput, portalSize);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+
+        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, ARGB.color(99, 4, 1));
+
+        GuiHelper.drawWhiteCenteredString(graphics, Component.translatable("ricksportalgun.button.settings"), this.width / 2, this.height / 10);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4, ARGB.color(199, 12, 6));
+        GuiHelper.drawWhiteString(graphics, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4);
+        GuiHelper.drawWhiteString(graphics, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4);
+        GuiHelper.drawWhiteString(graphics, Component.translatable("ricksportalgun.button.portal_age"), this.width / 4 - 16, this.portalAge.getY() + 4);
+        GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, lockButton, playerInput, portalSize);
+
+        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {
-            this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, pPartialTick);
+            this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
         }
-
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }
