@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +55,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     protected void init() {
         super.init();
 
-        this.dimInput = this.addWidget(new SuggestionTextFieldWidget(this,
-                this.width / 2 - 32, this.height / 2 - 64, 112, 16,
+        this.dimInput = this.addWidget(new SuggestionTextFieldWidget(this.width / 2 - 32, this.height / 2 - 64, 112, 16,
                 Component.translatable("chat.editBox"), dimSuggestions));
         this.addWidget(this.dimInput.getSuggestionList());
 
@@ -104,7 +104,9 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURES));
 
         this.dimInput.setMaxLength(256);
-        this.dimInput.getSuggestionList().setBorderColor(ARGB.color(255, 0, 0));
+        this.dimInput.getSuggestionList().setBorderColor(HIGHLIGHT_RED);
+        this.select.setTextColour(WHITE);
+        this.cancel.setTextColour(WHITE);
         LocalPlayer player = minecraft.player;
         if (player != null) {
             ResourceLocation location = player.level().dimension().location();
@@ -151,12 +153,12 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float delta) {
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, BG_RED);
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 4 - 32, TEXT_RED);
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 4 - 32, WHITE);
 
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.xInput.getY(), TEXT_RED);
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.yInput.getY(), TEXT_RED);
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.z", ""), this.width / 2 - 88, this.zInput.getY(), TEXT_RED);
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.dimInput.getY(), TEXT_RED);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.xInput.getY(), WHITE);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.yInput.getY(), WHITE);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.z", ""), this.width / 2 - 88, this.zInput.getY(), WHITE);
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.dimInput.getY(), WHITE);
 
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, delta, xInput, yInput, zInput);
         dimInput.render(graphics, pMouseX, pMouseY, delta);
@@ -205,11 +207,10 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             this.zInput.setSuggestion(this.zS.substring(zValue.length()));
         } else this.zInput.setSuggestion("");
 
-        int color = ARGB.color(199, 12, 6);
-        xInput.setTextColor(color);
-        yInput.setTextColor(color);
-        zInput.setTextColor(color);
-        dimInput.setTextColor(color);
+        xInput.setTextColor(WHITE);
+        yInput.setTextColor(WHITE);
+        zInput.setTextColor(WHITE);
+        dimInput.setTextColor(WHITE);
 
     }
 

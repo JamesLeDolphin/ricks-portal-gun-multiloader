@@ -80,7 +80,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
                 this.width / 2 + 48, this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
 
-        this.dimInput = new SuggestionTextFieldWidget(this, this.width / 2 - 32,this.height / 2 - 48, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
+        this.dimInput = new SuggestionTextFieldWidget(this.width / 2 - 32,this.height / 2 - 48, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
         dimInput.update();
         setupSuggestionBox(dimInput);
         this.addWidget(dimInput.getSuggestionList());

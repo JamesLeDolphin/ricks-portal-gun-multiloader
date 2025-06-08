@@ -23,7 +23,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     private final List<String> suggestions;
     private final SuggestionList suggestionListWidget;
 
-    public SuggestionTextFieldWidget(Screen screen, int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
+    public SuggestionTextFieldWidget(int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
         super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
         this.suggestionListWidget = new SuggestionList(Minecraft.getInstance(),
