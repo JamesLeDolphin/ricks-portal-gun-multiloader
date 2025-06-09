@@ -35,8 +35,13 @@ public class GuiHelper {
         stack.drawCenteredString(Minecraft.getInstance().font, text, x, y, Color.WHITE.getRGB());
     }
 
-    public static void setTooltip(AbstractWidget widget, Tooltip tooltip) {
-        if (widget != null && tooltip != null) {
+    public static void renderOutline(GuiGraphics graphics, AbstractWidget widget, int color) {
+        graphics.renderOutline(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), color);
+    }
+
+    public static void setTooltip(AbstractWidget widget, Component component) {
+        if (widget != null && component != null) {
+            Tooltip tooltip = Tooltip.create(component);
             widget.setTooltip(tooltip);
         }
     }

@@ -54,7 +54,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
                     this.height / 2 + 16);
         }
         this.waypointName.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        Style style = this.minecraft.gui.getChat().getClickedComponentStyleAt(pMouseX, pMouseY);
+        Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {
             this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, pPartialTick);
         }

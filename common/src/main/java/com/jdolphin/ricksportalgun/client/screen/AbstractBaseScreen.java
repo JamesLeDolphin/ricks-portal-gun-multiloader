@@ -1,18 +1,21 @@
 package com.jdolphin.ricksportalgun.client.screen;
 
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;
 
 public abstract class AbstractBaseScreen extends Screen {
     public static ResourceLocation BG_LOCATION = PGHelper.createLocation("textures/gui/pg_background.png");
-    public static int TEXT_RED = ARGB.color(200, 0, 0);
-    public static int HIGHLIGHT_RED = ARGB.color(255, 0, 0);
+    public static int HIGHLIGHT_RED = ARGB.color(200, 0, 0);
     public static int BG_RED = ARGB.color(100, 0, 0);
     public static int WHITE = Color.WHITE.getRGB();
 
@@ -27,6 +30,17 @@ public abstract class AbstractBaseScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
+
+    protected PortalGunStyle getStyle() {
+        assert this.minecraft != null;
+        Player player = this.minecraft.player;
+        if (player != null) {
+            ItemStack stack = player.getMainHandItem();
+            return stack.getOrDefault(PGDataComponents.PORTAL_GUN_STYLE, PortalGunStyle.DEFAULT);
+        }
+        return PortalGunStyle.DEFAULT;
+    }
+
 
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderMenuBackground(context);

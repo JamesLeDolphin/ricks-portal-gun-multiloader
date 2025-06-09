@@ -11,6 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Random;
+
 public class PGHelper {
 
     public static ResourceLocation createLocation(String string) {
@@ -23,6 +26,12 @@ public class PGHelper {
 
     public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
         Services.PLATFORM.sendPacketToClient(player, packet);
+    }
+
+    public static <T> T getRandomFromList(List<T> list) {
+        int i = list.size();
+        int index = PGConstants.RANDOM.nextInt(i);
+        return list.get(index);
     }
 
     @Nullable

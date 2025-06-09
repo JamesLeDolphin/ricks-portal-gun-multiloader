@@ -38,6 +38,11 @@ public class SuggestionTextFieldWidget extends EditBox {
         return suggestions;
     }
 
+    public void setSuggestions(List<String> suggestions) {
+        this.suggestions.clear();
+        this.suggestions.addAll(suggestions);
+    }
+
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.isFocused()) {
             this.suggestionListWidget.visible = false;

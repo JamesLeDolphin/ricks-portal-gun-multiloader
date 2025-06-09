@@ -60,7 +60,6 @@ public class WaypointScreen extends AbstractBaseScreen {
 
         GuiHelper.drawWhiteCenteredString(stack, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, 30);
 
-        assert this.minecraft != null;
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {
             this.renderWithTooltip(stack, pMouseX, pMouseY, pPartialTick);

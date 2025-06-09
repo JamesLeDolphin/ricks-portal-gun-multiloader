@@ -1,10 +1,7 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -25,11 +22,13 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBOpenLocatorScreen.ID, SBOpenLocatorScreen.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, FabricPackets::handle);
@@ -42,6 +41,7 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSetBarrierCodePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetDispenserDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetWorkbenchTypePacket.ID, FabricPackets::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBOpenLocatorScreen.ID, FabricPackets::handle);
     }
 
     private static  <P extends PGPayload> void handle(P packet, ServerPlayNetworking.Context context) {
@@ -53,5 +53,7 @@ public class FabricPackets {
         ClientPlayNetworking.registerGlobalReceiver(CBSyncDimensionListPacket.ID, (packet, context) -> ClientPacketHandler.syncClientDimensions(packet.dimensions()));
         ClientPlayNetworking.registerGlobalReceiver(CBSyncGunTypesPacket.ID, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenBarrierGuiPacket.ID, (packet, context) -> ClientPacketHandler.openBarrierGui(packet.pos()));
+        ClientPlayNetworking.registerGlobalReceiver(CBOpenLocatorScreenPacket.ID, (packet, context) ->
+                ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
     }
 }

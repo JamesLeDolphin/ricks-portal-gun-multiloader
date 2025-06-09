@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -33,6 +34,9 @@ public class PGDataComponents {
 
     public static DataComponentType<PortalGunType> PORTAL_GUN_TYPE = registerComponent("portal_gun_type", typeBuilder -> typeBuilder
             .persistent(PortalGunType.CODEC).networkSynchronized(PortalGunType.PACKET_CODEC).cacheEncoding());
+
+    public static DataComponentType<PortalGunStyle> PORTAL_GUN_STYLE = registerComponent("portal_gun_style", typeBuilder -> typeBuilder
+            .persistent(PortalGunStyle.CODEC).networkSynchronized(PortalGunStyle.PACKET_CODEC).cacheEncoding());
 
     public static final DataComponentType<Integer> PRIMARY_DYE = registerComponent("primary_dye", typeBuilder -> typeBuilder.persistent(Codec.INT));
     public static final DataComponentType<Integer> SECONDARY_DYE = registerComponent("secondary_dye", typeBuilder -> typeBuilder.persistent(Codec.INT));

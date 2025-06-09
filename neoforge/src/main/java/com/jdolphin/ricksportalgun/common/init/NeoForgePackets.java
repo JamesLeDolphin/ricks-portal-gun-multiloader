@@ -1,10 +1,7 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,12 +22,17 @@ public class NeoForgePackets {
         registrar.commonToServer(SBOpenCoordGuiPacket.ID, SBOpenCoordGuiPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBOpenLocatorScreen.ID, SBOpenLocatorScreen.CODEC, NeoForgePackets::handle);
 
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings));
         registrar.commonToClient(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC, (packet, context) ->ClientPacketHandler.openBarrierGui(packet.pos()));
         registrar.commonToClient(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
-        registrar.commonToClient(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC, (packet, context) -> ClientPacketHandler.syncClientDimensions(packet.dimensions()));
+        registrar.commonToClient(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC, (packet, context) ->
+                ClientPacketHandler.syncClientDimensions(packet.dimensions()));
+
+        registrar.commonToClient(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC, (packet, context) ->
+                ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
     }
 
     private static  <P extends CustomPacketPayload> void handle(P packet, IPayloadContext context) {

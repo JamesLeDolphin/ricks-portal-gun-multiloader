@@ -15,14 +15,11 @@ import net.minecraft.util.ARGB;
 import java.util.function.Consumer;
 
 public class PGImageButton extends AbstractButton {
-    private static final WidgetSprites SPRITES = new WidgetSprites(PGHelper.createLocation("widget/button"),
-            PGHelper.createLocation("widget/button"), PGHelper.createLocation("widget/button_hovered"));
-
     protected final ResourceLocation texture;
     protected final int textureWidth;
     protected final int textureHeight;
     protected final Consumer<AbstractButton> onPress;
-
+    protected boolean renderBg = true;
 
     public PGImageButton(int x, int y, int width, int height, Component message, Consumer<AbstractButton> onPress, int textureWidth, int textureHeight, ResourceLocation texture) {
         super(x, y, width, height, message);
@@ -30,6 +27,10 @@ public class PGImageButton extends AbstractButton {
         this.textureHeight = textureHeight;
         this.texture = texture;
         this.onPress = onPress;
+    }
+
+    public void setRenderBackground(boolean renderBg) {
+        this.renderBg = renderBg;
     }
 
     public void renderString(GuiGraphics graphics, Font textRenderer, int color) {}
@@ -40,8 +41,9 @@ public class PGImageButton extends AbstractButton {
     }
 
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.blitSprite(RenderType::guiTextured, SPRITES.get(true, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
-
+        if (this.renderBg) {
+            super.renderWidget(graphics, mouseX, mouseY, delta);
+        }
         int i = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
         int j = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
         graphics.blitSprite(RenderType::guiTextured, this.texture, i, j, this.textureWidth, this.textureHeight);

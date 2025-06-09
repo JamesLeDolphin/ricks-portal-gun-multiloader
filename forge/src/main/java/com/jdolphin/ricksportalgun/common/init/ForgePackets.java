@@ -1,10 +1,7 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -58,6 +55,10 @@ public class ForgePackets {
                 .codec(SBSetWorkbenchTypePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBOpenLocatorScreen.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBOpenLocatorScreen.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
@@ -79,6 +80,11 @@ public class ForgePackets {
                 .codec(CBSyncDimensionListPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
                     if (context.isClientSide()) ClientPacketHandler.syncClientDimensions(packet.dimensions());
+                }).add();
+        INSTANCE.messageBuilder(CBOpenLocatorScreenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(CBOpenLocatorScreenPacket.CODEC.cast())
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList());
                 }).add();
     }
 

@@ -30,6 +30,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.y",  wp.getY()), this.width / 2 - 128, this.height / 2 - 16);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.z",  wp.getZ()), this.width / 2 - 128, this.height / 2);
         GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.dimension",  wp.getDim()), this.width / 2 - 128, this.height / 2 + 16);
+
         Style style = GuiHelper.getStyle(pMouseX, pMouseY);
         if (style != null && style.getHoverEvent() != null) {
             this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, pPartialTick);
