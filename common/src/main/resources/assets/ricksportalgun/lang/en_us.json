@@ -64,8 +64,12 @@
   "error.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
   "error.ricksportalgun.dimension_disabled": "Error 403: You are forbidden from entering this dimension!",
   "error.ricksportalgun.destination_not_found": "Error 404: Destination level not found!",
-  "error.ricksportalgun.player_not_found": "Error 404: Player %s not found!",
-  "error.ricksportalgun.player_locating_disabled": "Error 405: Player locating is disabled in this server!",
+  "error.ricksportalgun.locating.player.not_found": "Error 404: Player %s not found!",
+  "error.ricksportalgun.locating.player.disabled": "Error 405: Player locating is disabled in this server!",
+  "error.ricksportalgun.locator.structure.not_in_area": "Error 404: Unable to find structure \"%s\" in area!",
+  "error.ricksportalgun.locator.structure.unknown": "Error 404: Unknown Structure: \"%s\"!",
+  "error.ricksportalgun.locator.biome.not_in_area": "Error 404: Unable to find biome \"%s\" in area!",
+  "error.ricksportalgun.locator.biome.unknown": "Error 404: Unknown Biome: \"%s\"!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",
@@ -83,6 +87,8 @@
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
   "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s",
   "tooltip.ricksportalgun.upgrade": "Upgrade: ",
+  "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
+  "tooltip.ricksportalgun.hold_shift": "Hold \\u00a79[\\u00a76Shift\\u00a79]",
 
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
@@ -95,9 +101,10 @@
   "key.ricksportalgun.portal_menu": "Open portal gun menu",
 
   "entity.ricksportalgun.portal": "Portal",
+
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
-  "tooltip.ricksportalgun.hold_shift": "Hold \\u00a79[\\u00a76Shift\\u00a79]"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+
+
 }

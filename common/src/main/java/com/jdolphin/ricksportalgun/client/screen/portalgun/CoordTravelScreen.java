@@ -7,7 +7,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidge
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCoordCheckerPacket;
-import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenLocatorScreen;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenLocatorScreenPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
@@ -23,7 +23,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -88,7 +87,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
         this.player_loc = this.addRenderableWidget(new PGImageButton(this.width / 2 - 64, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.player_locator"),
                 (button) -> {
-                    SBOpenLocatorScreen packet = new SBOpenLocatorScreen();
+                    SBOpenLocatorScreenPacket packet = new SBOpenLocatorScreenPacket();
                     PGHelper.sendPacketToServer(packet);
 
                 }, 20, 18, PLAYER_LOC_TEXTURES));

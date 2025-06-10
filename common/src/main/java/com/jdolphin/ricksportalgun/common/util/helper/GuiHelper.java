@@ -36,7 +36,9 @@ public class GuiHelper {
     }
 
     public static void renderOutline(GuiGraphics graphics, AbstractWidget widget, int color) {
-        graphics.renderOutline(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), color);
+        if (widget != null) {
+            graphics.renderOutline(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), color);
+        }
     }
 
     public static void setTooltip(AbstractWidget widget, Component component) {

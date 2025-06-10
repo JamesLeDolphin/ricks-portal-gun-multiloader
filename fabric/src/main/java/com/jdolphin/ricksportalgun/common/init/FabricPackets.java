@@ -13,7 +13,7 @@ public class FabricPackets {
     public static void registerC2SPackets() {
         PayloadTypeRegistry.playC2S().register(SBColourPacket.ID, SBColourPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBCoordCheckerPacket.ID, SBCoordCheckerPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(SBLocatePlayerPacket.ID, SBLocatePlayerPacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBLocatePacket.ID, SBLocatePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBManageWaypointsPacket.ID, SBManageWaypointsPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetDestinationPacket.ID, SBSetDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSettingsPacket.ID, SBSettingsPacket.CODEC);
@@ -22,7 +22,7 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(SBOpenLocatorScreen.ID, SBOpenLocatorScreen.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
@@ -32,7 +32,7 @@ public class FabricPackets {
 
         ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, FabricPackets::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBLocatePlayerPacket.ID, FabricPackets::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBLocatePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBManageWaypointsPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSettingsPacket.ID, FabricPackets::handle);
@@ -41,7 +41,7 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSetBarrierCodePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetDispenserDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetWorkbenchTypePacket.ID, FabricPackets::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBOpenLocatorScreen.ID, FabricPackets::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBOpenLocatorScreenPacket.ID, FabricPackets::handle);
     }
 
     private static  <P extends PGPayload> void handle(P packet, ServerPlayNetworking.Context context) {

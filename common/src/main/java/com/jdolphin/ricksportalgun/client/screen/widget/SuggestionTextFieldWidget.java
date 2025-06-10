@@ -27,7 +27,7 @@ public class SuggestionTextFieldWidget extends EditBox {
         super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
         this.suggestionListWidget = new SuggestionList(Minecraft.getInstance(),
-                width, height * 3, x, y + height, 14, this);
+                width, height * 3 - 5, x, y + height, 14, this);
     }
 
     public SuggestionList getSuggestionList() {
@@ -41,6 +41,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     public void setSuggestions(List<String> suggestions) {
         this.suggestions.clear();
         this.suggestions.addAll(suggestions);
+        this.update();
     }
 
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
@@ -152,7 +153,12 @@ public class SuggestionTextFieldWidget extends EditBox {
         }
 
         public int getRowWidth() {
-            return this.width - 6;
+            return this.width - 10;
+        }
+
+        @Override
+        public int getRowRight() {
+            return super.getRowRight() - 6;
         }
 
         public static class SuggestionEntry extends PGScrollableWidget.Entry<SuggestionEntry> {

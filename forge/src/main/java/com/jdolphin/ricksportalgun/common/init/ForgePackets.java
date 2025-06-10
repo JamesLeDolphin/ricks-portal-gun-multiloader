@@ -27,8 +27,8 @@ public class ForgePackets {
                 .codec(SBSetDestinationPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
-        INSTANCE.messageBuilder(SBLocatePlayerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .codec(SBLocatePlayerPacket.CODEC.cast())
+        INSTANCE.messageBuilder(SBLocatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBLocatePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBCoordCheckerPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
@@ -55,8 +55,8 @@ public class ForgePackets {
                 .codec(SBSetWorkbenchTypePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
-        INSTANCE.messageBuilder(SBOpenLocatorScreen.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .codec(SBOpenLocatorScreen.CODEC.cast())
+        INSTANCE.messageBuilder(SBOpenLocatorScreenPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBOpenLocatorScreenPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
 

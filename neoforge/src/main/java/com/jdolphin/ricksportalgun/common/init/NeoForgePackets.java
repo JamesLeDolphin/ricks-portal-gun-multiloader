@@ -15,14 +15,14 @@ public class NeoForgePackets {
         //Server bound
         registrar.commonToServer(SBSettingsPacket.ID, SBSettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetDestinationPacket.ID, SBSetDestinationPacket.CODEC, NeoForgePackets::handle);
-        registrar.commonToServer(SBLocatePlayerPacket.ID, SBLocatePlayerPacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBLocatePacket.ID, SBLocatePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBCoordCheckerPacket.ID, SBCoordCheckerPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBColourPacket.ID, SBColourPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBManageWaypointsPacket.ID, SBManageWaypointsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenCoordGuiPacket.ID, SBOpenCoordGuiPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC, NeoForgePackets::handle);
-        registrar.commonToServer(SBOpenLocatorScreen.ID, SBOpenLocatorScreen.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC, NeoForgePackets::handle);
 
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings));

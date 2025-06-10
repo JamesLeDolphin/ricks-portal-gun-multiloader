@@ -51,7 +51,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
 
     public void setSelectedIndex(int selected) {
         if (selected == -1) {
-            this.setSelected((E) null);
+            this.setSelected(null);
         } else if (this.getItemCount() != 0) {
             this.setSelected(this.getEntry(selected));
         }
@@ -161,7 +161,8 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
 
     protected void renderListBackground(GuiGraphics guiGraphics) {
         ResourceLocation resourcelocation = this.minecraft.level == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND;
-        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), (float)this.getX(), (float)(this.getBottom() + (int)this.scrollAmount()), this.getWidth(), this.getHeight(), 32, 32);
+        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), (float)this.getX(), (float)(this.getBottom() + (int)this.scrollAmount()),
+                this.getWidth(), this.getHeight(), 32, 32);
     }
 
     protected void enableScissor(GuiGraphics guiGraphics) {
