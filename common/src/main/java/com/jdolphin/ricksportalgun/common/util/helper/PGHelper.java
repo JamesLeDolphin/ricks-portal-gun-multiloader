@@ -54,11 +54,7 @@ public class PGHelper {
         return list.get(index);
     }
 
-    @Nullable
     public static PortalGunItem getPortalGun(@NotNull ItemStack stack) {
-        if (stack.is(PGTags.Items.PORTAL_GUNS)) {
-            return (PortalGunItem) stack.getItem();
-        }
-        return null;
+        return stack.is(PGTags.Items.PORTAL_GUNS) ? (PortalGunItem) stack.getItem() : null;
     }
 }

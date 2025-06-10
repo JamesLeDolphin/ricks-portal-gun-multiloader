@@ -23,9 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
-
 import java.util.Optional;
-import java.util.function.Predicate;
 
 
 public record SBLocatePacket(String name, int value) implements PGPayload {
