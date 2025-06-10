@@ -43,20 +43,16 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         if (value == 0) {
             Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
             if (optionalRegistry.isPresent()) {
-                Registry<Biome> registry = optionalRegistry.get();
                 ResourceLocation location = ResourceLocation.parse(name);
-                Optional<Holder.Reference<Biome>> biomeReference = registry.get(location);
-                if (biomeReference.isPresent()) {
-                    Biome biome = biomeReference.get().value();
-                    Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d(Predicate.isEqual(Holder.direct(biome)), player.blockPosition(), 64000, 32, 64);
-                    System.out.println(pair == null);
-                    if (pair != null) {
-                        BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                        item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-                    } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.biome.not_in_area", name));
-                } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.biome.unknown", name));
+                Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d((biomeHolder -> biomeHolder.is(location)),
+                        player.blockPosition(), 6400, 32, 64);
+                if (pair != null) {
+                    BlockPos pos = pair.getFirst();
+                    BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                    item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                } else
+                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.biome.not_in_area", name));
             }
         }
         if (value == 1) {
