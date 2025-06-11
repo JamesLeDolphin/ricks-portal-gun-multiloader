@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SuggestionTextFieldWidget extends EditBox {
-    private final List<String> suggestions;
+    private List<String> suggestions;
     private final SuggestionList suggestionListWidget;
 
     public SuggestionTextFieldWidget(int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
@@ -40,8 +40,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     }
 
     public void setSuggestions(List<String> suggestions) {
-        this.suggestions.clear();
-        this.suggestions.addAll(suggestions);
+        this.suggestions = suggestions;
         this.update();
     }
 

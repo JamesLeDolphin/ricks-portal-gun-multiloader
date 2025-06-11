@@ -2,11 +2,13 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
@@ -22,6 +24,8 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
     private PGCycleButton<Boolean> lockButton;
     private SuggestionTextFieldWidget playerInput;
     private final List<String> players;
+    private EditBox code;
+    private PGTextButton select, cancel;
 
     public SecuritySettingsScreen(List<String> players) {
         super("menu.ricksportalgun.settings.security");
@@ -45,7 +49,7 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         MutableComponent sTrue = Component.translatable("ricksportalgun.button.true");
         MutableComponent sFalse = Component.translatable("ricksportalgun.button.false");
 
-        this.lockButton = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse)
+        this.lockButton = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse).withInitialValue(false)
                 .create(this.width / 2 + 64, this.height / 2 - 74, 64, 20,
                         Component.translatable("ricksportalgun.button.lock")));
 
@@ -53,14 +57,17 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
                 Component.translatable("chat.editBox"), players));
         this.addRenderableWidget(playerInput.getSuggestionList());
 
-        this.addRenderableWidget(Button.builder(
+        this.code = this.addRenderableWidget(new EditBox(this.font, this.width / 2 + 64, this.height / 2 - 22, 64, 20, Component.translatable("chat.editBox")));
+
+        this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
                     //TODO
                     this.onClose();
-                }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
+                }, this.font));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose())
-                .pos(this.width / 2 + 8, this.height / 2 + 32).size(128, 20).build());
+        this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
+                Component.translatable("ricksportalgun.button.cancel"),
+                (button) -> this.onClose(), this.font));
 
         PortalGunStyle style = getStyle();
         this.lockButton.setTextColor(style.textColor());
@@ -69,6 +76,8 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         this.playerInput.setResponder(s -> playerInput.update());
         this.playerInput.setMaxLength(64);
         this.playerInput.getSuggestionList().setBorderColor(style.highlightColor());
+        this.select.setTextColour(style.textColor());
+        this.cancel.setTextColour(style.textColor());
     }
 
     @Override
@@ -79,10 +88,13 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.security"), this.width / 2, 30, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4, getStyle().textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.code"), this.width / 4 - 16, this.code.getY() + 4, getStyle().textColor());
 
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, playerInput, lockButton);
         GuiHelper.renderOutline(graphics, lockButton, style.highlightColor());
         GuiHelper.renderOutline(graphics, playerInput, style.highlightColor());
+        GuiHelper.renderOutline(graphics, select, style.highlightColor());
+        GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
         Style guiStyle = GuiHelper.getStyle(mouseX, mouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

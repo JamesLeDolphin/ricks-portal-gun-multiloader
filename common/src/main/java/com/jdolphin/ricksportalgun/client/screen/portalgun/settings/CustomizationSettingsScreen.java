@@ -51,7 +51,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 Component.translatable("ricksportalgun.button.settings.customization.color"), button -> this.minecraft.setScreen(new ColourPickingScreen()), this.font));
 
         this.menuTheme = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 8, 256, 18,
-                Component.translatable("ricksportalgun.button.settings.customization.theme"), button -> System.out.println("Imagine screen here"), this.font));
+                Component.translatable("ricksportalgun.button.settings.customization.theme"), button -> minecraft.setScreen(new ThemeEditScreen()), this.font));
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64,128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {

@@ -4,9 +4,7 @@ import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 import java.text.DecimalFormat;
@@ -68,10 +66,13 @@ public class PGSlider extends AbstractSliderButton {
         } else if (this.style != null) {
             graphics.fill(this.getX(), this.getY(), this.getX() + width, this.getY() + height, style.bgColor());
             graphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), style.highlightColor());
-            graphics.renderOutline(this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 8, this.getHeight(), style.highlightColor());
 
-            int i = this.active ? 16777215 : 10526880;
-            this.renderScrollingString(graphics, Minecraft.getInstance().font, 2, i | Mth.ceil(this.alpha * 255.0F) << 24);
+            int i = this.getX() + (int)(this.value * (double)(this.width - 8));
+            graphics.renderOutline(i, this.getY(), 8, this.getHeight(), style.highlightColor());
+            graphics.fill(i, this.getY(), i + 8, this.getY() + this.getHeight(), style.highlightColor());
+
+            int j = this.active ? 16777215 : 10526880;
+            this.renderScrollingString(graphics, Minecraft.getInstance().font, 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
         }
     }
 

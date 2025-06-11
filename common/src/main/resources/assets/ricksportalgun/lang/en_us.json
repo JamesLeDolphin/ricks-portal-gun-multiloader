@@ -113,6 +113,8 @@
   "ricksportalgun.button.settings.customization.theme": "Edit portal gun theme",
   "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
   "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
-  "ricksportalgun.button.portal_age.reset": "Reset portal open time"
+  "ricksportalgun.button.portal_age.reset": "Reset portal open time",
+  "ricksportalgun.button.code": "Set portal code:",
+  "menu.ricksportalgun.settings.customization.theme": "Edit Portal Gun Theme"
 
 }

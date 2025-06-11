@@ -27,7 +27,7 @@ public class LocatorScreen extends AbstractBaseScreen {
     private PGCycleButton<LocatorType> locatorType;
     private final List<String> playerList, biomeList, structureList;
 
-    public LocatorScreen(List<String> playerList, List<String> biomeList, List<String> structureList) {
+    public LocatorScreen(final List<String> playerList, final List<String> biomeList, final List<String> structureList) {
         super("menu.ricksportalgun.player_locator");
         this.playerList = playerList;
         this.biomeList = biomeList;
@@ -36,17 +36,16 @@ public class LocatorScreen extends AbstractBaseScreen {
 
     private List<String> getListFromType(LocatorType type) {
         switch (type) {
-            case BIOME -> {
-                return this.biomeList;
-            }
             case STRUCTURE -> {
                 return this.structureList;
             }
             case PLAYER -> {
                 return this.playerList;
             }
+            default -> {
+                return this.biomeList;
+            }
         }
-        return getListFromType(this.locatorType.getValue());
     }
 
     @Override
@@ -62,12 +61,11 @@ public class LocatorScreen extends AbstractBaseScreen {
     protected void init() {
 
         this.locatorType = this.addRenderableWidget(PGCycleButton.builder(LocatorType::getDisplayName)
-                .withInitialValue(LocatorType.PLAYER)
                 .withValues(LocatorType.values())
                 .create(this.width / 2 - 64, this.height / 2 - 64, 128, 20, Component.translatable("ricksportalgun.button.locator"),
                         (button, type) -> {
-                            this.input.setSuggestions(getListFromType(type));
-                            this.input.update();
+                            List<String> list = getListFromType(type);
+                            this.input.setSuggestions(list);
                         }));
 
         this.input = this.addWidget(new SuggestionTextFieldWidget(this.width / 2 - 64, this.height / 2 - 32, 128, 24,
@@ -93,6 +91,16 @@ public class LocatorScreen extends AbstractBaseScreen {
         this.locatorType.setTextColor(style.textColor());
         this.locatorType.setRenderArrows(true);
         this.input.getSuggestionList().setBorderColor(style.highlightColor());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        //if (this.input.getSuggestions() != getListFromType(this.locatorType.getValue())) {
+        //    this.input.setSuggestions(getListFromType(this.locatorType.getValue()));
+        //    this.input.update();
+        //}
     }
 
     @Override
