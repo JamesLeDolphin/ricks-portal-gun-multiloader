@@ -23,12 +23,14 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBOpenSecuritySettingsPacket.ID, SBOpenSecuritySettingsPacket.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(CBOpenSecurityGuiPacket.ID, CBOpenSecurityGuiPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, FabricPackets::handle);
@@ -42,6 +44,7 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSetDispenserDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetWorkbenchTypePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBOpenLocatorScreenPacket.ID, FabricPackets::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBOpenSecuritySettingsPacket.ID, FabricPackets::handle);
     }
 
     private static  <P extends PGPayload> void handle(P packet, ServerPlayNetworking.Context context) {
@@ -49,11 +52,12 @@ public class FabricPackets {
     }
 
     public static void registerS2CPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(CBOpenCoordGuiPacket.ID, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings));
+        ClientPlayNetworking.registerGlobalReceiver(CBOpenCoordGuiPacket.ID, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));
         ClientPlayNetworking.registerGlobalReceiver(CBSyncDimensionListPacket.ID, (packet, context) -> ClientPacketHandler.syncClientDimensions(packet.dimensions()));
         ClientPlayNetworking.registerGlobalReceiver(CBSyncGunTypesPacket.ID, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenBarrierGuiPacket.ID, (packet, context) -> ClientPacketHandler.openBarrierGui(packet.pos()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenLocatorScreenPacket.ID, (packet, context) ->
                 ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
+        ClientPlayNetworking.registerGlobalReceiver(CBOpenSecurityGuiPacket.ID, (packet, context) -> ClientPacketHandler.openSecurityScreen(packet.strings()));
     }
 }

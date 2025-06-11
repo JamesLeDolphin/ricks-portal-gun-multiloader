@@ -1,7 +1,12 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 import java.text.DecimalFormat;
@@ -13,6 +18,8 @@ public class PGSlider extends AbstractSliderButton {
     protected double stepSize;
     protected boolean drawString;
     private final DecimalFormat format;
+    private boolean renderBG;
+    private PortalGunStyle style;
 
     public PGSlider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, double stepSize, int precision, boolean drawString) {
         super(x, y, width, height, Component.empty(), 0.0F);
@@ -45,6 +52,27 @@ public class PGSlider extends AbstractSliderButton {
 
     public PGSlider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, boolean drawString) {
         this(x, y, width, height, message, currentValue, minValue, maxValue, 0.1F, 0, drawString);
+    }
+
+    public void setRenderBG(boolean renderBG) {
+        this.renderBG = renderBG;
+    }
+
+    public void setStyle(PortalGunStyle style) {
+        this.style = style;
+    }
+
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        if (this.renderBG) {
+            super.renderWidget(graphics, mouseX, mouseY, delta);
+        } else if (this.style != null) {
+            graphics.fill(this.getX(), this.getY(), this.getX() + width, this.getY() + height, style.bgColor());
+            graphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), style.highlightColor());
+            graphics.renderOutline(this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 8, this.getHeight(), style.highlightColor());
+
+            int i = this.active ? 16777215 : 10526880;
+            this.renderScrollingString(graphics, Minecraft.getInstance().font, 2, i | Mth.ceil(this.alpha * 255.0F) << 24);
+        }
     }
 
     public double getValue() {

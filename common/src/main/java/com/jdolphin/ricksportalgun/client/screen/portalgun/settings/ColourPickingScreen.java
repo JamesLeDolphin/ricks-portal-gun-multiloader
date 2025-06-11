@@ -1,11 +1,13 @@
-package com.jdolphin.ricksportalgun.client.screen.portalgun;
+package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBColourPacket;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
@@ -22,9 +24,10 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 
 public class ColourPickingScreen extends AbstractBaseScreen {
-    private PGSlider r, g, b;
+    private PGSlider r, g, b, size;
+    private PGTextButton reset, select, cancel;
 
-    protected ColourPickingScreen() {
+    public ColourPickingScreen() {
         super(Component.translatable("menu.ricksportalgun.colour_select"));
     }
 
@@ -42,17 +45,23 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         this.b = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
                 Component.empty(), ARGB.blueFloat(color), 0, 1, false));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
+        this.size = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 + 12, 36, 20,
+                Component.empty(), 1, 1, 3, false));
+
+        this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
+                Component.translatable("ricksportalgun.button.select"), (button) -> {
             if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                 SBColourPacket packet = new SBColourPacket(getColor());
                 PGHelper.sendPacketToServer(packet);
                 this.onClose();
             }
-        }).size(128, 20).pos(this.width / 2 - 136, this.height / 2 + 32).build());
-        this.addRenderableWidget(Button.builder(
-                Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose()).size(128, 20).pos(this.width / 2 + 8, this.height / 2 + 32).build());
+        }, this.font));
 
-        this.addRenderableWidget(Button.builder(
+        this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
+                Component.translatable("ricksportalgun.button.cancel"),
+                (button) -> this.onClose(), this.font));
+
+        this.reset = this.addRenderableWidget(new PGTextButton(this.width / 2 + 72, this.height / 2 + 42, 64, 20,
                 Component.translatable("ricksportalgun.button.colour.reset"), (button) -> {
                     int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
 
@@ -63,7 +72,12 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }).pos(this.width / 2 + 72, this.height / 2 + 8).size(64, 20).build());
+                }, this.font));
+
+        PortalGunStyle style = getStyle();
+        this.select.setTextColour(style.textColor());
+        this.reset.setTextColour(style.textColor());
+        this.cancel.setTextColour(style.textColor());
     }
 
     public int getColor() {
@@ -78,24 +92,34 @@ public class ColourPickingScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 80, this.height / 2 - 55);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 80, this.height / 2 - 32);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.blue", ""), this.width / 2 - 80, this.height / 2 - 7);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        PortalGunStyle style = getStyle();
 
-        GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("menu.ricksportalgun.colour_select"),
-                this.width / 2, 30);
+        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        GuiHelper.renderWidgets(pPoseStack, pMouseX, pMouseY, pPartialTick, r, g, b);
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, 30, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 110, this.r.getY() + 4, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 110, this.g.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.blue", ""), this.width / 2 - 110, this.b.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.settings.customization.color.size"), this.width / 2 - 110, this.size.getY() + 4, getStyle().textColor());
 
-        int x = 64, y = 82;
-        pPoseStack.blit(RenderType::guiTextured, PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10, this.height / 2 - 64, x, y, x, y, x, y, this.getColor());
+        GuiHelper.renderOutline(graphics, select, style.highlightColor());
+        GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
+        GuiHelper.renderOutline(graphics, reset, style.highlightColor());
 
-        Style style = GuiHelper.getStyle(pMouseX, pMouseY);
-        if (style != null && style.getHoverEvent() != null) {
-            this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, r, g, b);
+
+        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+
+        int x = 64, y = 82, multiplier = size.getValueInt();
+        graphics.blit(RenderType::guiTextured, PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
+                this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y, this.getColor());
+
+        Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
+        if (guiStyle != null && guiStyle.getHoverEvent() != null) {
+            this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
         }
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override

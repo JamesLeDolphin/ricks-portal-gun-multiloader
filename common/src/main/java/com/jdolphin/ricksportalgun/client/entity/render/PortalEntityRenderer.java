@@ -31,6 +31,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     private final int frames = 8;
     private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
     int tickTimer = 0;
+
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
         this.model = new PortalEntityModel(pContext.bakeLayer(PortalEntityModel.LAYER_LOCATION));
@@ -117,7 +118,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         tickTexture();
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
         int i = state.rgb;
-        if (state.name != null && names.contains(state.name.getString())) {
+        if (state.name != null && names.contains(state.name.getString().toLowerCase())) {
             int j = 25;
             int k = Mth.floor(state.ageInTicks);
             int l = k / 25;

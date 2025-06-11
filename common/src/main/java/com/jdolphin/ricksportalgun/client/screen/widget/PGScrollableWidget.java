@@ -95,9 +95,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     }
 
     protected void addEntryToTop(E entry) {
-        double d0 = (double)this.maxScrollAmount() - this.scrollAmount();
         this.children.addFirst(entry);
-        this.setScrollAmount((double)this.maxScrollAmount() - d0);
     }
 
     protected boolean removeEntryFromTop(E entry) {

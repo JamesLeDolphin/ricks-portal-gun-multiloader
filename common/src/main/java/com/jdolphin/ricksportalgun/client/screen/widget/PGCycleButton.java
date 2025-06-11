@@ -1,17 +1,21 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.google.common.collect.ImmutableList;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 import java.util.Collection;
@@ -20,6 +24,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 public class PGCycleButton<T> extends AbstractButton {
+    private static final List<Boolean> BOOLEAN_OPTIONS;
+    public static ResourceLocation ARROW_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/arrow.png");
     private int index;
     private T value;
     private final PGCycleButton.ValueListSupplier<T> values;
@@ -28,6 +34,7 @@ public class PGCycleButton<T> extends AbstractButton {
     private final PGCycleButton.OnValueChange<T> onValueChange;
     private final OptionInstance.TooltipSupplier<T> tooltipSupplier;
     private boolean renderBG = true;
+    private boolean renderArrows = false;
     private int color = this.active ? 16777215 : 10526880 | Mth.ceil(this.alpha * 255.0F) << 24;
 
     PGCycleButton(int x, int y, int width, int height, Component message, int index,
@@ -48,6 +55,10 @@ public class PGCycleButton<T> extends AbstractButton {
         this.renderBG = renderBG;
     }
 
+    public void setRenderArrows(boolean renderArrows) {
+        this.renderArrows = renderArrows;
+    }
+
     public void setTextColor(int color) {
         this.color = color;
     }
@@ -59,6 +70,11 @@ public class PGCycleButton<T> extends AbstractButton {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (renderBG) {
             super.renderWidget(graphics, mouseX, mouseY, delta);
+        }
+        if (renderArrows) {
+            graphics.blit(RenderType::guiTextured, ARROW_TEXTURES, this.getX() + 1, this.getY() + this.height - 18, 0, 0, 16, 16, 32, 16, this.color);
+            graphics.blit(RenderType::guiTextured, ARROW_TEXTURES,
+                    this.getX() + this.width - 17, this.getY() + this.height - 18, 16, 0, 16, 16, 32, 16, this.color);
         }
         Component component = this.isHovered() ? ComponentUtils.mergeStyles(this.getMessage().copy(), Style.EMPTY.withUnderlined(true)) : this.getMessage();
         renderScrollingString(graphics, Minecraft.getInstance().font, component, this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), this.color);
@@ -138,6 +154,14 @@ public class PGCycleButton<T> extends AbstractButton {
 
     public static <T> PGCycleButton.Builder<T> builder(Function<T, Component> valueStringifier) {
         return new PGCycleButton.Builder<>(valueStringifier);
+    }
+
+    public static PGCycleButton.Builder<Boolean> booleanBuilder(Component componentOn, Component componentOff) {
+        return (new PGCycleButton.Builder<Boolean>((b) -> b ? componentOn : componentOff)).withValues(BOOLEAN_OPTIONS);
+    }
+
+    static {
+        BOOLEAN_OPTIONS = ImmutableList.of(Boolean.TRUE, Boolean.FALSE);
     }
 
 

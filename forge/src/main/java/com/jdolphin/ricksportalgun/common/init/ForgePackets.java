@@ -59,12 +59,16 @@ public class ForgePackets {
                 .codec(SBOpenLocatorScreenPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBOpenSecuritySettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBOpenSecuritySettingsPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(CBOpenCoordGuiPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) ClientPacketHandler.openCoordTravelScreen(packet.strings);
+                    if (context.isClientSide()) ClientPacketHandler.openCoordTravelScreen(packet.strings());
                 }).add();
         INSTANCE.messageBuilder(CBOpenBarrierGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(CBOpenBarrierGuiPacket.CODEC.cast())
@@ -85,6 +89,11 @@ public class ForgePackets {
                 .codec(CBOpenLocatorScreenPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
                     if (context.isClientSide()) ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList());
+                }).add();
+        INSTANCE.messageBuilder(CBOpenSecurityGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(CBOpenSecurityGuiPacket.CODEC.cast())
+                .consumerMainThread((packet, context) -> {
+                    if (context.isClientSide()) ClientPacketHandler.openSecurityScreen(packet.strings());
                 }).add();
     }
 

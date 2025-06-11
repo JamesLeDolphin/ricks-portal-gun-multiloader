@@ -37,7 +37,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
         ItemStack stack = player.getMainHandItem();
         PortalGunItem item = PGHelper.getPortalGun(stack);
-
+        assert item != null;
         if (value == 0) {
             Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
             if (optionalRegistry.isPresent()) {
@@ -46,11 +46,11 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                         player.blockPosition(), 6400, 32, 64);
                 if (pair != null) {
                     BlockPos pos = pair.getFirst();
-                    BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                    BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
                     item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                     PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                 } else
-                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.biome.not_in_area", name));
+                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
             }
         }
         if (value == 1) {
@@ -61,7 +61,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
             ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
             if (targetPlayer != null) {
-                item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition());
+                item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
                 PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
 
             } else
@@ -82,13 +82,13 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                             .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                        BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
                         item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else {
-                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.structure.not_in_area", name));
+                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
                     }
-                } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locator.structure.unknown", name));
+                } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
             }
         }
     }

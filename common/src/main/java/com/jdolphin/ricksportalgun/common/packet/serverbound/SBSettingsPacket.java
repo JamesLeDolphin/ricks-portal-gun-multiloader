@@ -32,9 +32,9 @@ public record SBSettingsPacket(boolean lock, String name, float size, int lifeti
             if (newOwner != null) {
                 stack.set(PGDataComponents.OWNER, newOwner.getStringUUID());
             } else {
-                player.sendSystemMessage(Component.translatable("error.ricksportalgun.player_not_found", name).withStyle(ChatFormatting.RED), false);
+                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
             }
-            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.settings.applied").withStyle(ChatFormatting.GREEN), false);
+            PGHelper.sendSuccessMsg(player, "notice.ricksportalgun.settings.applied");
         }
     }
 

@@ -23,9 +23,10 @@ public class NeoForgePackets {
         registrar.commonToServer(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBOpenSecuritySettingsPacket.ID, SBOpenSecuritySettingsPacket.CODEC, NeoForgePackets::handle);
 
         //Client bound
-        registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings));
+        registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));
         registrar.commonToClient(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC, (packet, context) ->ClientPacketHandler.openBarrierGui(packet.pos()));
         registrar.commonToClient(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         registrar.commonToClient(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC, (packet, context) ->
@@ -33,6 +34,8 @@ public class NeoForgePackets {
 
         registrar.commonToClient(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC, (packet, context) ->
                 ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
+        registrar.commonToClient(CBOpenSecurityGuiPacket.ID, CBOpenSecurityGuiPacket.CODEC, (packet, context) ->
+                ClientPacketHandler.openSecurityScreen(packet.strings()));
     }
 
     private static  <P extends CustomPacketPayload> void handle(P packet, IPayloadContext context) {

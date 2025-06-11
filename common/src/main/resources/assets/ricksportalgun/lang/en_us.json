@@ -25,27 +25,30 @@
   "menu.ricksportalgun.waypoints.info": "Waypoint Info",
   "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s/%s",
   "menu.ricksportalgun.workbench": "Portal Gun Workbench",
+  "menu.ricksportalgun.settings.security": "Security Settings",
+  "menu.ricksportalgun.settings.customization": "Customization Settings",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
   "ricksportalgun.button.waypoint.new": "Create New Waypoint",
   "ricksportalgun.button.waypoint.info": "Waypoint Info",
   "ricksportalgun.button.waypoint.saved": "Saved Waypoints",
-  "ricksportalgun.button.player_locator": "Player Locator",
   "ricksportalgun.button.player_locator.disabled": "Player locating is disabled on this server",
   "ricksportalgun.button.colour.reset": "Reset Color",
   "ricksportalgun.button.colour": "Change Portal Color",
   "ricksportalgun.button.lock": "Enable biometric lock",
   "ricksportalgun.button.settings": "Portal Gun Settings",
   "ricksportalgun.button.ownership": "Transfer portal gun ownership to:",
-  "ricksportalgun.button.portal_size": "Change portal size",
-  "ricksportalgun.button.portal_age": "Change portal open time",
+  "ricksportalgun.button.portal_size": "Change portal size:",
+  "ricksportalgun.button.portal_age": "Change portal open time:",
   "ricksportalgun.button.randomise.dimension": "Randomize Dimension",
   "ricksportalgun.button.randomise.coord": "Randomize Coordinates",
   "ricksportalgun.button.locator": "Locator",
   "ricksportalgun.button.locator.player": "Player Locator",
   "ricksportalgun.button.locator.biome": "Biome Locator",
   "ricksportalgun.button.locator.structure": "Structure Locator",
+  "ricksportalgun.button.settings.security": "Security Settings",
+  "ricksportalgun.button.settings.customization": "Customization Settings",
 
   "ricksportalgun.button.cancel": "Cancel",
   "ricksportalgun.button.true": "True",
@@ -62,14 +65,15 @@
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
   "error.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
-  "error.ricksportalgun.dimension_disabled": "Error 403: You are forbidden from entering this dimension!",
+  "error.ricksportalgun.dimension.disabled": "Error 403: You are forbidden from entering this dimension!",
   "error.ricksportalgun.destination_not_found": "Error 404: Destination level not found!",
   "error.ricksportalgun.locating.player.not_found": "Error 404: Player %s not found!",
   "error.ricksportalgun.locating.player.disabled": "Error 405: Player locating is disabled in this server!",
-  "error.ricksportalgun.locator.structure.not_in_area": "Error 404: Unable to find structure \"%s\" in area!",
-  "error.ricksportalgun.locator.structure.unknown": "Error 404: Unknown Structure: \"%s\"!",
-  "error.ricksportalgun.locator.biome.not_in_area": "Error 404: Unable to find biome \"%s\" in area!",
-  "error.ricksportalgun.locator.biome.unknown": "Error 404: Unknown Biome: \"%s\"!",
+  "error.ricksportalgun.locating.structure.not_in_area": "Error 404: Unable to find structure \"%s\" in area!",
+  "error.ricksportalgun.locating.structure.unknown": "Error 404: Unknown Structure: \"%s\"!",
+  "error.ricksportalgun.locating.biome.not_in_area": "Error 404: Unable to find biome \"%s\" in area!",
+  "error.ricksportalgun.locating.biome.unknown": "Error 404: Unknown Biome: \"%s\"!",
+  "error.ricksportalgun.destination.dragon": "Er#or #$@: Unabl3 t0 cre@te p#rta1!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",
@@ -104,7 +108,11 @@
 
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
-
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "ricksportalgun.button.settings.customization.color": "Change Portal Color",
+  "ricksportalgun.button.settings.customization.theme": "Edit portal gun theme",
+  "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
+  "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
+  "ricksportalgun.button.portal_age.reset": "Reset portal open time"
 
 }

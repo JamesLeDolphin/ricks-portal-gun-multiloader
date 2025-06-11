@@ -4,11 +4,13 @@ import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -34,12 +36,16 @@ public class WaypointScreen extends AbstractBaseScreen {
 
         LocalPlayer player = minecraft.player;
         this.addWaypoint = this.addRenderableWidget(new PGImageButton(this.width / 2 + 68, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
-                (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES ));
-        ItemStack stack = player.getMainHandItem();
-        if (stack.is(PGTags.Items.PORTAL_GUNS))
-            this.waypointList = this.addWidget(new WaypointListWidget(this, this.width, (this.height / 3) * 2, 0,this.height / 3 - 30,
-                    21, stack, true, 128, 20));
+                (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
 
+        ItemStack stack = player.getMainHandItem();
+        this.waypointList = this.addWidget(new WaypointListWidget(170, (this.height / 3) * 2, this.width / 2 - 75, this.height / 3 - 30,
+                24, stack, true, 128, 20));
+
+        PortalGunStyle style = getStyle();
+        this.addWaypoint.setRenderBackground(false);
+        this.waypointList.setRenderButtonBackground(false);
+        this.waypointList.setBorderColor(style.highlightColor());
     }
 
     @Override
@@ -53,17 +59,27 @@ public class WaypointScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics stack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.addWaypoint.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.new")));
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        PortalGunStyle style = getStyle();
+
+        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+
+        GuiHelper.renderTooltip(graphics, Component.translatable("ricksportalgun.button.waypoint.new"), addWaypoint);
+        GuiHelper.renderOutline(graphics, addWaypoint, style.highlightColor());
+        GuiHelper.renderOutline(graphics, waypointList, style.highlightColor());
+
         if (waypointList != null)
-            this.waypointList.render(stack, pMouseX, pMouseY, pPartialTick);
+            this.waypointList.render(graphics, pMouseX, pMouseY, pPartialTick);
 
-        GuiHelper.drawWhiteCenteredString(stack, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, 30);
+        graphics.drawCenteredString(this.font, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, 30, style.textColor());
 
-        Style style = GuiHelper.getStyle(pMouseX, pMouseY);
-        if (style != null && style.getHoverEvent() != null) {
-            this.renderWithTooltip(stack, pMouseX, pMouseY, pPartialTick);
+
+        Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
+        if (guiStyle != null && guiStyle.getHoverEvent() != null) {
+            this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
         }
-        super.render(stack, pMouseX, pMouseY, pPartialTick);
+
+        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }

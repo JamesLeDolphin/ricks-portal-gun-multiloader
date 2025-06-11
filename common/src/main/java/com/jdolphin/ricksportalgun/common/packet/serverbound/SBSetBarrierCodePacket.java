@@ -23,7 +23,7 @@ public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGPay
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof SubetherBarrierBlockEntity barrier) {
             barrier.setCode(code);
-            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.barrier.code_set"));
+            PGHelper.sendSuccessMsg(player, Component.translatable("notice.ricksportalgun.barrier.code_set"));
         }
     }
 

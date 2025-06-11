@@ -85,7 +85,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURES));
 
 
-        this.player_loc = this.addRenderableWidget(new PGImageButton(this.width / 2 - 64, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.player_locator"),
+        this.player_loc = this.addRenderableWidget(new PGImageButton(this.width / 2 - 64, this.height / 2 + 64, 20, 18, Component.translatable("ricksportalgun.button.locator"),
                 (button) -> {
                     SBOpenLocatorScreenPacket packet = new SBOpenLocatorScreenPacket();
                     PGHelper.sendPacketToServer(packet);
@@ -200,7 +200,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
         GuiHelper.setTooltip(waypoints, Component.translatable("ricksportalgun.button.waypoint"));
-        GuiHelper.setTooltip(player_loc, Component.translatable("ricksportalgun.button.player_locator"));
+        GuiHelper.setTooltip(player_loc, Component.translatable("ricksportalgun.button.locator"));
         GuiHelper.setTooltip(randomiseDim, Component.translatable("ricksportalgun.button.randomise.dimension"));
         GuiHelper.setTooltip(randomiseCoord, Component.translatable("ricksportalgun.button.randomise.coord"));
         GuiHelper.setTooltip(settings, Component.translatable("ricksportalgun.button.settings"));

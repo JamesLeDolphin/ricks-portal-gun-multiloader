@@ -23,7 +23,7 @@ public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implemen
             if (!PGCommonConfig.INSTANCE.getDisabledDimensions().contains(dim)) {
                 menu.setCoords(pos, dim);
             } else
-                player.sendSystemMessage(Component.translatable("notice.ricksportalgun.dimension_disabled").withStyle(ChatFormatting.RED), false);
+                PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
         }
     }
 

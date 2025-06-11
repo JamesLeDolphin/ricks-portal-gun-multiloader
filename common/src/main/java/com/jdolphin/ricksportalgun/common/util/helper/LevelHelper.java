@@ -22,10 +22,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.dimension.end.EndDragonFight;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -118,10 +121,11 @@ public class LevelHelper {
     public static void randomTP(ServerPlayer player, int radius) {
         ServerLevel level = player.serverLevel();
         ServerLevel dest = getRandomServerLevel(player.server);
-        teleportEntity(player, dest, getSafePos(getRandomCoord(dest, radius), level));
+        teleportEntity(player, dest, getSafePos(getRandomCoord(dest, radius), level, 0));
     }
 
-    public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
+    public static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
+        iteration++;
         ChunkAccess chunk = level.getChunk(bPos);
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);
 
@@ -131,16 +135,10 @@ public class LevelHelper {
 
         int direction = y > worldCenter ? -1 : 1;
 
-        while (y >= level.getMinY() + 2 && y <= level.getHeight()) {
+        while (y >= level.getMinY() + 2 && y <= level.getMaxY()) {
             BlockPos pos1 = new BlockPos(bPos.getX(), y, bPos.getZ());
 
-            BlockState blockState = level.getBlockState(pos1);
-            BlockState belowState = level.getBlockState(pos1.below());
-            BlockState aboveState = level.getBlockState(pos1.above());
-
-            if (belowState.isAir()
-                    || aboveState.is(PGTags.Blocks.RANDOMIZER_AVOID)
-                    || blockState.isSuffocating(level, pos1)) {
+            if (!isRandomizerSafe(level, pos1)) {
 
                 y += direction;
 
@@ -149,14 +147,36 @@ public class LevelHelper {
 
         bPos = new BlockPos(bPos.getX(), y, bPos.getZ());
 
-        BlockState blockState = level.getBlockState(bPos);
-        if (blockState.isSuffocating(level, bPos)
-                || blockState.is(PGTags.Blocks.RANDOMIZER_AVOID)
-                || y <= level.getMinY() + 2 || y >= level.getHeight()) {
-            return getSafePos(getRandomCoord(level, 500), level);
+        if (!isRandomizerSafe(level, bPos)
+                || y <= level.getMinY() + 2 || y >= level.getMaxY()) {
+            return iteration <= 25 ? getSafePos(getRandomCoord(level, 15), level, iteration) : bPos;
         }
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, false);
         return bPos;
+    }
+
+    public static boolean endHasDragons(ServerLevel level) {
+        if (Level.END.location().equals(getLevelDimensionLocation(level))) {
+            EndDragonFight fight = level.getDragonFight();
+            if (fight != null) {
+                EndDragonFight.Data data = fight.saveData();
+                return !data.dragonKilled() || data.isRespawning();
+            }
+        }
+        return false;
+    }
+
+    public static boolean isRandomizerSafe(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        BlockState aboveState = level.getBlockState(pos.above());
+        BlockState belowState = level.getBlockState(pos.below());
+
+        if (!(belowState.isSuffocating(level, pos) || belowState.is(Blocks.LAVA) || belowState.isAir() || belowState.is(Blocks.KELP_PLANT))) {
+            if (!(state.isSuffocating(level, pos) || state.is(Blocks.WATER) || state.is(Blocks.LAVA) || state.is(Blocks.KELP_PLANT))) {
+                return !(aboveState.isSuffocating(level, pos) || aboveState.is(Blocks.WATER) || aboveState.is(Blocks.LAVA) || aboveState.is(Blocks.KELP_PLANT));
+            }
+        }
+        return false;
     }
 
     public static void teleportEntity(Entity entity, ServerLevel level, BlockPos pos) {

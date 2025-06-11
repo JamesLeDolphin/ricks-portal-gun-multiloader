@@ -26,8 +26,9 @@ public class SuggestionTextFieldWidget extends EditBox {
     public SuggestionTextFieldWidget(int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
         super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
+        int i = Math.min(suggestions.size(), 3);
         this.suggestionListWidget = new SuggestionList(Minecraft.getInstance(),
-                width, height * 3 - 5, x, y + height, 14, this);
+                width, height * i, x, y + height, 14, this);
     }
 
     public SuggestionList getSuggestionList() {
@@ -59,6 +60,7 @@ public class SuggestionTextFieldWidget extends EditBox {
         List<String> suggestions = this.sortSuggestions(this.suggestions);
         this.suggestionListWidget.setSuggestions(suggestions);
         this.suggestionListWidget.setScrollAmount(0);
+        this.suggestionListWidget.setHeight(this.height * Math.min(3, suggestions.size()));
     }
 
     private List<String> sortSuggestions(List<String> suggestions) {

@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
+import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -26,24 +28,28 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
     public final ItemStack stack;
     public final PortalGunItem item;
-    public final Screen screen;
     public boolean showInfoButton;
     public int rowWidth = 188;
     private final int buttonWidth;
     private final int buttonHeight;
+    private boolean renderButtonBg;
+    private int borderColor = 0;
 
-    public WaypointListWidget(Screen screen, int width, int height, int x, int y, int itemHeight, ItemStack stack, boolean showInfo, int buttonWidth, int buttonHeight) {
+    public WaypointListWidget(int width, int height, int x, int y, int itemHeight, ItemStack stack, boolean showInfo, int buttonWidth, int buttonHeight) {
         super(Minecraft.getInstance(), width, height, x, y, itemHeight);
-
         this.stack = stack;
-        this.screen = screen;
         this.item = (PortalGunItem) stack.getItem();
         this.showInfoButton = showInfo;
         this.buttonWidth = buttonWidth;
         this.buttonHeight = buttonHeight;
         this.refreshEntries(stack);
-
     }
+
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    protected void renderListBackground(GuiGraphics guiGraphics) {}
 
     public void refreshEntries(ItemStack stack) {
         this.children().clear();
@@ -51,8 +57,8 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
         for (Waypoint waypoint : waypoints) {
             if (waypoint != null) {
-                this.addEntry(new WaypointEntry(waypoint, this, this.showInfoButton));
-            } else LogManager.getLogger().warn("Failed to get Waypoint: {}", waypoint);
+                this.addEntryToTop(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.borderColor));
+            } else LogManager.getLogger().warn("Failed to get Waypoint");
         }
     }
 
@@ -65,44 +71,56 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         narrationElementOutput.add(NarratedElementType.USAGE, Component.empty());
     }
 
+    public void setRenderButtonBackground(boolean renderButtonBg) {
+        this.renderButtonBg = renderButtonBg;
+    }
+
     public static class WaypointEntry extends Entry<WaypointListWidget.WaypointEntry> {
 
-        private final Waypoint waypoint;
         private final Button button;
         private final PGImageButton infoButton;
         protected WaypointListWidget list;
         private final boolean showInfo;
+        private final int color;
 
-        WaypointEntry(Waypoint waypoint, WaypointListWidget list, boolean showInfoButton) {
-            this.waypoint = waypoint;
+        WaypointEntry(Waypoint waypoint, WaypointListWidget list, boolean showInfoButton, boolean renderButtonBG, int borderColor) {
             this.list = list;
             this.showInfo = showInfoButton;
+            this.color = borderColor;
 
-            this.button = Button.builder(Component.literal(waypoint.getName()),
-                    (pButton -> {
-                        SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDim());
-                        PGHelper.sendPacketToServer(packet);
-                        Minecraft.getInstance().setScreen(null);
-                    })).pos(16, 0).size(list.buttonWidth, list.buttonHeight).build();
+            Button.OnPress press = (pButton) -> {
+                SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDim());
+                PGHelper.sendPacketToServer(packet);
+                Minecraft.getInstance().setScreen(null);
+            };
+
+            if (renderButtonBG) {
+                this.button = Button.builder(Component.literal(waypoint.getName()), press)
+                        .pos(16, 0).size(list.buttonWidth, list.buttonHeight).build();
+            } else {
+                this.button = new PGTextButton(16, 0, list.buttonWidth, list.buttonHeight, Component.literal(waypoint.getName()), press, Minecraft.getInstance().font);
+            }
                 this.infoButton = new PGImageButton(0, 0, 20, 20, Component.translatable("ricksportalgun.button.waypoint.info"),
                         (button) ->
                                 Minecraft.getInstance().setScreen(new WaypointInfoScreen(waypoint)), 20, 20, WAYPOINT_INFO_TEXTURES);
+            this.infoButton.setRenderBackground(renderButtonBG);
+            this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
         }
 
         @Override
-        public void render(@NotNull GuiGraphics pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
             WaypointListWidget wpList = this.list;
             if (pTop > wpList.headerHeight) {
 
-                this.button.setX(wpList.getWidth() / 2 - 64);
+                this.button.setX(pLeft + 18);
                 this.button.setY(pTop);
-                this.button.setMessage(Component.literal(this.waypoint.getName()));
-                this.button.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+                this.button.render(graphics, pMouseX, pMouseY, pPartialTick);
+                GuiHelper.renderOutline(graphics, button, this.color);
                 if (this.showInfo) {
-                    this.infoButton.setX(wpList.getWidth() / 2 + 68);
+                    this.infoButton.setX(pLeft + button.getWidth() + 20);
                     this.infoButton.setY(pTop);
-                    this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
-                    this.infoButton.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+                    GuiHelper.renderOutline(graphics, infoButton, this.color);
+                    this.infoButton.render(graphics, pMouseX, pMouseY, pPartialTick);
                 }
             }
         }

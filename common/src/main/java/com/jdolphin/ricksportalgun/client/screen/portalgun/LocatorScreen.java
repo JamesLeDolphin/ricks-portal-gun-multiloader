@@ -91,13 +91,8 @@ public class LocatorScreen extends AbstractBaseScreen {
         this.input.setResponder(s -> input.update());
         this.locatorType.setRenderBackground(false);
         this.locatorType.setTextColor(style.textColor());
+        this.locatorType.setRenderArrows(true);
         this.input.getSuggestionList().setBorderColor(style.highlightColor());
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
     }
 
     @Override
@@ -105,7 +100,7 @@ public class LocatorScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.locator"), this.width / 2, 30, Color.WHITE.getRGB());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.locator"), this.width / 2, 30, style.textColor());
         if (this.input != null) this.input.render(graphics, pMouseX, pMouseY, pPartialTick);
 
         GuiHelper.renderOutline(graphics, select, style.highlightColor());

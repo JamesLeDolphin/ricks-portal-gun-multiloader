@@ -20,19 +20,6 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
             ByteBufCodecs.BOOL, SBManageWaypointsPacket::remove, SBManageWaypointsPacket::new);
     public static final Type<SBManageWaypointsPacket> ID = new Type<>(PGHelper.createLocation("manage_waypoint"));
 
-    public SBManageWaypointsPacket(String waypoint, boolean remove) {
-        this.waypoint = waypoint;
-        this.remove = remove;
-    }
-
-    public SBManageWaypointsPacket(FriendlyByteBuf buf) {
-        this(buf.readUtf(), buf.readBoolean());
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.waypoint);
-        buf.writeBoolean(this.remove);
-    }
 
     public void handle(ServerPlayer player) {
         Waypoint wp = Waypoint.getWaypoint(waypoint);
@@ -42,7 +29,7 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
                 if (!remove) IWaypointStorage.addWaypoint(stack, wp);
                 if (remove) {
                     IWaypointStorage.deleteWaypoint(stack, wp);
-                    player.displayClientMessage(Component.translatable("ricksportalgun.deleted", wp.getName()).withStyle(ChatFormatting.GREEN), false);
+                    PGHelper.sendSuccessMsg(player, Component.translatable("ricksportalgun.deleted", wp.getName()));
                 }
             }
         }

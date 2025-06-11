@@ -27,27 +27,36 @@ public record SBOpenLocatorScreenPacket() implements PGPayload {
         MinecraftServer server = player.server;
 
         List<String> players = Arrays.asList(server.getPlayerNames());
+        int playerCount = server.getPlayerNames().length;
         List<String> biomes = new ArrayList<>();
         List<String> structures = new ArrayList<>();
-        Optional<Registry<Biome>> biomeRegistry =  server.registryAccess().lookup(Registries.BIOME);
-        Optional<Registry<Structure>> structureRegistry =  server.registryAccess().lookup(Registries.STRUCTURE);
 
-        biomeRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
-            String biomeName = holders.getRegisteredName();
-            if (!biomes.contains(biomeName)) {
-                biomes.add(biomeName);
-            }
-        }));
-
-        structureRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
-            String structureName = holders.getRegisteredName();
-            if (!structures.contains(structureName)) {
-                structures.add(structureName);
-            }
-        }));
-
-        CBOpenLocatorScreenPacket packet = new CBOpenLocatorScreenPacket(players, biomes, structures);
-        PGHelper.sendPacketToClient(player, packet);
+        Optional<Registry<Biome>> biomeRegistry = server.registryAccess().lookup(Registries.BIOME);
+        Optional<Registry<Structure>> structureRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
+        int biomeCount = 0;
+        int structureCount = 0;
+        if (biomeRegistry.isPresent()) {
+            biomeCount = biomeRegistry.get().size();
+            biomeRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
+                String biomeName = holders.getRegisteredName();
+                if (!biomes.contains(biomeName)) {
+                    biomes.add(biomeName);
+                }
+            }));
+        }
+        if (structureRegistry.isPresent()) {
+            structureCount = structureRegistry.get().size();
+            structureRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
+                String structureName = holders.getRegisteredName();
+                if (!structures.contains(structureName)) {
+                    structures.add(structureName);
+                }
+            }));
+        }
+        if (playerCount == players.size() && biomeCount == biomes.size() && structureCount == structures.size()) {
+            CBOpenLocatorScreenPacket packet = new CBOpenLocatorScreenPacket(players, biomes, structures);
+            PGHelper.sendPacketToClient(player, packet);
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -194,33 +195,35 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setBootleg(bootleg);
                     exPortal.setBootleg(bootleg);
 
-                    if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
-                        level.addFreshEntity(portal);
-                        if (!player.isCreative()) {
-                            lowerFuel(stack, 1);
-                            player.awardStat(Stats.ITEM_USED.get(this));
-                            player.getCooldowns().addCooldown(stack, 20 * 3);
-                        }
-                    } else if (serverlevel != null) {
-                        if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                            if (!portal.isFlat()) {
-                                portal.setYRot(player.getYRot());
-                                exPortal.setYRot(player.getYRot());
-                            }
-                            serverlevel.addFreshEntity(exPortal);
-                            level.addFreshEntity(portal);
+                    if (!(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
 
-                            player.awardStat(Stats.ITEM_USED.get(this));
-                            player.getCooldowns().addCooldown(stack, 20 * 3);
+                        if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                            level.addFreshEntity(portal);
                             if (!player.isCreative()) {
                                 lowerFuel(stack, 1);
+                                player.awardStat(Stats.ITEM_USED.get(this));
+                                player.getCooldowns().addCooldown(stack, 20 * 3);
                             }
                         } else {
-                            serverPlayer.sendSystemMessage(Component.translatable("error.ricksportalgun.destination_unreachable").withStyle(ChatFormatting.RED));
-                            return InteractionResult.FAIL;
+                            if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
+                                if (!portal.isFlat()) {
+                                    portal.setYRot(player.getYRot());
+                                    exPortal.setYRot(player.getYRot());
+                                }
+                                serverlevel.addFreshEntity(exPortal);
+                                level.addFreshEntity(portal);
+
+                                player.awardStat(Stats.ITEM_USED.get(this));
+                                player.getCooldowns().addCooldown(stack, 20 * 3);
+                                if (!player.isCreative()) {
+                                    lowerFuel(stack, 1);
+                                }
+                            } else {
+                                PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
+                                return InteractionResult.FAIL;
+                            }
                         }
-                    } else
-                        serverPlayer.sendSystemMessage(Component.translatable("error.ricksportalgun.destination_not_found").withStyle(ChatFormatting.RED));
+                    } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
                 }
             }
             return InteractionResult.SUCCESS;
@@ -241,7 +244,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 .withStyle(ChatFormatting.GRAY));
         toolTips.add(Component.translatable("tooltip.ricksportalgun.fuel", getFuel(stack), getMaxFuel(stack)).withStyle(ChatFormatting.GRAY));
 
-            toolTips.add(Component.translatable("").withStyle(ChatFormatting.GRAY));
         } else {
             toolTips.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.GRAY));
             if (stack.has(PGDataComponents.PRIMARY_DYE) || stack.has(PGDataComponents.SECONDARY_DYE)) {

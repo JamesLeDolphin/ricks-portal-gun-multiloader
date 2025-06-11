@@ -1,8 +1,6 @@
-package com.jdolphin.ricksportalgun.common;
+package com.jdolphin.ricksportalgun;
 
 
-import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.RicksPortalGunCommonMain;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import net.minecraft.core.Registry;
