@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
@@ -26,6 +27,7 @@ import java.awt.*;
 public class ColourPickingScreen extends AbstractBaseScreen {
     private PGSlider r, g, b, size;
     private PGTextButton reset, select, cancel;
+    private PGImageButton backButton;
 
     public ColourPickingScreen() {
         super(Component.translatable("menu.ricksportalgun.colour_select"));
@@ -74,10 +76,24 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                     }
                 }, this.font));
 
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+                (button) -> minecraft.setScreen(new CustomizationSettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
+
         PortalGunStyle style = getStyle();
         this.select.setTextColour(style.textColor());
         this.reset.setTextColour(style.textColor());
         this.cancel.setTextColour(style.textColor());
+        this.r.setRenderBG(false);
+        this.g.setRenderBG(false);
+        this.b.setRenderBG(false);
+        this.size.setRenderBG(false);
+        this.r.setStyle(style);
+        this.g.setStyle(style);
+        this.b.setStyle(style);
+        this.size.setStyle(style);
+        this.backButton.setColor(style.highlightColor());
+        this.backButton.setRenderBackground(false);
+        GuiHelper.setTooltip(backButton, Component.translatable("ricksportalgun.button.back"));
     }
 
     public int getColor() {
@@ -97,7 +113,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, 30, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, this.height / 4 - 32, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 110, this.r.getY() + 4, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 110, this.g.getY() + 4, getStyle().textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.blue", ""), this.width / 2 - 110, this.b.getY() + 4, getStyle().textColor());
@@ -106,6 +122,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
         GuiHelper.renderOutline(graphics, reset, style.highlightColor());
+        GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, r, g, b);
 

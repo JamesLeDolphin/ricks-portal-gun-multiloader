@@ -1,14 +1,18 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class WaypointInfoScreen extends AbstractBaseScreen {
     private final Waypoint wp;
+    private PGTextButton select, delete;
+    private PGImageButton backButton;
 
     public WaypointInfoScreen(Waypoint waypoint) {
         super("menu.ricksportalgun.waypoints.info");
@@ -23,41 +29,55 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        GuiHelper.drawWhiteCenteredString(pPoseStack, Component.translatable("menu.ricksportalgun.waypoints.info"), this.width / 2, 30);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.name", wp.getName()), this.width / 2 - 128, this.height / 2 - 48);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.x",  wp.getX()), this.width / 2 - 128, this.height / 2 - 32);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.y",  wp.getY()), this.width / 2 - 128, this.height / 2 - 16);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.z",  wp.getZ()), this.width / 2 - 128, this.height / 2);
-        GuiHelper.drawWhiteString(pPoseStack, Component.translatable("ricksportalgun.dimension",  wp.getDim()), this.width / 2 - 128, this.height / 2 + 16);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        PortalGunStyle style = getStyle();
+        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        Style style = GuiHelper.getStyle(pMouseX, pMouseY);
-        if (style != null && style.getHoverEvent() != null) {
-            this.renderWithTooltip(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.waypoints.info"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.name", wp.getName()), this.width / 2 - 64, this.height / 2 - 48, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.x",  wp.getX()), this.width / 2 - 64, this.height / 2 - 32, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.y",  wp.getY()), this.width / 2 - 64, this.height / 2 - 16, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.z",  wp.getZ()), this.width / 2 - 64, this.height / 2, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension",  wp.getDim()), this.width / 2 - 64, this.height / 2 + 16, style.textColor());
+
+        GuiHelper.renderOutline(graphics, select, style.highlightColor());
+        GuiHelper.renderOutline(graphics, delete, style.highlightColor());
+        GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
+
+        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+
+        Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
+        if (guiStyle != null && guiStyle.getHoverEvent() != null) {
+            this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
         }
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
     protected void init() {
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
-            Player player = minecraft.player;
-            ItemStack itemStack = player.getMainHandItem();
-            if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
-                SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDim());
-                PGHelper.sendPacketToServer(packet);
-                this.onClose();
-            }
-        }).pos(this.width / 2 - 136, this.height / 2 + 32).size(128, 20).build());
-        this.addRenderableWidget(Button.builder(Component.translatable("ricksportalgun.button.delete"), (button) -> {
-            Player player = minecraft.player;
-            ItemStack itemStack = player.getMainHandItem();
-            if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
-                SBManageWaypointsPacket packet = new SBManageWaypointsPacket(wp.getWaypointString(), true);
-                PGHelper.sendPacketToServer(packet);
-                minecraft.setScreen(new WaypointScreen());
-            }
-        }).size(128, 20).pos(this.width / 2 + 8, this.height / 2 + 32).build());
         super.init();
+        assert  minecraft != null && minecraft.player != null;
+
+        this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
+                Component.translatable("ricksportalgun.button.select"), (button) -> {
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDim());
+            PGHelper.sendPacketToServer(packet);
+            this.onClose();
+        }, this.font));
+
+        this.delete = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
+                Component.translatable("ricksportalgun.button.delete"), (button) -> {
+            SBManageWaypointsPacket packet = new SBManageWaypointsPacket(wp.getWaypointString(), true);
+            PGHelper.sendPacketToServer(packet);
+            minecraft.setScreen(new WaypointScreen());
+        }, this.font));
+
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
+                (button) -> minecraft.setScreen(new WaypointScreen()), 20, 20, BACK_BUTTON_TEXTURE));
+
+        PortalGunStyle style = getStyle();
+        this.backButton.setColor(style.highlightColor());
+        this.backButton.setRenderBackground(false);
+        GuiHelper.setTooltip(backButton, Component.translatable("ricksportalgun.button.back"));
     }
 }

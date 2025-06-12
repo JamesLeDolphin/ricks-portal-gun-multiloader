@@ -53,8 +53,4 @@ public class PGHelper {
         int index = PGConstants.RANDOM.nextInt(i);
         return list.get(index);
     }
-
-    public static PortalGunItem getPortalGun(@NotNull ItemStack stack) {
-        return stack.is(PGTags.Items.PORTAL_GUNS) ? (PortalGunItem) stack.getItem() : null;
-    }
 }

@@ -63,6 +63,10 @@ public class ForgePackets {
                 .codec(SBOpenSecuritySettingsPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBSetPortalGunStylePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBSetPortalGunStylePacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

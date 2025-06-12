@@ -36,8 +36,6 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         ServerLevel level = player.serverLevel();
 
         ItemStack stack = player.getMainHandItem();
-        PortalGunItem item = PGHelper.getPortalGun(stack);
-        assert item != null;
         if (value == 0) {
             Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
             if (optionalRegistry.isPresent()) {
@@ -47,7 +45,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 if (pair != null) {
                     BlockPos pos = pair.getFirst();
                     BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
-                    item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                     PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                 } else
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
@@ -61,7 +59,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
             ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
             if (targetPlayer != null) {
-                item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
+                PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
                 PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
 
             } else
@@ -83,7 +81,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
                         BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
-                        item.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else {
                         PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));

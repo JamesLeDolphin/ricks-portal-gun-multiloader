@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -73,7 +74,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         stack.remove(DataComponents.DAMAGE);
     }
 
-    public boolean refuel(ItemStack stack, Player player) {
+    public static boolean refuel(ItemStack stack, Player player) {
         ItemStack offhand = player.getOffhandItem();
         ItemStack mainHand = player.getMainHandItem();
         if (getFuel(stack) < getMaxFuel(stack) && mainHand.is(PGTags.Items.PORTAL_GUNS)) {
@@ -93,7 +94,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return false;
     }
 
-    public void setPortalGunType(ItemStack stack, PortalGunType type) {
+    public static void setPortalGunType(ItemStack stack, PortalGunType type) {
         stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
         stack.set(DataComponents.ITEM_MODEL, type.model());
         stack.set(DataComponents.ITEM_NAME, type.name());
@@ -187,7 +188,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
-                    int color = this.getColor(stack);
+                    int color = getColor(stack);
                     portal.setColor(color);
                     exPortal.setColor(color);
 
@@ -267,19 +268,23 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return Math.round((float)getFuel(stack) * 13.0F / (float)getMaxFuel(stack));
     }
 
-    public int getColor(ItemStack stack) {
+    public static int getColor(ItemStack stack) {
         return stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
     }
 
-    public void setDefaultColor(ItemStack stack, int color) {
+    public static void setDefaultColor(ItemStack stack, int color) {
         stack.set(PGDataComponents.DEFAULT_PORTAL_COLOUR, color);
     }
 
-    public void setColor(ItemStack stack, int color) {
+    public static void setStyle(ItemStack stack, PortalGunStyle style) {
+        stack.set(PGDataComponents.PORTAL_GUN_STYLE, style);
+    }
+
+    public static void setColor(ItemStack stack, int color) {
         stack.set(PGDataComponents.PORTAL_COLOUR, color);
     }
 
-    public  void setHopLocation(ItemStack stack, ResourceLocation dimension, BlockPos pos) {
+    public static void setHopLocation(ItemStack stack, ResourceLocation dimension, BlockPos pos) {
         stack.set(PGDataComponents.PORTAL_DIM, dimension);
         stack.set(PGDataComponents.PORTAL_POS, pos);
     }

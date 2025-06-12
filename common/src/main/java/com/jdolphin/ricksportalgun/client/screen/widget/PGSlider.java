@@ -16,7 +16,7 @@ public class PGSlider extends AbstractSliderButton {
     protected double stepSize;
     protected boolean drawString;
     private final DecimalFormat format;
-    private boolean renderBG;
+    private boolean renderBG = true;
     private PortalGunStyle style;
 
     public PGSlider(int x, int y, int width, int height, Component message, double currentValue, double minValue, double maxValue, double stepSize, int precision, boolean drawString) {

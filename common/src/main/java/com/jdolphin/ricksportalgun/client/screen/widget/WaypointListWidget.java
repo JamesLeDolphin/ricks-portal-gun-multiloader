@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.client.screen.portalgun.WaypointInfoScreen;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
+import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.WaypointEntry> {
-    public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.createLocation("icon/waypoint_info");
+    public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/waypoint_info.png");
 
     public final ItemStack stack;
     public final PortalGunItem item;
@@ -33,7 +34,7 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
     private final int buttonWidth;
     private final int buttonHeight;
     private boolean renderButtonBg;
-    private int borderColor = 0;
+    private PortalGunStyle style = PortalGunStyle.DEFAULT;
 
     public WaypointListWidget(int width, int height, int x, int y, int itemHeight, ItemStack stack, boolean showInfo, int buttonWidth, int buttonHeight) {
         super(Minecraft.getInstance(), width, height, x, y, itemHeight);
@@ -45,8 +46,8 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         this.refreshEntries(stack);
     }
 
-    public void setBorderColor(int borderColor) {
-        this.borderColor = borderColor;
+    public void setStyle(PortalGunStyle style) {
+        this.style = style;
     }
 
     protected void renderListBackground(GuiGraphics guiGraphics) {}
@@ -57,7 +58,7 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
         for (Waypoint waypoint : waypoints) {
             if (waypoint != null) {
-                this.addEntryToTop(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.borderColor));
+                this.addEntryToTop(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
             } else LogManager.getLogger().warn("Failed to get Waypoint");
         }
     }
@@ -104,7 +105,11 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
                         (button) ->
                                 Minecraft.getInstance().setScreen(new WaypointInfoScreen(waypoint)), 20, 20, WAYPOINT_INFO_TEXTURES);
             this.infoButton.setRenderBackground(renderButtonBG);
+            this.infoButton.setColor(this.list.style.textColor());
             this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
+            if (this.button instanceof PGTextButton textButton) {
+                textButton.setTextColour(this.list.style.textColor());
+            }
         }
 
         @Override

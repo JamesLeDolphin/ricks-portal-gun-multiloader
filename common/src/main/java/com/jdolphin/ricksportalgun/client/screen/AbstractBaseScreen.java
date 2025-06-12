@@ -15,8 +15,7 @@ import java.awt.*;
 
 public abstract class AbstractBaseScreen extends Screen {
     public static ResourceLocation BG_LOCATION = PGHelper.createLocation("textures/gui/pg_background.png");
-    public static int HIGHLIGHT_RED = ARGB.color(200, 0, 0);
-    public static int BG_RED = ARGB.color(100, 0, 0);
+    public static ResourceLocation BACK_BUTTON_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/arrow_back.png");
     public static int WHITE = Color.WHITE.getRGB();
 
     protected AbstractBaseScreen(Component title) {

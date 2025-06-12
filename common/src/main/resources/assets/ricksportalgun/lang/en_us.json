@@ -27,6 +27,8 @@
   "menu.ricksportalgun.workbench": "Portal Gun Workbench",
   "menu.ricksportalgun.settings.security": "Security Settings",
   "menu.ricksportalgun.settings.customization": "Customization Settings",
+  "menu.ricksportalgun.settings.customization.theme": "Edit Portal Gun Theme",
+  "menu.ricksportalgun.settings.customization.theme.example": "Example Text",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
@@ -49,6 +51,12 @@
   "ricksportalgun.button.locator.structure": "Structure Locator",
   "ricksportalgun.button.settings.security": "Security Settings",
   "ricksportalgun.button.settings.customization": "Customization Settings",
+  "ricksportalgun.button.settings.customization.color": "Change Portal Color",
+  "ricksportalgun.button.settings.customization.theme": "Edit Portal Gun Theme",
+  "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
+  "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
+  "ricksportalgun.button.portal_age.reset": "Reset portal open time",
+  "ricksportalgun.button.code": "Set portal code:",
 
   "ricksportalgun.button.cancel": "Cancel",
   "ricksportalgun.button.true": "True",
@@ -67,7 +75,7 @@
   "error.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
   "error.ricksportalgun.dimension.disabled": "Error 403: You are forbidden from entering this dimension!",
   "error.ricksportalgun.destination_not_found": "Error 404: Destination level not found!",
-  "error.ricksportalgun.locating.player.not_found": "Error 404: Player %s not found!",
+  "error.ricksportalgun.locating.player.not_found": "Error 404: Player \"%s\" not found!",
   "error.ricksportalgun.locating.player.disabled": "Error 405: Player locating is disabled in this server!",
   "error.ricksportalgun.locating.structure.not_in_area": "Error 404: Unable to find structure \"%s\" in area!",
   "error.ricksportalgun.locating.structure.unknown": "Error 404: Unknown Structure: \"%s\"!",
@@ -86,6 +94,9 @@
   "ricksportalgun.blue": "Blue: %s",
   "ricksportalgun.barrier_code": "Code: %s",
   "ricksportalgun.deleted": "Deleted %s",
+  "ricksportalgun.r": "R:",
+  "ricksportalgun.g": "G:",
+  "ricksportalgun.b": "B:",
 
   "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
@@ -109,12 +120,9 @@
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
   "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "ricksportalgun.button.settings.customization.color": "Change Portal Color",
-  "ricksportalgun.button.settings.customization.theme": "Edit portal gun theme",
-  "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
-  "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
-  "ricksportalgun.button.portal_age.reset": "Reset portal open time",
-  "ricksportalgun.button.code": "Set portal code:",
-  "menu.ricksportalgun.settings.customization.theme": "Edit Portal Gun Theme"
+  "ricksportalgun.button.customization.highlight": "Highlight:",
+  "ricksportalgun.button.customization.text": "Text:",
+  "ricksportalgun.button.customization.background": "Background:",
+  "ricksportalgun.button.back": "Back"
 
 }

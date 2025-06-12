@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 
 import java.util.function.Consumer;
 
@@ -20,6 +21,7 @@ public class PGImageButton extends AbstractButton {
     protected final int textureHeight;
     protected final Consumer<AbstractButton> onPress;
     protected boolean renderBg = true;
+    protected int color = 16777215 | Mth.ceil(this.alpha * 255.0F) << 24;
 
     public PGImageButton(int x, int y, int width, int height, Component message, Consumer<AbstractButton> onPress, int textureWidth, int textureHeight, ResourceLocation texture) {
         super(x, y, width, height, message);
@@ -27,6 +29,10 @@ public class PGImageButton extends AbstractButton {
         this.textureHeight = textureHeight;
         this.texture = texture;
         this.onPress = onPress;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public void setRenderBackground(boolean renderBg) {
@@ -44,9 +50,9 @@ public class PGImageButton extends AbstractButton {
         if (this.renderBg) {
             super.renderWidget(graphics, mouseX, mouseY, delta);
         }
-        int i = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
-        int j = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
-        graphics.blitSprite(RenderType::guiTextured, this.texture, i, j, this.textureWidth, this.textureHeight);
+        int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
+        int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
+        graphics.blit(RenderType::guiTextured, this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
     }
 
     @Override

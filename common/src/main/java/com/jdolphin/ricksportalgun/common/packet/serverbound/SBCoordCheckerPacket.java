@@ -35,9 +35,8 @@ public record SBCoordCheckerPacket(String dim) implements PGPayload {
         if (level == null) level = player.serverLevel();
 
         ItemStack stack = player.getMainHandItem();
-        PortalGunItem item = PGHelper.getPortalGun(stack);
 
-        item.setHopLocation(stack, level.dimension().location(), bPos);
+        PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
         player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
     }
 

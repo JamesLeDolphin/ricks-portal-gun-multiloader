@@ -2,9 +2,11 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBLocatePacket;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -26,6 +28,7 @@ public class LocatorScreen extends AbstractBaseScreen {
     private PGTextButton select, cancel;
     private PGCycleButton<LocatorType> locatorType;
     private final List<String> playerList, biomeList, structureList;
+    private PGImageButton backButton;
 
     public LocatorScreen(final List<String> playerList, final List<String> biomeList, final List<String> structureList) {
         super("menu.ricksportalgun.player_locator");
@@ -78,7 +81,11 @@ public class LocatorScreen extends AbstractBaseScreen {
             this.onClose();
         }, this.font));
 
-
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+                (button) -> {
+                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                    PGHelper.sendPacketToServer(packet);
+                }, 20, 20, BACK_BUTTON_TEXTURE));
 
         this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
@@ -91,16 +98,9 @@ public class LocatorScreen extends AbstractBaseScreen {
         this.locatorType.setTextColor(style.textColor());
         this.locatorType.setRenderArrows(true);
         this.input.getSuggestionList().setBorderColor(style.highlightColor());
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        //if (this.input.getSuggestions() != getListFromType(this.locatorType.getValue())) {
-        //    this.input.setSuggestions(getListFromType(this.locatorType.getValue()));
-        //    this.input.update();
-        //}
+        this.backButton.setColor(style.highlightColor());
+        this.backButton.setRenderBackground(false);
+        GuiHelper.setTooltip(backButton, Component.translatable("ricksportalgun.button.back"));
     }
 
     @Override
@@ -108,13 +108,14 @@ public class LocatorScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.locator"), this.width / 2, 30, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.locator"), this.width / 2, this.height / 4 - 32, style.textColor());
         if (this.input != null) this.input.render(graphics, pMouseX, pMouseY, pPartialTick);
 
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
         GuiHelper.renderOutline(graphics, locatorType, style.highlightColor());
         GuiHelper.renderOutline(graphics, input, style.highlightColor());
+        GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

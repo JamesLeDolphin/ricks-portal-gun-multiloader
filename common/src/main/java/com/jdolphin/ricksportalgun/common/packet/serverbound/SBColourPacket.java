@@ -12,13 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public record SBColourPacket(int colour) implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBColourPacket> CODEC = StreamCodec.composite(ByteBufCodecs.VAR_INT, SBColourPacket::colour, SBColourPacket::new);
+    public static final StreamCodec<FriendlyByteBuf, SBColourPacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT, SBColourPacket::colour, SBColourPacket::new);
     public static final Type<SBColourPacket> ID = new Type<>(PGHelper.createLocation("color"));
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();
-        PortalGunItem item = PGHelper.getPortalGun(stack);
-        item.setColor(stack, this.colour);
+        PortalGunItem.setColor(stack, this.colour);
     }
 
     @Override
