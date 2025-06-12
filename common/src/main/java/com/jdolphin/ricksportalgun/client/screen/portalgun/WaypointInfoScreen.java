@@ -29,7 +29,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.waypoints.info"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.waypoints.info"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.name", wp.getName()), this.width / 2 - 64, this.height / 2 - 48, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.x",  wp.getX()), this.width / 2 - 64, this.height / 2 - 32, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.y",  wp.getY()), this.width / 2 - 64, this.height / 2 - 16, style.textColor());
@@ -68,7 +68,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
             minecraft.setScreen(new WaypointScreen());
         }, this.font));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
                 (button) -> minecraft.setScreen(new WaypointScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();

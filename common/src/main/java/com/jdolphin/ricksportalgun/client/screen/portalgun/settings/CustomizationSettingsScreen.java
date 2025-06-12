@@ -66,7 +66,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         this.cancel = this.addRenderableWidget(new PGTextButton( this.width / 2 + 8, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> minecraft.setScreen(new SettingsScreen()), 16, 16, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
@@ -93,7 +93,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_age"), this.width / 4 - 16, this.portalAge.getY() + 4, style.textColor());
 

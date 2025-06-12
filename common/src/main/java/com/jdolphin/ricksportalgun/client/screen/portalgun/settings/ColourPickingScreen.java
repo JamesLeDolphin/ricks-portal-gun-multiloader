@@ -79,7 +79,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                     }
                 }, this.font));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> minecraft.setScreen(new CustomizationSettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
@@ -116,7 +116,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 110, this.r.getY() + 4, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 110, this.g.getY() + 4, getStyle().textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.blue", ""), this.width / 2 - 110, this.b.getY() + 4, getStyle().textColor());

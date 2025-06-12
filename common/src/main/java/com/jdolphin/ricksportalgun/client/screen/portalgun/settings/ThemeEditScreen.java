@@ -70,7 +70,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         this.cancel = this.addRenderableWidget(new PGTextButton( this.width / 2 + 8, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> minecraft.setScreen(new CustomizationSettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         this.select.setTextColour(style.textColor());
@@ -126,7 +126,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization.theme"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization.theme"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());

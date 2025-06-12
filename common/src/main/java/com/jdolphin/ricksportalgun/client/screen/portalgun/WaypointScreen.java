@@ -42,7 +42,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         this.waypointList = this.addWidget(new WaypointListWidget(170, (this.height / 3) * 2, this.width / 2 - 75, this.height / 3 - 30,
                 24, stack, true, 128, 20));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> {
                     SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                     PGHelper.sendPacketToServer(packet);
@@ -83,7 +83,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         if (waypointList != null)
             this.waypointList.render(graphics, pMouseX, pMouseY, pPartialTick);
 
-        graphics.drawCenteredString(this.font, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, this.height / 2 - 92, style.textColor());
 
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);

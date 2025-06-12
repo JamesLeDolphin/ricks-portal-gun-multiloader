@@ -37,7 +37,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.customization = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 36, 128, 20,
                 Component.translatable("ricksportalgun.button.settings.customization"), button -> this.minecraft.setScreen(new CustomizationSettingsScreen()), this.font));
 
-        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.back"),
+        this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> {
                     SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                     PGHelper.sendPacketToServer(packet);
@@ -56,7 +56,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         GuiHelper.renderOutline(graphics, security, style.highlightColor());
         GuiHelper.renderOutline(graphics, customization, style.highlightColor());
