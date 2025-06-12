@@ -4,7 +4,6 @@ import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -13,7 +12,7 @@ public class NeoForgePackets {
 
     public static void init(PayloadRegistrar registrar) {
         //Server bound
-        registrar.commonToServer(SBSettingsPacket.ID, SBSettingsPacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBSecuritySettingsPacket.ID, SBSecuritySettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetDestinationPacket.ID, SBSetDestinationPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBLocatePacket.ID, SBLocatePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBCoordCheckerPacket.ID, SBCoordCheckerPacket.CODEC, NeoForgePackets::handle);
@@ -25,6 +24,7 @@ public class NeoForgePackets {
         registrar.commonToServer(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenSecuritySettingsPacket.ID, SBOpenSecuritySettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetPortalGunStylePacket.ID, SBSetPortalGunStylePacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBCustomizeSettingsPacket.ID, SBCustomizeSettingsPacket.CODEC, NeoForgePackets::handle);
 
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));
@@ -39,7 +39,7 @@ public class NeoForgePackets {
                 ClientPacketHandler.openSecurityScreen(packet.strings()));
     }
 
-    private static  <P extends CustomPacketPayload> void handle(P packet, IPayloadContext context) {
-        ((PGPayload) packet).handle((ServerPlayer) context.player());
+    private static  <P extends PGPayload> void handle(P packet, IPayloadContext context) {
+        packet.handle((ServerPlayer) context.player());
     }
 }

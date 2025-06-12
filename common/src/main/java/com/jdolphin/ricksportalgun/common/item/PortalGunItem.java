@@ -151,7 +151,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     return InteractionResult.SUCCESS;
                 }
                 if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
-                    upgrade.getUpgradeType().applyUpgrade(stack, this);
+                    upgrade.applyUpgrade(stack, this);
                 }
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {

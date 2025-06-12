@@ -19,8 +19,8 @@ public class ForgePackets {
 
     public static void init() {
         //Server bound
-        INSTANCE.messageBuilder(SBSettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .codec(SBSettingsPacket.CODEC.cast())
+        INSTANCE.messageBuilder(SBSecuritySettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBSecuritySettingsPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
         INSTANCE.messageBuilder(SBSetDestinationPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
@@ -65,6 +65,10 @@ public class ForgePackets {
                 .add();
         INSTANCE.messageBuilder(SBSetPortalGunStylePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .codec(SBSetPortalGunStylePacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
+        INSTANCE.messageBuilder(SBCustomizeSettingsPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBCustomizeSettingsPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
 

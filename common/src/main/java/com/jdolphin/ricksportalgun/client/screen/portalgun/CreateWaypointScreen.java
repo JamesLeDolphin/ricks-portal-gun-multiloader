@@ -45,9 +45,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, 26, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
-                (button) -> {
-                    minecraft.setScreen(new WaypointScreen());
-                }, 20, 20, BACK_BUTTON_TEXTURE));
+                (button) -> minecraft.setScreen(new WaypointScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
         this.backButton.setColor(style.highlightColor());

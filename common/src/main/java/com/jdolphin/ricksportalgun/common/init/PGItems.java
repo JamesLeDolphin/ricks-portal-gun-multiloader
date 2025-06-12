@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.item.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class PGItems {
     private static final Map<ResourceLocation, Item> ALL = new HashMap<>();
 
@@ -33,9 +35,15 @@ public class PGItems {
 
     public static final Item DATA_CARD = register("data_card", DataCardItem::new, new Item.Properties());
 
+    public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties), new Item.Properties());
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties());
-    public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties), new Item.Properties());
+
+    public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.FIRE_RESISTANT, true)), new Item.Properties());
+
+    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.MAX_FUEL, 128)), new Item.Properties());
 
     private static Item registerGun(String name) {
         return registerGun(name, Color.GREEN);

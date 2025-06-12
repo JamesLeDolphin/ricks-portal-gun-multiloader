@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
@@ -97,7 +98,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         try {
             return ARGB.colorFromFloat(1.0f, (float) rText.getValue(), (float) gText.getValue(), (float) bText.getValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            PGConstants.LOGGER.warn(e.getMessage());
         }
         return 0x000000;
     }
@@ -106,7 +107,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         try {
             return ARGB.colorFromFloat(1.0f, (float) rH.getValue(), (float) gH.getValue(), (float) bH.getValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            PGConstants.LOGGER.warn(e.getMessage());
         }
         return 0x000000;
     }
@@ -115,7 +116,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         try {
             return ARGB.colorFromFloat(1.0f, (float) rBG.getValue(), (float) gBG.getValue(), (float) bBG.getValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            PGConstants.LOGGER.warn(e.getMessage());
         }
         return 0x000000;
     }

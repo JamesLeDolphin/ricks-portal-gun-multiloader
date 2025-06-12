@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,18 +14,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSettingsPacket(boolean lock, String name, float size, int lifetime) implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSettingsPacket::lock,
-            ByteBufCodecs.STRING_UTF8, SBSettingsPacket::name, ByteBufCodecs.FLOAT, SBSettingsPacket::size, ByteBufCodecs.INT, SBSettingsPacket::lifetime, SBSettingsPacket::new);
-    public static final Type<SBSettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
+public record SBSecuritySettingsPacket(boolean lock, String name, String code) implements PGPayload {
+    public static final StreamCodec<FriendlyByteBuf, SBSecuritySettingsPacket> CODEC;
+    public static final Type<SBSecuritySettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
 
         ItemStack stack = player.getMainHandItem();
         stack.set(PGDataComponents.LOCK, lock);
-        stack.set(PGDataComponents.PORTAL_SIZE, size);
-        stack.set(PGDataComponents.PORTAL_LIFETIME, this.lifetime);
+
+        if (!code.isEmpty()) {
+            PortalGunItem.setCode(stack, this.code);
+        }
 
         if (!name.isEmpty()) {
             Player newOwner = server.getPlayerList().getPlayerByName(name);
@@ -33,12 +35,18 @@ public record SBSettingsPacket(boolean lock, String name, float size, int lifeti
             } else {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
             }
-            PGHelper.sendSuccessMsg(player, "notice.ricksportalgun.settings.applied");
         }
+        PGHelper.sendSuccessMsg(player, "notice.ricksportalgun.settings.applied");
     }
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return ID;
+    }
+
+    static {
+        CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSecuritySettingsPacket::lock,
+                ByteBufCodecs.STRING_UTF8, SBSecuritySettingsPacket::name,
+                ByteBufCodecs.STRING_UTF8, SBSecuritySettingsPacket::code,SBSecuritySettingsPacket::new);
     }
 }

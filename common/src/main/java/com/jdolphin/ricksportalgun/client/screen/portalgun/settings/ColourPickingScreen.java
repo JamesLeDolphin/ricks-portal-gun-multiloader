@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
@@ -35,6 +36,8 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     @Override
     protected void init() {
+        assert minecraft != null && minecraft.player != null;
+
         LocalPlayer player = minecraft.player;
         ItemStack stack = player.getMainHandItem();
         int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
@@ -72,7 +75,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                         this.g.setValue(ARGB.greenFloat(rgb));
                         this.b.setValue(ARGB.blueFloat(rgb));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        PGConstants.LOGGER.warn(e.getMessage());
                     }
                 }, this.font));
 

@@ -43,6 +43,8 @@ public class PGDataComponents {
     public static final DataComponentType<Float> PORTAL_SIZE = registerComponent("portal_size", typeBuilder -> typeBuilder.persistent(Codec.FLOAT));
     public static final DataComponentType<String> CODE = registerComponent("code", typeBuilder -> typeBuilder.persistent(Codec.STRING));
 
+    public static final DataComponentType<Boolean> FIRE_RESISTANT = registerComponent("fire_resistant", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
+
     private static <T> DataComponentType<T> registerComponent(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
         ALL.put(PGHelper.createLocation(name), type);

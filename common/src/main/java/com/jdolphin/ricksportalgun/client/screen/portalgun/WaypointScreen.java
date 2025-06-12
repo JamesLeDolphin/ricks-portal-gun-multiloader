@@ -34,6 +34,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.screen != null && minecraft.player != null;
 
         LocalPlayer player = minecraft.player;
+
         this.addWaypoint = this.addRenderableWidget(new PGImageButton(this.width / 2 + 68, this.height / 2 - 94, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
                 (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
 
@@ -60,6 +61,7 @@ public class WaypointScreen extends AbstractBaseScreen {
     @Override
     public void tick() {
         super.tick();
+        assert minecraft != null && minecraft.player != null;
 
         ItemStack heldItem = minecraft.player.getMainHandItem();
         if (heldItem.is(PGTags.Items.PORTAL_GUNS)) {

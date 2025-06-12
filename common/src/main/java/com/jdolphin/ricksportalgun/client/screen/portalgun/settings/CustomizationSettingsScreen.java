@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCustomizeSettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -29,6 +30,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
     public void init() {
         super.init();
+        assert minecraft != null && minecraft.player != null;
 
         LocalPlayer player = minecraft.player;
         ItemStack stack = player.getMainHandItem();
@@ -56,8 +58,8 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64,128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
-                    //  SBSettingsPacket packet = new SBSettingsPacket(this.portalSize.getValue(), this.portalAge.getValueInt());
-                    //  PGHelper.sendPacketToServer(packet);
+                    SBCustomizeSettingsPacket packet = new SBCustomizeSettingsPacket(this.portalSize.getValue(), this.portalAge.getValueInt());
+                    PGHelper.sendPacketToServer(packet);
                     this.onClose();
 
                 }, this.font));
