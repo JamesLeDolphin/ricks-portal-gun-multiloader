@@ -13,6 +13,16 @@
   "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "item.ricksportalgun.data_card": "Data Card",
 
+  "item.ricksportalgun.upgrade_durability": "Portal Gun Durability Upgrade",
+  "item.ricksportalgun.upgrade_waypoint": "Portal Gun Waypoint Upgrade",
+  "item.ricksportalgun.upgrade_dimension": "Portal Gun Dimension Upgrade Mk.I",
+  "item.ricksportalgun.upgrade_dimension_end": "Portal Gun Dimension Upgrade Mk.II",
+  "item.ricksportalgun.upgrade_settings": "Portal Gun Settings Upgrade",
+  "item.ricksportalgun.upgrade_fuel": "Portal Gun Fuel Upgrade",
+  "item.ricksportalgun.upgrade_biome_locator": "Portal Gun Biome Locator Upgrade",
+  "item.ricksportalgun.upgrade_player_locator": "Portal Gun Player Locator Upgrade",
+  "item.ricksportalgun.upgrade_structure_locator": "Portal Gun Structure Locator Upgrade",
+
   "menu.ricksportalgun.coord": "Portal Gun Coordinate Travel",
   "menu.ricksportalgun.waypoints.new": "New Waypoint",
   "menu.ricksportalgun.locator": "Locating",
@@ -57,7 +67,11 @@
   "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
   "ricksportalgun.button.portal_age.reset": "Reset portal open time",
   "ricksportalgun.button.code": "Set portal code:",
+  "ricksportalgun.button.customization.highlight": "Highlight:",
+  "ricksportalgun.button.customization.text": "Text:",
+  "ricksportalgun.button.customization.background": "Background:",
 
+  "ricksportalgun.button.back": "Back",
   "ricksportalgun.button.cancel": "Cancel",
   "ricksportalgun.button.true": "True",
   "ricksportalgun.button.false": "False",
@@ -72,7 +86,7 @@
   "notice.ricksportalgun.barrier.code_set": "Code set!",
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
-  "error.ricksportalgun.destination_unreachable": "Error 401: Destination is unreachable!",
+  "error.ricksportalgun.destination.unreachable": "Error 401: Destination is unreachable!",
   "error.ricksportalgun.dimension.disabled": "Error 403: You are forbidden from entering this dimension!",
   "error.ricksportalgun.destination_not_found": "Error 404: Destination level not found!",
   "error.ricksportalgun.locating.player.not_found": "Error 404: Player \"%s\" not found!",
@@ -82,6 +96,9 @@
   "error.ricksportalgun.locating.biome.not_in_area": "Error 404: Unable to find biome \"%s\" in area!",
   "error.ricksportalgun.locating.biome.unknown": "Error 404: Unknown Biome: \"%s\"!",
   "error.ricksportalgun.destination.dragon": "Er#or #$@: Unabl3 t0 cre@te p#rta1!",
+  "error.ricksportalgun.upgrade.needs_biome": "Error 503: Upgrade locked! Install Biome Locator upgrade first!",
+  "error.ricksportalgun.upgrade.needs_player": "Error 503: Upgrade locked! Install Player Locator upgrade first!",
+  "error.ricksportalgun.upgrade.needs_dimension": "Error 503: Upgrade locked! Install Dimension upgrade Mk.I first!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",
@@ -119,10 +136,6 @@
 
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "ricksportalgun.button.customization.highlight": "Highlight:",
-  "ricksportalgun.button.customization.text": "Text:",
-  "ricksportalgun.button.customization.background": "Background:",
-  "ricksportalgun.button.back": "Back"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
 
 }

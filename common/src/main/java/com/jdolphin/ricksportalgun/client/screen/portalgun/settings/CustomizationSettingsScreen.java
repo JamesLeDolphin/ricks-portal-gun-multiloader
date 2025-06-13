@@ -67,7 +67,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
-                (button) -> minecraft.setScreen(new SettingsScreen()), 16, 16, BACK_BUTTON_TEXTURE));
+                (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
         this.resetAge.setRenderBackground(false);

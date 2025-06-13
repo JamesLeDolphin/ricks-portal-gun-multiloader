@@ -65,17 +65,18 @@ public class RicksPortalGunNeoForgeMain {
             event.accept(PGItems.QUANTUM_LEAP_ELIXIR);
             event.accept(PGItems.BOOTLEG_PORTAL_FLUID);
         }
-        //if (event.getTab().equals(PGCreativeTabs.UPGRADE_TAB.get())) {
-        //    event.accept(PGItems.UPGRADE_TEMPLATE.get());
-        //    event.accept(PGItems.DIM_1_UPGRADE.get());
-        //    event.accept(PGItems.DIM_2_UPGRADE.get());
-        //    event.accept(PGItems.WAYPOINT_UPGRADE.get());
-        //    event.accept(PGItems.FUEL_UPGRADE.get());
-        //    event.accept(PGItems.SETTINGS_UPGRADE.get());
-        //    event.accept(PGItems.PLAYER_LOCATOR_UPGRADE.get());
-        //    event.accept(PGItems.BIOME_LOCATOR_UPGRADE.get());
-        //    event.accept(PGItems.RANDOMIZER_UPGRADE.get());
-        //}
+        if (key.equals(CreativeModeTabs.INGREDIENTS)) {
+            event.accept(PGItems.DURABILITY_UPGRADE);
+            event.accept(PGItems.DIM_UPGRADE);
+            event.accept(PGItems.BETTER_DIM_UPGRADE);
+            event.accept(PGItems.WAYPOINT_UPGRADE);
+            event.accept(PGItems.SETTINGS_UPGRADE);
+            event.accept(PGItems.FUEL_UPGRADE);
+            event.accept(PGItems.BIOME_LOC_UPGRADE);
+            event.accept(PGItems.PLAYER_LOC_UPGRADE);
+            event.accept(PGItems.STRUCTURE_LOC_UPGRADE);
+        }
+
         if (key.equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             event.accept(PGItems.PORTAL_GUN);
             event.accept(PGItems.PRIME_PORTAL_GUN);

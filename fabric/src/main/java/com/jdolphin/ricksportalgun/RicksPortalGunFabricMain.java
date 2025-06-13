@@ -70,6 +70,17 @@ public class RicksPortalGunFabricMain implements ModInitializer {
             content.accept(PGItems.GOLDEN_PORTAL_GUN);
         });
 
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(content -> {
+            content.accept(PGItems.DURABILITY_UPGRADE);
+            content.accept(PGItems.DIM_UPGRADE);
+            content.accept(PGItems.BETTER_DIM_UPGRADE);
+            content.accept(PGItems.WAYPOINT_UPGRADE);
+            content.accept(PGItems.SETTINGS_UPGRADE);
+            content.accept(PGItems.FUEL_UPGRADE);
+            content.accept(PGItems.BIOME_LOC_UPGRADE);
+            content.accept(PGItems.PLAYER_LOC_UPGRADE);
+            content.accept(PGItems.STRUCTURE_LOC_UPGRADE);
+        });
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(content -> {
             content.accept(PGItems.PORTAL_FLUID);

@@ -18,7 +18,7 @@ public class PGImageButton extends AbstractButton {
     protected final int textureHeight;
     protected final Consumer<AbstractButton> onPress;
     protected boolean renderBg = true;
-    protected int color = 16777215 | Mth.ceil(this.alpha * 255.0F) << 24;
+    protected int color = (this.active ? 16777215 : 10526880) | Mth.ceil(this.alpha * 255.0F) << 24;
 
     public PGImageButton(int x, int y, int width, int height, Component message, Consumer<AbstractButton> onPress, int textureWidth, int textureHeight, ResourceLocation texture) {
         super(x, y, width, height, message);
@@ -40,16 +40,18 @@ public class PGImageButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        this.onPress.accept(this);
+        if (this.active) this.onPress.accept(this);
     }
 
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        if (this.renderBg) {
-            super.renderWidget(graphics, mouseX, mouseY, delta);
+        if (this.active) {
+            if (this.renderBg) {
+                super.renderWidget(graphics, mouseX, mouseY, delta);
+            }
+            int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
+            int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
+            graphics.blit(RenderType::guiTextured, this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
         }
-        int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
-        int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
-        graphics.blit(RenderType::guiTextured, this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
     }
 
     @Override

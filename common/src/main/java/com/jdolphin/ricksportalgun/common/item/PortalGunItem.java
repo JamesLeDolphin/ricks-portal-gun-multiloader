@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -151,7 +152,9 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     return InteractionResult.SUCCESS;
                 }
                 if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
-                    upgrade.applyUpgrade(stack, this);
+                    InteractionResult result = upgrade.applyUpgrade(player, stack, this);
+                    if (!player.isCreative()) offhandStack.shrink(1);
+                    return result;
                 }
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
@@ -196,7 +199,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     portal.setBootleg(bootleg);
                     exPortal.setBootleg(bootleg);
 
-                    if (!(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                    if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
 
                         if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
                             level.addFreshEntity(portal);
@@ -229,6 +232,10 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             }
             return InteractionResult.SUCCESS;
         } else return InteractionResult.FAIL;
+    }
+
+    public static boolean canBypassDragon(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS_2, false);
     }
 
     private boolean isAir(Level level, BlockPos pos) {

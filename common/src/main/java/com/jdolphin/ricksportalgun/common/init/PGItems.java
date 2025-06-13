@@ -3,15 +3,20 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.UpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.LockableUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DamageResistant;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;
@@ -39,11 +44,40 @@ public class PGItems {
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties());
 
+    //Upgrades
     public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new UpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.FIRE_RESISTANT, true)), new Item.Properties());
+            (stack, portalGun) -> stack.set(DataComponents.DAMAGE_RESISTANT, new DamageResistant(DamageTypeTags.IS_FIRE))), new Item.Properties());
+
+    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.HAS_WAYPOINTS, true)), new Item.Properties());
+
+    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true)), new Item.Properties());
+
+    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new LockableUpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true),
+            ((stack, portalGun) -> stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS_2, false)),
+                    Component.translatable("error.ricksportalgun.upgrade.needs_dimension")),
+            new Item.Properties());
+
+    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.SETTINGS, true)), new Item.Properties());
 
     public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new UpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.MAX_FUEL, 128)), new Item.Properties());
+
+    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new UpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.BIOME_LOC, true)), new Item.Properties());
+
+    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new LockableUpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.PLAYER_LOC, true),
+            (stack, item) -> stack.getOrDefault(PGDataComponents.BIOME_LOC, false),
+            Component.translatable("error.ricksportalgun.upgrade.needs_biome")), new Item.Properties());
+
+    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new LockableUpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.STRUCTURE_LOC, true),
+            (stack, item) -> stack.getOrDefault(PGDataComponents.PLAYER_LOC, false),
+            Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties());
 
     private static Item registerGun(String name) {
         return registerGun(name, Color.GREEN);
@@ -59,6 +93,12 @@ public class PGItems {
                 .component(PGDataComponents.MAX_FUEL, 64)
                 .component(PGDataComponents.FUEL, 64)
                 .component(PGDataComponents.LOCK, false)
+                .component(PGDataComponents.HAS_WAYPOINTS, false)
+                .component(PGDataComponents.EXTRA_DIMENSIONS, false)
+                .component(PGDataComponents.SETTINGS, false)
+                .component(PGDataComponents.BIOME_LOC, false)
+                .component(PGDataComponents.PLAYER_LOC, false)
+                .component(PGDataComponents.STRUCTURE_LOC, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
                 .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.registry()));
     }

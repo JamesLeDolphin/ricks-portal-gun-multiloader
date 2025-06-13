@@ -22,13 +22,14 @@ public class PGDataComponents {
     public static final DataComponentType<BlockPos> PORTAL_POS = registerComponent("portal_pos", typeBuilder -> typeBuilder.persistent(BlockPos.CODEC));
     public static final DataComponentType<ResourceLocation> PORTAL_DIM = registerComponent("portal_dim", typeBuilder -> typeBuilder.persistent(ResourceLocation.CODEC));
     public static final DataComponentType<Integer> DEFAULT_PORTAL_COLOUR = registerComponent("default_color", typeBuilder -> typeBuilder.persistent(Codec.INT));
-    public static final DataComponentType<Boolean> BOOTLEG = registerComponent("bootleg", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
+    public static final DataComponentType<Boolean> BOOTLEG = registerBoolean("bootleg");
     public static final DataComponentType<Integer> PORTAL_COLOUR = registerComponent("portal_color", typeBuilder -> typeBuilder.persistent(Codec.INT));
     public static final DataComponentType<Integer> FUEL = registerComponent("fuel", typeBuilder -> typeBuilder.persistent(Codec.INT));
     public static final DataComponentType<Integer> MAX_FUEL = registerComponent("max_fuel", typeBuilder -> typeBuilder.persistent(Codec.INT));
-    public static final DataComponentType<Boolean> LOCK = registerComponent("lock", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
+    public static final DataComponentType<Boolean> LOCK = registerBoolean("lock");
     public static final DataComponentType<String> OWNER = registerComponent("owner", typeBuilder -> typeBuilder.persistent(Codec.STRING));
     public static final DataComponentType<Integer> PORTAL_LIFETIME = registerComponent("size", typeBuilder -> typeBuilder.persistent(Codec.INT));
+
     public static final DataComponentType<List<Waypoint>> WAYPOINTS = registerComponent("waypoints", typeBuilder -> typeBuilder
             .persistent(Waypoint.CODEC.listOf()).networkSynchronized(Waypoint.PACKET_CODEC.apply(ByteBufCodecs.list())).cacheEncoding());
 
@@ -43,7 +44,18 @@ public class PGDataComponents {
     public static final DataComponentType<Float> PORTAL_SIZE = registerComponent("portal_size", typeBuilder -> typeBuilder.persistent(Codec.FLOAT));
     public static final DataComponentType<String> CODE = registerComponent("code", typeBuilder -> typeBuilder.persistent(Codec.STRING));
 
-    public static final DataComponentType<Boolean> FIRE_RESISTANT = registerComponent("fire_resistant", typeBuilder -> typeBuilder.persistent(Codec.BOOL));
+    //Components needed for upgrades
+    public static final DataComponentType<Boolean> HAS_WAYPOINTS = registerBoolean("has_waypoints");
+    public static final DataComponentType<Boolean> EXTRA_DIMENSIONS = registerBoolean("more_dimensions");
+    public static final DataComponentType<Boolean> EXTRA_DIMENSIONS_2 = registerBoolean("extra_dimensions");
+    public static final DataComponentType<Boolean> SETTINGS = registerBoolean("settings");
+    public static final DataComponentType<Boolean> BIOME_LOC = registerBoolean("biome_locating");
+    public static final DataComponentType<Boolean> PLAYER_LOC = registerBoolean("player_locating");
+    public static final DataComponentType<Boolean> STRUCTURE_LOC = registerBoolean("structure_locating");
+
+    private static DataComponentType<Boolean> registerBoolean(String name) {
+        return registerComponent(name, tBuilder -> tBuilder.persistent(Codec.BOOL));
+    }
 
     private static <T> DataComponentType<T> registerComponent(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();

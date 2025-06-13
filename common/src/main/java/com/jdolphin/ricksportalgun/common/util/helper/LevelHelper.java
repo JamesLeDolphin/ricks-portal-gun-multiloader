@@ -65,25 +65,31 @@ public class LevelHelper {
     }
 
     public static List<BlockEntity> getBlockEntitiesInChunks(ServerLevel level, ChunkPos pos, int radius) {
-        List<BlockEntity> list = new ArrayList<>();
-        for(int x = -radius; x <= radius; ++x) {
-            for(int z = -radius; z <= radius; ++z) {
-                list.addAll(level.getChunk(pos.x + x, pos.z + z).getBlockEntities().values());
+        if (level != null) {
+            List<BlockEntity> list = new ArrayList<>();
+            for (int x = -radius; x <= radius; ++x) {
+                for (int z = -radius; z <= radius; ++z) {
+                    list.addAll(level.getChunk(pos.x + x, pos.z + z).getBlockEntities().values());
+                }
             }
+            return list;
         }
-        return list;
+        return List.of();
     }
 
     public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
-        String code = stack.getOrDefault(PGDataComponents.CODE, "");
-        List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
+        if (level != null) {
+            String code = stack.getOrDefault(PGDataComponents.CODE, "");
+            List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
 
-        for (BlockEntity be : blockEntities) {
-            if (be instanceof SubetherBarrierBlockEntity barrier) {
-                return !barrier.canBlockPortal(level, barrier.getBlockPos(), code);
+            for (BlockEntity be : blockEntities) {
+                if (be instanceof SubetherBarrierBlockEntity barrier) {
+                    return !barrier.canBlockPortal(level, barrier.getBlockPos(), code);
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static ResourceKey<Level> getWorldKey(ResourceLocation dimension) {
@@ -154,11 +160,13 @@ public class LevelHelper {
     }
 
     public static boolean endHasDragons(ServerLevel level) {
-        if (Level.END.location().equals(getLevelDimensionLocation(level))) {
-            EndDragonFight fight = level.getDragonFight();
-            if (fight != null) {
-                EndDragonFight.Data data = fight.saveData();
-                return !data.dragonKilled() || data.isRespawning();
+        if (level != null) {
+            if (Level.END.location().equals(getLevelDimensionLocation(level))) {
+                EndDragonFight fight = level.getDragonFight();
+                if (fight != null) {
+                    EndDragonFight.Data data = fight.saveData();
+                    return !data.dragonKilled() || data.isRespawning();
+                }
             }
         }
         return false;

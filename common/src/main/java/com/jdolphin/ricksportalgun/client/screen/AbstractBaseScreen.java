@@ -30,15 +30,16 @@ public abstract class AbstractBaseScreen extends Screen {
     }
 
     protected PortalGunStyle getStyle() {
-        assert this.minecraft != null;
-        Player player = this.minecraft.player;
-        if (player != null) {
-            ItemStack stack = player.getMainHandItem();
-            return stack.getOrDefault(PGDataComponents.PORTAL_GUN_STYLE, PortalGunStyle.DEFAULT);
-        }
-        return PortalGunStyle.DEFAULT;
+        ItemStack stack = getItemStack();
+        return stack.getOrDefault(PGDataComponents.PORTAL_GUN_STYLE, PortalGunStyle.DEFAULT);
     }
 
+
+    protected ItemStack getItemStack() {
+        assert this.minecraft != null && minecraft.player != null;
+        Player player = this.minecraft.player;
+        return player.getMainHandItem();
+    }
 
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderMenuBackground(context);
