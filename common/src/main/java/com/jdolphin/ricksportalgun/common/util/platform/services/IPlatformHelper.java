@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public interface IPlatformHelper {
@@ -34,4 +35,14 @@ public interface IPlatformHelper {
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BiFunction<BlockPos, BlockState, T> func, Block... blocks);
 
     <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor);
+
+    List<? extends String> getDisabledDimensions();
+
+    boolean disableStructureLocating();
+
+    boolean disableBiomeLocating();
+
+    boolean disablePlayerLocating();
+
+    int getRandomizerMax();
 }

@@ -1,6 +1,6 @@
 {
   "name": {
-    "translate": "item.ricksportalgun.golden_portal_gun"
+    "translate": "item.ricksportalgun.portalgun.golden"
   },
   "id": "ricksportalgun:gold",
   "color": [

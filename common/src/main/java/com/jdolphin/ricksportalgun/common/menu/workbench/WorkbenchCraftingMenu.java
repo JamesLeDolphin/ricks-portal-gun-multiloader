@@ -39,7 +39,12 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(container, 1, 123, 31));
         this.addSlot(new Slot(container, 2, 71, 54));
         this.addSlot(new Slot(container, 3, 123, 54));
-        this.addSlot(new Slot(container, 4, 97, 84));
+        this.addSlot(new Slot(container, 4, 97, 84) {
+
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
     }
 
     public int getProgress() {
@@ -60,6 +65,7 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
     public boolean isCrafting() {
         return getProgress() > 0;
     }
+
     public ContainerData getData() {
         return data;
     }

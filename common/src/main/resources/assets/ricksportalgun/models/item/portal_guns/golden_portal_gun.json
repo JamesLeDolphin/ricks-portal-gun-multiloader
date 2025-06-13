@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"2": "ricksportalgun:item/golden_portal_gun",
-		"particle": "ricksportalgun:item/golden_portal_gun"
+		"2": "ricksportalgun:item/portal_guns/golden_portal_gun",
+		"particle": "ricksportalgun:item/portal_guns/golden_portal_gun"
 	},
 	"elements": [
 		{

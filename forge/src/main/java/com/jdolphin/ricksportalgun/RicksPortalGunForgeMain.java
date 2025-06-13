@@ -22,6 +22,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -48,6 +49,8 @@ public class RicksPortalGunForgeMain {
         bind(bus, Registries.MENU, PGMenuTypes::init);
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
+
+        context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "portalgun-common.toml");
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {
@@ -75,7 +78,6 @@ public class RicksPortalGunForgeMain {
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        PGCommonConfig.INSTANCE = new PGCommonConfig();
         event.enqueueWork(ForgePackets::init);
     }
 

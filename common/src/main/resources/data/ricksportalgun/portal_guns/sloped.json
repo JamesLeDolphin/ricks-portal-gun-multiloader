@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.sloped"
+  },
+  "id": "ricksportalgun:sloped",
+  "model": "ricksportalgun:sloped_portal_gun"
+}

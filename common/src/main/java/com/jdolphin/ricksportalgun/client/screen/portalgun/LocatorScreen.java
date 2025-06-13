@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBLocatePacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -16,6 +17,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -58,11 +61,26 @@ public class LocatorScreen extends AbstractBaseScreen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    private LocatorType[] getAllowedLocators() {
+        ItemStack stack = getItemStack();
+        boolean canPlayerLocate = stack.getOrDefault(PGDataComponents.PLAYER_LOC, false);
+        boolean canStructureLocate = stack.getOrDefault(PGDataComponents.STRUCTURE_LOC, false);
+
+        if (canPlayerLocate && canStructureLocate) {
+            return LocatorType.values();
+        } else if (!canPlayerLocate && !canStructureLocate) {
+            return new LocatorType[]{LocatorType.BIOME};
+        } else if (canPlayerLocate && !canStructureLocate) {
+            return new LocatorType[]{LocatorType.BIOME, LocatorType.PLAYER};
+        }
+        return new LocatorType[]{};
+    }
+
     @Override
     protected void init() {
 
         this.locatorType = this.addRenderableWidget(PGCycleButton.builder(LocatorType::getDisplayName)
-                .withValues(LocatorType.values())
+                .withValues(getAllowedLocators())
                 .create(this.width / 2 - 64, this.height / 2 - 64, 128, 20, Component.translatable("ricksportalgun.button.locator"),
                         (button, type) -> {
                             List<String> list = getListFromType(type);
@@ -87,6 +105,7 @@ public class LocatorScreen extends AbstractBaseScreen {
 
         this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
+
 
         PortalGunStyle style = getStyle();
         this.input.setMaxLength(256);

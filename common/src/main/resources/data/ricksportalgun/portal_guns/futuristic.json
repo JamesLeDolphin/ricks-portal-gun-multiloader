@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.futuristic"
+  },
+  "id": "ricksportalgun:futuristic",
+  "model": "ricksportalgun:futuristic_portal_gun"
+}

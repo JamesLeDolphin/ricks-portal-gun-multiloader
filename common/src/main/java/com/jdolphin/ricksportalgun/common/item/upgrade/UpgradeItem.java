@@ -1,6 +1,8 @@
 package com.jdolphin.ricksportalgun.common.item.upgrade;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,6 +20,7 @@ public class UpgradeItem extends Item {
 
     public InteractionResult applyUpgrade(Player player, ItemStack stack, PortalGunItem item) {
         this.consumer.accept(stack, item);
+        PGHelper.sendSuccessMsg(player, Component.translatable("notice.ricksportalgun.upgrade"));
         return InteractionResult.SUCCESS;
     }
 }

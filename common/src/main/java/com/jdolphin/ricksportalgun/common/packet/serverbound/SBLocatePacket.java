@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -38,22 +37,26 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
         ItemStack stack = player.getMainHandItem();
         if (value == 0) {
-            Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
-            if (optionalRegistry.isPresent()) {
-                ResourceLocation location = ResourceLocation.parse(name);
-                Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d((biomeHolder -> biomeHolder.is(location)),
-                        player.blockPosition(), 6400, 32, 64);
-                if (pair != null) {
-                    BlockPos pos = pair.getFirst();
-                    BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
-                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-                } else
-                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
+            if (PGHelper.disableBiomeLocating()) {
+                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));
+                return;
             }
+                Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
+                if (optionalRegistry.isPresent()) {
+                    ResourceLocation location = ResourceLocation.parse(name);
+                    Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d((biomeHolder -> biomeHolder.is(location)),
+                            player.blockPosition(), 6400, 32, 64);
+                    if (pair != null) {
+                        BlockPos pos = pair.getFirst();
+                        BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                    } else
+                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
+                }
         }
         if (value == 1) {
-            if (PGCommonConfig.INSTANCE.disableLocating()) {
+            if (PGHelper.disablePlayerLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.disabled"));
                 return;
             }
@@ -67,6 +70,10 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
         }
         if (value == 2) {
+            if (PGHelper.disableStructureLocating()) {
+                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
+                return;
+            }
             Optional<Registry<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
             if (optionalRegistry.isPresent()) {
                 Registry<Structure> registry = optionalRegistry.get();

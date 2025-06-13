@@ -1,7 +1,7 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ricksportalgun:item/square_portal_gun",
+    "model": "ricksportalgun:item/portal_guns/square_portal_gun",
     "tints": [
       {
         "type": "ricksportalgun:primary_dye",
@@ -10,6 +10,10 @@
       {
         "type": "ricksportalgun:portal_color",
         "default": 65280
+      },
+      {
+        "type": "ricksportalgun:secondary_dye",
+        "default": 15989755
       }
     ]
   }

@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -20,7 +19,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayl
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();
-        if (!PGCommonConfig.INSTANCE.getDisabledDimensions().contains(dim)) {
+        if (!PGHelper.getDisabledDimensions().contains(dim)) {
             PortalGunItem.setHopLocation(stack, ResourceLocation.parse(dim), pos);
         } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
     }

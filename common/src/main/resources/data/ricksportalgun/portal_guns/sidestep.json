@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.sidestep"
+  },
+  "id": "ricksportalgun:sidestep",
+  "model": "ricksportalgun:sidestep_portal_gun"
+}

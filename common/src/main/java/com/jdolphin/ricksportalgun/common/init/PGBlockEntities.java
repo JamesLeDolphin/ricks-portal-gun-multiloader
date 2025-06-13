@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.jdolphin.ricksportalgun.common.util.platform.Services;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +24,7 @@ public class PGBlockEntities {
     public static BlockEntityType<SubetherBarrierBlockEntity> SUBETHER_BARRIER = register("subether_barrier", SubetherBarrierBlockEntity::new, PGBlocks.SUBETHER_BARRIER);
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
-        var bet = Services.PLATFORM.createBlockEntityType(func, blocks);
+        var bet = PGServices.PLATFORM.createBlockEntityType(func, blocks);
         ALL.put(PGHelper.createLocation(id), bet);
         return bet;
     }

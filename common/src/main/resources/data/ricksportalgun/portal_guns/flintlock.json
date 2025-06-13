@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.flintlock"
+  },
+  "id": "ricksportalgun:flintlock",
+  "model": "ricksportalgun:flintlock_portal_gun"
+}

@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.symmetrical"
+  },
+  "id": "ricksportalgun:symmetrical",
+  "model": "ricksportalgun:symmetrical_portal_gun"
+}

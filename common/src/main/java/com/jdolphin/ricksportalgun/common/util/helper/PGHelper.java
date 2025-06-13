@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.common.util.platform.Services;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +17,26 @@ public class PGHelper {
 
     public static ResourceLocation createLocation(String string) {
         return ResourceLocation.fromNamespaceAndPath(PGConstants.MODID, string);
+    }
+
+    public static int getRandomizerMax() {
+        return PGServices.PLATFORM.getRandomizerMax();
+    }
+
+    public static boolean disablePlayerLocating() {
+        return PGServices.PLATFORM.disablePlayerLocating();
+    }
+
+    public static boolean disableBiomeLocating() {
+        return PGServices.PLATFORM.disableBiomeLocating();
+    }
+
+    public static boolean disableStructureLocating() {
+        return PGServices.PLATFORM.disableStructureLocating();
+    }
+
+    public static List<? extends String> getDisabledDimensions() {
+        return PGServices.PLATFORM.getDisabledDimensions();
     }
 
     public static void sendSuccessMsg(Player player, String msg) {
@@ -36,11 +56,11 @@ public class PGHelper {
     }
 
     public static <P extends CustomPacketPayload> void sendPacketToServer(P packet) {
-        Services.PLATFORM.sendPacketToServer(packet);
+        PGServices.PLATFORM.sendPacketToServer(packet);
     }
 
     public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
-        Services.PLATFORM.sendPacketToClient(player, packet);
+        PGServices.PLATFORM.sendPacketToClient(player, packet);
     }
 
     public static <T> T getRandomFromList(List<T> list) {

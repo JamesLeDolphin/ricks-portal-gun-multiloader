@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -18,7 +17,7 @@ public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implemen
 
     public void handle(ServerPlayer player) {
         if (player.containerMenu instanceof PortalDispenserMenu menu) {
-            if (!PGCommonConfig.INSTANCE.getDisabledDimensions().contains(dim)) {
+            if (!PGHelper.getDisabledDimensions().contains(dim)) {
                 menu.setCoords(pos, dim);
             } else
                 PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");

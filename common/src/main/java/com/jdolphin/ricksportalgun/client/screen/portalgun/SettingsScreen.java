@@ -1,15 +1,20 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
+import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.settings.CustomizationSettingsScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
+import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBChangePortalGunTypePacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -42,6 +47,14 @@ public class SettingsScreen extends AbstractBaseScreen {
                     SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                     PGHelper.sendPacketToServer(packet);
                 }, 20, 20, BACK_BUTTON_TEXTURE));
+
+        //Temp
+        this.addRenderableWidget(Button.builder(Component.literal("Types"), button -> {
+            PortalGunType type = PortalGunTypeRegistry.CLIENT_TYPES.get(PGConstants.RANDOM.nextInt(PortalGunTypeRegistry.CLIENT_TYPES.size()));
+            System.out.println(PortalGunTypeRegistry.CLIENT_TYPES);
+            SBChangePortalGunTypePacket packet = new SBChangePortalGunTypePacket(type);
+            PGHelper.sendPacketToServer(packet);
+        }).size(20, 20).pos(this.width / 2 + 70, this.height / 2).build());
 
         PortalGunStyle style = getStyle();
         this.security.setTextColour(style.textColor());

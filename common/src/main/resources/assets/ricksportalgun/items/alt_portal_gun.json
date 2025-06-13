@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "ricksportalgun:item/portal_guns/alt_portal_gun",
+    "tints": [
+      {
+        "type": "ricksportalgun:primary_dye",
+        "default": 15989755
+      },
+      {
+        "type": "ricksportalgun:portal_color",
+        "default": 65280
+      },
+      {
+        "type": "ricksportalgun:secondary_dye",
+        "default": 15989755
+      }
+    ]
+  }
+}

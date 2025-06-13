@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -60,5 +62,30 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor) {
         return new MenuType<>(constructor::apply, FeatureFlags.DEFAULT_FLAGS);
+    }
+
+    @Override
+    public List<? extends String> getDisabledDimensions() {
+        return PGCommonConfig.getBlacklistedDims();
+    }
+
+    @Override
+    public boolean disableStructureLocating() {
+        return PGCommonConfig.disableStructureLocating();
+    }
+
+    @Override
+    public boolean disableBiomeLocating() {
+        return PGCommonConfig.disableBiomeLocating();
+    }
+
+    @Override
+    public boolean disablePlayerLocating() {
+        return PGCommonConfig.disablePlayerLocating();
+    }
+
+    @Override
+    public int getRandomizerMax() {
+        return PGCommonConfig.getMaxRandomizerDistance();
     }
 }

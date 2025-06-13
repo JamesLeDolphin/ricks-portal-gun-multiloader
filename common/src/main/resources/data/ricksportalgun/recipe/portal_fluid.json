@@ -1,0 +1,19 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:bootleg_portal_fluid"
+    },
+    {
+      "id": "minecraft:redstone"
+    },
+    {
+      "id": "minecraft:slime_ball",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:bootleg_portal_fluid",
+    "count": 2
+  }
+}

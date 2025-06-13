@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.LockableUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.ConditionalUpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
@@ -54,9 +54,9 @@ public class PGItems {
     public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new UpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true)), new Item.Properties());
 
-    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new LockableUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true),
-            ((stack, portalGun) -> stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS_2, false)),
+    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new ConditionalUpgradeItem(properties,
+            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS_2, true),
+            ((stack, portalGun) -> stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, false)),
                     Component.translatable("error.ricksportalgun.upgrade.needs_dimension")),
             new Item.Properties());
 
@@ -69,12 +69,12 @@ public class PGItems {
     public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new UpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.BIOME_LOC, true)), new Item.Properties());
 
-    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new LockableUpgradeItem(properties,
+    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new ConditionalUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.PLAYER_LOC, true),
             (stack, item) -> stack.getOrDefault(PGDataComponents.BIOME_LOC, false),
             Component.translatable("error.ricksportalgun.upgrade.needs_biome")), new Item.Properties());
 
-    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new LockableUpgradeItem(properties,
+    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new ConditionalUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.STRUCTURE_LOC, true),
             (stack, item) -> stack.getOrDefault(PGDataComponents.PLAYER_LOC, false),
             Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties());

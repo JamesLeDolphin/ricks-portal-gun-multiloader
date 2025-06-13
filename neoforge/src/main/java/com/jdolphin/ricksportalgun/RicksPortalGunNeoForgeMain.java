@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun;
 
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import net.minecraft.core.Registry;
@@ -10,7 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -38,6 +41,8 @@ public class RicksPortalGunNeoForgeMain {
         bind(bus, Registries.MENU, PGMenuTypes::init);
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
+
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "portalgun-common.toml");
     }
 
     public void registerPackets(final RegisterPayloadHandlersEvent event) {

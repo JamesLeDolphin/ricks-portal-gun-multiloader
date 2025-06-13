@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionList
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -17,6 +18,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.neoforged.fml.config.ModConfig;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -37,6 +39,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
 
+        ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
 
         initEvents();
@@ -48,10 +51,8 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
 
     private void initEvents() {
-        //ClientLifecycleEvents.CLIENT_STARTED.register(mc -> PGCommonConfig.INSTANCE = new PGCommonConfig());
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            PGCommonConfig.INSTANCE = new PGCommonConfig();
             List<String> strings = LevelHelper.getDimensionsAsString(server.getAllLevels());
             if (!strings.contains(PGHelper.createLocation("blender").toString())) strings.add(PGHelper.createLocation("blender").toString());
             LevelHelper.addDimensions(strings);

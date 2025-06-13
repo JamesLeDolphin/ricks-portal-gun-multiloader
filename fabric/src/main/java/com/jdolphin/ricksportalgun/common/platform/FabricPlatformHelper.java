@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public class FabricPlatformHelper implements IPlatformHelper {
@@ -59,5 +61,30 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor) {
         return new MenuType<>(constructor::apply, FeatureFlags.DEFAULT_FLAGS);
+    }
+
+    @Override
+    public List<? extends String> getDisabledDimensions() {
+        return PGCommonConfig.getBlacklistedDims();
+    }
+
+    @Override
+    public boolean disableStructureLocating() {
+        return PGCommonConfig.disableStructureLocating();
+    }
+
+    @Override
+    public boolean disableBiomeLocating() {
+        return PGCommonConfig.disableBiomeLocating();
+    }
+
+    @Override
+    public boolean disablePlayerLocating() {
+        return PGCommonConfig.disablePlayerLocating();
+    }
+
+    @Override
+    public int getRandomizerMax() {
+        return PGCommonConfig.getMaxRandomizerDistance();
     }
 }

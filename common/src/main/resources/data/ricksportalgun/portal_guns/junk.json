@@ -1,0 +1,7 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portalgun.junk"
+  },
+  "id": "ricksportalgun:junk",
+  "model": "ricksportalgun:junk_portal_gun"
+}

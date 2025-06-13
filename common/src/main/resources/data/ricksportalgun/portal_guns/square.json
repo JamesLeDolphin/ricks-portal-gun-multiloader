@@ -1,6 +1,6 @@
 {
   "name": {
-    "translate": "item.ricksportalgun.square_portal_gun"
+    "translate": "item.ricksportalgun.portalgun.square"
   },
   "id": "ricksportalgun:square_portal_gun",
   "model": "ricksportalgun:square_portal_gun"
