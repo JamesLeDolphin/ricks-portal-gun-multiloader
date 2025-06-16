@@ -1,7 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "ricksportalgun:item/portal_guns/portal_gun_mk2"
+		"1": "ricksportalgun:item/portal_guns/portal_gun_mk2",
+		"particle": "ricksportalgun:item/portal_guns/portal_gun_mk2"
 	},
 	"elements": [
 		{
@@ -372,23 +373,23 @@
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, 180, 0],
-			"translation": [0, 0, -2.75],
-			"scale": [1.8, 1.8, 1.8]
+			"translation": [0, 0.25, -3],
+			"scale": [1.5, 1.5, 1.5]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [0, 180, 0],
-			"translation": [0, 0, -2.75],
-			"scale": [1.8, 1.8, 1.8]
+			"translation": [0, 0.25, -3],
+			"scale": [1.5, 1.5, 1.5]
 		},
 		"firstperson_righthand": {
 			"rotation": [0, 180, 0],
-			"translation": [0, 0, -3.25],
-			"scale": [2, 2, 2]
+			"translation": [0, 0.25, -3],
+			"scale": [1.5, 1.5, 1.5]
 		},
 		"firstperson_lefthand": {
 			"rotation": [0, 180, 0],
-			"translation": [0, 0, -3.25],
-			"scale": [2, 2, 2]
+			"translation": [0, 0.25, -3],
+			"scale": [1.5, 1.5, 1.5]
 		},
 		"ground": {
 			"rotation": [0, 180, 0],
@@ -396,18 +397,18 @@
 			"scale": [2, 2, 2]
 		},
 		"gui": {
-			"rotation": [27, -121, 8],
-			"translation": [-2.75, 0, 0],
+			"rotation": [-155, 40, 170],
+			"translation": [1.75, 0.5, 0],
 			"scale": [3, 3, 3]
 		},
 		"head": {
-			"rotation": [180, 0, 180],
-			"translation": [0, 6.5, -2.75],
-			"scale": [4, 4, 4]
+			"rotation": [0, 180, 0],
+			"translation": [0, 6.5, -3],
+			"scale": [1.5, 1.5, 1.5]
 		},
 		"fixed": {
-			"rotation": [0, 90, 0],
-			"translation": [4.25, -1.5, 1],
+			"rotation": [0, -90, 0],
+			"translation": [-4.25, -1.5, 1],
 			"scale": [4, 4, 4]
 		}
 	},

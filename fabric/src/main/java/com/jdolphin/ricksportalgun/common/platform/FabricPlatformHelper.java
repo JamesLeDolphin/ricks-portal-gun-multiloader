@@ -44,8 +44,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
-        ServerPlayNetworking.send(player, packet);
+    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packets) {
+        for (P packet : packets) {
+            ServerPlayNetworking.send(player, packet);
+        }
     }
 
     @Override

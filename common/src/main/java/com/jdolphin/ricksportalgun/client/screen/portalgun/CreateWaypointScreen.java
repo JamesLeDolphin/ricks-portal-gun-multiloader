@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBManageWaypointsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public class CreateWaypointScreen extends AbstractBaseScreen {
@@ -91,15 +89,14 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
     public void createWaypoint() {
         assert minecraft != null && minecraft.player != null;
         LocalPlayer player = minecraft.player;
-        ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.is(PGTags.Items.PORTAL_GUNS)) {
-            BlockPos pos = player.blockPosition();
-            if (waypointName.getValue().isEmpty()) return;
-            Waypoint waypoint = new Waypoint(pos, LevelHelper.getPlayerDimensionLocation(player).toString(), waypointName.getValue());
-            SBManageWaypointsPacket packet = new SBManageWaypointsPacket(waypoint.getWaypointString(), false);
-            PGHelper.sendPacketToServer(packet);
-            this.minecraft.setScreen(new WaypointScreen());
-        }
+
+        BlockPos pos = player.blockPosition();
+        if (waypointName.getValue().isEmpty()) return;
+        Waypoint waypoint = new Waypoint(pos, LevelHelper.getPlayerDimensionLocation(player).toString(), waypointName.getValue());
+        SBManageWaypointsPacket packet = new SBManageWaypointsPacket(waypoint.getWaypointString(), false);
+        System.out.println("Sent");
+        PGHelper.sendPacketToServer(packet);
+        this.minecraft.setScreen(new WaypointScreen());
     }
 
     @Override

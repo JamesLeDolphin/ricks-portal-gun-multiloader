@@ -42,13 +42,13 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 Component.empty(), size, 1.0f, 3.0f, true));
 
         this.resetSize = this.addRenderableWidget(new PGImageButton(portalSize.getX() + portalSize.getWidth() + 10, portalSize.getY() - 1, 21, 21,
-                Component.translatable("ricksportalgun.button.portal_size.reset"), button -> this.portalSize.setValue(1), 20, 13, RESET_LOCATION));
+                Component.translatable("ricksportalgun.button.portal_size.reset"), button -> this.portalSize.setValue(1), 16, 16, RESET_LOCATION));
 
         this.portalAge = this.addWidget(new PGSlider(this.width / 2 + 62, this.height / 2 - 40, 42, 18,
                 Component.empty(), age, 5, 45, true));
 
         this.resetAge = this.addRenderableWidget(new PGImageButton(portalAge.getX() + portalAge.getWidth() + 10, portalAge.getY() - 1, 21, 21,
-                Component.translatable("ricksportalgun.button.portal_age.reset"), button -> this.portalAge.setValue(10), 20, 13, RESET_LOCATION));
+                Component.translatable("ricksportalgun.button.portal_age.reset"), button -> this.portalAge.setValue(10), 16, 16, RESET_LOCATION));
 
         this.portalColor = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 - 16, 256, 18,
                 Component.translatable("ricksportalgun.button.settings.customization.color"), button -> this.minecraft.setScreen(new ColourPickingScreen()), this.font));

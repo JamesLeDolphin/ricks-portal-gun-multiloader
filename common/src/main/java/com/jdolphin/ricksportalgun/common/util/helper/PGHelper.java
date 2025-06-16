@@ -59,7 +59,7 @@ public class PGHelper {
         PGServices.PLATFORM.sendPacketToServer(packet);
     }
 
-    public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
+    public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packet) {
         PGServices.PLATFORM.sendPacketToClient(player, packet);
     }
 

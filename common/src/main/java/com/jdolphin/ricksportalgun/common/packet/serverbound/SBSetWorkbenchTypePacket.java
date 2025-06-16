@@ -16,7 +16,7 @@ public record SBSetWorkbenchTypePacket(int id) implements PGPayload {
     @Override
     public void handle(ServerPlayer player) {
         if (player.containerMenu instanceof WorkbenchCraftingMenu menu) {
-            menu.setMenuType(id);
+            menu.setMenuType(id, player);
         }
     }
 

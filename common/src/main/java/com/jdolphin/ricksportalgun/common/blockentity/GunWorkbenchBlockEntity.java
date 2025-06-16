@@ -13,6 +13,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -39,7 +40,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 20 * 20;
-    private NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
+    private NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
 
     public GunWorkbenchBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(PGBlockEntities.GUN_WORKBENCH, pPos, pBlockState);
@@ -73,18 +74,18 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         return menuType.fac.create(pContainerId, inventory, this, this.data, ContainerLevelAccess.create(this.level, this.worldPosition));
     }
 
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
-        super.loadAdditional(pTag, registries);
-        this.menuType = MenuType.values()[pTag.getInt(TAG_MODE)];
-
-        progress = pTag.getInt(TAG_PROGRESS);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.menuType = MenuType.values()[tag.getInt(TAG_MODE)];
+        ContainerHelper.loadAllItems(tag, items, registries);
+        progress = tag.getInt(TAG_PROGRESS);
     }
 
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
-        super.saveAdditional(pTag, registries);
-        pTag.putInt(TAG_MODE, this.menuType.ordinal());
-
-        pTag.putInt(TAG_PROGRESS, this.progress);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt(TAG_MODE, this.menuType.ordinal());
+        ContainerHelper.saveAllItems(tag, this.items, registries);
+        tag.putInt(TAG_PROGRESS, this.progress);
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T t) {
@@ -209,7 +210,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     @Override
     public int getContainerSize() {
-        return 5;
+        return 7;
     }
 
     public interface IMenuFactory<T extends AbstractContainerMenu> {

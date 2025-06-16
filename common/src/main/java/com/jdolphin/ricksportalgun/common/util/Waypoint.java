@@ -20,22 +20,17 @@ public class Waypoint implements Comparable<Waypoint> {
     private String name;
     private final String waypointString;
 
-    public Waypoint(int X, int Y, int Z, String dimension, String name) {
-        this.x = X;
-        this.y = Y;
-        this.z = Z;
+    public Waypoint(int x, int y, int z, String dimension, String name) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
         this.dim = dimension;
         this.name = name;
         this.waypointString = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
     }
 
     public Waypoint(BlockPos pos, String dimension, String name) {
-        this.x = pos.getX();
-        this.y = pos.getY();
-        this.z = pos.getZ();
-        this.dim = dimension;
-        this.name = name;
-        this.waypointString = this.x + "|"  + this.y + "|" + this.z + "|" + this.dim + "|" + this.name;
+        this(pos.getX(), pos.getY(), pos.getZ(), dimension, name);
     }
     public BlockPos getBlockPos() {
         return new BlockPos(this.x, this.y, this.z);
@@ -81,7 +76,7 @@ public class Waypoint implements Comparable<Waypoint> {
         return this.name;
     }
 
-    public String getDim() {
+    public String getDimension() {
         return this.dim;
     }
 
@@ -107,7 +102,7 @@ public class Waypoint implements Comparable<Waypoint> {
         this.z = pos.getZ();
     }
 
-    public void setDim(String dimension) {
+    public void setDimension(String dimension) {
         this.dim = dimension;
     }
 
@@ -117,7 +112,7 @@ public class Waypoint implements Comparable<Waypoint> {
 
     @Override
     public int compareTo(@NotNull Waypoint wp) {
-        return this.getBlockPos().compareTo(wp.getBlockPos()) + this.getDim().compareTo(wp.getDim()) + this.getName().compareTo(wp.getName());
+        return this.getBlockPos().compareTo(wp.getBlockPos()) + this.getDimension().compareTo(wp.getDimension()) + this.getName().compareTo(wp.getName());
     }
 
     public boolean equals(Object o) {
@@ -132,7 +127,7 @@ public class Waypoint implements Comparable<Waypoint> {
                 return false;
             } else if (this.getZ() != waypoint.getZ()) {
                 return false;
-            } else if (!this.getDim().equals(waypoint.getDim())) {
+            } else if (!this.getDimension().equals(waypoint.getDimension())) {
                 return false;
             } else return this.getName().equals(waypoint.getName());
 
@@ -142,13 +137,13 @@ public class Waypoint implements Comparable<Waypoint> {
     static {
         CODEC = RecordCodecBuilder.create((instance) ->
                 instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(Waypoint::getBlockPos),
-                                Codec.STRING.fieldOf("dimension").forGetter(Waypoint::getDim),
+                                Codec.STRING.fieldOf("dimension").forGetter(Waypoint::getDimension),
                                 Codec.STRING.fieldOf("name").forGetter(Waypoint::getName))
                         .apply(instance, Waypoint::new));
 
         PACKET_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
                 Waypoint::getBlockPos, ByteBufCodecs.STRING_UTF8,
-                Waypoint::getDim, ByteBufCodecs.STRING_UTF8,
+                Waypoint::getDimension, ByteBufCodecs.STRING_UTF8,
                 Waypoint::getName, Waypoint::new);
     }
 }

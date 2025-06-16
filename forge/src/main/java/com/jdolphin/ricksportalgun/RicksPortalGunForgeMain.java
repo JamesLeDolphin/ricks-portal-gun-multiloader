@@ -15,7 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -28,6 +28,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -87,32 +88,9 @@ public class RicksPortalGunForgeMain {
 
     public void buildContents(BuildCreativeModeTabContentsEvent event) {
         ResourceKey<CreativeModeTab> key = event.getTabKey();
-        if (key.equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
-            event.accept(PGItems.PORTAL_FLUID, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            event.accept(PGItems.QUANTUM_LEAP_ELIXIR);
-            event.accept(PGItems.BOOTLEG_PORTAL_FLUID);
-        }
-        if (key.equals(CreativeModeTabs.INGREDIENTS)) {
-            event.accept(PGItems.DURABILITY_UPGRADE);
-            event.accept(PGItems.DIM_UPGRADE);
-            event.accept(PGItems.BETTER_DIM_UPGRADE);
-            event.accept(PGItems.WAYPOINT_UPGRADE);
-            event.accept(PGItems.SETTINGS_UPGRADE);
-            event.accept(PGItems.FUEL_UPGRADE);
-            event.accept(PGItems.BIOME_LOC_UPGRADE);
-            event.accept(PGItems.PLAYER_LOC_UPGRADE);
-            event.accept(PGItems.STRUCTURE_LOC_UPGRADE);
-        }
-        if (key.equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
-            event.accept(PGItems.PORTAL_GUN);
-            event.accept(PGItems.PRIME_PORTAL_GUN);
-            event.accept(PGItems.GOLDEN_PORTAL_GUN);
-        }
-        if (key.equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
-            event.accept(PGItems.PORTAL_GUN_WORKBENCH.asItem());
-        }
-        if (key.equals(CreativeModeTabs.INGREDIENTS)) {
-            event.accept(PGItems.DATA_CARD);
+        for (Map.Entry<Item, ResourceKey<CreativeModeTab>> entry : PGItems.TABS.entrySet()) {
+            ResourceKey<CreativeModeTab> entryKey = entry.getValue();
+            if (key.equals(entryKey)) event.accept(entry.getKey());
         }
     }
 }

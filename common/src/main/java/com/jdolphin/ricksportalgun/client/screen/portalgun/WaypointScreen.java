@@ -63,7 +63,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         super.tick();
         assert minecraft != null && minecraft.player != null;
 
-        ItemStack heldItem = minecraft.player.getMainHandItem();
+        ItemStack heldItem = getItemStack();
         if (heldItem.is(PGTags.Items.PORTAL_GUNS)) {
             if (this.waypointList != null) this.waypointList.refreshEntries(heldItem);
         } else this.onClose();

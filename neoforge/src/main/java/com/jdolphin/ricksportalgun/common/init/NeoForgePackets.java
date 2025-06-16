@@ -25,6 +25,7 @@ public class NeoForgePackets {
         registrar.commonToServer(SBOpenSecuritySettingsPacket.ID, SBOpenSecuritySettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetPortalGunStylePacket.ID, SBSetPortalGunStylePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBCustomizeSettingsPacket.ID, SBCustomizeSettingsPacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBWorkbenchWaypointEditPackage.ID, SBWorkbenchWaypointEditPackage.CODEC, NeoForgePackets::handle);
 
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));

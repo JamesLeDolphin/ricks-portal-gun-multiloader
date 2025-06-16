@@ -34,7 +34,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
         graphics.drawString(this.font, Component.translatable("ricksportalgun.x",  wp.getX()), this.width / 2 - 64, this.height / 2 - 32, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.y",  wp.getY()), this.width / 2 - 64, this.height / 2 - 16, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.z",  wp.getZ()), this.width / 2 - 64, this.height / 2, style.textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension",  wp.getDim()), this.width / 2 - 64, this.height / 2 + 16, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension",  wp.getDimension()), this.width / 2 - 64, this.height / 2 + 16, style.textColor());
 
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, delete, style.highlightColor());
@@ -56,7 +56,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
-            SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDim());
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDimension());
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         }, this.font));

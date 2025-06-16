@@ -1,6 +1,6 @@
 {
   "name": {
-    "translate": "item.ricksportalgun.portalgun.prime"
+    "translate": "item.ricksportalgun.prime_portal_gun"
   },
   "id": "ricksportalgun:prime",
   "model": "ricksportalgun:prime_portal_gun"

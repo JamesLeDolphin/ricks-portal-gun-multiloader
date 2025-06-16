@@ -16,7 +16,7 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
     private Container container;
 
     public WorkbenchCraftingMenu(int id, Inventory inventory) {
-        this(id, inventory, new SimpleContainer(5), new SimpleContainerData(2), ContainerLevelAccess.NULL);
+        this(id, inventory, new SimpleContainer(7), new SimpleContainerData(2), ContainerLevelAccess.NULL);
     }
 
     public WorkbenchCraftingMenu(int i, Inventory inventory, Container container, ContainerData data, ContainerLevelAccess access) {
@@ -26,7 +26,7 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
         this.access = access;
         this.addDataSlots(data);
         checkContainerDataCount(data, 2);
-        checkContainerSize(container, 5);
+        checkContainerSize(container, 7);
 
         addInventoryExtendedSlots(inventory, 25, 129);
         addInventoryHotbarSlots(inventory, 25, 187);
@@ -70,11 +70,14 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
         return data;
     }
 
-    public void setMenuType(int i) {
+    public void setMenuType(int i, Player player) {
         access.execute((level, pos) -> {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof GunWorkbenchBlockEntity workbench) {
-                if (!level.isClientSide()) workbench.setMenuType(i);
+                if (!level.isClientSide()) {
+                    workbench.setMenuType(i);
+                    player.openMenu(workbench);
+                }
             }
         });
     }

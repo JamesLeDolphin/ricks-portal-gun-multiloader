@@ -24,7 +24,7 @@ public interface IPlatformHelper {
 
     <P extends CustomPacketPayload> void sendPacketToServer(P packet);
 
-    <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet);
+    <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packet);
 
     String getConfigPath();
 

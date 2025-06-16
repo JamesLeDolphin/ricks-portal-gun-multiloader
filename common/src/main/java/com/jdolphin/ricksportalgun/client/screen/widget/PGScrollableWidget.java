@@ -35,6 +35,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     private E selected;
     @Nullable
     private E hovered;
+    private boolean renderScrollbar = true;
 
     public PGScrollableWidget(Minecraft minecraft, int width, int height, int x, int y, int itemHeight) {
         super(x, y, width, height, CommonComponents.EMPTY);
@@ -86,7 +87,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     }
 
     protected E getEntry(int index) {
-        return (E)(this.children().get(index));
+        return this.children().get(index);
     }
 
     protected int addEntry(E entry) {
@@ -114,7 +115,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     }
 
     @Nullable
-    protected final E getEntryAtPosition(double mouseX, double mouseY) {
+    public final E getEntryAtPosition(double mouseX, double mouseY) {
         int i = this.getRowWidth() / 2;
         int j = this.getX() + this.width / 2;
         int k = j - i;
@@ -148,6 +149,15 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
         graphics.disableScissor();
 
         this.renderScrollbar(graphics);
+    }
+
+    @Override
+    protected void renderScrollbar(GuiGraphics guiGraphics) {
+        if (renderScrollbar) super.renderScrollbar(guiGraphics);
+    }
+
+    public void setRenderScrollbar(boolean renderScrollbar) {
+        this.renderScrollbar = renderScrollbar;
     }
 
     protected void renderListSeparators(GuiGraphics guiGraphics) {

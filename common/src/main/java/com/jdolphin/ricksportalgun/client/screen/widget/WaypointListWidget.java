@@ -2,7 +2,6 @@ package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.jdolphin.ricksportalgun.client.screen.portalgun.WaypointInfoScreen;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -25,19 +24,16 @@ import java.util.List;
 public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.WaypointEntry> {
     public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/waypoint_info.png");
 
-    public final ItemStack stack;
-    public final PortalGunItem item;
     public boolean showInfoButton;
     public int rowWidth = 188;
     private final int buttonWidth;
     private final int buttonHeight;
-    private boolean renderButtonBg;
+    private boolean renderButtonBg = true;
+    protected Button.OnPress onPress;
     private PortalGunStyle style = PortalGunStyle.DEFAULT;
 
     public WaypointListWidget(int width, int height, int x, int y, int itemHeight, ItemStack stack, boolean showInfo, int buttonWidth, int buttonHeight) {
         super(Minecraft.getInstance(), width, height, x, y, itemHeight);
-        this.stack = stack;
-        this.item = (PortalGunItem) stack.getItem();
         this.showInfoButton = showInfo;
         this.buttonWidth = buttonWidth;
         this.buttonHeight = buttonHeight;
@@ -65,6 +61,10 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         return rowWidth;
     }
 
+    public void setOnPress(Button.OnPress onPress) {
+        this.onPress = onPress;
+    }
+
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.USAGE, Component.empty());
@@ -81,17 +81,24 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         protected WaypointListWidget list;
         private final boolean showInfo;
         private final int color;
+        private final boolean renderBG;
+        public final Waypoint waypoint;
 
         WaypointEntry(Waypoint waypoint, WaypointListWidget list, boolean showInfoButton, boolean renderButtonBG, int borderColor) {
+            this.waypoint = waypoint;
             this.list = list;
             this.showInfo = showInfoButton;
             this.color = borderColor;
+            this.renderBG = renderButtonBG;
 
-            Button.OnPress press = (pButton) -> {
-                SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDim());
-                PGHelper.sendPacketToServer(packet);
-                Minecraft.getInstance().setScreen(null);
-            };
+            Button.OnPress press = this.list.onPress;
+            if (this.list.onPress == null) {
+                press = (pButton) -> {
+                    SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDimension());
+                    PGHelper.sendPacketToServer(packet);
+                    Minecraft.getInstance().setScreen(null);
+                };
+            }
 
             if (renderButtonBG) {
                 this.button = Button.builder(Component.literal(waypoint.getName()), press)
@@ -115,14 +122,15 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
             WaypointListWidget wpList = this.list;
             if (pTop > wpList.headerHeight) {
 
-                this.button.setX(pLeft + 18);
+                this.button.setX(pLeft + (showInfo ? 18 : 56));
                 this.button.setY(pTop);
                 this.button.render(graphics, pMouseX, pMouseY, pPartialTick);
-                GuiHelper.renderOutline(graphics, button, this.color);
+                if (!renderBG) GuiHelper.renderOutline(graphics, button, this.color);
+
                 if (this.showInfo) {
                     this.infoButton.setX(pLeft + button.getWidth() + 20);
                     this.infoButton.setY(pTop);
-                    GuiHelper.renderOutline(graphics, infoButton, this.color);
+                    if (!renderBG) GuiHelper.renderOutline(graphics, infoButton, this.color);
                     this.infoButton.render(graphics, pMouseX, pMouseY, pPartialTick);
                 }
             }

@@ -3,8 +3,17 @@
   "item.ricksportalgun.golden_portal_gun": "Golden Portal Gun",
   "item.ricksportalgun.prime_portal_gun": "Prime Portal Gun",
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
+  "item.ricksportalgun.circuitboard": "Circuit Board",
+
+  "item.ricksportalgun.portalgun.alt": "Alternative Portal Gun",
+  "item.ricksportalgun.portalgun.flintlock": "Flintlock Portal Gun",
+  "item.ricksportalgun.portalgun.futuristic": "Futuristic Portal Gun",
+  "item.ricksportalgun.portalgun.junk": "Junk Portal Gun",
+  "item.ricksportalgun.portalgun.mk2": "Portal Gun Mk.II",
+  "item.ricksportalgun.portalgun.sidestep": "Sidestep Portal Gun",
+  "item.ricksportalgun.portalgun.sloped": "Sloped Portal Gun",
   "item.ricksportalgun.portalgun.square": "Square Portal Gun",
-  "item.ricksportalgun.portalgun.golden": "Golden Portal Gun",
+  "item.ricksportalgun.portalgun.symmetrical": "Symmetrical Portal Gun",
 
   "item.ricksportalgun.quantum_leap_elixir": "Quantum Leap Elixir",
   "item.ricksportalgun.bootleg_portal_fluid": "Bootleg Portal Fluid",
@@ -71,6 +80,8 @@
   "ricksportalgun.button.customization.highlight": "Highlight:",
   "ricksportalgun.button.customization.text": "Text:",
   "ricksportalgun.button.customization.background": "Background:",
+  "ricksportalgun.button.workbench.copy": "Copy waypoint",
+  "ricksportalgun.button.workbench.move": "Move Waypoint",
 
   "ricksportalgun.button.back": "Back",
   "ricksportalgun.button.cancel": "Cancel",
@@ -78,6 +89,7 @@
   "ricksportalgun.button.false": "False",
   "ricksportalgun.button.delete": "Delete",
   "ricksportalgun.button.select": "Select",
+
 
   "notice.ricksportalgun.randomizer_find_y.start": "Finding safe Y position...",
   "notice.ricksportalgun.randomizer_find_y.success": "Done!",
@@ -124,7 +136,9 @@
   "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s",
   "tooltip.ricksportalgun.upgrade": "Upgrade: ",
   "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
-  "tooltip.ricksportalgun.hold_shift": "Hold \\u00a79[\\u00a76Shift\\u00a79]",
+  "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
+  "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
+  "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
 
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",

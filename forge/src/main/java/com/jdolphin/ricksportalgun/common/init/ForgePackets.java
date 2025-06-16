@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.ChannelBuilder;
@@ -71,6 +72,10 @@ public class ForgePackets {
                 .codec(SBCustomizeSettingsPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBWorkbenchWaypointEditPackage.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBWorkbenchWaypointEditPackage.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
@@ -109,13 +114,13 @@ public class ForgePackets {
         packet.handle(context.getSender());
     }
 
-    public static void sendToServer(Object msg) {
+    public static <P extends CustomPacketPayload> void sendToServer(P msg) {
         INSTANCE.send(msg, PacketDistributor.SERVER.noArg());
     }
 
-    public static void sendToPlayer(ServerPlayer player, Object... messages) {
-        for (Object obj : messages) {
-            INSTANCE.send(obj, PacketDistributor.PLAYER.with(player));
+    public static <P extends CustomPacketPayload> void sendToPlayer(ServerPlayer player, P... messages) {
+        for (P packet : messages) {
+            INSTANCE.send(packet, PacketDistributor.PLAYER.with(player));
         }
     }
 }

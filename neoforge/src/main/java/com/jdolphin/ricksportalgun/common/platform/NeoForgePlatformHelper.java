@@ -45,8 +45,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P packet) {
-        PacketDistributor.sendToPlayer(player, packet);
+    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packets) {
+        for (P packet : packets) {
+            PacketDistributor.sendToPlayer(player, packet);
+        }
     }
 
     @Override
