@@ -26,7 +26,7 @@ public record SBCoordCheckerPacket(String dim) implements PGPayload {
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
-        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGHelper.getRandomizerMax()), player.serverLevel(), 0);
+        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGHelper.getRandomizerMax()), player.serverLevel());
 
         ResourceLocation dim = ResourceLocation.parse(this.dim);
         ServerLevel level;

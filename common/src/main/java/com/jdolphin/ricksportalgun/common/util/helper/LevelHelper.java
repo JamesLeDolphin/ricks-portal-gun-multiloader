@@ -122,13 +122,17 @@ public class LevelHelper {
         return worldList.get(PGConstants.RANDOM.nextInt(worldList.size()));
     }
 
-    public static void randomTP(ServerPlayer player, int radius) {
+    public static void randomTP(ServerPlayer player, int radius, boolean interdimensional) {
         ServerLevel level = player.serverLevel();
         ServerLevel dest = getRandomServerLevel(player.server);
-        teleportEntity(player, dest, getSafePos(getRandomCoord(dest, radius), level, 0));
+        teleportEntity(player, interdimensional ? dest : level, getSafePos(getRandomCoord(dest, radius), level));
     }
 
-    public static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
+    public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
+        return getSafePos(bPos, level, 0);
+    }
+
+    private static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
         iteration++;
         ChunkAccess chunk = level.getChunk(bPos);
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);

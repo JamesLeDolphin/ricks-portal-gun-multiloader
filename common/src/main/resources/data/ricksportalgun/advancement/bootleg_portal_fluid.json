@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "ricksportalgun:bootleg_portal_fluid",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancement.ricksportalgun.craft_bootleg_fluid"
+    },
+    "description": {
+      "translate": "advancement.ricksportalgun.description.craft_bootleg"
+    }
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "bootleg_portal_fluid": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "ricksportalgun:bootleg_portal_fluid",
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bootleg_portal_fluid"
+    ]
+  ]
+}

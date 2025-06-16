@@ -48,7 +48,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                             player.blockPosition(), 6400, 32, 64);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
+                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
                         PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else
@@ -88,7 +88,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                             .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level, 0);
+                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
                         PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else {

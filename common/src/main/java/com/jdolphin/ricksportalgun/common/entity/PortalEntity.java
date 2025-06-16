@@ -295,7 +295,7 @@ public class PortalEntity extends Entity {
                         destinationPos = getHopLoc();
                     } else {
                         destinationDim = LevelHelper.getRandomServerLevel(serverLevel.getServer());
-                        destinationPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 5000), serverLevel, 0);
+                        destinationPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 5000), serverLevel);
                     }
                     if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                         if (this.bootleg || LevelHelper.isBlenderDestination(getHopDim())) {

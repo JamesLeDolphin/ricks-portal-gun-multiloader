@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "id": "ricksportalgun:portal_fluid",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancement.ricksportalgun.drink_portal_fluid"
+    },
+    "description": {
+      "translate": "advancement.ricksportalgun.description.drink_fluid"
+    }
+  },
+  "parent": "ricksportalgun:bootleg_portal_fluid",
+  "criteria": {
+    "req": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "ricksportalgun:portal_fluid"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "req"
+    ]
+  ]
+}

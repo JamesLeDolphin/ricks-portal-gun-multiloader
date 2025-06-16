@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -36,12 +37,13 @@ public class PortalFluidItem extends Item {
             if (!player.isCreative()) {
                 stack.consume(1, entity);
                 player.addItem(stack.getItem().getCraftingRemainder());
+                player.awardStat(Stats.ITEM_USED.get(this));
             }
             player.addEffect(new MobEffectInstance(MobEffects.POISON));
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 2, 2));
             ServerLevel serverLevel = (ServerLevel) level;
             player.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, PGDamageTypes.TELEPORT), 3);
-            LevelHelper.randomTP(player, 500);
+            LevelHelper.randomTP(player, 500, true);
         }
         return stack;
     }

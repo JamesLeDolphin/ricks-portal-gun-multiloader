@@ -140,6 +140,14 @@
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
 
+  "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
+  "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",
+  "advancement.ricksportalgun.obtain_portal_gun": "Gateway to infinity!",
+
+  "advancement.ricksportalgun.description.craft_bootleg": "Obtain a bottle of Bootleg Portal Fluid",
+  "advancement.ricksportalgun.description.drink_fluid": "Drink a bottle of Portal Fluid",
+  "advancement.ricksportalgun.description.obtain_portal_gun": "Obtain your very own Portal Gun",
+
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
   "death.attack.blender": "%s stepped into the blender dimension",
