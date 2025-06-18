@@ -3,8 +3,6 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.advancement.PortalGunTrigger;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
