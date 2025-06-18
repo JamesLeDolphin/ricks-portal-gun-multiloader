@@ -47,6 +47,10 @@ public class PGHelper {
         return PGServices.PLATFORM.getDisabledDimensions();
     }
 
+    public static boolean disablePortalColourTint() {
+        return PGServices.PLATFORM.disablePortalGunColorTint();
+    }
+
     public static void sendSuccessMsg(Player player, String msg) {
         sendSuccessMsg(player, Component.translatable(msg));
     }

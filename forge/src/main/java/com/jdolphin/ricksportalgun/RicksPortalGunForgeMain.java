@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -51,7 +52,8 @@ public class RicksPortalGunForgeMain {
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
 
-        context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "portalgun-common.toml");
+        context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
+        context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

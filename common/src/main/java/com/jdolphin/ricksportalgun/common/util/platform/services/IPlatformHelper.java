@@ -45,4 +45,6 @@ public interface IPlatformHelper {
     boolean disablePlayerLocating();
 
     int getRandomizerMax();
+
+    boolean disablePortalGunColorTint();
 }

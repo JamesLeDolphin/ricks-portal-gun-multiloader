@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
@@ -87,5 +88,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public int getRandomizerMax() {
         return PGCommonConfig.getMaxRandomizerDistance();
+    }
+
+    @Override
+    public boolean disablePortalGunColorTint() {
+        return PGClientConfig.disablePortalGunColorTint();
     }
 }

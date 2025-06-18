@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun;
 
 
+import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -43,7 +44,8 @@ public class RicksPortalGunNeoForgeMain {
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
 
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "portalgun-common.toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
     }
 
     public void registerPackets(final RegisterPayloadHandlersEvent event) {
