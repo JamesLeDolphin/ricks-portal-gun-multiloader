@@ -10,22 +10,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
-public class WaypointTransferMenu extends AbstractContainerMenu {
+public class WaypointTransferMenu extends AbstractWorkbenchMenu {
     private final Container container;
     private final ContainerData data;
     private final ContainerLevelAccess access;
 
     public WaypointTransferMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new SimpleContainer(7), new SimpleContainerData(2), ContainerLevelAccess.NULL);
+        this(containerId, playerInventory, new SimpleContainer(10), new SimpleContainerData(2), ContainerLevelAccess.NULL);
     }
 
     public WaypointTransferMenu(int i, Inventory inventory, Container container, ContainerData data, ContainerLevelAccess access) {
-        super(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, i);
+        super(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, i, access);
         this.data = data;
         this.access = access;
         this.container = container;
         this.addDataSlots(data);
-        checkContainerSize(container, 7);
+        checkContainerSize(container, 10);
         checkContainerDataCount(data, 2);
 
         addInventoryExtendedSlots(inventory, 25, 129);

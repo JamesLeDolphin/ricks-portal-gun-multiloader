@@ -1,6 +1,6 @@
 {
   "item.ricksportalgun.portal_gun": "Portal Gun",
-  "item.ricksportalgun.golden_portal_gun": "Golden Portal Gun",
+  "item.ricksportalgun.golden_portal_gun": "Evil Portal Gun",
   "item.ricksportalgun.prime_portal_gun": "Prime Portal Gun",
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
   "item.ricksportalgun.circuitboard": "Circuit Board",
@@ -143,25 +143,31 @@
   "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
   "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",
   "advancement.ricksportalgun.obtain_portal_gun": "Gateway to infinity!",
+  "advancement.ricksportalgun.obtain_upgrade": "Upgrades, People, Upgrades",
 
   "advancement.ricksportalgun.description.craft_bootleg": "Obtain a bottle of Bootleg Portal Fluid",
   "advancement.ricksportalgun.description.drink_fluid": "Drink a bottle of Portal Fluid",
   "advancement.ricksportalgun.description.obtain_portal_gun": "Obtain your very own Portal Gun",
+  "advancement.ricksportalgun.description.obtain_upgrade": "Obtain and apply your first Portal Gun Upgrade",
 
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
   "death.attack.blender": "%s stepped into the blender dimension",
 
-  "gamerule.allowPlayerLocating": "Allow locating players",
-  "gamerule.randomiserMax": "Randomizer maximum area",
+  "tag.item.ricksportalgun.portal_guns": "Portal Guns",
+  "tag.item.ricksportalgun.upgrades": "Upgrades",
 
   "key.category.ricksportalgun.portal_menu": "Portal Gun Mod",
   "key.ricksportalgun.portal_menu": "Open portal gun menu",
 
   "entity.ricksportalgun.portal": "Portal",
 
-  "tag.item.ricksportalgun.portal_guns": "Portal Guns",
-
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "menu.ricksportalgun.workbench.skin": "Edit Portal Gun Appearance",
+  "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
+  "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
+  "ricksportalgun.button.next": "Next",
+  "ricksportalgun.button.previous": "Previous",
+  "ricksportalgun.gun_type": "Portal Gun Type: %s"
 
 }

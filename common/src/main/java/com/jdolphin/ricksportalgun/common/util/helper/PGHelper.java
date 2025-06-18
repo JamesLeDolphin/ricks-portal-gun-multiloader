@@ -19,6 +19,14 @@ public class PGHelper {
         return ResourceLocation.fromNamespaceAndPath(PGConstants.MODID, string);
     }
 
+    public static int seconds(int amount) {
+        return 20 * amount;
+    }
+
+    public static int minutes(int amount) {
+        return 60 * seconds(amount);
+    }
+
     public static int getRandomizerMax() {
         return PGServices.PLATFORM.getRandomizerMax();
     }

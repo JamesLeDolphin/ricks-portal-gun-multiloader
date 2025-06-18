@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.mk2"
   },
+  "monotone": true,
   "id": "ricksportalgun:mk2",
   "model": "ricksportalgun:portal_gun_mk2"
 }

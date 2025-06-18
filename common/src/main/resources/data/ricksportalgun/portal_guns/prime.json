@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.prime_portal_gun"
   },
+  "monotone": true,
   "id": "ricksportalgun:prime",
   "model": "ricksportalgun:prime_portal_gun"
 }

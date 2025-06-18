@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.futuristic"
   },
+  "monotone": false,
   "id": "ricksportalgun:futuristic",
   "model": "ricksportalgun:futuristic_portal_gun"
 }

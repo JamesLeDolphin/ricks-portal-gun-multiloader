@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.menu.workbench;
 
-import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -8,25 +7,24 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class WorkbenchCraftingMenu extends AbstractContainerMenu {
+public class WorkbenchCraftingMenu extends AbstractWorkbenchMenu {
     private ContainerData data;
     private ContainerLevelAccess access;
     private Container container;
 
     public WorkbenchCraftingMenu(int id, Inventory inventory) {
-        this(id, inventory, new SimpleContainer(7), new SimpleContainerData(2), ContainerLevelAccess.NULL);
+        this(id, inventory, new SimpleContainer(10), new SimpleContainerData(2), ContainerLevelAccess.NULL);
     }
 
     public WorkbenchCraftingMenu(int i, Inventory inventory, Container container, ContainerData data, ContainerLevelAccess access) {
-        super(PGMenuTypes.WORKBENCH_CRAFTING, i);
+        super(PGMenuTypes.WORKBENCH_CRAFTING, i, access);
         this.container = container;
         this.data = data;
         this.access = access;
         this.addDataSlots(data);
         checkContainerDataCount(data, 2);
-        checkContainerSize(container, 7);
+        checkContainerSize(container, 10);
 
         addInventoryExtendedSlots(inventory, 25, 129);
         addInventoryHotbarSlots(inventory, 25, 187);
@@ -54,7 +52,7 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
     public int getScaledProgress() {
         int progress = getProgress();
         int maxProgress = Math.max(getMaxProgress(), 1);
-        int progressArrowSize = 33;
+        int progressArrowSize = 46;
         return progress * progressArrowSize / maxProgress;
     }
 
@@ -68,18 +66,6 @@ public class WorkbenchCraftingMenu extends AbstractContainerMenu {
 
     public ContainerData getData() {
         return data;
-    }
-
-    public void setMenuType(int i, Player player) {
-        access.execute((level, pos) -> {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof GunWorkbenchBlockEntity workbench) {
-                if (!level.isClientSide()) {
-                    workbench.setMenuType(i);
-                    player.openMenu(workbench);
-                }
-            }
-        });
     }
 
     @Override

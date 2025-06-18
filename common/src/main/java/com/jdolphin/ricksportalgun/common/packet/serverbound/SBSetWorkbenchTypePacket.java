@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
+import com.jdolphin.ricksportalgun.common.menu.workbench.AbstractWorkbenchMenu;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +15,7 @@ public record SBSetWorkbenchTypePacket(int id) implements PGPayload {
 
     @Override
     public void handle(ServerPlayer player) {
-        if (player.containerMenu instanceof WorkbenchCraftingMenu menu) {
+        if (player.containerMenu instanceof AbstractWorkbenchMenu menu) {
             menu.setMenuType(id, player);
         }
     }

@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 public class PGTags {
     public static class Items {
         public static final TagKey<Item> PORTAL_GUNS = makeTag("portal_guns");
+        public static final TagKey<Item> UPGRADES = makeTag("upgrades");
 
         public static TagKey<Item> makeTag(String name) {
             return TagKey.create(Registries.ITEM, PGHelper.createLocation(name));

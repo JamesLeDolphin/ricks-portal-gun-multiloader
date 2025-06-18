@@ -1,0 +1,8 @@
+{
+  "name": {
+    "translate": "item.ricksportalgun.portal_gun"
+  },
+  "monotone": true,
+  "id": "ricksportalgun:portal_gun",
+  "model": "ricksportalgun:portal_gun"
+}

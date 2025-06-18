@@ -1,8 +1,11 @@
 package com.jdolphin.ricksportalgun.client.screen.workbench;
 
+import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetWorkbenchTypePacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBWorkbenchWaypointEditPackage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
@@ -16,12 +19,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import oshi.util.tuples.Pair;
 
 import java.awt.*;
 import java.util.Optional;
 
-public class WaypointTransferScreen extends AbstractContainerScreen<WaypointTransferMenu> {
+public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTransferMenu> {
     public static final ResourceLocation BG = PGHelper.createLocation("textures/gui/workbench/waypoint_transfer.png");
     public static final ResourceLocation WP_INFO_BG = PGHelper.createLocation("textures/gui/workbench/waypoint_info_bg.png");
     private WaypointListWidget leftWaypointList, rightWaypointList;
@@ -106,6 +110,22 @@ public class WaypointTransferScreen extends AbstractContainerScreen<WaypointTran
                 selectedWaypoint = null;
             }
         }).bounds(this.width / 2 - 175, this.height / 2 + 26, 80, 16).build());
+
+        PGItemButton skin = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 105, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.skin"), button -> setScreen(1), PGItems.PORTAL_GUN.getDefaultInstance()));
+        skin.setRenderBackground(false);
+
+        PGItemButton waypoint = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 80, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.waypoint"), button -> {}, PGItems.DATA_CARD.getDefaultInstance()));
+        waypoint.setRenderBackground(false);
+
+        PGItemButton craft = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 55, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.craft"), button -> setScreen(2), Items.CRAFTING_TABLE.getDefaultInstance()));
+        craft.setRenderBackground(false);
+
+        GuiHelper.setTooltip(skin, Component.translatable("menu.ricksportalgun.workbench.skin"));
+        GuiHelper.setTooltip(waypoint, Component.translatable("menu.ricksportalgun.workbench.waypoint"));
+        GuiHelper.setTooltip(craft, Component.translatable("menu.ricksportalgun.workbench.craft"));
 
         GuiHelper.setTooltip(copy, Component.translatable("tooltip.ricksportalgun.button.copy"));
         GuiHelper.setTooltip(moveTo, Component.translatable("tooltip.ricksportalgun.button.move"));

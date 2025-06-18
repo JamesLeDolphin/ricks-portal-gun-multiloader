@@ -2,16 +2,10 @@ package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
-import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.SkinSelectingScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.WaypointTransferScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
+import com.jdolphin.ricksportalgun.client.init.PGItemTints;
+import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
-import com.jdolphin.ricksportalgun.common.util.tint.PrimaryDyeTint;
-import com.jdolphin.ricksportalgun.common.util.tint.SecondaryDyeTint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -24,21 +18,20 @@ import net.minecraft.client.renderer.RenderType;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
 
-        MenuScreens.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
-        MenuScreens.register(PGMenuTypes.WORKBENCH_CRAFTING, WorkbenchCraftingScreen::new);
-        MenuScreens.register(PGMenuTypes.WORKBENCH_SKIN_SELECTOR, SkinSelectingScreen::new);
-        MenuScreens.register(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, WaypointTransferScreen::new);
+        PGMenuScreens.ALL.forEach((type, func) -> {
+            MenuScreens.ScreenConstructor constructor = func::apply;
+            MenuScreens.register(type, constructor);
+        });
 
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 
-        ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("primary_dye"), PrimaryDyeTint.CODEC);
-        ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("secondary_dye"), SecondaryDyeTint.CODEC);
-        ItemTintSources.ID_MAPPER.put(PGHelper.createLocation("portal_color"), PortalColourTint.CODEC);
+        PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {

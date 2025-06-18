@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util.tint;
+package com.jdolphin.ricksportalgun.client.tint;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.mojang.serialization.Codec;
@@ -18,10 +18,6 @@ public record PrimaryDyeTint(int defaultColor) implements ItemTintSource {
 
     public static MapCodec<PrimaryDyeTint> CODEC = RecordCodecBuilder.mapCodec((instance) ->
             instance.group(Codec.INT.optionalFieldOf("default", Color.WHITE.getRGB()).forGetter(PrimaryDyeTint::defaultColor)).apply(instance, PrimaryDyeTint::new));
-
-    public PrimaryDyeTint(int defaultColor) {
-        this.defaultColor = defaultColor;
-    }
 
     @Override
     public int calculate(ItemStack stack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {

@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
 import com.jdolphin.ricksportalgun.common.recipe.WorkbenchRecipeInput;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +41,8 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     protected final ContainerData data;
     private int progress = 0;
-    private int maxProgress = 20 * 20;
-    private NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
+    private int maxProgress = PGHelper.seconds(3);
+    private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
 
     public GunWorkbenchBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(PGBlockEntities.GUN_WORKBENCH, pPos, pBlockState);
@@ -169,7 +171,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     private void resetProgress() {
         this.progress = 0;
-        this.maxProgress = 72;
+        this.maxProgress = PGHelper.seconds(3);
     }
 
     private boolean hasRecipe() {
@@ -183,8 +185,8 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     private Optional<RecipeHolder<PortalGunWorkbenchRecipe>> getCurrentRecipe() {
         if (this.level instanceof ServerLevel serverLevel) {
-
-            return serverLevel.recipeAccess().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, new WorkbenchRecipeInput(items), serverLevel);
+            List<ItemStack> recipeItems = items.subList(0, 3);
+            return serverLevel.recipeAccess().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, new WorkbenchRecipeInput(recipeItems), serverLevel);
         } return Optional.empty();
     }
 
@@ -210,7 +212,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     @Override
     public int getContainerSize() {
-        return 7;
+        return 10;
     }
 
     public interface IMenuFactory<T extends AbstractContainerMenu> {

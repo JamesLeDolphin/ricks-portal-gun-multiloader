@@ -102,7 +102,7 @@ public class PGCycleButton<T> extends AbstractButton {
 
     private T getCycledValue(int delta) {
         List<T> list = this.values.getSelectedList();
-        return (T)list.get(Mth.positiveModulo(this.index + delta, list.size()));
+        return list.get(Mth.positiveModulo(this.index + delta, list.size()));
     }
 
     public boolean mouseScrolled(double p_168885_, double p_168886_, double p_168887_, double p_294881_) {

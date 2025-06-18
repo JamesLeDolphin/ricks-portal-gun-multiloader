@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.flintlock"
   },
+  "monotone": false,
   "id": "ricksportalgun:flintlock",
   "model": "ricksportalgun:flintlock_portal_gun"
 }

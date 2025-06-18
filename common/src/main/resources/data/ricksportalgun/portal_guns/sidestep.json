@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.sidestep"
   },
+  "monotone": false,
   "id": "ricksportalgun:sidestep",
   "model": "ricksportalgun:sidestep_portal_gun"
 }

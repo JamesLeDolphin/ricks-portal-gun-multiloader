@@ -1,21 +1,25 @@
 package com.jdolphin.ricksportalgun.client.screen.workbench;
 
+import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetWorkbenchTypePacket;
+import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 
-public class WorkbenchCraftingScreen extends AbstractContainerScreen<WorkbenchCraftingMenu> {
+public class WorkbenchCraftingScreen extends AbstractWorkbenchScreen<WorkbenchCraftingMenu> {
     public static final ResourceLocation CRAFT_BG = PGHelper.createLocation("textures/gui/workbench/crafting.png");
 
     public WorkbenchCraftingScreen(WorkbenchCraftingMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+
         this.imageHeight = 211;
         this.imageWidth = 212;
         this.inventoryLabelX = this.imageWidth - 188;
@@ -27,21 +31,28 @@ public class WorkbenchCraftingScreen extends AbstractContainerScreen<WorkbenchCr
     @Override
     protected void init() {
         super.init();
+        PGItemButton skin = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 105, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.skin"), button -> setScreen(1), PGItems.PORTAL_GUN.getDefaultInstance()));
+        skin.setRenderBackground(false);
 
-        this.addRenderableWidget(Button.builder(Component.literal("TEst"), button -> {
-            SBSetWorkbenchTypePacket packet = new SBSetWorkbenchTypePacket(0);
-            PGHelper.sendPacketToServer(packet);
-        }).bounds(this.imageWidth / 2, this.imageHeight / 2, 16, 16).build());
-    }
+        PGItemButton waypoint = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 80, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.waypoint"), button -> setScreen(0), PGItems.DATA_CARD.getDefaultInstance()));
+        waypoint.setRenderBackground(false);
 
-    public boolean isPauseScreen() {
-        return false;
+        PGItemButton craft = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 55, 24, 24,
+                Component.translatable("menu.ricksportalgun.workbench.craft"), button -> {
+        }, Items.CRAFTING_TABLE.getDefaultInstance()));
+        craft.setRenderBackground(false);
+
+        GuiHelper.setTooltip(skin, Component.translatable("menu.ricksportalgun.workbench.skin"));
+        GuiHelper.setTooltip(waypoint, Component.translatable("menu.ricksportalgun.workbench.waypoint"));
+        GuiHelper.setTooltip(craft, Component.translatable("menu.ricksportalgun.workbench.craft"));
     }
 
     @Override
-    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(graphics, pMouseX, pMouseY);
     }
 
     @Override
@@ -56,8 +67,7 @@ public class WorkbenchCraftingScreen extends AbstractContainerScreen<WorkbenchCr
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if (menu.isCrafting()) {
             if (menu.getScaledProgress() < 66) {
-               guiGraphics.blit(RenderType::guiTextured, CRAFT_BG, x + 16, y + 49, 0, 223, 66, menu.getScaledProgress(), 256 ,256);
-               guiGraphics.blit(RenderType::guiTextured, CRAFT_BG, x + 16, y + 49, 0, 223, 66, menu.getScaledProgress(), 256 ,256);
+               guiGraphics.blit(RenderType::guiTextured, CRAFT_BG, x + 88, y + 36, 222, 210, 34, menu.getScaledProgress(), 256 ,256);
             }
         }
     }

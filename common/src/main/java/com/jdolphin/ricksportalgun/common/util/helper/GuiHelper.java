@@ -7,7 +7,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 
 import java.awt.*;
@@ -20,6 +22,14 @@ public class GuiHelper {
                 widget.render(graphics, pMouseX, pMouseY, pPartialTick);
             }
         }
+    }
+
+    public static void drawWordWrap(GuiGraphics graphics, Font font, FormattedText text, int x, int y, int lineWidth, int color) {
+        for(FormattedCharSequence formattedcharsequence : font.split(text, lineWidth)) {
+            graphics.drawCenteredString(font, formattedcharsequence, x, y, color);
+            y += 9;
+        }
+
     }
 
     public static void renderScrollingString(GuiGraphics guiGraphics, Component text, int minX, int minY, int maxX, int maxY, int color) {

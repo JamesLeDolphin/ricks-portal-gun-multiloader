@@ -3,20 +3,15 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
-import com.jdolphin.ricksportalgun.client.screen.PortalDispenserScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.SkinSelectingScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.WaypointTransferScreen;
-import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
+import com.jdolphin.ricksportalgun.client.init.PGItemTints;
+import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
-import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.jdolphin.ricksportalgun.common.util.tint.PortalColourTint;
-import com.jdolphin.ricksportalgun.common.util.tint.PrimaryDyeTint;
-import com.jdolphin.ricksportalgun.common.util.tint.SecondaryDyeTint;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -27,19 +22,18 @@ import net.neoforged.neoforge.client.event.*;
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD, modid = PGConstants.MODID)
 public class NeoForgeClientMain {
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @SubscribeEvent
     public static void clientSetup(RegisterMenuScreensEvent event) {
-        event.register(PGMenuTypes.PORTAL_DISPENSER, PortalDispenserScreen::new);
-        event.register(PGMenuTypes.WORKBENCH_WAYPOINT_TRANSFER, WaypointTransferScreen::new);
-        event.register(PGMenuTypes.WORKBENCH_CRAFTING, WorkbenchCraftingScreen::new);
-        event.register(PGMenuTypes.WORKBENCH_SKIN_SELECTOR, SkinSelectingScreen::new);
+        PGMenuScreens.ALL.forEach((type, func) -> {
+            MenuScreens.ScreenConstructor constructor = func::apply;
+            event.register(type, constructor);
+        });
     }
 
     @SubscribeEvent
     public static void registerTints(RegisterColorHandlersEvent.ItemTintSources event) {
-        event.register(PGHelper.createLocation("primary_dye"), PrimaryDyeTint.CODEC);
-        event.register(PGHelper.createLocation("secondary_dye"), SecondaryDyeTint.CODEC);
-        event.register(PGHelper.createLocation("portal_color"), PortalColourTint.CODEC);
+        PGItemTints.ALL.forEach(event::register);
     }
 
     @SubscribeEvent

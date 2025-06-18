@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "id": "ricksportalgun:upgrade_durability",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancement.ricksportalgun.obtain_upgrade",
+      "with": []
+    },
+    "description": {
+      "translate": "advancement.ricksportalgun.description.obtain_upgrade"
+    }
+  },
+  "parent": "ricksportalgun:portal_gun",
+  "criteria": {
+    "req": {
+      "trigger": "minecraft:using_item",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "mainhand": {
+              "items": "#ricksportalgun:portal_guns"
+            },
+            "offhand": {
+              "items": "#ricksportalgun:upgrades"
+            }
+          }
+        },
+        "item": {
+          "items": "#ricksportalgun:portal_guns"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "req"
+    ]
+  ]
+}

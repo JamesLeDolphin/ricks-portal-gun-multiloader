@@ -57,6 +57,23 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         stack.set(PGDataComponents.FUEL, Math.max(0, i - amount));
     }
 
+    public static void setPrimaryDye(ItemStack stack, int color) {
+        stack.set(PGDataComponents.PRIMARY_DYE, color);
+    }
+
+    public static void setSecondaryDye(ItemStack stack, int color) {
+        stack.set(PGDataComponents.SECONDARY_DYE, color);
+    }
+
+    public static int getPrimaryDye(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.PRIMARY_DYE, 0);
+    }
+
+    public static int getSecondaryDye(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.SECONDARY_DYE, 0);
+    }
+
+
     public static void setCode(ItemStack stack, String code) {
         stack.set(PGDataComponents.CODE, code);
     }
@@ -98,8 +115,12 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     public static void setPortalGunType(ItemStack stack, PortalGunType type) {
         stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
         stack.set(DataComponents.ITEM_MODEL, type.model());
-        stack.set(DataComponents.ITEM_NAME, type.name());
+        if (stack.getCustomName() == null) stack.set(DataComponents.ITEM_NAME, type.name());
         setDefaultColor(stack, type.color());
+    }
+
+    public static PortalGunType getPortalGunType(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.PORTAL_GUN_TYPE, PortalGunType.DEFAULT);
     }
 
     private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
@@ -147,10 +168,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
                     !stack.getOrDefault(PGDataComponents.LOCK, false)) {
 
-                if (offhandStack.getItem() instanceof DyeItem dye) {
-                    stack.set(PGDataComponents.PRIMARY_DYE, dye.getDyeColor().getTextureDiffuseColor());
-                    return InteractionResult.SUCCESS;
-                }
                 if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
                     InteractionResult result = upgrade.applyUpgrade(player, stack, this);
                     if (!player.isCreative()) offhandStack.shrink(1);

@@ -76,6 +76,10 @@ public class ForgePackets {
                 .codec(SBWorkbenchWaypointEditPackage.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBSetPortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBSetPortalGunTypePacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

@@ -13,7 +13,7 @@ import net.minecraft.util.Mth;
 import java.util.function.Consumer;
 
 public class PGImageButton extends AbstractButton {
-    protected final ResourceLocation texture;
+    protected ResourceLocation texture;
     protected final int textureWidth;
     protected final int textureHeight;
     protected final Consumer<AbstractButton> onPress;
@@ -30,6 +30,10 @@ public class PGImageButton extends AbstractButton {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public void setTexture(ResourceLocation location) {
+        this.texture = location;
     }
 
     public void setRenderBackground(boolean renderBg) {

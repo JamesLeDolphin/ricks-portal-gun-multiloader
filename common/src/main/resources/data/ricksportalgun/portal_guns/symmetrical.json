@@ -2,6 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.symmetrical"
   },
+  "monotone": false,
   "id": "ricksportalgun:symmetrical",
   "model": "ricksportalgun:symmetrical_portal_gun"
 }
