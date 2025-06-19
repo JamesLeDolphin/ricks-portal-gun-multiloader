@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
@@ -17,12 +18,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
 
 public class SecuritySettingsScreen extends AbstractBaseScreen {
-    private PGCycleButton<Boolean> lockButton;
+    private PGCycleButton<Boolean> lockButton, selfDestruct;
     private SuggestionTextFieldWidget playerInput;
     private final List<String> players;
     private EditBox code;
@@ -46,11 +48,13 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
     public void init() {
         super.init();
         assert minecraft != null;
-
+        ItemStack stack = getItemStack();
+        boolean destruct = stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false);
+        boolean lock = stack.getOrDefault(PGDataComponents.LOCK, false);
         MutableComponent sTrue = Component.translatable("ricksportalgun.button.true");
         MutableComponent sFalse = Component.translatable("ricksportalgun.button.false");
 
-        this.lockButton = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse).withInitialValue(false)
+        this.lockButton = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse).withInitialValue(lock)
                 .create(this.width / 2 + 64, this.height / 2 - 70, 64, 20,
                         Component.translatable("ricksportalgun.button.lock")));
 
@@ -60,9 +64,13 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
 
         this.code = this.addWidget(new EditBox(this.font, this.width / 2 + 64, this.height / 2 - 18, 64, 20, Component.translatable("chat.editBox")));
 
+        this.selfDestruct = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse).withInitialValue(destruct)
+                .create(this.width / 2 + 64, this.height / 2 + 8, 64, 20,
+                        Component.translatable("ricksportalgun.button.lock")));
+
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
-            SBSecuritySettingsPacket packet = new SBSecuritySettingsPacket(this.lockButton.getValue(), this.playerInput.getValue(), this.code.getValue());
+            SBSecuritySettingsPacket packet = new SBSecuritySettingsPacket(this.lockButton.getValue(), this.playerInput.getValue(), this.code.getValue(), this.selfDestruct.getValue());
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         }, this.font));
@@ -77,6 +85,8 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
         this.lockButton.setTextColor(style.textColor());
         this.lockButton.setRenderBackground(false);
+        this.selfDestruct.setTextColor(style.textColor());
+        this.selfDestruct.setRenderBackground(false);
         this.playerInput.setBordered(true);
         this.playerInput.setResponder(s -> playerInput.update());
         this.playerInput.setMaxLength(64);
@@ -99,6 +109,7 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4, getStyle().textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4, getStyle().textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.code"), this.width / 4 - 16, this.code.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.self_destruct"), this.width / 4 - 16, this.selfDestruct.getY() + 4, getStyle().textColor());
 
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, playerInput, lockButton, code);
         GuiHelper.renderOutline(graphics, lockButton, style.highlightColor());
@@ -106,6 +117,7 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, code, style.highlightColor());
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
+        GuiHelper.renderOutline(graphics, selfDestruct, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
         Style guiStyle = GuiHelper.getStyle(mouseX, mouseY);

@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBActivateSelfDestructPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCoordCheckerPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenLocatorScreenPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CoordTravelScreen extends AbstractBaseScreen {
-    private PGImageButton waypoints, randomiseDim, randomiseCoord, locator, settings;
+    private PGImageButton waypoints, randomiseDim, randomiseCoord, locator, settings, selfDestruct;
     private String dS, xS, yS, zS; //Suggestions
     private EditBox xInput, yInput, zInput;
     private SuggestionTextFieldWidget dimInput;
@@ -90,6 +91,18 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     }
                     this.onClose();
                 }, 20, 18, RANDOMIZER_TEXTURES));
+
+        this.selfDestruct = this.addRenderableWidget(new PGImageButton(this.yInput.getX() - 96, this.yInput.getY() - 2, 20, 20,
+                Component.translatable("ricksportalgun.button.self_destruct.activate"),
+                (button) -> {
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBActivateSelfDestructPacket packet = new SBActivateSelfDestructPacket();
+                        PGHelper.sendPacketToServer(packet);
+
+                    }
+                    this.onClose();
+                }, 20, 18, RANDOMIZER_TEXTURES));
+        selfDestruct.active = stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false);
 
         this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
                 button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURES));
@@ -154,6 +167,8 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         this.xInput.setSuggestion(xS);
         this.yInput.setSuggestion(yS);
         this.zInput.setSuggestion(zS);
+        GuiHelper.setTooltip(randomiseCoord, Component.translatable("ricksportalgun.button.randomise.coord"));
+        GuiHelper.setTooltip(selfDestruct, Component.translatable("ricksportalgun.button.self_destruct.activate"));
     }
 
     private void setupImgButtons(PGImageButton button, PortalGunStyle style) {
@@ -211,9 +226,6 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, randomiseCoord, style.highlightColor());
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
-
-
-        GuiHelper.setTooltip(randomiseCoord, Component.translatable("ricksportalgun.button.randomise.coord"));
 
 
         ItemStack stack = getItemStack();

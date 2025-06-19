@@ -80,6 +80,10 @@ public class ForgePackets {
                 .codec(SBSetPortalGunTypePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBActivateSelfDestructPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBActivateSelfDestructPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

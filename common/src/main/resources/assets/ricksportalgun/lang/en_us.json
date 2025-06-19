@@ -168,6 +168,8 @@
   "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
   "ricksportalgun.button.next": "Next",
   "ricksportalgun.button.previous": "Previous",
-  "ricksportalgun.gun_type": "Portal Gun Type: %s"
+  "ricksportalgun.gun_type": "Portal Gun Type: %s",
+  "ricksportalgun.button.self_destruct": "Enable self destruct:",
+  "ricksportalgun.button.self_destruct.activate": "Activate Self Destruct"
 
 }

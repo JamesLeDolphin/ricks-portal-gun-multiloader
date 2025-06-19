@@ -43,6 +43,7 @@ public class PGDataComponents {
     public static final DataComponentType<Integer> SECONDARY_DYE = registerInteger("secondary_dye");
     public static final DataComponentType<Float> PORTAL_SIZE = registerComponent("portal_size", typeBuilder -> typeBuilder.persistent(Codec.FLOAT));
     public static final DataComponentType<String> CODE = registerComponent("code", typeBuilder -> typeBuilder.persistent(Codec.STRING));
+    public static final DataComponentType<Boolean> SELF_DESTRUCT = registerBoolean("self_destruct");
 
     //Components needed for upgrades
     public static final DataComponentType<Boolean> HAS_WAYPOINTS = registerBoolean("has_waypoints");

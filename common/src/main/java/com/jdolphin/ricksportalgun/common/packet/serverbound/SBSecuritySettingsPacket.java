@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSecuritySettingsPacket(boolean lock, String name, String code) implements PGPayload {
+public record SBSecuritySettingsPacket(boolean lock, String name, String code, boolean selfDestruct) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBSecuritySettingsPacket> CODEC;
     public static final Type<SBSecuritySettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
 
@@ -23,6 +23,7 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code) i
 
         ItemStack stack = player.getMainHandItem();
         stack.set(PGDataComponents.LOCK, lock);
+        stack.set(PGDataComponents.SELF_DESTRUCT, selfDestruct);
 
         if (!code.isEmpty()) {
             PortalGunItem.setCode(stack, this.code);
@@ -47,6 +48,8 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code) i
     static {
         CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, SBSecuritySettingsPacket::lock,
                 ByteBufCodecs.STRING_UTF8, SBSecuritySettingsPacket::name,
-                ByteBufCodecs.STRING_UTF8, SBSecuritySettingsPacket::code,SBSecuritySettingsPacket::new);
+                ByteBufCodecs.STRING_UTF8, SBSecuritySettingsPacket::code,
+                ByteBufCodecs.BOOL, SBSecuritySettingsPacket::selfDestruct,
+                SBSecuritySettingsPacket::new);
     }
 }
