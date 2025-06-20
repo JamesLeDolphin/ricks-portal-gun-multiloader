@@ -3,7 +3,9 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBWorkbenchWaypointEditPackage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -169,10 +171,16 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
 
         if (selectedWaypoint != null) {
             delete.render(graphics, mouseX, mouseY, delta);
-            if (!getItem(selectedWaypoint.getB().opposite()).isEmpty()) {
+            ItemStack opposite = getItem(selectedWaypoint.getB().opposite());
+            if (!opposite.isEmpty()) {
+
+                if (!opposite.is(PGTags.Items.PORTAL_GUNS) || (opposite.is(PGTags.Items.PORTAL_GUNS) &&
+                        opposite.getOrDefault(PGDataComponents.HAS_WAYPOINTS, false)) ) {
+
                 copy.render(graphics, mouseX, mouseY, delta);
                 moveTo.render(graphics, mouseX, mouseY, delta);
             }
+                }
             renderWaypointInfo(graphics, mouseX, mouseY, delta);
         }
     }

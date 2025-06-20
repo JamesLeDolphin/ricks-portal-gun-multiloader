@@ -10,16 +10,16 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-public class ConditionalUpgradeItem extends UpgradeItem {
+public class SimpleConditionalUpgradeItem extends SimpleUpgradeItem {
     protected BiFunction<ItemStack, PortalGunItem, Boolean> condition;
     protected Component errorMsg = null;
 
-    public ConditionalUpgradeItem(Properties properties, BiConsumer<ItemStack, PortalGunItem> onApply, BiFunction<ItemStack, PortalGunItem, Boolean> condition) {
+    public SimpleConditionalUpgradeItem(Properties properties, BiConsumer<ItemStack, PortalGunItem> onApply, BiFunction<ItemStack, PortalGunItem, Boolean> condition) {
         super(properties, onApply);
         this.condition = condition;
     }
 
-    public ConditionalUpgradeItem(Properties properties, BiConsumer<ItemStack, PortalGunItem> onApply, BiFunction<ItemStack, PortalGunItem, Boolean> condition, Component errorMsg) {
+    public SimpleConditionalUpgradeItem(Properties properties, BiConsumer<ItemStack, PortalGunItem> onApply, BiFunction<ItemStack, PortalGunItem, Boolean> condition, Component errorMsg) {
         this(properties, onApply, condition);
         this.errorMsg = errorMsg;
     }

@@ -32,6 +32,7 @@
   "item.ricksportalgun.upgrade_biome_locator": "Portal Gun Biome Locator Upgrade",
   "item.ricksportalgun.upgrade_player_locator": "Portal Gun Player Locator Upgrade",
   "item.ricksportalgun.upgrade_structure_locator": "Portal Gun Structure Locator Upgrade",
+  "item.ricksportalgun.upgrade_creative": "Creative Portal Gun Upgrade",
 
   "menu.ricksportalgun.coord": "Portal Gun Coordinate Travel",
   "menu.ricksportalgun.waypoints.new": "New Waypoint",
@@ -49,6 +50,9 @@
   "menu.ricksportalgun.settings.customization": "Customization Settings",
   "menu.ricksportalgun.settings.customization.theme": "Edit Portal Gun Theme",
   "menu.ricksportalgun.settings.customization.theme.example": "Example Text",
+  "menu.ricksportalgun.workbench.skin": "Edit Portal Gun Appearance",
+  "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
+  "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
@@ -82,14 +86,17 @@
   "ricksportalgun.button.customization.background": "Background:",
   "ricksportalgun.button.workbench.copy": "Copy waypoint",
   "ricksportalgun.button.workbench.move": "Move Waypoint",
+  "ricksportalgun.button.self_destruct": "Enable self destruct:",
+  "ricksportalgun.button.self_destruct.activate": "Activate Self Destruct. Warning: This action will destroy the portal gun!",
 
+  "ricksportalgun.button.next": "Next",
+  "ricksportalgun.button.previous": "Previous",
   "ricksportalgun.button.back": "Back",
   "ricksportalgun.button.cancel": "Cancel",
   "ricksportalgun.button.true": "True",
   "ricksportalgun.button.false": "False",
   "ricksportalgun.button.delete": "Delete",
   "ricksportalgun.button.select": "Select",
-
 
   "notice.ricksportalgun.randomizer_find_y.start": "Finding safe Y position...",
   "notice.ricksportalgun.randomizer_find_y.success": "Done!",
@@ -130,6 +137,7 @@
   "ricksportalgun.r": "R:",
   "ricksportalgun.g": "G:",
   "ricksportalgun.b": "B:",
+  "ricksportalgun.gun_type": "Portal Gun Type: %s",
 
   "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
@@ -153,6 +161,7 @@
   "death.attack.teleport": "%s couldn't handle the interdimensional travel",
   "death.attack.bootleg": "%s was incinerated by a bootleg portal",
   "death.attack.blender": "%s stepped into the blender dimension",
+  "death.attack.self_destruct": "%s was caught in portal gun self destruct blast",
 
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
   "tag.item.ricksportalgun.upgrades": "Upgrades",
@@ -162,14 +171,6 @@
 
   "entity.ricksportalgun.portal": "Portal",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "menu.ricksportalgun.workbench.skin": "Edit Portal Gun Appearance",
-  "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
-  "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
-  "ricksportalgun.button.next": "Next",
-  "ricksportalgun.button.previous": "Previous",
-  "ricksportalgun.gun_type": "Portal Gun Type: %s",
-  "ricksportalgun.button.self_destruct": "Enable self destruct:",
-  "ricksportalgun.button.self_destruct.activate": "Activate Self Destruct"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
 
 }

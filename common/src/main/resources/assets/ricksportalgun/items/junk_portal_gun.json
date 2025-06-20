@@ -5,7 +5,7 @@
     "tints": [
       {
         "type": "ricksportalgun:primary_dye",
-        "default": 15989755
+        "default": 15921906
       },
       {
         "type": "ricksportalgun:portal_color",
@@ -13,7 +13,7 @@
       },
       {
         "type": "ricksportalgun:secondary_dye",
-        "default": 15989755
+        "default": 12754274
       }
     ]
   }

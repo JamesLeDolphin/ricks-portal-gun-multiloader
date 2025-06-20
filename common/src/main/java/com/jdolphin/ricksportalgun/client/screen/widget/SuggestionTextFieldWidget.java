@@ -46,9 +46,10 @@ public class SuggestionTextFieldWidget extends EditBox {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.isFocused()) {
             this.suggestionListWidget.visible = false;
-
+            this.suggestionListWidget.active = false;
         } else {
             this.suggestionListWidget.visible = true;
+            this.suggestionListWidget.active = true;
             this.suggestionListWidget.render(graphics, mouseX, mouseY, delta);
         }
         super.renderWidget(graphics, mouseX, mouseY, delta);
@@ -124,11 +125,13 @@ public class SuggestionTextFieldWidget extends EditBox {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            SuggestionEntry hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
-            if (hoveredEntry == null) {
-                this.widget.setFocused(false);
-            }
-            return super.mouseClicked(mouseX, mouseY, button);
+            if (this.active && this.visible) {
+                SuggestionEntry hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
+                if (hoveredEntry == null) {
+                    this.widget.setFocused(false);
+                }
+                return super.mouseClicked(mouseX, mouseY, button);
+            } return false;
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 
@@ -25,8 +28,11 @@ public record SBActivateSelfDestructPacket() implements PGPayload {
         MinecraftServer server = player.server;
         ServerLevel level = player.serverLevel();
         ItemStack stack = player.getMainHandItem();
-       ItemEntity itemEntity = player.drop(stack, false);
+        ItemStack copy = stack.copy();
+        if (!player.isCreative()) stack.shrink(1);
+       ItemEntity itemEntity = player.drop(copy, false);
        if (itemEntity != null) {
+           itemEntity.setInvulnerable(true);
            itemEntity.setNeverPickUp();
            AtomicInteger i = new AtomicInteger();
            server.addTickable(() -> {
@@ -35,7 +41,8 @@ public record SBActivateSelfDestructPacket() implements PGPayload {
                    BlockPos pos = itemEntity.blockPosition();
                    boolean kaboom = level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
                    Level.ExplosionInteraction interaction = kaboom ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE;
-                   level.explode(itemEntity, pos.getX(), pos.getY(), pos.getZ(), 5, interaction);
+                   ExplosionDamageCalculator calc = new EntityBasedExplosionDamageCalculator(itemEntity); //Short for calculator
+                   level.explode(itemEntity, PGDamageTypes.of(level, PGDamageTypes.SELF_DESTRUCT), calc, pos.getX(), pos.getY(), pos.getZ(), 5, true, interaction);
                    itemEntity.kill(level);
                }
            });

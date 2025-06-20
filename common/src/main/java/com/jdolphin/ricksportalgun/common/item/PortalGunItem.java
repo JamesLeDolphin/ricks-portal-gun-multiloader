@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.AbstractUpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -15,6 +15,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -36,7 +41,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class PortalGunItem extends Item implements IWaypointStorage {
 
     public PortalGunItem(Properties properties) {
@@ -123,37 +130,39 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
-        Vec3 newLoc = loc;
-        if (isAir(level, bPos.above()) && (dir == Direction.UP)) {
-            newLoc = new Vec3(loc.x(), loc.y(), loc.z());
-        }
         if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
-            newLoc = new Vec3(loc.x(), loc.y() - 0.2, loc.z());
+            loc = loc.add(0, -0.2, 0);
         }
-
+        boolean air = true;
         switch (dir) {
             case NORTH -> {
                 if (isAir(level, bPos.north())) {
-                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() - 0.5);
-                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+                    Vec3 vec = bPos.north().getBottomCenter();
+                    loc = vec.add(0, 0, 0.4);
+                } else  air = false;
             }
             case SOUTH -> {
                 if (isAir(level, bPos.south())) {
-                    newLoc = new Vec3(bPos.getX() + 0.5, bPos.getY(), bPos.getZ() + 1.5);
-                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+                    Vec3 vec = bPos.south().getBottomCenter();
+                    loc = vec.add(0, 0, -0.4);
+                } else  air = false;
             }
             case WEST -> {
                 if (isAir(level, bPos.west())) {
-                    newLoc = new Vec3(bPos.getX() - 0.5, bPos.getY(), bPos.getZ() + 0.5);
-                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+                    Vec3 vec = bPos.west().getBottomCenter();
+                    loc =vec.add(0.4, 0, 0);
+                } else  air = false;
             }
             case EAST -> {
                 if (isAir(level, bPos.east())) {
-                    newLoc = new Vec3(bPos.getX() + 1.5, bPos.getY(), bPos.getZ() + 0.5);
-                } else newLoc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+                    Vec3 vec = bPos.east().getBottomCenter();
+                    loc = vec.add(-0.4, 0, 0);
+                } else air = false;
             }
         }
-        return newLoc;
+        if (!air) loc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+
+        return loc;
     }
 
     @Override
@@ -161,13 +170,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         ItemStack stack = player.getMainHandItem();
         ItemStack offhandStack = player.getOffhandItem();
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
-        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+        if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
-            if ((stack.getOrDefault(PGDataComponents.LOCK, false) &&
-                    stack.getOrDefault(PGDataComponents.OWNER, "").equals(player.getUUID().toString())) ||
-                    !stack.getOrDefault(PGDataComponents.LOCK, false)) {
-
-                if (offhandStack.getItem() instanceof UpgradeItem upgrade) {
+            migrateNBT(stack);
+            if (PGHelper.canPlayerAccessGun(player, stack)) {
+                if (offhandStack.getItem() instanceof AbstractUpgradeItem upgrade) {
                     InteractionResult result = upgrade.applyUpgrade(player, stack, this);
                     if (!player.isCreative()) offhandStack.shrink(1);
                     return result;
@@ -190,30 +197,26 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
 
                     PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
-                    PortalEntity exPortal = new PortalEntity(level, new Vec3(getHopCoords(stack)), dir, facing, size);
+                    PortalEntity exPortal = new PortalEntity(level, getHopCoords(stack).above().getBottomCenter(), dir, facing, size);
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
 
-                    portal.setLifetime(age);
-                    exPortal.setLifetime(age);
+                    doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
 
                     Component customName = stack.getCustomName();
                     if (customName != null) {
-                        portal.setCustomName(customName);
-                        exPortal.setCustomName(customName);
+                        doForBoth(entity -> entity.setCustomName(customName), portal, exPortal);
                     }
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
                     int color = getColor(stack);
-                    portal.setColor(color);
-                    exPortal.setColor(color);
+                    doForBoth(entity -> entity.setColor(color), portal, exPortal);
 
                     boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
-                    portal.setBootleg(bootleg);
-                    exPortal.setBootleg(bootleg);
+                    doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
 
                     if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
 
@@ -227,8 +230,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                         } else {
                             if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
                                 if (!portal.isFlat()) {
-                                    portal.setYRot(player.getYRot());
-                                    exPortal.setYRot(player.getYRot());
+                                    doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
                                 }
                                 serverlevel.addFreshEntity(exPortal);
                                 level.addFreshEntity(portal);
@@ -248,6 +250,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             }
             return InteractionResult.SUCCESS;
         } else return InteractionResult.FAIL;
+    }
+
+    private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {
+        consumer.accept(a);
+        consumer.accept(b);
     }
 
     public static boolean canBypassDragon(ItemStack stack) {
@@ -318,6 +325,70 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static BlockPos getHopCoords(ItemStack stack) {
         return stack.getOrDefault(PGDataComponents.PORTAL_POS, BlockPos.ZERO);
+    }
+
+    public static void migrateNBT(ItemStack stack) {
+        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        if (data != null) {
+            String dim = "PortalDimension";
+            String fuel = "Fuel";
+            String pos = "PortalPos";
+            String bootleg = "Bootleg";
+            String color = "Color";
+            String waypoints = "Waypoints";
+            String lock = "Lock";
+            String owner = "Owner";
+            String defaultColor = "DefaultColor";
+
+            CompoundTag tag = data.copyTag();
+            if (tag.contains(dim)) {
+                String dimension = tag.getString(dim);
+                ResourceLocation rl = ResourceLocation.parse(dimension);
+                stack.set(PGDataComponents.PORTAL_DIM, rl);
+                tag.remove(dim);
+            }
+            if (tag.contains(fuel)) {
+                int f = tag.getInt(fuel);
+                stack.set(PGDataComponents.FUEL, f);
+                tag.remove(fuel);
+            }
+            if (tag.contains(pos)) {
+                @SuppressWarnings("OptionalGetWithoutIsPresent") BlockPos blockPos = NbtUtils.readBlockPos(tag, pos).get();
+                stack.set(PGDataComponents.PORTAL_POS, blockPos);
+                tag.remove(pos);
+            }
+            if (tag.contains(bootleg)) {
+                boolean acid = tag.getBoolean(bootleg);
+                stack.set(PGDataComponents.BOOTLEG, acid);
+                tag.remove(bootleg);
+            }
+            if (tag.contains(color)) {
+                int colour = tag.getInt(color);
+                stack.set(PGDataComponents.PORTAL_COLOUR, colour);
+                tag.remove(color);
+            }
+            if (tag.contains(waypoints)) {
+                ListTag listTag = tag.getList(waypoints, Tag.TAG_STRING);
+                List<Waypoint> waypointList = listTag.stream().map(Tag::getAsString).map(Waypoint::getWaypoint).toList();
+                stack.set(PGDataComponents.WAYPOINTS, waypointList);
+                tag.remove(waypoints);
+            }
+            if (tag.contains(lock)) {
+                boolean locked = tag.getBoolean(lock);
+                stack.set(PGDataComponents.LOCK, locked);
+                tag.remove(lock);
+            }
+            if (tag.contains(owner)) {
+                String own = tag.getString(owner);
+                stack.set(PGDataComponents.OWNER, own);
+                tag.remove(owner);
+            }
+            if (tag.contains(defaultColor)) {
+                int defColour = tag.getInt(defaultColor);
+                stack.set(PGDataComponents.DEFAULT_PORTAL_COLOUR, defColour);
+                tag.remove(defaultColor);
+            }
+        }
     }
 
 }

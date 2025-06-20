@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -107,10 +108,12 @@ public class LevelHelper {
     public static BlockPos getRandomCoord(ServerLevel level, int radius) {
         WorldBorder border = level.getWorldBorder();
         RandomSource rand = level.getRandom();
-        int xCoord = Mth.nextInt(rand, (int) Math.max(border.getMinX(), -radius), (int) Math.min(border.getMaxX(), radius));
+        int min = radius < 1000 ? 10 : 100;
+        int xCoord = rand.nextInt(min, radius);
         int yCoord = Mth.nextInt(rand,level.getMinY() + 1, level.getMaxY());
-        int zCoord = Mth.nextInt(rand,(int) Math.max(border.getMinZ(), -radius), (int) Math.min(border.getMaxZ(), radius));
-        return new BlockPos(xCoord, yCoord, zCoord);
+        int zCoord =  rand.nextInt(min, radius);
+        BlockPos posNew = new BlockPos(xCoord, yCoord, zCoord);
+        return border.clampToBounds(posNew);
     }
 
     public static ServerLevel getRandomServerLevel(MinecraftServer server) {
@@ -138,7 +141,7 @@ public class LevelHelper {
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);
 
         int y = bPos.getY();
-        int height = level.getHeight();
+        int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, bPos.getX(), bPos.getZ());
         int worldCenter = ((level.getMinY() + 2) + height) / 2;
 
         int direction = y > worldCenter ? -1 : 1;
@@ -157,11 +160,12 @@ public class LevelHelper {
 
         if (!isRandomizerSafe(level, bPos)
                 || y <= level.getMinY() + 2 || y >= level.getMaxY()) {
-            return iteration <= 25 ? getSafePos(getRandomCoord(level, 15), level, iteration) : bPos;
+            return iteration <= 100 ? getSafePos(getRandomCoord(level, 25), level, iteration) : bPos;
         }
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, false);
         return bPos;
     }
+
 
     public static boolean endHasDragons(ServerLevel level) {
         if (level != null) {

@@ -1,4 +1,5 @@
 {
+	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
 		"2": "ricksportalgun:item/portal_guns/sloped_portal_gun",
@@ -192,38 +193,38 @@
 			"to": [8.6743, 7.7493, 10.7993],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8.1743, 7.75345, 8.30595]},
 			"faces": {
-				"north": {"uv": [2, 14, 0, 16], "texture": "#2"},
-				"east": {"uv": [2, 14, 0, 16], "texture": "#2"},
-				"south": {"uv": [2, 14, 0, 16], "texture": "#2"},
-				"west": {"uv": [2, 14, 0, 16], "texture": "#2"},
-				"up": {"uv": [2, 14, 0, 16], "texture": "#2"},
-				"down": {"uv": [2, 14, 0, 16], "texture": "#2"}
+				"north": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1},
+				"east": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1},
+				"south": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1},
+				"west": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1},
+				"up": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1},
+				"down": {"uv": [2, 14, 0, 16], "texture": "#2", "tintindex": 1}
 			}
 		}
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0, 1.75, -0.75],
 			"scale": [1.5, 1.5, 1.5]
 		},
 		"thirdperson_lefthand": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0, 1.75, -0.75],
 			"scale": [1.5, 1.5, 1.5]
 		},
 		"firstperson_righthand": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0.5, 1.75, -1],
 			"scale": [2, 2, 2]
 		},
 		"firstperson_lefthand": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0.5, 1.75, -1],
 			"scale": [2, 2, 2]
 		},
 		"ground": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0, -0.25, -0.75],
 			"scale": [2, 2, 2]
 		},
@@ -233,7 +234,7 @@
 			"scale": [3, 3, 3]
 		},
 		"head": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"translation": [0, 9.25, -0.75],
 			"scale": [2, 2, 2]
 		},

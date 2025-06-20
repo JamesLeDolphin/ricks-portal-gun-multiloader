@@ -3,8 +3,9 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.ConditionalUpgradeItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.CreativeUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleConditionalUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleUpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
@@ -14,10 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DamageResistant;
 import net.minecraft.world.level.Level;
 
@@ -53,37 +51,39 @@ public class PGItems {
     public static final Item CIRCUIT_BOARD = register("circuitboard", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     //Upgrades
-    public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new UpgradeItem(properties,
+    public static final Item CREATIVE_UPGRADE = register("upgrade_creative", CreativeUpgradeItem::new, new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
+
+    public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(DataComponents.DAMAGE_RESISTANT, new DamageResistant(DamageTypeTags.IS_FIRE))),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new UpgradeItem(properties,
+    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.HAS_WAYPOINTS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new UpgradeItem(properties,
+    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new ConditionalUpgradeItem(properties,
+    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new SimpleConditionalUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS_2, true),
             ((stack, portalGun) -> stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, false)),
                     Component.translatable("error.ricksportalgun.upgrade.needs_dimension")),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new UpgradeItem(properties,
+    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.SETTINGS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new UpgradeItem(properties,
+    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.MAX_FUEL, 128)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new UpgradeItem(properties,
+    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new SimpleUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.BIOME_LOC, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new ConditionalUpgradeItem(properties,
+    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new SimpleConditionalUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.PLAYER_LOC, true),
             (stack, item) -> stack.getOrDefault(PGDataComponents.BIOME_LOC, false),
             Component.translatable("error.ricksportalgun.upgrade.needs_biome")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new ConditionalUpgradeItem(properties,
+    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new SimpleConditionalUpgradeItem(properties,
             (stack, portalGun) -> stack.set(PGDataComponents.STRUCTURE_LOC, true),
             (stack, item) -> stack.getOrDefault(PGDataComponents.PLAYER_LOC, false),
             Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
@@ -109,7 +109,7 @@ public class PGItems {
                 .component(PGDataComponents.PLAYER_LOC, false)
                 .component(PGDataComponents.STRUCTURE_LOC, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
-                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.registry()), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
+                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
     }
 
     private static Item registerFluid(String name) {

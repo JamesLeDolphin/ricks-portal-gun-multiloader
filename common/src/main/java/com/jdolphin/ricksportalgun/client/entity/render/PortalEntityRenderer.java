@@ -27,10 +27,10 @@ import java.util.List;
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEntityRenderState> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
     public PortalEntityModel model;
-    private int textureFrame = 0;
-    private final int frames = 8;
+    private static int textureFrame = 0;
+    private static final int frames = 8;
     private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
-    int tickTimer = 0;
+    private static int tickTimer = 0;
 
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -115,7 +115,6 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
             stack.mulPose(Axis.YN.rotationDegrees(direction.getAxis().isVertical() ? yRot : state.yRot));
         }
 
-        tickTexture();
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
         int i = state.rgb;
         if (state.name != null && names.contains(state.name.getString().toLowerCase())) {
@@ -137,10 +136,10 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
     }
 
 
-    public void tickTexture() {
+    public static void tickTexture() {
         tickTimer++;
 
-        if (tickTimer >= 40) {
+        if (tickTimer >= 4) {
             tickTimer = 0;
             textureFrame = (textureFrame + 1) % frames;
         }

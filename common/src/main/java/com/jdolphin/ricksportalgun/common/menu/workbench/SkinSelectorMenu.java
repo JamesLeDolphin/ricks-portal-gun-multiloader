@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.menu.workbench;
 
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
@@ -14,6 +15,9 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
+import java.util.function.Function;
 
 public class SkinSelectorMenu extends AbstractWorkbenchMenu {
     private Container container;
@@ -47,14 +51,24 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             int secondary = 0;
 
             if (!dye1.isEmpty()) {
-                DyeItem dyeItem = (DyeItem) dye1.getItem();
-                primary = dyeItem.getDyeColor().getTextureDiffuseColor();
-                if (!player.isCreative()) dye1.shrink(1);
+                if (!dye1.is(Items.WATER_BUCKET)) {
+                    DyeItem dyeItem = (DyeItem) dye1.getItem();
+                    primary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    if (!player.isCreative()) dye1.shrink(1);
+                } else {
+                    gun.remove(PGDataComponents.PRIMARY_DYE);
+                    if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainder());
+                }
             }
             if (!type.monoTone() && !dye2.isEmpty()) {
-                DyeItem dyeItem = (DyeItem) dye2.getItem();
-                secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
-                if (!player.isCreative()) dye2.shrink(1);
+                if (!dye2.is(Items.WATER_BUCKET)) {
+                    DyeItem dyeItem = (DyeItem) dye2.getItem();
+                    secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    if (!player.isCreative()) dye2.shrink(1);
+                } else {
+                    gun.remove(PGDataComponents.SECONDARY_DYE);
+                    if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainder());
+                }
             }
             PortalGunItem.setPortalGunType(gun, type);
             if (primary != 0) PortalGunItem.setPrimaryDye(gun, primary);
@@ -63,6 +77,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
     }
 
     protected void addSlots(Container container) {
+        Function<ItemStack, Boolean> bool = stack -> stack.getItem() instanceof DyeItem || stack.is(Items.WATER_BUCKET);
         this.addSlot(new Slot(container, 7, 25, 73) {
 
             @Override
@@ -74,7 +89,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof DyeItem;
+                return bool.apply(stack);
             }
         });
 
@@ -82,7 +97,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof DyeItem;
+                return bool.apply(stack);
             }
         });
     }

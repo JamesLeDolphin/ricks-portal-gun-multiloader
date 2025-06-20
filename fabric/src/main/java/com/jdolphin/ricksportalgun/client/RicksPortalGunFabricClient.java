@@ -39,6 +39,12 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
 
+        initEvents();
+
+        FabricPackets.registerS2CPackets();
+    }
+
+    private void initEvents() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
                 SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
@@ -46,6 +52,8 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
             }
         });
 
-        FabricPackets.registerS2CPackets();
+        ClientTickEvents.START_CLIENT_TICK.register(minecraft -> {
+            PortalEntityRenderer.tickTexture();
+        });
     }
 }

@@ -40,10 +40,11 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     private final List<String> dimSuggestions;
     private PGTextButton select, cancel;
 
-    public static ResourceLocation WAYPOINT_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/waypoint.png");
-    public static ResourceLocation PLAYER_LOC_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/locator.png");
-    public static ResourceLocation RANDOMIZER_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/randomizer.png");
-    public static ResourceLocation SETTINGS_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/settings.png");
+    public static ResourceLocation WAYPOINT_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/waypoint.png");
+    public static ResourceLocation PLAYER_LOC_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/locator.png");
+    public static ResourceLocation RANDOMIZER_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/randomizer.png");
+    public static ResourceLocation SETTINGS_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/settings.png");
+    public static ResourceLocation SELF_DESTRUCT_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/self_destruct.png");
 
 
     public CoordTravelScreen(List<String> suggestions) {
@@ -79,7 +80,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     List<String> strings = this.dimInput.getSuggestions();
                     String s = PGHelper.getRandomFromList(strings);
                     this.dimInput.setValue(s);
-                }, 20, 18, RANDOMIZER_TEXTURES));
+                }, 20, 18, RANDOMIZER_TEXTURE));
 
         this.randomiseCoord = this.addRenderableWidget(new PGImageButton(this.randomiseDim.getX(), this.yInput.getY(), 20, 18, Component.translatable("ricksportalgun.button.randomise.coord"),
                 (button) -> {
@@ -90,7 +91,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                         PGHelper.sendPacketToServer(packet);
                     }
                     this.onClose();
-                }, 20, 18, RANDOMIZER_TEXTURES));
+                }, 20, 18, RANDOMIZER_TEXTURE));
 
         this.selfDestruct = this.addRenderableWidget(new PGImageButton(this.yInput.getX() - 96, this.yInput.getY() - 2, 20, 20,
                 Component.translatable("ricksportalgun.button.self_destruct.activate"),
@@ -101,21 +102,21 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
                     }
                     this.onClose();
-                }, 20, 18, RANDOMIZER_TEXTURES));
+                }, 20, 18, SELF_DESTRUCT_TEXTURE));
         selfDestruct.active = stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false);
 
         this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
-                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURES));
+                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
 
         this.locator = this.addRenderableWidget(new PGImageButton(this.width / 2 - 10, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.locator"),
                 (button) -> {
                     SBOpenLocatorScreenPacket packet = new SBOpenLocatorScreenPacket();
                     PGHelper.sendPacketToServer(packet);
 
-                }, 20, 18, PLAYER_LOC_TEXTURES));
+                }, 20, 18, PLAYER_LOC_TEXTURE));
 
         this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 + 16, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.settings"),
-                (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURES));
+                (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURE));
 
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20, Component.translatable("ricksportalgun.button.select"), (button) -> {
@@ -129,6 +130,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         if (!stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, true)) {
             this.randomiseDim.active = false;
             this.dimInput.setEditable(false);
+            this.dimInput.getSuggestionList().active = false;
         }
         if (!stack.getOrDefault(PGDataComponents.HAS_WAYPOINTS, true)) {
             this.waypoints.active = false;
@@ -153,6 +155,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         setupImgButtons(locator, style);
         setupImgButtons(randomiseCoord, style);
         setupImgButtons(randomiseDim, style);
+        setupImgButtons(selfDestruct, style);
 
         ResourceLocation location = LevelHelper.getPlayerDimensionLocation(player);
         this.dS = location.getNamespace().equals("minecraft") ?
@@ -168,7 +171,6 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         this.yInput.setSuggestion(yS);
         this.zInput.setSuggestion(zS);
         GuiHelper.setTooltip(randomiseCoord, Component.translatable("ricksportalgun.button.randomise.coord"));
-        GuiHelper.setTooltip(selfDestruct, Component.translatable("ricksportalgun.button.self_destruct.activate"));
     }
 
     private void setupImgButtons(PGImageButton button, PortalGunStyle style) {
@@ -227,8 +229,13 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
-
         ItemStack stack = getItemStack();
+
+        if (stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false)) {
+            GuiHelper.renderOutline(graphics, selfDestruct, style.highlightColor());
+            selfDestruct.render(graphics, pMouseX, pMouseY, delta);
+            GuiHelper.setTooltip(selfDestruct, Component.translatable("ricksportalgun.button.self_destruct.activate"));
+        }
 
         if (stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, false)) {
             dimInput.render(graphics, pMouseX, pMouseY, delta);

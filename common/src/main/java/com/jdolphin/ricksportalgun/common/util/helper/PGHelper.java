@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -29,6 +31,15 @@ public class PGHelper {
 
     public static int getRandomizerMax() {
         return PGServices.PLATFORM.getRandomizerMax();
+    }
+
+    public static boolean canPlayerAccessGun(Player player, ItemStack stack) {
+        boolean locked = stack.getOrDefault(PGDataComponents.LOCK, false);
+        String uuid = stack.getOrDefault(PGDataComponents.OWNER, "");
+        if (locked) {
+            return player.getStringUUID().equals(uuid);
+        }
+        return true;
     }
 
     public static boolean disablePlayerLocating() {

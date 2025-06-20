@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
+import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
@@ -42,6 +43,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
     private PGImageButton next, previous;
     private Button select;
     private int index = 0;
+    private float rot = 0;
 
     public SkinSelectingScreen(SkinSelectorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -130,7 +132,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
         ItemStack stack = getStack(36);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
-
+            ItemStack fakeStack = stack.copy();
             ItemStack dyeStack1 = getStack(37);
             ItemStack dyeStack2 = getStack(38);
 
@@ -138,36 +140,36 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             int secondary = 0;
 
             if (!dyeStack1.isEmpty()) {
-                DyeItem dyeItem = (DyeItem) dyeStack1.getItem();
-                primary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                if (dyeStack1.getItem() instanceof DyeItem dyeItem) {
+                    primary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                } else if (dyeStack1.is(Items.WATER_BUCKET)) fakeStack.remove(PGDataComponents.PRIMARY_DYE);
             }
             if (!dyeStack2.isEmpty()) {
-                DyeItem dyeItem = (DyeItem) dyeStack2.getItem();
-                secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                if (dyeStack2.getItem() instanceof DyeItem dyeItem) {
+                    secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                } else if (dyeStack2.is(Items.WATER_BUCKET)) fakeStack.remove(PGDataComponents.SECONDARY_DYE);
             }
-
             int color = PortalGunItem.getColor(stack);
-            ItemStack fakeStack = stack.copy();
+
 
             PortalGunItem.setPortalGunType(fakeStack, type);
             PortalGunItem.setColor(fakeStack, color);
             if (primary != 0) PortalGunItem.setPrimaryDye(fakeStack, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(fakeStack, secondary);
 
-
             renderFakeItem(graphics, fakeStack, 48, this.width / 2 + 40, this.height / 2 - 44, 32, mouseX, mouseY);
         }
     }
 
-    public static void renderFakeItem(GuiGraphics graphics, ItemStack stack, float scale, int x, int y, int z, int mouseX, int mouseY) {
+    public void renderFakeItem(GuiGraphics graphics, ItemStack stack, float scale, int x, int y, int z, int mouseX, int mouseY) {
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
 
         poseStack.translate(x, y, z);
         poseStack.scale(scale, -scale, scale);
 
-        if (!hasShiftDown())
-            poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
+        if (hasShiftDown()) poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
+        else poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
 
         ItemStackRenderState state = new ItemStackRenderState();
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.GUI, false, null, null, 0);
