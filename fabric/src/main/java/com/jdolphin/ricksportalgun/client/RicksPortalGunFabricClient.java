@@ -12,6 +12,7 @@ import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -38,10 +39,13 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 
         PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
+        KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
 
         initEvents();
 
         FabricPackets.registerS2CPackets();
+
+
     }
 
     private void initEvents() {

@@ -33,7 +33,6 @@ import java.util.Optional;
 
 public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity implements MenuProvider {
     public static final String TAG_MODE = "WorkbenchMode";
-    public static final String TAG_INV = "Inventory";
     public static final String TAG_PROGRESS = "CraftProgress";
     private MenuType menuType = MenuType.CRAFTING;
     public static final int OUTPUT_SLOT = 4;
