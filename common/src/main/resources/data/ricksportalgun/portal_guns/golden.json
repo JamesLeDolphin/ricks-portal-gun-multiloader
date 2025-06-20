@@ -2,7 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.golden_portal_gun"
   },
-  "monotone": true,
+  "tint_amount": 2,
   "id": "ricksportalgun:gold",
   "color": [
     255,

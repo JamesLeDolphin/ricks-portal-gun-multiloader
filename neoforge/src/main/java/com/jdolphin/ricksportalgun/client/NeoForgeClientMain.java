@@ -32,6 +32,11 @@ public class NeoForgeClientMain {
     }
 
     @SubscribeEvent
+    public static void clientTick(ClientTickEvent event) {
+        PortalEntityRenderer.tickTexture();
+    }
+
+    @SubscribeEvent
     public static void registerTints(RegisterColorHandlersEvent.ItemTintSources event) {
         PGItemTints.ALL.forEach(event::register);
     }

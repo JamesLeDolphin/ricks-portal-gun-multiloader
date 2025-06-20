@@ -2,7 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.sloped"
   },
-  "monotone": true,
+  "tint_amount": 2,
   "id": "ricksportalgun:sloped",
   "model": "ricksportalgun:sloped_portal_gun"
 }

@@ -68,9 +68,13 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         });
 
         for (Map.Entry<Item, ResourceKey<CreativeModeTab>> entry : PGItems.TABS.entrySet()) {
-            ItemGroupEvents.modifyEntriesEvent(entry.getValue()).register((entries) -> {
-                entries.accept(entry.getKey());
-            });
+            ResourceKey<CreativeModeTab> tabKey = entry.getValue();
+            if (tabKey != null) {
+                ItemGroupEvents.modifyEntriesEvent(entry.getValue()).register((entries) -> {
+                    Item item = entry.getKey();
+                    entries.accept(item);
+                });
+            }
         }
     }
 }

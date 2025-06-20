@@ -50,7 +50,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             int primary = 0;
             int secondary = 0;
 
-            if (!dye1.isEmpty()) {
+            if (!(type.tints() < 2) && !dye1.isEmpty()) {
                 if (!dye1.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye1.getItem();
                     primary = dyeItem.getDyeColor().getTextureDiffuseColor();
@@ -60,7 +60,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainder());
                 }
             }
-            if (!type.monoTone() && !dye2.isEmpty()) {
+            if (!(type.tints() < 3) && !dye2.isEmpty()) {
                 if (!dye2.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye2.getItem();
                     secondary = dyeItem.getDyeColor().getTextureDiffuseColor();

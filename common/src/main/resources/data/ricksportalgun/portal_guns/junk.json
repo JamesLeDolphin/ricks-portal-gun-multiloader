@@ -2,7 +2,7 @@
   "name": {
     "translate": "item.ricksportalgun.portalgun.junk"
   },
-  "monotone": false,
+  "tint_amount": 3,
   "id": "ricksportalgun:junk",
   "model": "ricksportalgun:junk_portal_gun"
 }

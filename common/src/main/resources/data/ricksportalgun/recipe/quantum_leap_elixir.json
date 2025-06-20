@@ -2,10 +2,13 @@
   "type": "ricksportalgun:portal_gun_workbench",
   "ingredients": [
     {
-      "id": "ricksportalgun:bootleg_portal_fluid"
+      "id": "minecraft:amethyst_shard"
     },
     {
-      "id": "ricksportalgun:quantum_leap_elixir"
+      "id": "minecraft:honey_bottle"
+    },
+    {
+      "id": ""
     }
   ],
   "result": {

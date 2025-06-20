@@ -33,8 +33,8 @@ public class PGItems {
     public static final Map<Item, ResourceKey<CreativeModeTab>> TABS = new LinkedHashMap<>();
 
     public static final Item PORTAL_GUN = registerGun("portal_gun");
-    public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW);
-    public static final Item PRIME_PORTAL_GUN = registerGun("prime_portal_gun");
+    public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW, null);
+    public static final Item PRIME_PORTAL_GUN = registerGun("prime_portal_gun", Color.GREEN, null);
 
     public static final Item PORTAL_FLUID = registerFluid("portal_fluid");
     public static final Item BOOTLEG_PORTAL_FLUID = registerFluid("bootleg_portal_fluid");
@@ -89,10 +89,10 @@ public class PGItems {
             Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     private static Item registerGun(String name) {
-        return registerGun(name, Color.GREEN);
+        return registerGun(name, Color.GREEN, PGCreativeModeTabs.INGREDIENTS);
     }
 
-    private static Item registerGun(String name, Color color) {
+    private static Item registerGun(String name, Color color, ResourceKey<CreativeModeTab> tab) {
         return register(name, PortalGunItem::new, new Item.Properties().stacksTo(1)
                 .component(PGDataComponents.PORTAL_COLOUR, color.getRGB())
                 .component(PGDataComponents.DEFAULT_PORTAL_COLOUR, color.getRGB())
@@ -109,7 +109,7 @@ public class PGItems {
                 .component(PGDataComponents.PLAYER_LOC, false)
                 .component(PGDataComponents.STRUCTURE_LOC, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
-                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
+                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()), tab);
     }
 
     private static Item registerFluid(String name) {

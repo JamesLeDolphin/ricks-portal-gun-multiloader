@@ -86,10 +86,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
 
     public static class Serializer implements RecipeSerializer<PortalGunWorkbenchRecipe> {
 
-        private static final MapCodec<PortalGunWorkbenchRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-                instance.group(ItemStack.STRICT_CODEC.listOf(1, 4).fieldOf("ingredients").forGetter((recipe) -> recipe.items),
-                                ItemStack.CODEC.fieldOf("result").forGetter((recipe) -> recipe.result))
-                        .apply(instance, PortalGunWorkbenchRecipe::new));
+        private static final MapCodec<PortalGunWorkbenchRecipe> CODEC;
 
         public static final StreamCodec<RegistryFriendlyByteBuf, PortalGunWorkbenchRecipe> STREAM_CODEC;
 
@@ -106,6 +103,11 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
         }
 
         static {
+            CODEC = RecordCodecBuilder.mapCodec((instance) ->
+                    instance.group(ItemStack.STRICT_CODEC.listOf(1, 4).fieldOf("ingredients").forGetter((recipe) -> recipe.items),
+                                    ItemStack.CODEC.fieldOf("result").forGetter((recipe) -> recipe.result))
+                            .apply(instance, PortalGunWorkbenchRecipe::new));
+
             STREAM_CODEC = StreamCodec.composite(ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), (recipe) -> recipe.items,
                     ItemStack.STREAM_CODEC, (recipe) -> recipe.result, PortalGunWorkbenchRecipe::new);
 

@@ -1,0 +1,23 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "minecraft:slime_ball"
+    },
+    {
+      "id": "minecraft:comparator"
+    },
+    {
+      "id": "minecraft:gold_nugget",
+      "count": 3
+    },
+    {
+      "id": "minecraft:repeater",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:circuitboard",
+    "count": 1
+  }
+}
