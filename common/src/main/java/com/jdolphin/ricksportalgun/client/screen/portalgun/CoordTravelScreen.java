@@ -211,7 +211,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
-        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 4 - 32, style.textColor());
+        graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         graphics.drawString(this.font, Component.translatable("ricksportalgun.x", ""), this.width / 2 - 88, this.xInput.getY() + 3, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.y", ""), this.width / 2 - 88, this.yInput.getY() + 3, style.textColor());

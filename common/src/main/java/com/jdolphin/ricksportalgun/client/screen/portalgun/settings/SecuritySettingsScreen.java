@@ -106,10 +106,10 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.security"), this.width / 2, this.height / 2 - 92, style.textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 4 - 16, this.lockButton.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.ownership"), this.width / 4 - 16, this.playerInput.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.code"), this.width / 4 - 16, this.code.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.self_destruct"), this.width / 4 - 16, this.selfDestruct.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 2 - 128, this.lockButton.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.ownership"), this.width / 2 - 128, this.playerInput.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.code"), this.width / 2 - 128, this.code.getY() + 4, getStyle().textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.self_destruct"), this.width / 2 - 128, this.selfDestruct.getY() + 4, getStyle().textColor());
 
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, playerInput, lockButton, code);
         GuiHelper.renderOutline(graphics, lockButton, style.highlightColor());

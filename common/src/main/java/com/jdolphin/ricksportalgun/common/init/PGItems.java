@@ -89,7 +89,7 @@ public class PGItems {
             Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     private static Item registerGun(String name) {
-        return registerGun(name, Color.GREEN, PGCreativeModeTabs.INGREDIENTS);
+        return registerGun(name, Color.GREEN, PGCreativeModeTabs.TOOLS_AND_UTILITIES);
     }
 
     private static Item registerGun(String name, Color color, ResourceKey<CreativeModeTab> tab) {

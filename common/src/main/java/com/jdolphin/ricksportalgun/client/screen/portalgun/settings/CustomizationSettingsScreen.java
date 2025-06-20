@@ -94,8 +94,8 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization"), this.width / 2, this.height / 2 - 92, style.textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_size"), this.width / 4 - 16, this.portalSize.getY() + 4, style.textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_age"), this.width / 4 - 16, this.portalAge.getY() + 4, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_size"), this.width / 2 - 128, this.portalSize.getY() + 4, style.textColor());
+        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_age"), this.width / 2 - 128, this.portalAge.getY() + 4, style.textColor());
 
         GuiHelper.renderOutline(graphics, this.portalColor, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.menuTheme, style.highlightColor());

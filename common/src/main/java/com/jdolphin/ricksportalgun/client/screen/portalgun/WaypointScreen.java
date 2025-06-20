@@ -39,7 +39,7 @@ public class WaypointScreen extends AbstractBaseScreen {
                 (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
 
         ItemStack stack = player.getMainHandItem();
-        this.waypointList = this.addWidget(new WaypointListWidget(170, (this.height / 3) * 2, this.width / 2 - 75, this.height / 3 - 30,
+        this.waypointList = this.addWidget(new WaypointListWidget(170, 152, this.width / 2 - 75, this.height / 2 - 70,
                 24, stack, true, 128, 20));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
