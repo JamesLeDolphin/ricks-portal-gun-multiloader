@@ -8,11 +8,11 @@
       "id": "minecraft:honey_bottle"
     },
     {
-      "id": "minecraft:blaze_powder"
+      "id": ""
     }
   ],
   "result": {
-    "id": "ricksportalgun:quantum_leap_elixir",
+    "id": "ricksportalgun:portal_fluid",
     "count": 1
   }
 }

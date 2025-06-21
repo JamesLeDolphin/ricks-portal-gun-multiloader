@@ -34,7 +34,7 @@ import java.util.Optional;
 public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity implements MenuProvider {
     public static final String TAG_MODE = "WorkbenchMode";
     public static final String TAG_PROGRESS = "CraftProgress";
-    private MenuType menuType = MenuType.SKIN_SELECTOR;
+    private MenuType menuType = MenuType.CRAFTING;
     public static final int OUTPUT_SLOT = 4;
 
     protected final ContainerData data;
@@ -199,7 +199,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     @Override
-    public NonNullList<ItemStack> getItems() {
+    protected NonNullList<ItemStack> getItems() {
         return this.items;
     }
 

@@ -1,10 +1,10 @@
 package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
-import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
-import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
@@ -29,8 +29,6 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGCommonConfig.SPEC, "ricksportalgun-client.toml");
 
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
-        //BlockEntityRenderers.register(PGBlockEntities.GUN_WORKBENCH, WorkbenchBlockEntityRenderer::new);
-
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
 
         PGMenuScreens.ALL.forEach((type, func) -> {
