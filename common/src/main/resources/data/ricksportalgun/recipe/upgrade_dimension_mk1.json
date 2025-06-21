@@ -1,0 +1,24 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:disc_template"
+    },
+    {
+      "id": "minecraft:blaze_powder",
+      "count": 2
+    },
+    {
+      "id": "minecraft:glowstone_dust",
+      "count": 4
+    },
+    {
+      "id": "minecraft:nether_wart",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:upgrade_dimension_mk1",
+    "count": 1
+  }
+}
