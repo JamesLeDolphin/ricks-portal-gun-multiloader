@@ -183,7 +183,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     private Optional<RecipeHolder<PortalGunWorkbenchRecipe>> getCurrentRecipe() {
         if (this.level instanceof ServerLevel serverLevel) {
-            List<ItemStack> recipeItems = items.subList(0, 3);
+            List<ItemStack> recipeItems = items.subList(0, 4);
             return serverLevel.recipeAccess().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, new WorkbenchRecipeInput(recipeItems), serverLevel);
         } return Optional.empty();
     }
