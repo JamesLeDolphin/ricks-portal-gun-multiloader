@@ -1,10 +1,10 @@
 package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
-import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;

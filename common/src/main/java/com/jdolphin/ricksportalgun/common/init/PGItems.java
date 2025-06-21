@@ -48,7 +48,11 @@ public class PGItems {
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
 
+    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new BlockItem(PGBlocks.SUBETHER_BARRIER, properties),
+            new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
+
     public static final Item CIRCUIT_BOARD = register("circuitboard", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item DISC_TEMPLATE = register("disc_template", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     //Upgrades
     public static final Item CREATIVE_UPGRADE = register("upgrade_creative", CreativeUpgradeItem::new, new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);

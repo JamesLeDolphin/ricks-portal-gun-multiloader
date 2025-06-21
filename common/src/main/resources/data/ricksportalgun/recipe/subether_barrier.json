@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": "minecraft:iron_block",
+    "R": "minecraft:redstone",
+    "C": "ricksportalgun:circuitboard",
+    "O": "minecraft:observer",
+    "F": "ricksportalgun:portal_fluid"
+  },
+  "pattern": [
+    "FOF",
+    "CRC",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ricksportalgun:portal_dispenser"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:disc_template"
+    },
+    {
+      "id": "ricksportalgun:data_card"
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:upgrade_waypoint",
+    "count": 1
+  }
+}

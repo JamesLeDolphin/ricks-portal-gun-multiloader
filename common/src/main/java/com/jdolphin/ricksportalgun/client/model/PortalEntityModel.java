@@ -1,6 +1,6 @@
-package com.jdolphin.ricksportalgun.client.entity.model;
+package com.jdolphin.ricksportalgun.client.model;
 
-import com.jdolphin.ricksportalgun.client.entity.PortalEntityRenderState;
+import com.jdolphin.ricksportalgun.client.render.state.PortalEntityRenderState;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

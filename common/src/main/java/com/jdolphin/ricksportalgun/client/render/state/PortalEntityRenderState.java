@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.entity;
+package com.jdolphin.ricksportalgun.client.render.state;
 
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.core.Direction;
