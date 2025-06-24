@@ -4,6 +4,8 @@ import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,9 +22,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Relative;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
@@ -246,11 +245,10 @@ public class PortalEntity extends Entity {
             AABB boundingBox = entity.getBoundingBox().inflate(range);
             List<Entity> entities = entity.level().getEntitiesOfClass(Entity.class, boundingBox);
             entities.remove(entity);
-            entities.removeIf(e -> e instanceof PortalEntity);
-            entities.removeIf(e -> e instanceof EnderDragon);
-            entities.removeIf(e -> e instanceof WitherBoss);
-            entities.removeIf(e -> e instanceof Warden);
-//            entities.removeIf(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
+            entities.removeIf(e -> {
+                String entityAsString = PGHelper.getEntityAsString(e.getType());
+                return PGConfigHelper.getDisabledEntities().contains(entityAsString);
+            });
             entities.removeIf(e -> {
                 if (e instanceof ServerPlayer player) {
                     return player.isOnPortalCooldown() || player.isChangingDimension() || !player.canUsePortal(false);

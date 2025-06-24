@@ -73,6 +73,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public List<? extends String> getDisabledEntities() {
+        return PGCommonConfig.getBlacklistedEntities();
+    }
+
+    @Override
     public boolean disableStructureLocating() {
         return PGCommonConfig.disableStructureLocating();
     }

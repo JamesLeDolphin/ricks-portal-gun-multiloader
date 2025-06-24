@@ -91,6 +91,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public List<? extends String> getDisabledEntities() {
+        return PGCommonConfig.getBlacklistedEntities();
+    }
+
+    @Override
     public boolean disablePortalGunColorTint() {
         return PGClientConfig.disablePortalGunColorTint();
     }

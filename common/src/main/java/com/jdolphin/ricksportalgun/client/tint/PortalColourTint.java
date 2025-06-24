@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.tint;
 
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,7 +21,7 @@ public record PortalColourTint(int defaultColor) implements ItemTintSource {
 
     @Override
     public int calculate(ItemStack stack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
-        return PGHelper.disablePortalColourTint() ? this.defaultColor : ARGB.opaque(stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, this.defaultColor));
+        return PGConfigHelper.disablePortalColourTint() ? this.defaultColor : ARGB.opaque(stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, this.defaultColor));
     }
 
     @Override

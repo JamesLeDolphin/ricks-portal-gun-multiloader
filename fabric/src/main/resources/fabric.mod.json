@@ -20,6 +20,9 @@
         ],
         "client": [
             "com.jdolphin.ricksportalgun.client.RicksPortalGunFabricClient"
+        ],
+        "rei_client": [
+            "com.jdolphin.ricksportalgun.common.compat.rei.PGREIPlugin"
         ]
     },
     "depends": {

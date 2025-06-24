@@ -38,6 +38,8 @@ public interface IPlatformHelper {
 
     List<? extends String> getDisabledDimensions();
 
+    List<? extends String> getDisabledEntities();
+
     boolean disableStructureLocating();
 
     boolean disableBiomeLocating();

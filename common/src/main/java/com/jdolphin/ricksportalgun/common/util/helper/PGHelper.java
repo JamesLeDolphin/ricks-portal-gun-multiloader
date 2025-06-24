@@ -1,14 +1,18 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
+import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,10 +33,6 @@ public class PGHelper {
         return 60 * seconds(amount);
     }
 
-    public static int getRandomizerMax() {
-        return PGServices.PLATFORM.getRandomizerMax();
-    }
-
     public static boolean canPlayerAccessGun(Player player, ItemStack stack) {
         boolean locked = stack.getOrDefault(PGDataComponents.LOCK, false);
         String uuid = stack.getOrDefault(PGDataComponents.OWNER, "");
@@ -42,24 +42,18 @@ public class PGHelper {
         return true;
     }
 
-    public static boolean disablePlayerLocating() {
-        return PGServices.PLATFORM.disablePlayerLocating();
+    public static String getEntityAsString(EntityType<?> type) {
+        ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+        return  rl.toString();
     }
 
-    public static boolean disableBiomeLocating() {
-        return PGServices.PLATFORM.disableBiomeLocating();
-    }
-
-    public static boolean disableStructureLocating() {
-        return PGServices.PLATFORM.disableStructureLocating();
-    }
-
-    public static List<? extends String> getDisabledDimensions() {
-        return PGServices.PLATFORM.getDisabledDimensions();
-    }
-
-    public static boolean disablePortalColourTint() {
-        return PGServices.PLATFORM.disablePortalGunColorTint();
+    public static List<String> defaultDisabledEntities() {
+        return Lists.newArrayList(
+                PGHelper.getEntityAsString(EntityType.ENDER_DRAGON),
+                PGHelper.getEntityAsString(EntityType.WITHER),
+                PGHelper.getEntityAsString(EntityType.WARDEN),
+                PGHelper.getEntityAsString(PGEntities.PORTAL)
+        );
     }
 
     public static void sendSuccessMsg(Player player, String msg) {
