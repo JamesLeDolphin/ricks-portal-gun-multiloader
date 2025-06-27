@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "ricksportalgun:portal_dispenser",
+    "ricksportalgun:subether_barrier",
+    "ricksportalgun:portal_gun_workbench"
+  ]
+}
