@@ -86,7 +86,8 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 (button) -> {
                     if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                         Level level = player.level();
-                        String dim = this.dimInput.getValue().isEmpty() ? LevelHelper.getLevelDimensionLocation(level).toString() : this.dimInput.getValue();
+                        String destDim = stack.getOrDefault(PGDataComponents.PORTAL_DIM, LevelHelper.getLevelDimensionLocation(level)).toString();
+                        String dim = this.dimInput.getValue().isEmpty() ? destDim : this.dimInput.getValue();
                         SBCoordCheckerPacket packet = new SBCoordCheckerPacket(dim);
                         PGHelper.sendPacketToServer(packet);
                     }
@@ -209,7 +210,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float delta) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.coord"), this.width / 2, this.height / 2 - 92, style.textColor());
 
@@ -266,7 +267,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, pMouseX, pMouseY, delta);
         }
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
         super.render(graphics, pMouseX, pMouseY, delta);
     }
 

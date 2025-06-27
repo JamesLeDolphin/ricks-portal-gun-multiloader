@@ -8,6 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,8 @@ public record SBColourPacket(int colour) implements PGPayload {
     public static final Type<SBColourPacket> ID = new Type<>(PGHelper.createLocation("color"));
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
         PortalGunItem.setColor(stack, this.colour);
     }
 

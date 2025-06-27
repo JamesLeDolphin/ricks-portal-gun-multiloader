@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -36,7 +37,8 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         MinecraftServer server = player.server;
         ServerLevel level = player.serverLevel();
 
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
         if (value == 0) {
             if (PGConfigHelper.disableBiomeLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));

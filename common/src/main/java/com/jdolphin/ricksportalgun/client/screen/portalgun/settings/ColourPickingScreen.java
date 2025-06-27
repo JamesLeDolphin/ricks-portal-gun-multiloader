@@ -114,7 +114,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 110, this.r.getY() + 4, style.textColor());
@@ -129,7 +129,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, r, g, b);
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
 
         int x = 64, y = 82, multiplier = size.getValueInt();
         graphics.blit(RenderType::guiTextured, PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,

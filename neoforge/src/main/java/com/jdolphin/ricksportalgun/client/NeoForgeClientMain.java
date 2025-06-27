@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.common.init.NeoForgePackets;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
@@ -13,11 +14,14 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD, modid = PGConstants.MODID)
 public class NeoForgeClientMain {
@@ -62,13 +66,14 @@ public class NeoForgeClientMain {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
-                Minecraft minecraft = Minecraft.getInstance();
-                LocalPlayer player = minecraft.player;
-                ItemStack gun = player.getMainHandItem();
-
-                if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    PGHelper.sendPacketToServer(packet);
+                Player player = Minecraft.getInstance().player;
+                if (player != null) {
+                    InteractionHand hand = player.getUsedItemHand();
+                    ItemStack stack = player.getItemInHand(hand);
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                        PacketDistributor.sendToServer(packet);
+                    }
                 }
             }
         }

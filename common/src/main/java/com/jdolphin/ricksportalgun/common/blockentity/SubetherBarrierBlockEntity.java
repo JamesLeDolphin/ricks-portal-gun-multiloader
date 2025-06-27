@@ -35,7 +35,7 @@ public class SubetherBarrierBlockEntity extends BlockEntity {
     }
 
     public boolean canBlockPortal(Level level, BlockPos pos, String code) {
-        return level.getBlockState(pos).getValue(SubetherBarrierBlock.ACTIVE) && !this.code.isEmpty() && !this.code.equals(code);
+        return level.getBlockState(pos).getValue(SubetherBarrierBlock.ACTIVE) && code.isEmpty() && !this.code.equals(code);
     }
 
 

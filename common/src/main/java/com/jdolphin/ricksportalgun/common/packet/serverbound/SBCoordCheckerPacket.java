@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public record SBCoordCheckerPacket(String dim) implements PGPayload {
@@ -34,7 +35,8 @@ public record SBCoordCheckerPacket(String dim) implements PGPayload {
         level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
         if (level == null) level = player.serverLevel();
 
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
 
         PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
         player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));

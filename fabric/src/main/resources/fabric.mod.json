@@ -7,10 +7,6 @@
     "authors": [
         "${mod_author}"
     ],
-    "contact": {
-        "homepage": "https://fabricmc.net/",
-        "sources": "https://github.com/FabricMC/fabric-example-mod"
-    },
     "license": "${license}",
     "icon": "rpg_fabric.png",
     "environment": "*",
@@ -27,12 +23,10 @@
     },
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
+        "forgeconfigapiport": "*",
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
         "java": ">=${java_version}"
-    },
-    "suggests": {
-        "another-mod": "*"
     }
 }
   

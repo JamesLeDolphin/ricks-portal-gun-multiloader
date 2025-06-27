@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPayload {
@@ -16,7 +17,8 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPaylo
 
     @Override
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
         PortalGunItem.setStyle(stack, style);
     }
 

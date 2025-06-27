@@ -125,7 +125,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization.theme"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
@@ -153,7 +153,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, mouseX, mouseY, delta);
         }
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
 
         graphics.fill(rH.getX(), rH.getY() - 22, rText.getX() + rText.getWidth() / 2, rH.getY() - 76, this.getHighlightColor());
         graphics.fill(rText.getX() + rText.getWidth() / 2, rText.getY() - 22, rBG.getX() + rBG.getWidth(), rBG.getY() - 76, this.getBackgroundColor());

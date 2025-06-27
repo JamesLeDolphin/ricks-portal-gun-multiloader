@@ -12,6 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,6 +46,10 @@ public class PGHelper {
     public static String getEntityAsString(EntityType<?> type) {
         ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         return  rl.toString();
+    }
+
+    public static InteractionHand getOppositeHand(InteractionHand hand) {
+        return hand.equals(InteractionHand.MAIN_HAND) ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
     }
 
     public static List<String> defaultDisabledEntities() {

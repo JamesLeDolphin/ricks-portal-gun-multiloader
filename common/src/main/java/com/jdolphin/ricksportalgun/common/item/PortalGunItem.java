@@ -134,49 +134,43 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             loc = loc.add(0, -0.2, 0);
         }
         boolean air = true;
-        switch (dir) {
-            case NORTH -> {
-                if (isAir(level, bPos.north())) {
+        if (!isAir(level, bPos.relative(dir))) {
+            switch (dir) {
+                case NORTH -> {
                     Vec3 vec = bPos.north().getBottomCenter();
                     loc = vec.add(0, 0, 0.4);
-                } else  air = false;
-            }
-            case SOUTH -> {
-                if (isAir(level, bPos.south())) {
+
+                }
+                case SOUTH -> {
                     Vec3 vec = bPos.south().getBottomCenter();
                     loc = vec.add(0, 0, -0.4);
-                } else  air = false;
-            }
-            case WEST -> {
-                if (isAir(level, bPos.west())) {
+                }
+                case WEST -> {
                     Vec3 vec = bPos.west().getBottomCenter();
-                    loc =vec.add(0.4, 0, 0);
-                } else  air = false;
-            }
-            case EAST -> {
-                if (isAir(level, bPos.east())) {
+                    loc = vec.add(0.4, 0, 0);
+                }
+                case EAST -> {
                     Vec3 vec = bPos.east().getBottomCenter();
                     loc = vec.add(-0.4, 0, 0);
-                } else air = false;
+                }
             }
-        }
-        if (!air) loc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+        } else loc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
 
         return loc;
     }
 
     @Override
     public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getMainHandItem();
-        ItemStack offhandStack = player.getOffhandItem();
+        ItemStack stack = player.getItemInHand(hand);
+        ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
             migrateNBT(stack);
             if (PGHelper.canPlayerAccessGun(player, stack)) {
-                if (offhandStack.getItem() instanceof AbstractUpgradeItem upgrade) {
+                if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
                     InteractionResult result = upgrade.applyUpgrade(player, stack, this);
-                    if (!player.isCreative()) offhandStack.shrink(1);
+                    if (!player.isCreative()) oppositeStack.shrink(1);
                     return result;
                 }
 
@@ -218,32 +212,36 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
                     doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
 
-                    if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
 
+                    if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
                         if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                            if (!portal.isFlat()) {
+                                portal.setYRot(player.getYRot());
+                            }
                             level.addFreshEntity(portal);
+                            player.awardStat(Stats.ITEM_USED.get(this));
+                            player.getCooldowns().addCooldown(stack, 20 * 3);
                             if (!player.isCreative()) {
                                 lowerFuel(stack, 1);
-                                player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(stack, 20 * 3);
+                            }
+
+                            return InteractionResult.SUCCESS;
+                        }
+                        if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                            if (!portal.isFlat()) {
+                                doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                            }
+                            serverlevel.addFreshEntity(exPortal);
+                            level.addFreshEntity(portal);
+
+                            player.awardStat(Stats.ITEM_USED.get(this));
+                            player.getCooldowns().addCooldown(stack, 20 * 3);
+                            if (!player.isCreative()) {
+                                lowerFuel(stack, 1);
                             }
                         } else {
-                            if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                                if (!portal.isFlat()) {
-                                    doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
-                                }
-                                serverlevel.addFreshEntity(exPortal);
-                                level.addFreshEntity(portal);
-
-                                player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(stack, 20 * 3);
-                                if (!player.isCreative()) {
-                                    lowerFuel(stack, 1);
-                                }
-                            } else {
-                                PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
-                                return InteractionResult.FAIL;
-                            }
+                            PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
+                            return InteractionResult.FAIL;
                         }
                     } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
                 }

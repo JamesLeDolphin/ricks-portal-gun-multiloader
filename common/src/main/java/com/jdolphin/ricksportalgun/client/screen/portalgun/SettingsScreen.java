@@ -55,14 +55,14 @@ public class SettingsScreen extends AbstractBaseScreen {
     public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         GuiHelper.renderOutline(graphics, security, style.highlightColor());
         GuiHelper.renderOutline(graphics, customization, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

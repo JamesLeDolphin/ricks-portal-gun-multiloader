@@ -19,6 +19,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.config.ModConfig;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
@@ -52,14 +55,19 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
     private void initEvents() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
-                SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                ClientPlayNetworking.send(packet);
+            if (PGKeyBinds.KEY_PORTAL_MENU.isDown()) {
+                Player player = client.player;
+                if (player != null) {
+                    InteractionHand hand = player.getUsedItemHand();
+                    ItemStack stack = player.getItemInHand(hand);
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                        ClientPlayNetworking.send(packet);
+                    }
+                }
             }
         });
 
-        ClientTickEvents.START_CLIENT_TICK.register(minecraft -> {
-            PortalEntityRenderer.tickTexture();
-        });
+        ClientTickEvents.START_CLIENT_TICK.register(minecraft -> PortalEntityRenderer.tickTexture());
     }
 }

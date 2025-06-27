@@ -91,7 +91,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.customization"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.button.portal_size"), this.width / 2 - 128, this.portalSize.getY() + 4, style.textColor());
@@ -114,7 +114,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, mouseX, mouseY, delta);
         }
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
         super.render(graphics, mouseX, mouseY, delta);
     }
 }

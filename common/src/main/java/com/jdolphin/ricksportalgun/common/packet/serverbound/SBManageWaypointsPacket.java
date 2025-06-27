@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public record SBManageWaypointsPacket(String waypoint, boolean remove) implements PGPayload {
@@ -20,7 +21,9 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
 
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
+
         Waypoint wp = Waypoint.getWaypoint(waypoint);
         if (stack.getItem() instanceof IWaypointStorage) {
             if (wp != null) {

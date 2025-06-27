@@ -27,7 +27,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         PortalGunStyle style = getStyle();
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.waypoints.info"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.name", wp.getName()), this.width / 2 - 64, this.height / 2 - 48, style.textColor());
@@ -40,7 +40,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, delete, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

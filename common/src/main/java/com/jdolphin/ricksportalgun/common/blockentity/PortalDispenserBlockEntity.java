@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -13,6 +14,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
@@ -137,7 +139,6 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.fuel = Math.max(0, this.fuel - amount);
     }
 
-    //TODO: Check for barrier
     public void onActivation(Level level, BlockPos pos) {
         if (!level.isClientSide) {
             BlockState state = level.getBlockState(pos);
@@ -150,22 +151,25 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
                         break;
                     }
                 }
-                ResourceLocation dim = ResourceLocation.parse(getDestinationDim());
-                ServerLevel destLevel = LevelHelper.getServerWorld(level, LevelHelper.getWorldKey(dim));
+                if (!getDestinationDim().isEmpty() && getDestinationPos() != null) {
+                    ResourceLocation dim = ResourceLocation.parse(getDestinationDim());
+                    ServerLevel destLevel = LevelHelper.getServerWorld(level, LevelHelper.getWorldKey(dim));
+                    if (LevelHelper.canPortalTo(destLevel, getDestinationPos(), null)) {
+                        Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
+                        PortalEntity portal = new PortalEntity(level, vec, direction, this.dir, 3.0f);
+                        PortalEntity exitPortal = new PortalEntity(destLevel, new Vec3(getDestinationPos()), direction, this.dir, 3.0f);
+                        if (!portal.isFlat()) {
+                            portal.setYRot(this.dir.toYRot());
+                            exitPortal.setYRot(this.dir.toYRot());
+                        }
+                        portal.setHopLocation(dim, getDestinationPos());
+                        exitPortal.setHopLocation(dim, portal.blockPosition());
 
-                Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
-                PortalEntity portal = new PortalEntity(level, vec, direction, this.dir, 3.0f);
-                PortalEntity exitPortal = new PortalEntity(destLevel, new Vec3(getDestinationPos()), direction, this.dir, 3.0f);
-                if (!portal.isFlat()) {
-                    portal.setYRot(this.dir.toYRot());
-                    exitPortal.setYRot(this.dir.toYRot());
-                }
-                portal.setHopLocation(dim, getDestinationPos());
-                exitPortal.setHopLocation(dim, portal.blockPosition());
-
-                if (level.addFreshEntity(portal)) {
-                    destLevel.addFreshEntity(exitPortal);
-                    decreaseFuel(1);
+                        if (destLevel.addFreshEntity(exitPortal)) {
+                            level.addFreshEntity(portal);
+                            decreaseFuel(1);
+                        }
+                    }
                 }
             }
         }

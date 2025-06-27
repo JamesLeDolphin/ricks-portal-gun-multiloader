@@ -59,7 +59,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.player != null;
         LocalPlayer player = minecraft.player;
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.waypoints.new"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.name", ""), this.width / 2 - 96, this.height / 2 - 56, style.textColor());
@@ -76,7 +76,7 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
 
         this.waypointName.render(graphics, pMouseX, pMouseY, pPartialTick);
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

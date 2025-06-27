@@ -73,7 +73,7 @@ public class WaypointScreen extends AbstractBaseScreen {
     public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         PortalGunStyle style = getStyle();
 
-        graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
+        fillBackgroundColor(graphics);
 
         GuiHelper.renderTooltip(graphics, Component.translatable("ricksportalgun.button.waypoint.new"), addWaypoint);
         GuiHelper.renderOutline(graphics, addWaypoint, style.highlightColor());
@@ -91,7 +91,7 @@ public class WaypointScreen extends AbstractBaseScreen {
             this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
         }
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        drawOverlay(graphics);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }

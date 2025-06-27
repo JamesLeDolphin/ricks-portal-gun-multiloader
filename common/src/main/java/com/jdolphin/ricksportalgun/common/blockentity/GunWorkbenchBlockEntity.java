@@ -132,12 +132,14 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
                 if (ItemStack.isSameItemSameComponents(inOutputSlot, result)) {
                     int i = inOutputSlot.getCount();
                     int j = result.getCount();
-                    result.setCount(i + j);
-                    lowerInputs(recipe);
-                    this.setItem(OUTPUT_SLOT, result);
-                    return true;
+                    int sum = i + j;
+                    if (sum <= inOutputSlot.getMaxStackSize()) {
+                        result.setCount(i + j);
+                        lowerInputs(recipe);
+                        this.setItem(OUTPUT_SLOT, result);
+                        return true;
+                    }
                 }
-                else return false;
             }
         }
         return false;

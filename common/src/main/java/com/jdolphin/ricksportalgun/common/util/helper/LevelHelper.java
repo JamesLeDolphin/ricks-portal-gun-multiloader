@@ -80,7 +80,8 @@ public class LevelHelper {
 
     public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
         if (level != null) {
-            String code = stack.getOrDefault(PGDataComponents.CODE, "");
+            String code = "";
+            if (stack != null) code = stack.getOrDefault(PGDataComponents.CODE, "");
             List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
 
             for (BlockEntity be : blockEntities) {

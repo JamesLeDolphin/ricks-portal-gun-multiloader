@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
@@ -14,6 +15,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -38,13 +41,14 @@ public class ForgeClientMain {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
-                Minecraft minecraft = Minecraft.getInstance();
-                LocalPlayer player = minecraft.player;
-                ItemStack gun = player.getMainHandItem();
-
-                if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    PGHelper.sendPacketToServer(packet);
+                Player player = Minecraft.getInstance().player;
+                if (player != null) {
+                    InteractionHand hand = player.getUsedItemHand();
+                    ItemStack stack = player.getItemInHand(hand);
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                        ForgePackets.sendToServer(packet);
+                    }
                 }
             }
         }

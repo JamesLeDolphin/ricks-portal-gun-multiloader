@@ -8,6 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public record SBCustomizeSettingsPacket(double size, int age) implements PGPayload {
@@ -18,8 +19,9 @@ public record SBCustomizeSettingsPacket(double size, int age) implements PGPaylo
 
     @Override
     public void handle(ServerPlayer player) {
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
 
-        ItemStack stack = player.getMainHandItem();
         stack.set(PGDataComponents.PORTAL_SIZE, ((float) size));
         stack.set(PGDataComponents.PORTAL_LIFETIME, this.age);
     }

@@ -36,6 +36,7 @@
 - Recipe changes
 - Made Portal Gun recipe cheaper
 - Portal Guns now require upgrades to unlock more features. Certain upgrades require other upgrades before they can be applied.
+- Portal Guns can now be used in off-hand
 
 
 ## Upgrades:

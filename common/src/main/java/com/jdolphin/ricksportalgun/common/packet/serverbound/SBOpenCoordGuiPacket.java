@@ -9,6 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -19,7 +20,9 @@ public record SBOpenCoordGuiPacket() implements PGPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
+
         if (PGHelper.canPlayerAccessGun(player, stack)) {
             List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
             if (!dims.contains(PGHelper.createLocation("blender").toString()))

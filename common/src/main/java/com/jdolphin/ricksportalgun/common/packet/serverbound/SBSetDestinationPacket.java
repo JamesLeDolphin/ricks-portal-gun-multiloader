@@ -11,6 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayload {
@@ -19,7 +20,9 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayl
     public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.createLocation("destination"));
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
+
         if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
             PortalGunItem.setHopLocation(stack, ResourceLocation.parse(dim), pos);
         } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");

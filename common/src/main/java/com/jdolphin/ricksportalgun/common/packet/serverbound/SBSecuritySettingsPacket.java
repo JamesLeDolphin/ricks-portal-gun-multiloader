@@ -11,6 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,7 +22,9 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
 
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand hand = player.getUsedItemHand();
+        ItemStack stack = player.getItemInHand(hand);
+
         stack.set(PGDataComponents.LOCK, lock);
         stack.set(PGDataComponents.SELF_DESTRUCT, selfDestruct);
 
