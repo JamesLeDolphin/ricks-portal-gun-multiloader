@@ -173,6 +173,8 @@
 
   "entity.ricksportalgun.portal": "Portal",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
+  "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket"
 
 }
