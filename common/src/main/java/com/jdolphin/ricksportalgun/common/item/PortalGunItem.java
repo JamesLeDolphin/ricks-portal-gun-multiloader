@@ -27,6 +27,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -120,8 +121,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static void setPortalGunType(ItemStack stack, PortalGunType type) {
         stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
-        stack.set(DataComponents.ITEM_MODEL, type.model());
-        if (stack.getCustomName() == null) stack.set(DataComponents.ITEM_NAME, type.name());
+        stack.set(PGDataComponents.GUN_MODEL, type.model());
+        stack.getDisplayName();
         setDefaultColor(stack, type.color());
     }
 
@@ -166,9 +167,10 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getMainHandItem();
         ItemStack offhandStack = player.getOffhandItem();
+        ItemStack resultStack = player.getItemInHand(hand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
@@ -177,7 +179,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 if (offhandStack.getItem() instanceof AbstractUpgradeItem upgrade) {
                     InteractionResult result = upgrade.applyUpgrade(player, stack, this);
                     if (!player.isCreative()) offhandStack.shrink(1);
-                    return result;
+                    return InteractionResultHolder.success(resultStack);
                 }
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
@@ -204,10 +206,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                     doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
 
-                    Component customName = stack.getCustomName();
-                    if (customName != null) {
-                        doForBoth(entity -> entity.setCustomName(customName), portal, exPortal);
-                    }
+                    Component customName = stack.getDisplayName();
+                    doForBoth(entity -> entity.setCustomName(customName), portal, exPortal);
 
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
@@ -225,7 +225,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             if (!player.isCreative()) {
                                 lowerFuel(stack, 1);
                                 player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(stack, 20 * 3);
+                                player.getCooldowns().addCooldown(this, 20 * 3);
                             }
                         } else {
                             if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
@@ -236,20 +236,20 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                 level.addFreshEntity(portal);
 
                                 player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(stack, 20 * 3);
+                                player.getCooldowns().addCooldown(this, 20 * 3);
                                 if (!player.isCreative()) {
                                     lowerFuel(stack, 1);
                                 }
                             } else {
                                 PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
-                                return InteractionResult.FAIL;
+                                return InteractionResultHolder.fail(resultStack);
                             }
                         }
                     } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
                 }
             }
-            return InteractionResult.SUCCESS;
-        } else return InteractionResult.FAIL;
+            return InteractionResultHolder.success(resultStack);
+        } else return InteractionResultHolder.fail(resultStack);
     }
 
     private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {

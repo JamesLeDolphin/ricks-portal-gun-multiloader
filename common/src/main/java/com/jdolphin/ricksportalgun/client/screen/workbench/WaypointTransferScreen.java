@@ -14,7 +14,6 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -204,9 +203,9 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
         int y = (height - imageHeight) / 2;
 
         if (this.selectedWaypoint != null) {
-            graphics.blit(RenderType::guiTextured, WP_INFO_BG, this.width / 2 - 180, y, 0f, 0f, 128, 256, 128, 256);
+            graphics.blit(WP_INFO_BG, this.width / 2 - 180, y, 0f, 0f, 128, 256, 128, 256);
         }
-        graphics.blit(RenderType::guiTextured, BG, x + 12, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
+        graphics.blit(BG, x + 12, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
     }
 
     public enum Side {

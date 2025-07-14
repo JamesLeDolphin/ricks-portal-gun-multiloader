@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
-import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -16,7 +15,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.neoforged.fml.config.ModConfig;
@@ -38,7 +36,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
 
-        PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
+       // PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
         KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
 
         initEvents();

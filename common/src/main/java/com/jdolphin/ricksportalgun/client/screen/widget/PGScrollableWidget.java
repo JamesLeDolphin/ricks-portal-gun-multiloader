@@ -12,7 +12,6 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -99,12 +98,6 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
         this.children.addFirst(entry);
     }
 
-    protected boolean removeEntryFromTop(E entry) {
-        double d0 = (double)this.maxScrollAmount() - this.scrollAmount();
-        boolean flag = this.removeEntry(entry);
-        this.setScrollAmount((double)this.maxScrollAmount() - d0);
-        return flag;
-    }
 
     protected int getItemCount() {
         return this.children().size();
@@ -120,7 +113,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
         int j = this.getX() + this.width / 2;
         int k = j - i;
         int l = j + i;
-        int i1 = Mth.floor(mouseY - (double)this.getY()) - this.headerHeight + (int)this.scrollAmount() - 4;
+        int i1 = Mth.floor(mouseY - (double)this.getY()) - this.headerHeight + (int)this.scrollRate() - 4;
         int j1 = i1 / this.itemHeight;
         return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (PGScrollableWidget.Entry)this.children().get(j1) : null);
     }
@@ -132,7 +125,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     public void updateSizeAndPosition(int width, int height, int y) {
         this.setSize(width, height);
         this.setPosition(0, y);
-        this.refreshScrollAmount();
+        //this.refreshScrollAmount();
     }
 
     protected int contentHeight() {
@@ -148,13 +141,8 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
         this.renderListItems(graphics, mouseX, mouseY, delta);
         graphics.disableScissor();
 
-        this.renderScrollbar(graphics);
     }
 
-    @Override
-    protected void renderScrollbar(GuiGraphics guiGraphics) {
-        if (renderScrollbar) super.renderScrollbar(guiGraphics);
-    }
 
     public void setRenderScrollbar(boolean renderScrollbar) {
         this.renderScrollbar = renderScrollbar;
@@ -163,13 +151,13 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     protected void renderListSeparators(GuiGraphics guiGraphics) {
         ResourceLocation resourcelocation = this.minecraft.level == null ? Screen.HEADER_SEPARATOR : Screen.INWORLD_HEADER_SEPARATOR;
         ResourceLocation resourcelocation1 = this.minecraft.level == null ? Screen.FOOTER_SEPARATOR : Screen.INWORLD_FOOTER_SEPARATOR;
-        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY() - 2, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
-        guiGraphics.blit(RenderType::guiTextured, resourcelocation1, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+        guiGraphics.blit(resourcelocation, this.getX(), this.getY() - 2, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+        guiGraphics.blit(resourcelocation1, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
     }
 
     protected void renderListBackground(GuiGraphics guiGraphics) {
         ResourceLocation resourcelocation = this.minecraft.level == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND;
-        guiGraphics.blit(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), (float)this.getX(), (float)(this.getBottom() + (int)this.scrollAmount()),
+        guiGraphics.blit(resourcelocation, this.getX(), this.getY(), (float)this.getX(), (float)(this.getBottom() + (int)this.scrollRate()),
                 this.getWidth(), this.getHeight(), 32, 32);
     }
 
@@ -177,28 +165,19 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
         guiGraphics.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
     }
 
-    protected void centerScrollOn(E entry) {
-        this.setScrollAmount(this.children().indexOf(entry) * this.itemHeight + this.itemHeight / 2 - this.height / 2);
-    }
-
     protected void ensureVisible(E entry) {
         int i = this.getRowTop(this.children().indexOf(entry));
         int j = i - this.getY() - 4 - this.itemHeight;
         if (j < 0) {
-            this.scroll(j);
+         //   this.scroll(j);
         }
 
         int k = this.getBottom() - i - this.itemHeight - this.itemHeight;
         if (k < 0) {
-            this.scroll(-k);
+           // this.scroll(-k);
         }
 
     }
-
-    private void scroll(int scroll) {
-        this.setScrollAmount(this.scrollAmount() + (double)scroll);
-    }
-
     protected double scrollRate() {
         return (double)this.itemHeight / (double)2.0F;
     }
@@ -309,7 +288,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
     }
 
     public int getRowTop(int index) {
-        return this.getY() + 4 - (int)this.scrollAmount() + index * this.itemHeight + this.headerHeight;
+        return this.getY() + 4 - (int)this.scrollRate() + index * this.itemHeight + this.headerHeight;
     }
 
     public int getRowBottom(int index) {

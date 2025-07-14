@@ -43,7 +43,7 @@ public record SBActivateSelfDestructPacket() implements PGPayload {
                    Level.ExplosionInteraction interaction = kaboom ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE;
                    ExplosionDamageCalculator calc = new EntityBasedExplosionDamageCalculator(itemEntity); //Short for calculator
                    level.explode(itemEntity, PGDamageTypes.of(level, PGDamageTypes.SELF_DESTRUCT), calc, pos.getX(), pos.getY(), pos.getZ(), 5, true, interaction);
-                   itemEntity.kill(level);
+                   itemEntity.kill();
                }
            });
        }

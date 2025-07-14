@@ -16,15 +16,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SubetherBarrierBlock extends BaseEntityBlock {
-    public static final BooleanProperty ACTIVE = BlockStateProperties.ACTIVE;
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public SubetherBarrierBlock(Properties properties) {
         super(properties);
@@ -35,7 +33,7 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
         builder.add(ACTIVE);
     }
 
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         if (!level.isClientSide) {
             boolean flag = state.getValue(ACTIVE);
             if (flag != level.hasNeighborSignal(pos)) {
@@ -64,7 +62,7 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             PGHelper.sendPacketToClient(serverPlayer, new CBOpenBarrierGuiPacket(pos));
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         } else return InteractionResult.CONSUME;
     }
 

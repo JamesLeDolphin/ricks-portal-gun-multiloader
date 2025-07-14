@@ -5,7 +5,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -54,7 +53,7 @@ public class PGImageButton extends AbstractButton {
             }
             int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
             int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
-            graphics.blit(RenderType::guiTextured, this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
+            graphics.blit(this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
         }
     }
 

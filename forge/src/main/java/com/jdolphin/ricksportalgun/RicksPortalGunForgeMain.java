@@ -4,11 +4,14 @@ import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.item.ForgePortalGunItem;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +31,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -45,7 +49,7 @@ public class RicksPortalGunForgeMain {
         bus.addListener(this::buildContents);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
         bind(bus, Registries.BLOCK, PGBlocks::init);
-        bind(bus, Registries.ITEM, PGItems::init);
+        hackyItemRegisterStuffIdk(bus);
         bind(bus, Registries.BLOCK_ENTITY_TYPE, PGBlockEntities::init);
         bind(bus, Registries.ENTITY_TYPE, PGEntities::init);
         bind(bus, Registries.MENU, PGMenuTypes::init);
@@ -54,6 +58,19 @@ public class RicksPortalGunForgeMain {
 
         context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
+    }
+
+    private void hackyItemRegisterStuffIdk(IEventBus bus) {
+
+        for (Map.Entry<ResourceLocation, Item> entry : PGItems.ALL.entrySet()) {
+            Item item = entry.getValue();
+            DataComponentMap map = item.components();
+            if (item instanceof PortalGunItem) {
+                int color = map.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
+                entry.setValue(new ForgePortalGunItem(PGItems.gunProperties(new Color(color))));
+            }
+            bind(bus, Registries.ITEM, consumer -> consumer.accept(item, entry.getKey()));
+        }
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

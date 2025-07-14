@@ -155,7 +155,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
                 Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
                 PortalEntity portal = new PortalEntity(level, vec, direction, this.dir, 3.0f);
-                PortalEntity exitPortal = new PortalEntity(destLevel, new Vec3(getDestinationPos()), direction, this.dir, 3.0f);
+                PortalEntity exitPortal = new PortalEntity(destLevel, getDestinationPos().above().getBottomCenter(), direction, this.dir, 3.0f);
                 if (!portal.isFlat()) {
                     portal.setYRot(this.dir.toYRot());
                     exitPortal.setYRot(this.dir.toYRot());

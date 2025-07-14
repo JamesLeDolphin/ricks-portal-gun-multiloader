@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
@@ -71,8 +70,8 @@ public class PGCycleButton<T> extends AbstractButton {
             super.renderWidget(graphics, mouseX, mouseY, delta);
         }
         if (renderArrows) {
-            graphics.blit(RenderType::guiTextured, ARROW_TEXTURES, this.getX() + 1, this.getY() + this.height - 18, 0, 0, 16, 16, 32, 16, this.color);
-            graphics.blit(RenderType::guiTextured, ARROW_TEXTURES,
+            graphics.blit(ARROW_TEXTURES, this.getX() + 1, this.getY() + this.height - 18, 0, 0, 16, 16, 32, 16, this.color);
+            graphics.blit(ARROW_TEXTURES,
                     this.getX() + this.width - 17, this.getY() + this.height - 18, 16, 0, 16, 16, 32, 16, this.color);
         }
         Component component = this.isHovered() ? ComponentUtils.mergeStyles(this.getMessage().copy(), Style.EMPTY.withUnderlined(true)) : this.getMessage();

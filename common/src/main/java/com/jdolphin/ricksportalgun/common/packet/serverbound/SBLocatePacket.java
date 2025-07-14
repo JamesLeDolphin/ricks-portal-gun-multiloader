@@ -7,14 +7,15 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));
                 return;
             }
-                Optional<Registry<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
+                Optional<HolderLookup.RegistryLookup<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
                 if (optionalRegistry.isPresent()) {
                     ResourceLocation location = ResourceLocation.parse(name);
                     Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d((biomeHolder -> biomeHolder.is(location)),
@@ -74,11 +75,11 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
                 return;
             }
-            Optional<Registry<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
+            Optional<HolderLookup.RegistryLookup<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
             if (optionalRegistry.isPresent()) {
-                Registry<Structure> registry = optionalRegistry.get();
+                HolderLookup.RegistryLookup<Structure> registry = optionalRegistry.get();
                 ResourceLocation location = ResourceLocation.parse(name);
-                Optional<Holder.Reference<Structure>> structureReference = registry.get(location);
+                Optional<Holder.Reference<Structure>> structureReference = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
                 if (structureReference.isPresent()) {
                     Structure structure = structureReference.get().value();
 

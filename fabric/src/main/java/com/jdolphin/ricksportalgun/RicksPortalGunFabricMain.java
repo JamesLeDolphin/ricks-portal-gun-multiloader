@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
-import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
@@ -12,12 +11,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.fml.config.ModConfig;
@@ -43,7 +40,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         FabricPackets.registerC2SPackets();
 
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGClientConfig.SPEC, "ricksportalgun-common.toml");
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
+        //ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
 
         initEvents();
     }

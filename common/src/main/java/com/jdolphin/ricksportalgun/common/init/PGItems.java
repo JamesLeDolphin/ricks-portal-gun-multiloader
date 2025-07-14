@@ -14,9 +14,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.DamageResistant;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;
@@ -29,7 +28,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class PGItems {
-    private static final Map<ResourceLocation, Item> ALL = new HashMap<>();
+    public static final Map<ResourceLocation, Item> ALL = new HashMap<>();
     public static final Map<Item, ResourceKey<CreativeModeTab>> TABS = new LinkedHashMap<>();
 
     public static final Item PORTAL_GUN = registerGun("portal_gun");
@@ -54,7 +53,7 @@ public class PGItems {
     public static final Item CREATIVE_UPGRADE = register("upgrade_creative", CreativeUpgradeItem::new, new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
 
     public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(DataComponents.DAMAGE_RESISTANT, new DamageResistant(DamageTypeTags.IS_FIRE))),
+            (stack, portalGun) -> stack.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE)),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new SimpleUpgradeItem(properties,
@@ -93,7 +92,11 @@ public class PGItems {
     }
 
     private static Item registerGun(String name, Color color, ResourceKey<CreativeModeTab> tab) {
-        return register(name, PortalGunItem::new, new Item.Properties().stacksTo(1)
+        return register(name, PortalGunItem::new, gunProperties(color), tab);
+    }
+
+    public static Item.Properties gunProperties(Color color) {
+        return new Item.Properties().stacksTo(1)
                 .component(PGDataComponents.PORTAL_COLOUR, color.getRGB())
                 .component(PGDataComponents.DEFAULT_PORTAL_COLOUR, color.getRGB())
                 .component(PGDataComponents.BOOTLEG, false)
@@ -109,16 +112,16 @@ public class PGItems {
                 .component(PGDataComponents.PLAYER_LOC, false)
                 .component(PGDataComponents.STRUCTURE_LOC, false)
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
-                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()), tab);
+                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location());
     }
 
     private static Item registerFluid(String name) {
-        return register(name, PortalFluidItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID, PGFoods.PORTAL_FLUID_CONSUMABLE),
+        return register(name, PortalFluidItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID),
                 PGCreativeModeTabs.FOOD_AND_DRINKS);
     }
 
     private static Item register(String name, Function<Item.Properties, Item> factory, Item.Properties properties, ResourceKey<CreativeModeTab> tab) {
-        Item item = factory.apply(properties.setId(keyOf(name)));
+        Item item = factory.apply(properties);
         TABS.put(item, tab);
         ALL.put(PGHelper.createLocation(name), item);
         return item;

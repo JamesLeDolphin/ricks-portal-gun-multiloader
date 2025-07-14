@@ -34,8 +34,8 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
         checkContainerDataCount(data, 2);
         checkContainerSize(container, 10);
 
-        addInventoryExtendedSlots(inventory, 25, 110);
-        addInventoryHotbarSlots(inventory, 25, 168);
+       // addInventoryExtendedSlots(inventory, 25, 110);
+       // addInventoryHotbarSlots(inventory, 25, 168);
 
         addSlots(container);
     }
@@ -57,7 +57,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) dye1.shrink(1);
                 } else {
                     gun.remove(PGDataComponents.PRIMARY_DYE);
-                    if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainder());
+                    if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
             if (!(type.tints() < 3) && !dye2.isEmpty()) {
@@ -67,7 +67,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) dye2.shrink(1);
                 } else {
                     gun.remove(PGDataComponents.SECONDARY_DYE);
-                    if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainder());
+                    if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
             PortalGunItem.setPortalGunType(gun, type);

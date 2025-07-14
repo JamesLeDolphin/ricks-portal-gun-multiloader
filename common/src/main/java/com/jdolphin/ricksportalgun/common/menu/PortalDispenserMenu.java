@@ -37,7 +37,7 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
             }
         });
         this.addDataSlots(data);
-        this.addStandardInventorySlots(playerInventory, 8, 84);
+        //this.addStandardInventorySlots(playerInventory, 8, 84);
     }
 
     public int getFuel() {

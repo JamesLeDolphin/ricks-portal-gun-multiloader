@@ -10,10 +10,9 @@ import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.ARGB;
+import net.minecraft.util.FastColor;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -33,32 +32,32 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         rH = this.addRenderableWidget(new PGSlider(this.width / 2 - 90,this.height / 2 + 8, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.redFloat(style.highlightColor()), 0, 1, false));
+                FastColor.ARGB32.red(style.highlightColor()), 0, 255, false));
 
         gH = this.addRenderableWidget(new PGSlider(this.width / 2 - 90, this.height / 2 + 28, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.greenFloat(style.highlightColor()), 0, 1, false));
+                FastColor.ARGB32.green(style.highlightColor()), 0, 255, false));
 
         bH = this.addRenderableWidget(new PGSlider(this.width / 2 - 90, this.height / 2 + 48, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.blueFloat(style.highlightColor()), 0, 1, false));
+                FastColor.ARGB32.blue(style.highlightColor()), 0, 255, false));
 
 
         rText = this.addRenderableWidget(new PGSlider(this.width / 2 - 18, this.height / 2 + 8, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.redFloat(style.textColor()), 0, 1, false));
+                FastColor.ARGB32.red(style.textColor()), 0, 255, false));
 
         gText = this.addRenderableWidget(new PGSlider(this.width / 2 - 18, this.height / 2 + 28, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.greenFloat(style.textColor()), 0, 1, false));
+                FastColor.ARGB32.green(style.textColor()), 0, 255, false));
 
         bText = this.addRenderableWidget(new PGSlider(this.width / 2 - 18, this.height / 2 + 48, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.blueFloat(style.textColor()), 0, 1, false));
+                FastColor.ARGB32.blue(style.textColor()), 0, 255, false));
 
         rBG = this.addRenderableWidget(new PGSlider(this.width / 2 + 54, this.height / 2 + 8, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.redFloat(style.bgColor()), 0, 1, false));
+                FastColor.ARGB32.red(style.bgColor()), 0, 255, false));
 
         gBG = this.addRenderableWidget(new PGSlider(this.width / 2 + 54, this.height / 2 + 28, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.greenFloat(style.bgColor()), 0, 1, false));
+                FastColor.ARGB32.green(style.bgColor()), 0, 255, false));
 
         bBG = this.addRenderableWidget(new PGSlider(this.width / 2 + 54, this.height / 2 + 48, 36, 12, Component.translatable("chat.editBox"),
-                ARGB.blueFloat(style.bgColor()), 0, 1, false));
+                FastColor.ARGB32.blue(style.bgColor()), 0, 255, false));
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64,128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
@@ -96,7 +95,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getTextColor() {
         try {
-            return ARGB.colorFromFloat(1.0f, (float) rText.getValue(), (float) gText.getValue(), (float) bText.getValue());
+            return FastColor.ARGB32.color((int) rText.getValue(), (int) gText.getValue(), (int) bText.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }
@@ -105,7 +104,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getHighlightColor() {
         try {
-            return ARGB.colorFromFloat(1.0f, (float) rH.getValue(), (float) gH.getValue(), (float) bH.getValue());
+            return FastColor.ARGB32.color((int) rH.getValue(), (int) gH.getValue(), (int) bH.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }
@@ -114,7 +113,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getBackgroundColor() {
         try {
-            return ARGB.colorFromFloat(1.0f, (float) rBG.getValue(), (float) gBG.getValue(), (float) bBG.getValue());
+            return FastColor.ARGB32.color((int) rBG.getValue(), (int) gBG.getValue(), (int) bBG.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }
@@ -153,7 +152,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, mouseX, mouseY, delta);
         }
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
 
         graphics.fill(rH.getX(), rH.getY() - 22, rText.getX() + rText.getWidth() / 2, rH.getY() - 76, this.getHighlightColor());
         graphics.fill(rText.getX() + rText.getWidth() / 2, rText.getY() - 22, rBG.getX() + rBG.getWidth(), rBG.getY() - 76, this.getBackgroundColor());

@@ -20,7 +20,7 @@ public class PGEntities {
 
 
     private static <E extends Entity> EntityType<E> register(String name, EntityType.Builder<E> builder) {
-        EntityType<E> type = builder.build(keyOf(name));
+        EntityType<E> type = builder.build(name);
         ALL.put(PGHelper.createLocation(name), type);
         return type;
     }

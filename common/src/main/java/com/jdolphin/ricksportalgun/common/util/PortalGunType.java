@@ -39,10 +39,11 @@ public record PortalGunType(Component name, ResourceLocation id, int color, int 
     }
 
     static {
+
         CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(ComponentSerialization.CODEC.fieldOf("name").forGetter(PortalGunType::name),
                         ResourceLocation.CODEC.fieldOf("id").forGetter(PortalGunType::id),
-                                ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("color", Color.GREEN.getRGB()).forGetter(PortalGunType::color),
+                                ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("color", Color.GREEN.getRGB()).forGetter(PortalGunType::color),
                                 Codec.INT.optionalFieldOf("tint_amount", 3)
                                         .validate(integer -> (integer >= 0 && integer <= 3) ? DataResult.success(integer) : DataResult.error(() -> "Tint amount must be between 0 and 3 inclusive!"))
                                         .forGetter(PortalGunType::tints),

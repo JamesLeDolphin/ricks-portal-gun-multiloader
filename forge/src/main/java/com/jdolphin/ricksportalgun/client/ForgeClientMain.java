@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
-import com.jdolphin.ricksportalgun.client.init.PGItemTints;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
@@ -11,7 +10,6 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -66,7 +64,7 @@ public class ForgeClientMain {
 
         @SubscribeEvent
         public static void constructEvent(FMLConstructModEvent event) {
-            PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
+        //    PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
         }
 
         @SubscribeEvent

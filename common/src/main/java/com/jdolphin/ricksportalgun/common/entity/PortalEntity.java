@@ -19,7 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Relative;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -144,7 +144,7 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public void kill(ServerLevel level) {
+    public void kill() {
         this.remove(RemovalReason.DISCARDED);
     }
 
@@ -159,7 +159,7 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public boolean hurtServer(@NotNull ServerLevel serverLevel, @NotNull DamageSource damageSource, float v) {
+    public boolean hurt(@NotNull DamageSource damageSource, float v) {
         return false;
     }
 
@@ -281,7 +281,7 @@ public class PortalEntity extends Entity {
             if (lifetime > 0) lifetime--;
             if (delay > 0) delay--;
             if (!firstTick && lifetime == 0) {
-                this.kill(serverLevel);
+                this.kill();
                 return;
             }
             List<Entity> entityList = getEntitiesNearby(this, 0.3D);
@@ -299,16 +299,16 @@ public class PortalEntity extends Entity {
                     }
                     if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                         if (this.bootleg || LevelHelper.isBlenderDestination(getHopDim())) {
-                            nearby.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Integer.MAX_VALUE);
+                            nearby.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Integer.MAX_VALUE);
                         }
                         if (destinationDim != null && !destinationDim.isClientSide()) {
                             if (nearby.canUsePortal(false) && delay == 0) {
                                 Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
                                 double dx = (double) destinationPos.getX() + look.x * 2d;
                                 double dz = (double) destinationPos.getZ() + look.z * 2d;
-                                Set<Relative> relativeSet = new HashSet<>();
-                                relativeSet.add(Relative.Y_ROT);
-                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot(), false);
+                                Set<RelativeMovement> set = new HashSet<>();
+                                set.add(RelativeMovement.Y_ROT);
+                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, set, nearby.getYRot(), nearby.getXRot());
 
                                 nearby.setPortalCooldown();
                             }

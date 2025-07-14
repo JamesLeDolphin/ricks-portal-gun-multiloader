@@ -16,10 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,13 +40,13 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         ItemStack stack = player.getMainHandItem();
         int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
         this.r = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
-                Component.empty(), ARGB.redFloat(color), 0, 1, false));
+                Component.empty(), new Color(color).getRed(), 0, 255, false));
 
         this.g = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 36, 36, 20,
-                Component.empty(), ARGB.greenFloat(color), 0, 1, false));
+                Component.empty(), new Color(color).getGreen(), 0, 255, false));
 
         this.b = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 12, 36, 20,
-                Component.empty(), ARGB.blueFloat(color), 0, 1, false));
+                Component.empty(), new Color(color).getBlue(), 0, 255, false));
 
         this.size = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 + 12, 36, 20,
                 Component.empty(), 1, 1, 3, false));
@@ -71,9 +69,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                     int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
 
                     try {
-                        this.r.setValue(ARGB.redFloat(rgb));
-                        this.g.setValue(ARGB.greenFloat(rgb));
-                        this.b.setValue(ARGB.blueFloat(rgb));
+                        this.r.setValue(new Color(rgb).getRed());
+                        this.g.setValue(new Color(rgb).getRed());
+                        this.b.setValue(new Color(rgb).getRed());
                     } catch (Exception e) {
                         PGConstants.LOGGER.warn(e.getMessage());
                     }
@@ -101,7 +99,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
     public int getColor() {
         try {
-            return ARGB.colorFromFloat(1.0f, (float) this.r.getValue(), (float) this.g.getValue(), (float) this.b.getValue());
+            return new Color(((int) this.r.getValue()), ((int) this.g.getValue()), ((int) this.b.getValue())).getRGB();
         } catch (NumberFormatException e) {
             GuiHelper.drawWhiteCenteredString(new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource()),
                     Component.translatable("error.ricksportalgun.color", e.getMessage().toLowerCase()),
@@ -129,10 +127,10 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, r, g, b);
 
-        graphics.blit(RenderType::guiTextured, BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
 
         int x = 64, y = 82, multiplier = size.getValueInt();
-        graphics.blit(RenderType::guiTextured, PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
+        graphics.blit(PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
                 this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y, this.getColor());
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);

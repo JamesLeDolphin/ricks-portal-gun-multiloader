@@ -30,7 +30,7 @@ public class PGBlocks {
             .mapColor(MapColor.COLOR_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
 
     private static Block register(String id, Function<BlockBehaviour.Properties, Block> func, BlockBehaviour.Properties properties) {
-        Block block = func.apply(properties.setId(keyOf(id)));
+        Block block = func.apply(properties);
         ALL.put(PGHelper.createLocation(id), block);
         return block;
     }

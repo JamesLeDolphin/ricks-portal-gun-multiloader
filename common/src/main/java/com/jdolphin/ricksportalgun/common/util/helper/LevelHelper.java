@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Relative;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -110,7 +110,7 @@ public class LevelHelper {
         RandomSource rand = level.getRandom();
         int min = radius < 1000 ? 10 : 100;
         int xCoord = rand.nextInt(min, radius);
-        int yCoord = Mth.nextInt(rand,level.getMinY() + 1, level.getMaxY());
+        int yCoord = Mth.nextInt(rand,level.getMinBuildHeight() + 1, level.getMaxBuildHeight());
         int zCoord =  rand.nextInt(min, radius);
         BlockPos posNew = new BlockPos(xCoord, yCoord, zCoord);
         return border.clampToBounds(posNew);
@@ -142,11 +142,11 @@ public class LevelHelper {
 
         int y = bPos.getY();
         int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, bPos.getX(), bPos.getZ());
-        int worldCenter = ((level.getMinY() + 2) + height) / 2;
+        int worldCenter = ((level.getMinBuildHeight() + 2) + height) / 2;
 
         int direction = y > worldCenter ? -1 : 1;
 
-        while (y >= level.getMinY() + 2 && y <= level.getMaxY()) {
+        while (y >= level.getMinBuildHeight() + 2 && y <= level.getMaxBuildHeight()) {
             BlockPos pos1 = new BlockPos(bPos.getX(), y, bPos.getZ());
 
             if (!isRandomizerSafe(level, pos1)) {
@@ -159,7 +159,7 @@ public class LevelHelper {
         bPos = new BlockPos(bPos.getX(), y, bPos.getZ());
 
         if (!isRandomizerSafe(level, bPos)
-                || y <= level.getMinY() + 2 || y >= level.getMaxY()) {
+                || y <= level.getMinBuildHeight() + 2 || y >= level.getMaxBuildHeight()) {
             return iteration <= 100 ? getSafePos(getRandomCoord(level, 25), level, iteration) : bPos;
         }
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, false);
@@ -194,9 +194,9 @@ public class LevelHelper {
     }
 
     public static void teleportEntity(Entity entity, ServerLevel level, BlockPos pos) {
-        Set<Relative> relativeSet = new HashSet<>();
-        relativeSet.add(Relative.Y_ROT);
-        entity.teleportTo(level, pos.getX(), pos.getY(), pos.getZ(), relativeSet, entity.getYRot(), entity.getXRot(), false);
+        Set<RelativeMovement> relativeSet = new HashSet<>();
+        relativeSet.add(RelativeMovement.Y_ROT);
+        entity.teleportTo(level, pos.getX(), pos.getY(), pos.getZ(), relativeSet, entity.getYRot(), entity.getXRot());
     }
 
     public static ResourceLocation getLevelDimensionLocation(Level world) {

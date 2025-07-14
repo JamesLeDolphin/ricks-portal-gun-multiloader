@@ -9,16 +9,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     private final List<ItemStack> items;
     final ItemStack result;
-    private PlacementInfo placementInfo;
 
     public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result) {
         this.items = itemStacks; //Temp
@@ -59,6 +59,16 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     }
 
     @Override
+    public boolean canCraftInDimensions(int i, int i1) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return this.result;
+    }
+
+    @Override
     public RecipeSerializer<? extends Recipe<WorkbenchRecipeInput>> getSerializer() {
         return PGRecipeSerializers.WORKBENCH_SERIALIZER;
     }
@@ -68,21 +78,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
         return PGRecipeTypes.WORKBENCH_TYPE;
     }
 
-    @Override
-    public PlacementInfo placementInfo() {
-        if (this.placementInfo == null) {
-            List<Ingredient> ingredientList = new ArrayList<>();
-            this.items.forEach(stack -> ingredientList.add(Ingredient.of(stack.getItem())));
-            this.placementInfo = PlacementInfo.create(ingredientList);
-        }
 
-        return this.placementInfo;
-    }
-
-    @Override
-    public RecipeBookCategory recipeBookCategory() {
-        return RecipeBookCategories.CRAFTING_MISC;
-    }
 
     public static class Serializer implements RecipeSerializer<PortalGunWorkbenchRecipe> {
 

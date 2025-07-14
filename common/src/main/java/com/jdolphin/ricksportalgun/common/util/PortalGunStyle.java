@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.ARGB;
+import net.minecraft.util.FastColor;
 
 import java.awt.*;
 
@@ -24,6 +24,6 @@ public record PortalGunStyle(int highlightColor, int bgColor, int textColor) {
         PACKET_CODEC = StreamCodec.composite(ByteBufCodecs.INT, PortalGunStyle::highlightColor, ByteBufCodecs.INT, PortalGunStyle::bgColor,
                 ByteBufCodecs.INT, PortalGunStyle::textColor, PortalGunStyle::new);
 
-        DEFAULT = new PortalGunStyle(ARGB.color(200, 0, 0), ARGB.color(100, 0, 0), Color.WHITE.getRGB());
+        DEFAULT = new PortalGunStyle(FastColor.ARGB32.color(200, 0, 0), FastColor.ARGB32.color(100, 0, 0), Color.WHITE.getRGB());
     }
 }

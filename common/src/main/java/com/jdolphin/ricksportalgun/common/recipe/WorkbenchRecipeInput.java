@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.recipe;
 
-import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import java.util.List;
 public class WorkbenchRecipeInput implements RecipeInput {
     private final int ingredientCount;
     private final List<ItemStack> items;
-    private final StackedItemContents stackedContents = new StackedItemContents();
+    private final StackedContents stackedContents = new StackedContents();
 
     public WorkbenchRecipeInput(List<ItemStack> stacks) {
         this.items = stacks;
@@ -26,7 +26,7 @@ public class WorkbenchRecipeInput implements RecipeInput {
         ingredientCount = i;
     }
 
-    public StackedItemContents stackedContents() {
+    public StackedContents stackedContents() {
         return this.stackedContents;
     }
 

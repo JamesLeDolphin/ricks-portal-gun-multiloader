@@ -14,19 +14,13 @@ import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -171,9 +165,10 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         if (hasShiftDown()) poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
         else poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
 
-        ItemStackRenderState state = new ItemStackRenderState();
-        Minecraft.getInstance().getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.GUI, false, null, null, 0);
-        graphics.drawSpecial(source -> state.render(poseStack, source, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
+      //  ItemStackRenderState state = new ItemStackRenderState();
+      //
+      //  Minecraft.getInstance().getItemRenderer().updateForTopItem(state, stack, ItemDisplayContext.GUI, false, null, null, 0);
+      //  graphics.drawSpecial(source -> state.render(poseStack, source, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
 
         poseStack.popPose();
     }
@@ -183,6 +178,6 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         int x = (width - imageWidth) / 2;
         int y = ((height - imageHeight) / 2);
 
-        graphics.blit(RenderType::guiTextured, BG, x + 12, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
+        graphics.blit(BG, x + 12, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
     }
 }

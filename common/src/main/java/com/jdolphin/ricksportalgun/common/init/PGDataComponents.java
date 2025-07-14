@@ -21,6 +21,7 @@ public class PGDataComponents {
 
     public static final DataComponentType<BlockPos> PORTAL_POS = registerComponent("portal_pos", typeBuilder -> typeBuilder.persistent(BlockPos.CODEC));
     public static final DataComponentType<ResourceLocation> PORTAL_DIM = registerComponent("portal_dim", typeBuilder -> typeBuilder.persistent(ResourceLocation.CODEC));
+    public static final DataComponentType<ResourceLocation> GUN_MODEL = registerComponent("gun_model", typeBuilder -> typeBuilder.persistent(ResourceLocation.CODEC));
     public static final DataComponentType<Integer> DEFAULT_PORTAL_COLOUR = registerInteger("default_color");
     public static final DataComponentType<Boolean> BOOTLEG = registerBoolean("bootleg");
     public static final DataComponentType<Integer> PORTAL_COLOUR = registerInteger("portal_color");

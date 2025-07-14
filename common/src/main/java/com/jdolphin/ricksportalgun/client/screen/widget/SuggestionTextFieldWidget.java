@@ -58,7 +58,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     public void update() {
         List<String> suggestions = this.sortSuggestions(this.suggestions);
         this.suggestionListWidget.setSuggestions(suggestions);
-        this.suggestionListWidget.setScrollAmount(0);
+        //this.suggestionListWidget.setScrollAmount(0);
         this.suggestionListWidget.setHeight(this.height * Math.min(3, suggestions.size()));
     }
 

@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenLocatorScreenPacket;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,23 +31,23 @@ public record SBOpenLocatorScreenPacket() implements PGPayload {
         List<String> biomes = new ArrayList<>();
         List<String> structures = new ArrayList<>();
 
-        Optional<Registry<Biome>> biomeRegistry = server.registryAccess().lookup(Registries.BIOME);
-        Optional<Registry<Structure>> structureRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
+        Optional<HolderLookup.RegistryLookup<Biome>> biomeRegistry = server.registryAccess().lookup(Registries.BIOME);
+        Optional<HolderLookup.RegistryLookup<Structure>> structureRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
         int biomeCount = 0;
         int structureCount = 0;
         if (biomeRegistry.isPresent()) {
-            biomeCount = biomeRegistry.get().size();
-            biomeRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
-                String biomeName = holders.getRegisteredName();
+            biomeCount = biomeRegistry.get().listElements().toList().size();
+            biomeRegistry.ifPresent(registry -> registry.listElementIds().forEach(holders -> {
+                String biomeName = holders.location().toString();
                 if (!biomes.contains(biomeName)) {
                     biomes.add(biomeName);
                 }
             }));
         }
         if (structureRegistry.isPresent()) {
-            structureCount = structureRegistry.get().size();
-            structureRegistry.ifPresent(registry -> registry.asHolderIdMap().forEach(holders -> {
-                String structureName = holders.getRegisteredName();
+            structureCount = structureRegistry.get().listElements().toList().size();
+            structureRegistry.ifPresent(registry -> registry.listElementIds().forEach(holders -> {
+                String structureName = holders.location().toString();
                 if (!structures.contains(structureName)) {
                     structures.add(structureName);
                 }
