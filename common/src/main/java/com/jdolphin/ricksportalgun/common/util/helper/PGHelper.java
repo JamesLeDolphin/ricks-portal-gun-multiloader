@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.common.util.helper;
 import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
-import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +21,7 @@ import java.util.List;
 public class PGHelper {
     public static MutableComponent COORDS_SET = Component.translatable("notice.ricksportalgun.destination.set");
 
-    public static ResourceLocation createLocation(String string) {
+    public static ResourceLocation id(String string) {
         return ResourceLocation.fromNamespaceAndPath(PGConstants.MODID, string);
     }
 
@@ -53,11 +52,10 @@ public class PGHelper {
     }
 
     public static List<String> defaultDisabledEntities() {
-        return Lists.newArrayList(
-                PGHelper.getEntityAsString(EntityType.ENDER_DRAGON),
-                PGHelper.getEntityAsString(EntityType.WITHER),
-                PGHelper.getEntityAsString(EntityType.WARDEN),
-                PGHelper.getEntityAsString(PGEntities.PORTAL)
+        return Lists.newArrayList("minecraft:ender_dragon",
+                "minecraft:wither",
+                "minecraft:warden",
+                "ricksportalgun:portal"
         );
     }
 

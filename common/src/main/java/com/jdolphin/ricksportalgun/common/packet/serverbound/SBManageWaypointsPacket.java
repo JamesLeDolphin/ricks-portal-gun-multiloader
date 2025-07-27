@@ -17,7 +17,7 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
     public static final StreamCodec<FriendlyByteBuf, SBManageWaypointsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBManageWaypointsPacket::waypoint,
             ByteBufCodecs.BOOL, SBManageWaypointsPacket::remove, SBManageWaypointsPacket::new);
 
-    public static final Type<SBManageWaypointsPacket> ID = new Type<>(PGHelper.createLocation("manage_waypoint"));
+    public static final Type<SBManageWaypointsPacket> ID = new Type<>(PGHelper.id("manage_waypoint"));
 
 
     public void handle(ServerPlayer player) {

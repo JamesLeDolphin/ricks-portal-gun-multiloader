@@ -97,7 +97,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         stack.set(PGDataComponents.FUEL, fuel);
         stack.remove(DataComponents.DAMAGE);
     }
-
     public static boolean refuel(ItemStack stack, Player player) {
         ItemStack offhand = player.getOffhandItem();
         ItemStack mainHand = player.getMainHandItem();

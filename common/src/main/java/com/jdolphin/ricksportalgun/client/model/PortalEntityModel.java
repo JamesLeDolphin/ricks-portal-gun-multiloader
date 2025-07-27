@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class PortalEntityModel extends EntityModel<PortalEntityRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(PGHelper.createLocation("portal"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(PGHelper.id("portal"), "main");
     private final ModelPart bb_main;
 
     public PortalEntityModel(ModelPart root) {

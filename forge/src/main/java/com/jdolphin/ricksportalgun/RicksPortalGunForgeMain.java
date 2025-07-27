@@ -71,7 +71,7 @@ public class RicksPortalGunForgeMain {
             MinecraftServer server = serverPlayer.getServer();
             if (server != null) {
                 List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-                if (!dims.contains(PGHelper.createLocation("blender").toString())) dims.add(PGHelper.createLocation("blender").toString());
+                if (!dims.contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
                 CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
                 CBSyncGunTypesPacket typeSync = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
                 ForgePackets.sendToPlayer(serverPlayer, dimSync, typeSync);

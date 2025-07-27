@@ -16,7 +16,6 @@ neoForge {
     }
 }
 
-dependencies {}
 
 configurations {
     commonJava {

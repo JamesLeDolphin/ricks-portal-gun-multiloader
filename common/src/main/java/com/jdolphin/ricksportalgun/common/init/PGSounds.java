@@ -8,7 +8,7 @@ public class PGSounds {
     public static final SoundEvent PORTAL_SHOOT = registerSoundEvent("item.portal_gun.shoot");
 
     private static SoundEvent registerSoundEvent(String name) {
-        return SoundEvent.createVariableRangeEvent(PGHelper.createLocation(name));
+        return SoundEvent.createVariableRangeEvent(PGHelper.id(name));
     }
 
     public static void register() {}

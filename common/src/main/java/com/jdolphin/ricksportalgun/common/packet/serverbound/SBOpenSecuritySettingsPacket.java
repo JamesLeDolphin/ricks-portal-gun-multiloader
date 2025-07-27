@@ -14,7 +14,7 @@ import java.util.List;
 
 public record SBOpenSecuritySettingsPacket() implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBOpenSecuritySettingsPacket> CODEC = StreamCodec.unit(new SBOpenSecuritySettingsPacket());
-    public static final Type<SBOpenSecuritySettingsPacket> ID = new Type<>(PGHelper.createLocation("open_security_screen"));
+    public static final Type<SBOpenSecuritySettingsPacket> ID = new Type<>(PGHelper.id("open_security_screen"));
 
     @Override
     public void handle(ServerPlayer player) {

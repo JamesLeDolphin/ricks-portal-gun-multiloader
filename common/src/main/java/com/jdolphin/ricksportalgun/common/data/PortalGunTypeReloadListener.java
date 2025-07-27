@@ -18,7 +18,7 @@ public class PortalGunTypeReloadListener extends SimpleJsonResourceReloadListene
     }
 
     public ResourceLocation getID() {
-        return PGHelper.createLocation("portal_guns");
+        return PGHelper.id("portal_guns");
     }
 
     @Override

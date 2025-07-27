@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBCoordCheckerPacket(String dim) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
-    public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.createLocation("coord_check"));
+    public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.id("coord_check"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

@@ -21,7 +21,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     private PlacementInfo placementInfo;
 
     public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result) {
-        this.items = itemStacks; //Temp
+        this.items = itemStacks;
         this.result = result;
     }
 

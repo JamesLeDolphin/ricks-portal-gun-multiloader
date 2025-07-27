@@ -16,7 +16,7 @@ public class PGRecipeSerializers {
     public static final RecipeSerializer<PortalGunWorkbenchRecipe> WORKBENCH_SERIALIZER = register("portal_gun_workbench", new PortalGunWorkbenchRecipe.Serializer());
 
     private static  <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
-        ALL.put(PGHelper.createLocation(name), serializer);
+        ALL.put(PGHelper.id(name), serializer);
         return serializer;
     }
 

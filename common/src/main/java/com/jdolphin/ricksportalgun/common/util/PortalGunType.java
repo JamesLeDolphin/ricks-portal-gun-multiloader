@@ -17,9 +17,9 @@ import java.awt.*;
 public record PortalGunType(Component name, ResourceLocation id, int color, int tints, ResourceLocation model) {
     public static Codec<PortalGunType> CODEC;
     public static final StreamCodec<ByteBuf, PortalGunType> PACKET_CODEC;
-    public static final PortalGunType DEFAULT = new PortalGunType(Component.translatable("item.ricksportalgun.portal_gun"), PGHelper.createLocation("portal_gun"),
+    public static final PortalGunType DEFAULT = new PortalGunType(Component.translatable("item.ricksportalgun.portal_gun"), PGHelper.id("portal_gun"),
             Color.GREEN.getRGB(), 3,
-            PGHelper.createLocation("portal_gun"));
+            PGHelper.id("portal_gun"));
 
     public PortalGunType(Component name, ResourceLocation id, int color, int tints, ResourceLocation model) {
         this.id = id;

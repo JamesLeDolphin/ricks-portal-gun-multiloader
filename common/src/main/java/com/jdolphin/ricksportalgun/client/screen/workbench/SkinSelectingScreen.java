@@ -35,11 +35,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMenu> {
-    public static final ResourceLocation BG = PGHelper.createLocation("textures/gui/workbench/skin_select.png");
-    public static ResourceLocation NEXT = PGHelper.createLocation("textures/gui/sprites/next.png");
-    public static ResourceLocation NEXT_HL = PGHelper.createLocation("textures/gui/sprites/next_highlighted.png");
-    public static ResourceLocation PREVIOUS = PGHelper.createLocation("textures/gui/sprites/previous.png");
-    public static ResourceLocation PREVIOUS_HL = PGHelper.createLocation("textures/gui/sprites/previous_highlighted.png");
+    public static final ResourceLocation BG = PGHelper.id("textures/gui/workbench/skin_select.png");
+    public static ResourceLocation NEXT = PGHelper.id("textures/gui/sprites/next.png");
+    public static ResourceLocation NEXT_HL = PGHelper.id("textures/gui/sprites/next_highlighted.png");
+    public static ResourceLocation PREVIOUS = PGHelper.id("textures/gui/sprites/previous.png");
+    public static ResourceLocation PREVIOUS_HL = PGHelper.id("textures/gui/sprites/previous_highlighted.png");
 
     private PGImageButton next, previous;
     private Button select;

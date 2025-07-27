@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> {
-    public static final ResourceLocation CONTAINER_LOCATION = PGHelper.createLocation("textures/gui/dispenser/portal_dispenser.png");
+    public static final ResourceLocation CONTAINER_LOCATION = PGHelper.id("textures/gui/dispenser/portal_dispenser.png");
     private EditBox xInput, yInput, zInput;
     private Button selectButton;
     private SuggestionTextFieldWidget dimInput;

@@ -15,7 +15,7 @@ public class PGCriteriaTriggers {
     public static PortalGunTrigger PORTAL_GUN_TRIGGER = register("portal_gun", new PortalGunTrigger());
 
     private static <T extends CriterionTrigger<?>> T register(String name, T trigger) {
-        ALL.put(PGHelper.createLocation(name), trigger);
+        ALL.put(PGHelper.id(name), trigger);
         return trigger;
     }
 }

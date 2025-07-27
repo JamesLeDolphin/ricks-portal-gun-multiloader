@@ -13,7 +13,7 @@ public record SBSetPortalGunTypePacket(PortalGunType portalGunType) implements P
     public static final StreamCodec<FriendlyByteBuf, SBSetPortalGunTypePacket> CODEC = StreamCodec.composite(PortalGunType.PACKET_CODEC, SBSetPortalGunTypePacket::portalGunType,
             SBSetPortalGunTypePacket::new);
 
-    public static final Type<SBSetPortalGunTypePacket> ID = new Type<>(PGHelper.createLocation("set_portal_gun_type"));
+    public static final Type<SBSetPortalGunTypePacket> ID = new Type<>(PGHelper.id("set_portal_gun_type"));
 
     @Override
     public void handle(ServerPlayer player) {

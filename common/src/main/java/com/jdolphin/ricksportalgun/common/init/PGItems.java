@@ -124,7 +124,7 @@ public class PGItems {
     private static Item register(String name, Function<Item.Properties, Item> factory, Item.Properties properties, ResourceKey<CreativeModeTab> tab) {
         Item item = factory.apply(properties.setId(keyOf(name)));
         TABS.put(item, tab);
-        ALL.put(PGHelper.createLocation(name), item);
+        ALL.put(PGHelper.id(name), item);
         return item;
     }
 
@@ -135,6 +135,6 @@ public class PGItems {
     }
 
     private static ResourceKey<Item> keyOf(String id) {
-        return ResourceKey.create(Registries.ITEM, PGHelper.createLocation(id));
+        return ResourceKey.create(Registries.ITEM, PGHelper.id(id));
     }
 }

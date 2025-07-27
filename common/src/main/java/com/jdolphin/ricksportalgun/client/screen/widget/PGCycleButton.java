@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 public class PGCycleButton<T> extends AbstractButton {
     private static final List<Boolean> BOOLEAN_OPTIONS;
-    public static ResourceLocation ARROW_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/arrow.png");
+    public static ResourceLocation ARROW_TEXTURES = PGHelper.id("textures/gui/sprites/icon/arrow.png");
     private int index;
     private T value;
     private final PGCycleButton.ValueListSupplier<T> values;

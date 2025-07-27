@@ -37,7 +37,7 @@ public class NeoForgePackets {
                 ClientPacketHandler.syncClientDimensions(packet.dimensions()));
 
         registrar.commonToClient(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC, (packet, context) ->
-                ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
+                ClientPacketHandler.openLocatorScreen(packet.biomeList(), packet.structureList()));
         registrar.commonToClient(CBOpenSecurityGuiPacket.ID, CBOpenSecurityGuiPacket.CODEC, (packet, context) ->
                 ClientPacketHandler.openSecurityScreen(packet.strings()));
     }

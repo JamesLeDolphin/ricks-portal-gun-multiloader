@@ -31,7 +31,7 @@ import java.util.Optional;
 public record SBLocatePacket(String name, int value) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBLocatePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SBLocatePacket::name, ByteBufCodecs.INT, SBLocatePacket::value, SBLocatePacket::new);
-    public static final Type<SBLocatePacket> ID = new Type<>(PGHelper.createLocation("locate"));
+    public static final Type<SBLocatePacket> ID = new Type<>(PGHelper.id("locate"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

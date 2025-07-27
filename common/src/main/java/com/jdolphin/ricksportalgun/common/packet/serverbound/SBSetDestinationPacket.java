@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBSetDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDestinationPacket::pos,
             ByteBufCodecs.STRING_UTF8, SBSetDestinationPacket::dim, SBSetDestinationPacket::new);
-    public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.createLocation("destination"));
+    public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.id("destination"));
 
     public void handle(ServerPlayer player) {
         InteractionHand hand = player.getUsedItemHand();

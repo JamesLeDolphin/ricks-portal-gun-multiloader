@@ -17,7 +17,7 @@ public class PGRecipeTypes {
     public static final RecipeType<PortalGunWorkbenchRecipe> WORKBENCH_TYPE = register("portal_gun_workbench");
 
     private static  <T extends Recipe<?>> RecipeType<T> register(String name) {
-        ResourceLocation loc = PGHelper.createLocation(name);
+        ResourceLocation loc = PGHelper.id(name);
         RecipeType<T> type = new RecipeType<>() {
             @Override
             public String toString() {

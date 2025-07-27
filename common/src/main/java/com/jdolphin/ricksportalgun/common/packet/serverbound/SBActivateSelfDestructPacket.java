@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public record SBActivateSelfDestructPacket() implements PGPayload {
-    public static final Type<SBActivateSelfDestructPacket> ID = new Type<>(PGHelper.createLocation("activate_self_destruct"));
+    public static final Type<SBActivateSelfDestructPacket> ID = new Type<>(PGHelper.id("activate_self_destruct"));
     public static final StreamCodec<FriendlyByteBuf, SBActivateSelfDestructPacket> CODEC = StreamCodec.unit(new SBActivateSelfDestructPacket());
 
     @Override

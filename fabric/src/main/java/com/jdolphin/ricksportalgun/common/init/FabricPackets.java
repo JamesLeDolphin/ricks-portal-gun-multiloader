@@ -67,7 +67,7 @@ public class FabricPackets {
         ClientPlayNetworking.registerGlobalReceiver(CBSyncGunTypesPacket.ID, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenBarrierGuiPacket.ID, (packet, context) -> ClientPacketHandler.openBarrierGui(packet.pos()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenLocatorScreenPacket.ID, (packet, context) ->
-                ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
+                ClientPacketHandler.openLocatorScreen(packet.biomeList(), packet.structureList()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenSecurityGuiPacket.ID, (packet, context) -> ClientPacketHandler.openSecurityScreen(packet.strings()));
     }
 }

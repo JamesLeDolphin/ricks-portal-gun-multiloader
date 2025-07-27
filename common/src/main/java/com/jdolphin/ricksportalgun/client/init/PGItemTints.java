@@ -21,6 +21,6 @@ public class PGItemTints {
     }
 
     private static void register(String name, MapCodec<? extends ItemTintSource> codec) {
-        ALL.put(PGHelper.createLocation(name), codec);
+        ALL.put(PGHelper.id(name), codec);
     }
 }

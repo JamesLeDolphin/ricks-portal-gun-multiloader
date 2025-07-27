@@ -29,9 +29,10 @@ public class LocatorScreen extends AbstractBaseScreen {
     private final List<String> playerList, biomeList, structureList;
     private PGImageButton backButton;
 
-    public LocatorScreen(final List<String> playerList, final List<String> biomeList, final List<String> structureList) {
+    public LocatorScreen(final List<String> biomeList, final List<String> structureList) {
         super("menu.ricksportalgun.player_locator");
-        this.playerList = playerList;
+        assert minecraft.player != null;
+        this.playerList = minecraft.player.connection.getOnlinePlayers().stream().map(info -> info.getProfile().getName()).toList();
         this.biomeList = biomeList;
         this.structureList = structureList;
     }

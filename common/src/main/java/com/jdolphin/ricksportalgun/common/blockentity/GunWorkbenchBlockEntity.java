@@ -163,12 +163,6 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         }
     }
 
-    private void clearInputs() {
-        for (int i = 0; i < 4; i++) {
-            this.setItem(i, ItemStack.EMPTY);
-        }
-    }
-
     private void resetProgress() {
         this.progress = 0;
         this.maxProgress = PGHelper.seconds(3);

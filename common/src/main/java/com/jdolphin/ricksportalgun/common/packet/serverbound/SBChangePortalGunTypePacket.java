@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 public record SBChangePortalGunTypePacket(PortalGunType gunType) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBChangePortalGunTypePacket> CODEC = StreamCodec.composite(PortalGunType.PACKET_CODEC,
             SBChangePortalGunTypePacket::gunType, SBChangePortalGunTypePacket::new);
-    public static final Type<SBChangePortalGunTypePacket> ID = new Type<>(PGHelper.createLocation("portal_gun_type"));
+    public static final Type<SBChangePortalGunTypePacket> ID = new Type<>(PGHelper.id("portal_gun_type"));
 
     public void handle(ServerPlayer player) {
         InteractionHand hand = player.getUsedItemHand();

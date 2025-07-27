@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public record SBWorkbenchWaypointEditPackage(Waypoint waypoint, boolean leftSide, boolean copy, boolean delete) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBWorkbenchWaypointEditPackage> CODEC;
-    public static final Type<SBWorkbenchWaypointEditPackage> ID = new Type<>(PGHelper.createLocation("manage_waypoint_workbench"));
+    public static final Type<SBWorkbenchWaypointEditPackage> ID = new Type<>(PGHelper.id("manage_waypoint_workbench"));
 
     @Override
     public void handle(ServerPlayer player) {

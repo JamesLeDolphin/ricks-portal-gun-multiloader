@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBSecuritySettingsPacket(boolean lock, String name, String code, boolean selfDestruct) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBSecuritySettingsPacket> CODEC;
-    public static final Type<SBSecuritySettingsPacket> ID = new Type<>(PGHelper.createLocation("settings"));
+    public static final Type<SBSecuritySettingsPacket> ID = new Type<>(PGHelper.id("settings"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;

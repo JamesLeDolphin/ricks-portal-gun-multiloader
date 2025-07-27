@@ -21,7 +21,7 @@ public class PGEntities {
 
     private static <E extends Entity> EntityType<E> register(String name, EntityType.Builder<E> builder) {
         EntityType<E> type = builder.build(keyOf(name));
-        ALL.put(PGHelper.createLocation(name), type);
+        ALL.put(PGHelper.id(name), type);
         return type;
     }
 
@@ -32,6 +32,6 @@ public class PGEntities {
     }
 
     private static ResourceKey<EntityType<?>> keyOf(String id) {
-        return ResourceKey.create(Registries.ENTITY_TYPE, PGHelper.createLocation(id));
+        return ResourceKey.create(Registries.ENTITY_TYPE, PGHelper.id(id));
     }
 }

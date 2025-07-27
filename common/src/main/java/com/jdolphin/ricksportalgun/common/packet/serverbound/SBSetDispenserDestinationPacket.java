@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implements PGPayload {
     public static final StreamCodec<ByteBuf, SBSetDispenserDestinationPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, SBSetDispenserDestinationPacket::pos,
             ByteBufCodecs.STRING_UTF8, SBSetDispenserDestinationPacket::dim, SBSetDispenserDestinationPacket::new);
-    public static final Type<SBSetDispenserDestinationPacket> ID = new Type<>(PGHelper.createLocation("dispenser_destination"));
+    public static final Type<SBSetDispenserDestinationPacket> ID = new Type<>(PGHelper.id("dispenser_destination"));
 
     public void handle(ServerPlayer player) {
         if (player.containerMenu instanceof PortalDispenserMenu menu) {
