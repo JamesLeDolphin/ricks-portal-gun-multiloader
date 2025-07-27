@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": "minecraft:copper_block",
-    "B": "ricksportalgun:circuitboard",
+    "B": "minecraft:redstone",
     "T": "minecraft:crafting_table",
     "S": "minecraft:smithing_table"
   },
