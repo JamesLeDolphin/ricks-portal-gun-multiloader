@@ -109,7 +109,7 @@ public class ForgePackets {
         INSTANCE.messageBuilder(CBOpenLocatorScreenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(CBOpenLocatorScreenPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) ClientPacketHandler.openLocatorScreen(packet.biomeList(), packet.structureList());
+                    if (context.isClientSide()) ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList());
                 }).add();
         INSTANCE.messageBuilder(CBOpenSecurityGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(CBOpenSecurityGuiPacket.CODEC.cast())

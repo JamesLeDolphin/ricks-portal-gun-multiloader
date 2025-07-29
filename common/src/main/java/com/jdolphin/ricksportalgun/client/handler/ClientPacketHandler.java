@@ -31,8 +31,8 @@ public class ClientPacketHandler {
         PortalGunTypeRegistry.CLIENT_TYPES.addAll(types);
     }
 
-    public static void openLocatorScreen(List<String> biomeList, List<String> structureList) {
-        Minecraft.getInstance().setScreen(new LocatorScreen(biomeList, structureList));
+    public static void openLocatorScreen(List<String> playerlist, List<String> biomeList, List<String> structureList) {
+        Minecraft.getInstance().setScreen(new LocatorScreen(playerlist, biomeList, structureList));
     }
 
     public static void openSecurityScreen(List<String> playerList) {
