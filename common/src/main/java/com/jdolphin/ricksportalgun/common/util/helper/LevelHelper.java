@@ -142,7 +142,7 @@ public class LevelHelper {
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);
 
         int y = bPos.getY();
-        int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, bPos.getX(), bPos.getZ());
+        int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, bPos.getX(), bPos.getZ());
         int worldCenter = ((level.getMinY() + 2) + height) / 2;
 
         int direction = y > worldCenter ? -1 : 1;

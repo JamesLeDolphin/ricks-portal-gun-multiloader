@@ -1,12 +1,15 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.compat.CBSyncRecipesPacket;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.data.FabricPortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
+import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -20,13 +23,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.fml.config.ModConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class RicksPortalGunFabricMain implements ModInitializer {
+    public static List<RecipeHolder<?>> recipes = new ArrayList<>();
 
     @Override
     public void onInitialize() {
@@ -76,5 +83,20 @@ public class RicksPortalGunFabricMain implements ModInitializer {
                 });
             }
         }
+
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, b) -> {
+            if (PGServices.PLATFORM.isModLoaded("roughlyenoughitems")) {
+                RecipeManager manager = player.serverLevel().recipeAccess();
+                List<RecipeHolder<?>> list = manager.getRecipes().stream().filter(recipeHolder -> (recipeHolder.value() instanceof PortalGunWorkbenchRecipe)).toList();
+                CBSyncRecipesPacket packet = new CBSyncRecipesPacket(list);
+                PGHelper.sendPacketToClient(player, packet);
+            }
+        });
+        ServerPlayConnectionEvents.DISCONNECT.register((listener, server) -> {
+            if (PGServices.PLATFORM.isModLoaded("roughlyenoughitems")) {
+                CBSyncRecipesPacket packet = new CBSyncRecipesPacket(List.of());
+                PGHelper.sendPacketToClient(listener.player, packet);
+            }
+        });
     }
 }

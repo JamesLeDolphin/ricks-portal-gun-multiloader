@@ -31,11 +31,15 @@ public class LocatorScreen extends AbstractBaseScreen {
 
     public LocatorScreen(final List<String> biomeList, final List<String> structureList) {
         super("menu.ricksportalgun.player_locator");
-        assert minecraft.player != null;
-        this.playerList = minecraft.player.connection.getOnlinePlayers().stream().map(info -> info.getProfile().getName()).toList();
+        if (minecraft != null && minecraft.player != null) {
+            this.playerList = minecraft.player.connection.getOnlinePlayers().stream().map(info -> info.getProfile().getName()).toList();
+        } else {
+            playerList = List.of();
+        }
         this.biomeList = biomeList;
         this.structureList = structureList;
     }
+
 
     private List<String> getListFromType(LocatorType type) {
         switch (type) {

@@ -130,9 +130,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
         if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
-            loc = loc.add(0, -0.2, 0);
+            return loc.add(0, -0.2, 0);
         }
-        boolean air = true;
+        if (dir.equals(Direction.UP)) {
+            return loc;
+        }
         if (!isAir(level, bPos.relative(dir))) {
             switch (dir) {
                 case NORTH -> {

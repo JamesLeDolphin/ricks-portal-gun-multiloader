@@ -1,6 +1,8 @@
 package com.jdolphin.ricksportalgun.common.init;
 
+import com.jdolphin.ricksportalgun.RicksPortalGunFabricMain;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
+import com.jdolphin.ricksportalgun.common.compat.CBSyncRecipesPacket;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
@@ -36,6 +38,7 @@ public class FabricPackets {
         PayloadTypeRegistry.playS2C().register(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenSecurityGuiPacket.ID, CBOpenSecurityGuiPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(CBSyncRecipesPacket.ID, CBSyncRecipesPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SBColourPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBCoordCheckerPacket.ID, FabricPackets::handle);
@@ -69,5 +72,7 @@ public class FabricPackets {
         ClientPlayNetworking.registerGlobalReceiver(CBOpenLocatorScreenPacket.ID, (packet, context) ->
                 ClientPacketHandler.openLocatorScreen(packet.biomeList(), packet.structureList()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenSecurityGuiPacket.ID, (packet, context) -> ClientPacketHandler.openSecurityScreen(packet.strings()));
+
+        ClientPlayNetworking.registerGlobalReceiver(CBSyncRecipesPacket.ID, (packet, context) -> RicksPortalGunFabricMain.recipes = packet.holderList());
     }
 }
