@@ -37,7 +37,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         MinecraftServer server = player.server;
         ServerLevel level = player.serverLevel();
 
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
         if (value == 0) {
             if (PGConfigHelper.disableBiomeLocating()) {
@@ -65,7 +65,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
             }
 
             ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
-            if (targetPlayer != null) {
+            if (targetPlayer != null && !targetPlayer.isSpectator()) {
                 PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
                 PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
 

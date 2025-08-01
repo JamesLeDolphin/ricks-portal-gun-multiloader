@@ -19,24 +19,26 @@
 - Ability to customize Portal Gun menu in game
 - Ability to locate biomes
 - Ability to locate structures
-- New "Upgrades" tag
+- New "Upgrades" item tag
 - Blender Dimension
 - A colourful Easter egg.
 
 ## Changed:
 - Increased default Portal Gun max fuel from 16 to 64.
-- Portal Gun GUI has been redone
+- Portal Gun GUI has been redone to be more visually pleasing
 - Split randomizer to dimension randomizer & coordinate randomizer
 - Portal Gun locator screen now has dropdown list of suggestions
 - Added "Back" buttons to all Portal Gun screens
 - Portals opened on floors and ceilings are now flat
 - Portals opened on walls stick to them, instead of appearing in front of them
-- Drinking Portal Fluid now teleports you to a random dimension
+- Drinking Portal Fluid now teleports you to a random dimension, without much safety
 - Change Portal hitboxes to better reflect visual model
 - Recipe changes
 - Made Portal Gun recipe cheaper
 - Portal Guns now require upgrades to unlock more features. Certain upgrades require other upgrades before they can be applied.
+  Upgrades are applied the same way as refueling: Holding the portal gun in one hand and the upgrade/fuel in other hand and right-clicking
 - Portal Guns can now be used in off-hand
+- Fabric Versions will require 'Forge Config API Port' from now on
 
 
 ## Upgrades:

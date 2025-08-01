@@ -21,7 +21,7 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
 
 
     public void handle(ServerPlayer player) {
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
 
         Waypoint wp = Waypoint.getWaypoint(waypoint);

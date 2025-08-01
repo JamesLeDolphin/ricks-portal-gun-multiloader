@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.util.helper;
 import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,6 +46,14 @@ public class PGHelper {
     public static String getEntityAsString(EntityType<?> type) {
         ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         return  rl.toString();
+    }
+
+    public static InteractionHand getPortalGunHand(Player player) {
+        InteractionHand hand;
+        if (!player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
+            hand = InteractionHand.OFF_HAND;
+        } else hand = InteractionHand.MAIN_HAND;
+        return hand;
     }
 
     public static InteractionHand getOppositeHand(InteractionHand hand) {

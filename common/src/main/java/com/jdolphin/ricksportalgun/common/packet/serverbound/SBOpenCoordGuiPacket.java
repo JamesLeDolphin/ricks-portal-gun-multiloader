@@ -20,7 +20,7 @@ public record SBOpenCoordGuiPacket() implements PGPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
 
         if (PGHelper.canPlayerAccessGun(player, stack)) {

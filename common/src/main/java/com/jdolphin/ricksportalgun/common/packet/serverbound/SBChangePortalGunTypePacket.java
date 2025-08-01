@@ -17,7 +17,7 @@ public record SBChangePortalGunTypePacket(PortalGunType gunType) implements PGPa
     public static final Type<SBChangePortalGunTypePacket> ID = new Type<>(PGHelper.id("portal_gun_type"));
 
     public void handle(ServerPlayer player) {
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
         PortalGunItem.setPortalGunType(stack, gunType);
     }

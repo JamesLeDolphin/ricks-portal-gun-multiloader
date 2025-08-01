@@ -19,9 +19,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.config.ModConfig;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
@@ -32,7 +31,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
 
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
-        //BlockEntityRenderers.register(PGBlockEntities.GUN_WORKBENCH, WorkbenchBlockEntityRenderer::new);
+        EntityRendererRegistry.register(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
 
@@ -58,9 +57,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
             if (PGKeyBinds.KEY_PORTAL_MENU.isDown()) {
                 Player player = client.player;
                 if (player != null) {
-                    InteractionHand hand = player.getUsedItemHand();
-                    ItemStack stack = player.getItemInHand(hand);
-                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                    if (player.isHolding(stack1 -> stack1.is(PGTags.Items.PORTAL_GUNS))) {
                         SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                         ClientPlayNetworking.send(packet);
                     }

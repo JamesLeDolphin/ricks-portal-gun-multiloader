@@ -22,7 +22,7 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
 
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
 
         stack.set(PGDataComponents.LOCK, lock);

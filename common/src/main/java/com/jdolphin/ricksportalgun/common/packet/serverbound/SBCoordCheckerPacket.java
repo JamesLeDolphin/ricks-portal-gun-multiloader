@@ -35,7 +35,7 @@ public record SBCoordCheckerPacket(String dim) implements PGPayload {
         level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
         if (level == null) level = player.serverLevel();
 
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
 
         PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);

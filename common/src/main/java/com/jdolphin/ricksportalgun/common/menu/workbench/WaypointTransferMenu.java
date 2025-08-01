@@ -114,6 +114,4 @@ public class WaypointTransferMenu extends AbstractWorkbenchMenu {
     public boolean stillValid(Player player) {
         return this.container.stillValid(player);
     }
-
-
 }

@@ -37,7 +37,7 @@ public abstract class AbstractBaseScreen extends Screen {
     protected ItemStack getItemStack() {
         assert this.minecraft != null && minecraft.player != null;
         Player player = this.minecraft.player;
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         return player.getItemInHand(hand);
     }
 

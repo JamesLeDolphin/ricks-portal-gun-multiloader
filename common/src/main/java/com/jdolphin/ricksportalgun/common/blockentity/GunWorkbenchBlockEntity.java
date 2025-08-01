@@ -74,6 +74,11 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         return menuType.fac.create(pContainerId, inventory, this, this.data, ContainerLevelAccess.create(this.level, this.worldPosition));
     }
 
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveCustomOnly(registries);
+    }
+
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.menuType = MenuType.values()[tag.getInt(TAG_MODE)];
@@ -147,6 +152,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     public void setMenuType(int i) {
         this.menuType = MenuType.values()[i];
+        this.setChanged();
     }
 
     private void lowerInputs(PortalGunWorkbenchRecipe recipe) {

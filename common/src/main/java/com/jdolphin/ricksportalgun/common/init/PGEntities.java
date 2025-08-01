@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
+import com.jdolphin.ricksportalgun.common.entity.ExplosiveItemEntity;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.Registries;
@@ -17,6 +18,10 @@ public class PGEntities {
     private static final Map<ResourceLocation, EntityType<?>> ALL = new HashMap<>();
 
     public static final EntityType<PortalEntity> PORTAL = register("portal", EntityType.Builder.<PortalEntity>of((PortalEntity::new), MobCategory.MISC).sized(1.0f, 2.0f));
+
+    public static final EntityType<ExplosiveItemEntity> EXPLOSIVE_ITEM = register("explosive_item",
+            EntityType.Builder.<ExplosiveItemEntity>of((ExplosiveItemEntity::new), MobCategory.MISC).sized(0.25f, 0.25f)
+                    .noLootTable().eyeHeight(0.2125F).clientTrackingRange(6).updateInterval(20));
 
 
     private static <E extends Entity> EntityType<E> register(String name, EntityType.Builder<E> builder) {

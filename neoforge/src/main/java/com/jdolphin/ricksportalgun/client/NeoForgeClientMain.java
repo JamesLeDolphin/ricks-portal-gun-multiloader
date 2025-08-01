@@ -11,9 +11,8 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -50,6 +49,7 @@ public class NeoForgeClientMain {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(PGEntities.PORTAL, PortalEntityRenderer::new);
+        event.registerEntityRenderer(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
     }
 
     @EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT)
@@ -65,9 +65,7 @@ public class NeoForgeClientMain {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
                 Player player = Minecraft.getInstance().player;
                 if (player != null) {
-                    InteractionHand hand = player.getUsedItemHand();
-                    ItemStack stack = player.getItemInHand(hand);
-                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                    if (player.isHolding(stack -> stack.is(PGTags.Items.PORTAL_GUNS))) {
                         SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                         PacketDistributor.sendToServer(packet);
                     }

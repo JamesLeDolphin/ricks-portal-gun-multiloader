@@ -20,7 +20,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayl
     public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.id("destination"));
 
     public void handle(ServerPlayer player) {
-        InteractionHand hand = player.getUsedItemHand();
+        InteractionHand hand = PGHelper.getPortalGunHand(player);
         ItemStack stack = player.getItemInHand(hand);
 
         if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
