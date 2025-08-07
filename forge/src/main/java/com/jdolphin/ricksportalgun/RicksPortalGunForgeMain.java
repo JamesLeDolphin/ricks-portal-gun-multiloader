@@ -11,7 +11,6 @@ import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacke
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -64,10 +63,8 @@ public class RicksPortalGunForgeMain {
 
         for (Map.Entry<ResourceLocation, Item> entry : PGItems.ALL.entrySet()) {
             Item item = entry.getValue();
-            DataComponentMap map = item.components();
             if (item instanceof PortalGunItem) {
-                int color = map.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
-                entry.setValue(new ForgePortalGunItem(PGItems.gunProperties(new Color(color))));
+                entry.setValue(new ForgePortalGunItem(PGItems.gunProperties(Color.BLUE)));
             }
             bind(bus, Registries.ITEM, consumer -> consumer.accept(item, entry.getKey()));
         }

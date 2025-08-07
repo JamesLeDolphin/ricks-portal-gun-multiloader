@@ -4,9 +4,12 @@ import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
+import com.mojang.datafixers.types.Type;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -57,7 +60,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
-        return new BlockEntityType<>(func::apply, Set.of(blocks));
+        Type<?> type = Util.fetchChoiceType(References.BLOCK_ENTITY, "");
+        return new BlockEntityType<>(func::apply, Set.of(blocks), type);
     }
 
     @Override

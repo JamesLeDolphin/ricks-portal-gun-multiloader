@@ -12,10 +12,15 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,6 +51,18 @@ public class ForgeClientMain {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    private static void onModelBake(ModelEvent.BakingCompleted event) {
+        ModelManager modelManager = event.getModelManager();
+        ResourceLocation originalModel = PGHelper.createLocation("item/portal_guns/portal_gun");
+
+        BakedModel existing = modelManager.getModel(ModelResourceLocation.inventory(originalModel));
+        if (existing == null) return;
+
+        BakedModel overrideModel = new YourDynamicModel(existing, modelManager);
+        event.getModels().put(ModelResourceLocation.inventory(originalModel), overrideModel);
     }
 
 
