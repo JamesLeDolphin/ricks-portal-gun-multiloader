@@ -60,7 +60,9 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static void lowerFuel(ItemStack stack, int amount) {
         int i = getFuel(stack);
-        stack.set(PGDataComponents.FUEL, Math.max(0, i - amount));
+        int j = getMaxFuel(stack) - i;
+        int fuel = Math.max(0, i - amount);
+        stack.set(PGDataComponents.FUEL, fuel);
     }
 
     public static void setPrimaryDye(ItemStack stack, int color) {
@@ -93,24 +95,28 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public static void migrateDamage(ItemStack stack) {
-        int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
-        stack.set(PGDataComponents.FUEL, fuel);
-        stack.remove(DataComponents.DAMAGE);
+        if (stack.has(DataComponents.DAMAGE)) {
+            int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
+            stack.set(PGDataComponents.FUEL, fuel);
+            stack.remove(DataComponents.DAMAGE);
+        }
     }
     public static boolean refuel(ItemStack stack, Player player) {
-        ItemStack offhand = player.getOffhandItem();
-        ItemStack mainHand = player.getMainHandItem();
-        if (getFuel(stack) < getMaxFuel(stack) && mainHand.is(PGTags.Items.PORTAL_GUNS)) {
-            if (offhand.is(PGItems.PORTAL_FLUID)) {
+        InteractionHand pgHand = PGHelper.getPortalGunHand(player);
+        InteractionHand fluidHand = PGHelper.getOppositeHand(pgHand);
+        ItemStack gunStack = player.getItemInHand(pgHand);
+        ItemStack fluidStack = player.getItemInHand(fluidHand);
+        if (getFuel(stack) < getMaxFuel(stack) && gunStack.is(PGTags.Items.PORTAL_GUNS)) {
+            if (fluidStack.is(PGItems.PORTAL_FLUID)) {
                 refillFuel(stack);
-                offhand.shrink(1);
+                fluidStack.shrink(1);
                 stack.set(PGDataComponents.BOOTLEG, false);
                 return true;
             }
-            if (offhand.is(PGItems.BOOTLEG_PORTAL_FLUID)) {
+            if (fluidStack.is(PGItems.BOOTLEG_PORTAL_FLUID)) {
                 refillFuel(stack);
                 stack.set(PGDataComponents.BOOTLEG, true);
-                offhand.shrink(1);
+                fluidStack.shrink(1);
                 return true;
             }
         }
@@ -178,12 +184,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
 
                     Vec3 loc = hitResult.getLocation();
-                    Vec3 newLoc = loc;
                     if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
                         Direction dir = hitResult.getDirection();
                         BlockPos bPos = hitResult.getBlockPos();
 
-                        newLoc = getLocation(level, bPos, dir, loc);
+                        loc = getLocation(level, bPos, dir, loc);
                     }
 
                     Direction dir = hitResult.getDirection();
@@ -191,7 +196,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
                     int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
 
-                    PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
+                    PortalEntity portal = new PortalEntity(level, loc, dir, facing, size);
                     PortalEntity exPortal = new PortalEntity(level, getHopCoords(stack).above().getBottomCenter(), dir, facing, size);
 
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
@@ -214,20 +219,21 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
 
 
-                    if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                        if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
-                            if (!portal.isFlat()) {
-                                portal.setYRot(player.getYRot());
-                            }
-                            level.addFreshEntity(portal);
-                            player.awardStat(Stats.ITEM_USED.get(this));
-                            player.getCooldowns().addCooldown(stack, 20 * 3);
-                            if (!player.isCreative()) {
-                                lowerFuel(stack, 1);
-                            }
-
-                            return InteractionResult.SUCCESS;
+                    if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                        if (!portal.isFlat()) {
+                            portal.setYRot(player.getYRot());
                         }
+                        level.addFreshEntity(portal);
+                        player.awardStat(Stats.ITEM_USED.get(this));
+                        player.getCooldowns().addCooldown(stack, 20 * 3);
+
+                        if (!player.isCreative()) {
+                            lowerFuel(stack, 1);
+                        }
+
+                        return InteractionResult.SUCCESS;
+                    }
+                    if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
                         if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
                             if (!portal.isFlat()) {
                                 doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
@@ -326,6 +332,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return stack.getOrDefault(PGDataComponents.PORTAL_POS, BlockPos.ZERO);
     }
 
+    @SuppressWarnings("deprecation")
     public static void migrateNBT(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data != null) {
@@ -339,7 +346,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             String owner = "Owner";
             String defaultColor = "DefaultColor";
 
-            CompoundTag tag = data.copyTag();
+            CompoundTag tag = data.getUnsafe();
             if (tag.contains(dim)) {
                 String dimension = tag.getString(dim);
                 ResourceLocation rl = ResourceLocation.parse(dimension);

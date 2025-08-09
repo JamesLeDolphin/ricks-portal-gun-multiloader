@@ -23,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Relative;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
@@ -146,6 +147,8 @@ public class PortalEntity extends Entity {
     @Override
     public void kill(ServerLevel level) {
         this.remove(RemovalReason.DISCARDED);
+        ChunkPos chunkPos = this.chunkPosition();
+        level.setChunkForced(chunkPos.x, chunkPos.z, false);
     }
 
     @Override
@@ -301,7 +304,7 @@ public class PortalEntity extends Entity {
                             if (nearby instanceof LivingEntity living)
                                 living.hurtServer(serverLevel, PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG),
                                         living.getMaxHealth() * 10);
-                        }
+                        } else
                         if (destinationDim != null && !destinationDim.isClientSide()) {
                             if (nearby.canUsePortal(false) && delay == 0) {
                                 Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
@@ -310,7 +313,7 @@ public class PortalEntity extends Entity {
                                 Set<Relative> relativeSet = new HashSet<>();
                                 relativeSet.add(Relative.Y_ROT);
                                 nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot(), false);
-
+                                nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
                             }
                         }

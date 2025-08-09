@@ -129,11 +129,39 @@ public class LevelHelper {
     public static void randomTP(ServerPlayer player, int radius, boolean interdimensional) {
         ServerLevel level = player.serverLevel();
         ServerLevel dest = getRandomServerLevel(player.server);
-        teleportEntity(player, interdimensional ? dest : level, getSafePos(getRandomCoord(dest, radius), level));
+        teleportEntity(player, interdimensional ? dest : level, randomTeleport(level, getRandomCoord(dest, radius)));
+    }
+
+    @SuppressWarnings("deprecation")
+    public static BlockPos randomTeleport(Level level, BlockPos pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        double d3 = y;
+        BlockPos blockpos = BlockPos.containing(x, y, z);
+        BlockPos result = blockpos;
+            boolean flag1 = false;
+
+            while (!flag1 && blockpos.getY() > level.getMinY()) {
+                BlockPos blockpos1 = blockpos.below();
+                BlockState blockstate = level.getBlockState(blockpos1);
+                if (blockstate.blocksMotion()) {
+                    flag1 = true;
+                } else {
+                    --d3;
+                    blockpos = blockpos1;
+                }
+            }
+
+            if (flag1) {
+                result = BlockPos.containing(x, d3, z);
+            }
+
+        return result;
     }
 
     public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
-        return getSafePos(bPos, level, 0);
+        return randomTeleport(level, bPos);
     }
 
     private static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
