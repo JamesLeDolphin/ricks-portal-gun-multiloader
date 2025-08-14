@@ -118,7 +118,6 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity, PortalEnt
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
         int i = state.rgb;
         if (state.name != null && names.contains(state.name.getString().toLowerCase())) {
-            int j = 25;
             int k = Mth.floor(state.ageInTicks);
             int l = k / 25;
             int i1 = DyeColor.values().length;

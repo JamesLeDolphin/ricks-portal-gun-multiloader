@@ -161,7 +161,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     loc = vec.add(-0.4, 0, 0);
                 }
             }
-        } else loc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
+        } else {
+            float x = dir.getAxis().equals(Direction.Axis.X) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            float z = dir.getAxis().equals(Direction.Axis.Z) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            loc = new Vec3(loc.x() + x, bPos.getY(), loc.z() + z);
+        }
 
         return loc;
     }
@@ -202,7 +206,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
 
-                    doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
+                    doForBoth(entity -> entity.setLifetime(PGHelper.seconds(age)), portal, exPortal);
 
                     Component customName = stack.getCustomName();
                     if (customName != null) {

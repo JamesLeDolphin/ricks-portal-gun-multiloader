@@ -8,6 +8,7 @@ import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionList
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
@@ -69,7 +70,10 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         });
 
         ServerPlayConnectionEvents.JOIN.register((listener, sender, server) -> {
-            CBSyncDimensionListPacket dimPacket = new CBSyncDimensionListPacket(LevelHelper.getDimensionsAsString(server.getAllLevels()));
+            List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
+            if (!dims.contains(PGHelper.id("blender").toString()) && !PGConfigHelper.getDisabledDimensions().contains(PGHelper.id("blender").toString()))
+                dims.add(PGHelper.id("blender").toString());
+            CBSyncDimensionListPacket dimPacket = new CBSyncDimensionListPacket(dims);
             CBSyncGunTypesPacket typesPacket = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
             PGHelper.sendPacketToClient(listener.player, dimPacket, typesPacket);
         });

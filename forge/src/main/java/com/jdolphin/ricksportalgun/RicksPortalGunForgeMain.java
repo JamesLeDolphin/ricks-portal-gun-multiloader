@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +29,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -70,8 +72,8 @@ public class RicksPortalGunForgeMain {
         if (player instanceof ServerPlayer serverPlayer) {
             MinecraftServer server = serverPlayer.getServer();
             if (server != null) {
-                List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-                if (!dims.contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
+                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
+                if (!dims.contains(PGHelper.id("blender").toString()) && !PGConfigHelper.getDisabledDimensions().contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
                 CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
                 CBSyncGunTypesPacket typeSync = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
                 ForgePackets.sendToPlayer(serverPlayer, dimSync, typeSync);

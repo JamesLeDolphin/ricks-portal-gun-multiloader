@@ -50,7 +50,7 @@ public class PGCommonConfig {
         disable_biome_locating = BUILDER.comment("Disable locating biomes").define("disable_biome_locating", false);
         disable_structure_locating = BUILDER.comment("Disable locating structures").define("disable_structure_locating", false);
         disabled_dimensions = BUILDER.comment("List of Dimension IDs the portal gun can't travel to, everything else is allowed",
-                "Separate every entry except the last one with commas").defineList("blacklisted_dimensions", Lists::newArrayList, () -> "", String.class::isInstance);
+                "Separate every entry except the last one with commas").defineListAllowEmpty("blacklisted_dimensions", Lists::newArrayList, () -> "", String.class::isInstance);
 
         disabled_entities = BUILDER.comment("List of Entity IDs that cannot travel through portals, everything else is allowed",
                 "Separate every entry except the last one with commas").worldRestart().defineList("blacklisted_entities", PGHelper.defaultDisabledEntities(), () -> "", String.class::isInstance);

@@ -38,6 +38,7 @@ import java.util.Set;
 
 public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_COLOR_ID = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
@@ -55,13 +56,11 @@ public class PortalEntity extends Entity {
 
     private BlockPos targetPos;
     private boolean bootleg;
-    private int maxLifeTime;
     private boolean exists;
 
     private Vec3 pos;
     private String targetDim;
     private int delay = 0;
-    public int lifetime = PGHelper.seconds(10);
 
     public boolean exists() {
         return exists;
@@ -85,19 +84,11 @@ public class PortalEntity extends Entity {
     }
 
     public void setLifetime(int lifetime) {
-        this.lifetime = PGHelper.seconds(lifetime);
+        this.entityData.set(LIFETIME, lifetime);
     }
 
     public int getLifetime() {
-        return lifetime;
-    }
-
-    public void setMaxLifeTime(int lifetime) {
-        this.maxLifeTime = lifetime;
-    }
-
-    public int getMaxLifeTime() {
-        return this.maxLifeTime;
+        return this.entityData.get(LIFETIME);
     }
 
     public void setColor(int color) {
@@ -190,7 +181,7 @@ public class PortalEntity extends Entity {
         this.targetDim = tag.getString(TAG_DIMENSION);
         this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS).orElse(BlockPos.ZERO);
         this.setColor(tag.getInt(TAG_COLOR));
-        this.lifetime = tag.getInt(TAG_OPEN);
+         this.setLifetime(tag.getInt(TAG_OPEN));
         this.delay = tag.getInt(TAG_COOLDOWN);
         this.exists = tag.getBoolean(TAG_NEW);
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
@@ -205,7 +196,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_DIMENSION, getHopDim());
         tag.put(TAG_BPOS, NbtUtils.writeBlockPos(getHopLoc()));
         tag.putInt(TAG_COLOR, this.getColor());
-        tag.putInt(TAG_OPEN, this.lifetime);
+        tag.putInt(TAG_OPEN, this.getLifetime());
         tag.putInt(TAG_COOLDOWN, this.delay);
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
@@ -269,6 +260,7 @@ public class PortalEntity extends Entity {
         builder.define(DATA_DIR, Direction.SOUTH);
         builder.define(DATA_FACING, Direction.SOUTH);
         builder.define(DATA_SIZE, 1.0f);
+        builder.define(LIFETIME, PGHelper.seconds(10));
     }
 
     @Override
@@ -280,9 +272,12 @@ public class PortalEntity extends Entity {
                 LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
                 this.exists = true;
             }
-            if (lifetime > 0) lifetime--;
+            if (getLifetime() > 0) {
+                int l = getLifetime();
+                setLifetime(l - 1);
+            }
             if (delay > 0) delay--;
-            if (!firstTick && lifetime == 0) {
+            if (!firstTick && getLifetime() == 0) {
                 this.kill(serverLevel);
                 return;
             }

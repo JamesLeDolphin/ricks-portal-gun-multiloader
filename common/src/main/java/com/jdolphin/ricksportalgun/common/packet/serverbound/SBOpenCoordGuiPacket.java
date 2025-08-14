@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,9 +26,9 @@ public record SBOpenCoordGuiPacket() implements PGPayload {
 
         if (PGHelper.canPlayerAccessGun(player, stack)) {
             List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-            if (!dims.contains(PGHelper.id("blender").toString()))
-                dims.add(PGHelper.id("blender").toString());
-            PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
+            if (!dims.contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
+            List<String> dimsToSend = dims.stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList();
+            PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dimsToSend));
         }
     }
 
