@@ -1,54 +1,17 @@
-# 1.4.0 Update
+# 1.4.1 Bugfix
 
-## Added:
-- Portal Dispenser: Dispenser that creates portals, specify destination in GUI
-- Sub-Ether Barrier: Blocks all portals in a radius if powered by redstone. Will let portals with matching code through.
-- Portal Gun workbench: Has 3 modes: Skin Selection, Waypoint Transfer and Crafting.
-  - Skin Selection: Allows customizing portal guns by changing their model and dying them.
-  - Waypoint Transfer: Allows deleting, copying and moving waypoints between portal guns.
-  - Crafting: Custom crafting which allows inputs to have data components, stack size, and more
-- Upgrade items
-- 9 new Portal Gun models
-- Ability to dye Portal Guns
-- Data Card item: Holds waypoints for easier waypoint sharing
-- Portal Animation
-- Ability to add custom Portal Gun types via data packs
-- Portal size setting: Min 1 block wide, max 3 blocks wide.
-- Portal open time setting: Min 5s, max 45s
-- Portal Gun self-destruct setting
-- Ability to customize Portal Gun menu in game
-- Ability to locate biomes
-- Ability to locate structures
-- New "Upgrades" item tag
-- Blender Dimension
-- A colourful Easter egg.
+## Fixed
+- Fuel not draining properly
+- Portal positioning being inside the block on some occasions
+- Sub-Ether Barrier crash when setting the code
+- Blender dimension is now properly accessible without Mk.II Dimension Upgrade
+- Disabled dimensions no longer show up in dimension selector
+- Player locator now opens the portal behind them, instead of inside them
+- Lower the volume of portal opening sound
+- Fix certain packets not being registered on NeoForge
 
-## Changed:
-- Increased default Portal Gun max fuel from 16 to 64.
-- Portal Gun GUI has been redone to be more visually pleasing
-- Split randomizer to dimension randomizer & coordinate randomizer
-- Portal Gun locator screen now has dropdown list of suggestions
-- Added "Back" buttons to all Portal Gun screens
-- Portals opened on floors and ceilings are now flat
-- Portals opened on walls stick to them, instead of appearing in front of them
-- Drinking Portal Fluid now teleports you to a random dimension, without much safety
-- Change Portal hitboxes to better reflect visual model
-- Recipe changes
-- Made Portal Gun recipe cheaper
-- Portal Guns now require upgrades to unlock more features. Certain upgrades require other upgrades before they can be applied.
-  Upgrades are applied the same way as refueling: Holding the portal gun in one hand and the upgrade/fuel in other hand and right-clicking
-- Portal Guns can now be used in off-hand
-- Fabric Versions will require 'Forge Config API Port' from now on
+## Experimental Fixes
+- Attempted to fix locators incorrectly saying they're disabled
+- Attempted to improve randomiser and locator safety
 
-
-## Upgrades:
-- Durability Upgrade: Makes the Portal Gun completely fireproof
-- Dimension Upgrade Mk.I: Grants the Portal Gun ability to travel to any dimension
-- Dimension Upgrade Mk.II: Bypasses the Ender Dragon restriction in The End.
-- Fuel Upgrade: Doubles the maximum Portal Gun fuel from 64 to 128
-- Waypoint Upgrade: Allows creating and using waypoints
-- Settings upgrade: Allows changing Portal Gun settings
-- Locator Upgrades: 
-  - Biome Locator: Allows locating biomes
-  - Player Locator: Allows locating players
-  - Structure Locator: Allows locating structures
+In case of any bugs or suggestions, notify me in either [Discord](<https://discord.com/invite/mPFZqXpcFF>) or CurseForge comments.
