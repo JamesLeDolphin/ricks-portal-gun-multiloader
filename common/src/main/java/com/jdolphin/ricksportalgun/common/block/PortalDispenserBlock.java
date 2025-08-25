@@ -71,20 +71,8 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     }
 
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof PortalDispenserBlockEntity) {
-                if (level instanceof ServerLevel) {
-                    Containers.dropContents(level, pos, (PortalDispenserBlockEntity) blockEntity);
-                }
-
-                super.onRemove(state, level, pos, newState, movedByPiston);
-                level.updateNeighbourForOutputSignal(pos, this);
-            } else {
-                super.onRemove(state, level, pos, newState, movedByPiston);
-            }
-
-        }
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
         protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
