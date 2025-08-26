@@ -33,7 +33,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     public static final String TAG_DEST_DIM = "DestinationDim";
     public static final String TAG_DEST_BPOS = "DestinationPos";
     public static final String TAG_DIRECTION = "Direction";
-    private Direction dir;
+    private Direction dir = Direction.NORTH;
     private int fuel = 16;
     private int maxFuel = 16;
     private String desDim = "minecraft:overworld";

@@ -19,11 +19,14 @@ public class PGRecipeReceivedEvent {
 
     @SubscribeEvent
     public static void onRecipesReceived(RecipesReceivedEvent event) {
+        if (recipeHolders == null) {
+            recipeHolders = new ArrayList<>();
+        }
         recipeHolders = event.getRecipeMap().byType(PGRecipeTypes.WORKBENCH_TYPE).stream().toList();
     }
 
     @SubscribeEvent
     public static void onClientLeave(ClientPlayerNetworkEvent.LoggingOut loggingOut) {
-        recipeHolders.clear();
+        recipeHolders = null;
     }
 }

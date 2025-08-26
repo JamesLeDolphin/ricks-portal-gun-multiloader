@@ -1,17 +1,6 @@
-# 1.4.1 Bugfix
+# 1.4.2 Bugfix
 
 ## Fixed
-- Fuel not draining properly
-- Portal positioning being inside the block on some occasions
-- Sub-Ether Barrier crash when setting the code
-- Blender dimension is now properly accessible without Mk.II Dimension Upgrade
-- Disabled dimensions no longer show up in dimension selector
-- Player locator now opens the portal behind them, instead of inside them
-- Lower the volume of portal opening sound
-- Fix certain packets not being registered on NeoForge
-
-## Experimental Fixes
-- Attempted to fix locators incorrectly saying they're disabled
-- Attempted to improve randomiser and locator safety
-
-In case of any bugs or suggestions, notify me in either [Discord](<https://discord.com/invite/mPFZqXpcFF>) or CurseForge comments.
+- Occasional crash when breaking portal dispenser
+- Portal gun sound not playing
+- Occasional crash related to jei
