@@ -48,10 +48,6 @@ public class ForgePackets {
                 .codec(SBOpenCoordGuiPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
-        INSTANCE.messageBuilder(SBChangePortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .codec(SBChangePortalGunTypePacket.CODEC.cast())
-                .consumerMainThread(ForgePackets::handle)
-                .add();
         INSTANCE.messageBuilder(SBSetWorkbenchTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .codec(SBSetWorkbenchTypePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
@@ -76,10 +72,6 @@ public class ForgePackets {
                 .codec(SBWorkbenchWaypointEditPackage.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
-        INSTANCE.messageBuilder(SBSetPortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .codec(SBSetPortalGunTypePacket.CODEC.cast())
-                .consumerMainThread(ForgePackets::handle)
-                .add();
         INSTANCE.messageBuilder(SBActivateSelfDestructPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .codec(SBActivateSelfDestructPacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
@@ -95,11 +87,6 @@ public class ForgePackets {
                 .codec(CBOpenBarrierGuiPacket.CODEC.cast())
                 .consumerMainThread((packet, context) -> {
                     if (context.isClientSide()) ClientPacketHandler.openBarrierGui(packet.pos());
-                }).add();
-        INSTANCE.messageBuilder(CBSyncGunTypesPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .codec(CBSyncGunTypesPacket.CODEC.cast())
-                .consumerMainThread((packet, context) -> {
-                    if (context.isClientSide()) ClientPacketHandler.syncGunTypes(packet.types());
                 }).add();
         INSTANCE.messageBuilder(CBSyncDimensionListPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(CBSyncDimensionListPacket.CODEC.cast())

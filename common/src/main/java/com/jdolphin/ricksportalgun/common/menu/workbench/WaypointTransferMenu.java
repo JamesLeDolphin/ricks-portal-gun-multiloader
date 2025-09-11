@@ -31,8 +31,8 @@ public class WaypointTransferMenu extends AbstractWorkbenchMenu {
         checkContainerSize(container, 10);
         checkContainerDataCount(data, 2);
 
-      //  addInventoryExtendedSlots(inventory, 25, 129);
-      //  addInventoryHotbarSlots(inventory, 25, 187);
+        addInventoryExtendedSlots(inventory, 25, 129);
+        addInventoryHotbarSlots(inventory, 25, 187);
         addSlots(container);
     }
 

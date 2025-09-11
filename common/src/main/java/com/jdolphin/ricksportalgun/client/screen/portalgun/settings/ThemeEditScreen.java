@@ -9,6 +9,7 @@ import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetPortalGunStyle
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -152,7 +153,9 @@ public class ThemeEditScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, mouseX, mouseY, delta);
         }
+        RenderSystem.enableBlend();
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        RenderSystem.disableBlend();
 
         graphics.fill(rH.getX(), rH.getY() - 22, rText.getX() + rText.getWidth() / 2, rH.getY() - 76, this.getHighlightColor());
         graphics.fill(rText.getX() + rText.getWidth() / 2, rText.getY() - 22, rBG.getX() + rBG.getWidth(), rBG.getY() - 76, this.getBackgroundColor());

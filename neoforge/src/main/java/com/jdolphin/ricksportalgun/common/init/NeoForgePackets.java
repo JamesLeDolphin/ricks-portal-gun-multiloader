@@ -19,14 +19,12 @@ public class NeoForgePackets {
         registrar.commonToServer(SBColourPacket.ID, SBColourPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBManageWaypointsPacket.ID, SBManageWaypointsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenCoordGuiPacket.ID, SBOpenCoordGuiPacket.CODEC, NeoForgePackets::handle);
-        registrar.commonToServer(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenLocatorScreenPacket.ID, SBOpenLocatorScreenPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBOpenSecuritySettingsPacket.ID, SBOpenSecuritySettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetPortalGunStylePacket.ID, SBSetPortalGunStylePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBCustomizeSettingsPacket.ID, SBCustomizeSettingsPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBWorkbenchWaypointEditPackage.ID, SBWorkbenchWaypointEditPackage.CODEC, NeoForgePackets::handle);
-        registrar.commonToServer(SBSetPortalGunTypePacket.ID, SBSetPortalGunTypePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBActivateSelfDestructPacket.ID, SBActivateSelfDestructPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC, NeoForgePackets::handle);
@@ -34,7 +32,6 @@ public class NeoForgePackets {
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));
         registrar.commonToClient(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC, (packet, context) ->ClientPacketHandler.openBarrierGui(packet.pos()));
-        registrar.commonToClient(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         registrar.commonToClient(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC, (packet, context) ->
                 ClientPacketHandler.syncClientDimensions(packet.dimensions()));
 

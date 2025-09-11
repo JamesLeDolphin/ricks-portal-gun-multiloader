@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.PortalGunType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,13 +34,13 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
         checkContainerDataCount(data, 2);
         checkContainerSize(container, 10);
 
-       // addInventoryExtendedSlots(inventory, 25, 110);
-       // addInventoryHotbarSlots(inventory, 25, 168);
+        addInventoryExtendedSlots(inventory, 25, 110);
+        addInventoryHotbarSlots(inventory, 25, 168);
 
         addSlots(container);
     }
 
-    public void setPortalGunType(Player player, PortalGunType type) {
+    public void setPortalGunType(Player player, ResourceLocation type, int tints) {
         this.access.execute((level, pos) -> {
 
             ItemStack gun = this.getSlot(36).getItem();
@@ -50,7 +50,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             int primary = 0;
             int secondary = 0;
 
-            if (!(type.tints() < 2) && !dye1.isEmpty()) {
+            if (!(tints < 2) && !dye1.isEmpty()) {
                 if (!dye1.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye1.getItem();
                     primary = dyeItem.getDyeColor().getTextureDiffuseColor();
@@ -60,7 +60,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
-            if (!(type.tints() < 3) && !dye2.isEmpty()) {
+            if (!(tints < 3) && !dye2.isEmpty()) {
                 if (!dye2.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye2.getItem();
                     secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
@@ -70,7 +70,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
-            PortalGunItem.setPortalGunType(gun, type);
+            //Set type here
             if (primary != 0) PortalGunItem.setPrimaryDye(gun, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(gun, secondary);
         });

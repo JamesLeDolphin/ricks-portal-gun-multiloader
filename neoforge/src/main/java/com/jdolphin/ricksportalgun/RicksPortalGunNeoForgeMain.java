@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
-import com.jdolphin.ricksportalgun.common.data.PortalGunTypeReloadListener;
 import com.jdolphin.ricksportalgun.common.init.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -15,8 +14,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -32,7 +29,6 @@ public class RicksPortalGunNeoForgeMain {
     public RicksPortalGunNeoForgeMain(IEventBus bus) {
         RicksPortalGunCommonMain.init();
 
-        NeoForge.EVENT_BUS.addListener(this::reloadListenerAddEvent);
         bus.addListener(this::buildContents);
         bus.addListener(this::registerPackets);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
@@ -59,11 +55,6 @@ public class RicksPortalGunNeoForgeMain {
                 source.accept((t, rl) -> event.register(registry, rl, () -> t));
             }
         });
-    }
-
-    public void reloadListenerAddEvent(AddServerReloadListenersEvent event) {
-        PortalGunTypeReloadListener listener = new PortalGunTypeReloadListener();
-        event.addListener(listener.getID(), listener);
     }
 
     public void buildContents(BuildCreativeModeTabContentsEvent event) {

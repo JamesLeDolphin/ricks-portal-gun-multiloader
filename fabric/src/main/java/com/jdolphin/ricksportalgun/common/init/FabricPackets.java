@@ -18,7 +18,6 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSetDestinationPacket.ID, SBSetDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSecuritySettingsPacket.ID, SBSecuritySettingsPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBOpenCoordGuiPacket.ID, SBOpenCoordGuiPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(SBChangePortalGunTypePacket.ID, SBChangePortalGunTypePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetWorkbenchTypePacket.ID, SBSetWorkbenchTypePacket.CODEC);
@@ -27,12 +26,10 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBSetPortalGunStylePacket.ID, SBSetPortalGunStylePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBCustomizeSettingsPacket.ID, SBCustomizeSettingsPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBWorkbenchWaypointEditPackage.ID, SBWorkbenchWaypointEditPackage.CODEC);
-        PayloadTypeRegistry.playC2S().register(SBSetPortalGunTypePacket.ID, SBSetPortalGunTypePacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBActivateSelfDestructPacket.ID, SBActivateSelfDestructPacket.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
-        PayloadTypeRegistry.playS2C().register(CBSyncGunTypesPacket.ID, CBSyncGunTypesPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenBarrierGuiPacket.ID, CBOpenBarrierGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenLocatorScreenPacket.ID, CBOpenLocatorScreenPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBOpenSecurityGuiPacket.ID, CBOpenSecurityGuiPacket.CODEC);
@@ -44,7 +41,6 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSetDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSecuritySettingsPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBOpenCoordGuiPacket.ID, FabricPackets::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBChangePortalGunTypePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetBarrierCodePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetDispenserDestinationPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetWorkbenchTypePacket.ID, FabricPackets::handle);
@@ -53,7 +49,6 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBSetPortalGunStylePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBCustomizeSettingsPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBWorkbenchWaypointEditPackage.ID, FabricPackets::handle);
-        ServerPlayNetworking.registerGlobalReceiver(SBSetPortalGunTypePacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBActivateSelfDestructPacket.ID, FabricPackets::handle);
     }
 
@@ -64,7 +59,6 @@ public class FabricPackets {
     public static void registerS2CPackets() {
         ClientPlayNetworking.registerGlobalReceiver(CBOpenCoordGuiPacket.ID, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));
         ClientPlayNetworking.registerGlobalReceiver(CBSyncDimensionListPacket.ID, (packet, context) -> ClientPacketHandler.syncClientDimensions(packet.dimensions()));
-        ClientPlayNetworking.registerGlobalReceiver(CBSyncGunTypesPacket.ID, (packet, context) -> ClientPacketHandler.syncGunTypes(packet.types()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenBarrierGuiPacket.ID, (packet, context) -> ClientPacketHandler.openBarrierGui(packet.pos()));
         ClientPlayNetworking.registerGlobalReceiver(CBOpenLocatorScreenPacket.ID, (packet, context) ->
                 ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));

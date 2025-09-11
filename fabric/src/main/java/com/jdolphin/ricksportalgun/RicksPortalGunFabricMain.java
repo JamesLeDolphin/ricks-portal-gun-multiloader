@@ -2,8 +2,8 @@ package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncGunTypesPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
@@ -11,11 +11,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.neoforged.fml.config.ModConfig;
 
@@ -40,8 +42,6 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         FabricPackets.registerC2SPackets();
 
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGClientConfig.SPEC, "ricksportalgun-common.toml");
-        //ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricPortalGunTypeReloadListener());
-
         initEvents();
     }
 
@@ -60,8 +60,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((listener, sender, server) -> {
             CBSyncDimensionListPacket dimPacket = new CBSyncDimensionListPacket(LevelHelper.getDimensionsAsString(server.getAllLevels()));
-            CBSyncGunTypesPacket typesPacket = new CBSyncGunTypesPacket(PortalGunTypeRegistry.PORTAL_GUN_TYPES);
-            PGHelper.sendPacketToClient(listener.player, dimPacket, typesPacket);
+            PGHelper.sendPacketToClient(listener.player, dimPacket);
         });
 
         for (Map.Entry<Item, ResourceKey<CreativeModeTab>> entry : PGItems.TABS.entrySet()) {
@@ -71,6 +70,8 @@ public class RicksPortalGunFabricMain implements ModInitializer {
                     Item item = entry.getKey();
                     entries.accept(item);
                 });
+            } else if (FabricLoader.getInstance().isDevelopmentEnvironment() && entry.getKey() instanceof PortalGunItem item) {
+                ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(item));
             }
         }
     }

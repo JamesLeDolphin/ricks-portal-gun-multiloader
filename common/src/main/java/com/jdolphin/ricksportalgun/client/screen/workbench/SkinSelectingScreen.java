@@ -5,22 +5,23 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.init.PortalGunTypeRegistry;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
-import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetPortalGunTypePacket;
-import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -60,8 +61,8 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         previous.setRenderBackground(false);
 
         this.select = this.addWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), button -> {
-                    SBSetPortalGunTypePacket packet = new SBSetPortalGunTypePacket(getType());
-                    PGHelper.sendPacketToServer(packet);
+
+                    //PGHelper.sendPacketToServer(packet);
                 })
                 .bounds(this.width / 2 + 20, this.height / 2 - 18, 48, 16).build());
 
@@ -87,14 +88,9 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         return this.menu.getSlot(slotId).getItem();
     }
 
-    private PortalGunType getType() {
-        List<PortalGunType> list = PortalGunTypeRegistry.CLIENT_TYPES;
-        return list.get(index);
-    }
-
     private void cycleValue(int delta) {
-        List<PortalGunType> list = PortalGunTypeRegistry.CLIENT_TYPES;
-        this.index = Mth.positiveModulo(this.index + delta, list.size());
+        List<PortalGunItem> list = PGItems.PORTAL_GUNS;
+        if (!list.isEmpty()) this.index = Mth.positiveModulo(this.index + delta, list.size());
     }
 
     @Override
@@ -104,29 +100,33 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
         ItemStack stack = getStack(36);
         if (!stack.isEmpty() && stack.is(PGTags.Items.PORTAL_GUNS)) {
-            PortalGunType chooseType = getType();
-            PortalGunType currentType = PortalGunItem.getPortalGunType(stack);
+            List<PortalGunItem> list = PGItems.PORTAL_GUNS;
+            PortalGunItem item = list.get(this.index);
 
-            GuiHelper.drawWordWrap(graphics, this.font, Component.translatable("ricksportalgun.gun_type", "").append(currentType.name()),
-                    this.width / 2 - 44, this.height / 2 - 62, 86, Color.WHITE.getRGB());
+            if (item != null) {
+                Component currentTypeName = stack.getItem().getDefaultInstance().getDisplayName();
+                GuiHelper.drawWordWrap(graphics, this.font, Component.translatable("ricksportalgun.gun_type", "").append(currentTypeName),
+                        this.width / 2 - 44, this.height / 2 - 62, 86, Color.WHITE.getRGB());
 
-            GuiHelper.drawWordWrap(graphics, this.font, chooseType.name(), this.width / 2 + 44, this.height / 2 - 82, 86, Color.WHITE.getRGB());
-            this.select.render(graphics, mouseX, mouseY, delta);
+                Component name = item.getDefaultInstance().getDisplayName();
+                GuiHelper.drawWordWrap(graphics, this.font, name, this.width / 2 + 44, this.height / 2 - 82, 86, Color.WHITE.getRGB());
+                this.select.render(graphics, mouseX, mouseY, delta);
+            }
+
+
+            this.next.setTexture(next.isHovered() ? NEXT_HL : NEXT);
+            this.previous.setTexture(previous.isHovered() ? PREVIOUS_HL : PREVIOUS);
+
+            renderPortalGunType(graphics, mouseX, mouseY, delta);
         }
-
-
-        this.next.setTexture(next.isHovered() ? NEXT_HL : NEXT);
-        this.previous.setTexture(previous.isHovered() ? PREVIOUS_HL : PREVIOUS);
-
-        renderPortalGunType(graphics, mouseX, mouseY, delta);
     }
 
     private void renderPortalGunType(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        PortalGunType type = getType();
+
 
         ItemStack stack = getStack(36);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
-            ItemStack fakeStack = stack.copy();
+            ItemStack fakeStack = PGItems.PORTAL_GUNS.get(this.index).getDefaultInstance();
             ItemStack dyeStack1 = getStack(37);
             ItemStack dyeStack2 = getStack(38);
 
@@ -146,7 +146,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             int color = PortalGunItem.getColor(stack);
 
 
-            PortalGunItem.setPortalGunType(fakeStack, type);
+
             PortalGunItem.setColor(fakeStack, color);
             if (primary != 0) PortalGunItem.setPrimaryDye(fakeStack, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(fakeStack, secondary);
@@ -164,10 +164,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
         if (hasShiftDown()) poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
         else poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
-
-      //  ItemStackRenderState state = new ItemStackRenderState();
-      //
-      //  Minecraft.getInstance().getItemRenderer().updateForTopItem(state, stack, ItemDisplayContext.GUI, false, null, null, 0);
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, poseStack, graphics.bufferSource(), null, 0);
       //  graphics.drawSpecial(source -> state.render(poseStack, source, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
 
         poseStack.popPose();

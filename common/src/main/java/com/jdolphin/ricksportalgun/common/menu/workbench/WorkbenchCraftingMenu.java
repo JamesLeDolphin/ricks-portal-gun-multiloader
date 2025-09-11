@@ -29,8 +29,8 @@ public class WorkbenchCraftingMenu extends AbstractWorkbenchMenu {
         checkContainerDataCount(data, 2);
         checkContainerSize(container, 10);
 
-        //addInventoryExtendedSlots(inventory, 25, 129);
-        //addInventoryHotbarSlots(inventory, 25, 187);
+        addInventoryExtendedSlots(inventory, 25, 129);
+        addInventoryHotbarSlots(inventory, 25, 187);
 
         createInventory(container);
     }

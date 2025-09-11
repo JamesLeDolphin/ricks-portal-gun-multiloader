@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
@@ -36,8 +37,8 @@ public class NeoForgeClientMain {
     }
 
     @SubscribeEvent
-    public static void registerTints(RegisterColorHandlersEvent.ItemTintSources event) {
-        PGItemTints.ALL.forEach(event::register);
+    public void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
     }
 
     @SubscribeEvent

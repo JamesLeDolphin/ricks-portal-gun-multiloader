@@ -12,6 +12,7 @@ import com.jdolphin.ricksportalgun.common.packet.serverbound.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -126,9 +127,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, pPartialTick, r, g, b);
-
+        RenderSystem.enableBlend();
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
-
+        RenderSystem.disableBlend();
         int x = 64, y = 82, multiplier = size.getValueInt();
         graphics.blit(PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
                 this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y, this.getColor());

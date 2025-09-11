@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
@@ -12,21 +13,16 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 public class ForgeClientMain {
 
@@ -53,21 +49,13 @@ public class ForgeClientMain {
         }
     }
 
-    @SubscribeEvent
-    private static void onModelBake(ModelEvent.BakingCompleted event) {
-        ModelManager modelManager = event.getModelManager();
-        ResourceLocation originalModel = PGHelper.createLocation("item/portal_guns/portal_gun");
-
-        BakedModel existing = modelManager.getModel(ModelResourceLocation.inventory(originalModel));
-        if (existing == null) return;
-
-        BakedModel overrideModel = new YourDynamicModel(existing, modelManager);
-        event.getModels().put(ModelResourceLocation.inventory(originalModel), overrideModel);
-    }
-
-
     @Mod.EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModBusEvents {
+
+        @SubscribeEvent
+        public void registerItemColors(RegisterColorHandlersEvent.Item event) {
+            event.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
+        }
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         @SubscribeEvent
@@ -77,11 +65,6 @@ public class ForgeClientMain {
                 MenuScreens.ScreenConstructor constructor = func::apply;
                 MenuScreens.register(type, constructor);
             }));
-        }
-
-        @SubscribeEvent
-        public static void constructEvent(FMLConstructModEvent event) {
-        //    PGItemTints.ALL.forEach(ItemTintSources.ID_MAPPER::put);
         }
 
         @SubscribeEvent

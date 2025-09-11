@@ -34,6 +34,10 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, PGBlockEntities.GUN_WORKBENCH, GunWorkbenchBlockEntity::tick);
     }

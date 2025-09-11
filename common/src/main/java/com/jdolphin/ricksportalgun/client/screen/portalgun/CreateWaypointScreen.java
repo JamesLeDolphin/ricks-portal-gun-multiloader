@@ -9,6 +9,7 @@ import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.player.LocalPlayer;
@@ -74,9 +75,9 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
         this.waypointName.render(graphics, pMouseX, pMouseY, pPartialTick);
-
+        RenderSystem.enableBlend();
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
-
+        RenderSystem.disableBlend();
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);

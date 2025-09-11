@@ -6,11 +6,11 @@ import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.upgrade.AbstractUpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
-import com.jdolphin.ricksportalgun.common.util.PortalGunType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class PortalGunItem extends Item implements IWaypointStorage {
+public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
 
     public PortalGunItem(Properties properties) {
         super(properties);
@@ -73,11 +73,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public static int getPrimaryDye(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.PRIMARY_DYE, 0);
+        return stack.getOrDefault(PGDataComponents.PRIMARY_DYE, 15989755);
     }
 
     public static int getSecondaryDye(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.SECONDARY_DYE, 0);
+        return stack.getOrDefault(PGDataComponents.SECONDARY_DYE, 15989755);
     }
 
 
@@ -117,17 +117,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             }
         }
         return false;
-    }
-
-    public static void setPortalGunType(ItemStack stack, PortalGunType type) {
-        stack.set(PGDataComponents.PORTAL_GUN_TYPE, type);
-        stack.set(PGDataComponents.GUN_MODEL, type.model());
-        stack.getDisplayName();
-        setDefaultColor(stack, type.color());
-    }
-
-    public static PortalGunType getPortalGunType(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.PORTAL_GUN_TYPE, PortalGunType.DEFAULT);
     }
 
     private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
@@ -391,4 +380,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         }
     }
 
+    @Override
+    public int getColor(ItemStack itemStack, int i) {
+        return getColor(itemStack);
+    }
 }

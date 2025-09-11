@@ -5,6 +5,9 @@
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
   "item.ricksportalgun.circuitboard": "Circuit Board",
 
+  "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
+  "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
+
   "item.ricksportalgun.portalgun.alt": "Alternative Portal Gun",
   "item.ricksportalgun.portalgun.flintlock": "Flintlock Portal Gun",
   "item.ricksportalgun.portalgun.futuristic": "Futuristic Portal Gun",
@@ -19,8 +22,6 @@
   "item.ricksportalgun.bootleg_portal_fluid": "Bootleg Portal Fluid",
   "item.ricksportalgun.portal_fluid_bottle": "Portal Fluid Bottle",
   "item.ricksportalgun.bootleg_portal_fluid_bottle": "Bootleg Portal Fluid",
-  "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
-  "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "item.ricksportalgun.data_card": "Data Card",
 
   "item.ricksportalgun.upgrade_durability": "Portal Gun Durability Upgrade",

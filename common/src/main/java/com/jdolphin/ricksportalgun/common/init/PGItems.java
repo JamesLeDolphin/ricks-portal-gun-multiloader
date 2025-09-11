@@ -19,10 +19,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -30,16 +28,28 @@ import java.util.function.Function;
 public class PGItems {
     public static final Map<ResourceLocation, Item> ALL = new HashMap<>();
     public static final Map<Item, ResourceKey<CreativeModeTab>> TABS = new LinkedHashMap<>();
+    public static final List<PortalGunItem> PORTAL_GUNS = new ArrayList<>();
 
     public static final Item PORTAL_GUN = registerGun("portal_gun");
     public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW, null);
     public static final Item PRIME_PORTAL_GUN = registerGun("prime_portal_gun", Color.GREEN, null);
+
+    public static final Item ALT_PORTAL_GUN = registerGun("alt_portal_gun", Color.GREEN, null);
+    public static final Item FLINTLOCK_PORTAL_GUN = registerGun("flintlock_portal_gun", Color.GREEN, null);
+    public static final Item FUTURISTIC_PORTAL_GUN = registerGun("futuristic_portal_gun", Color.GREEN, null);
+    public static final Item JUNK_PORTAL_GUN = registerGun("junk_portal_gun", Color.GREEN, null);
+    public static final Item PORTAL_GUN_MK_II = registerGun("portal_gun_mk2", Color.GREEN, null);
+    public static final Item SIDESTEP_PORTAL_GUN = registerGun("sidestep_portal_gun", Color.GREEN, null);
+    public static final Item SLOPED_PORTAL_GUN = registerGun("sloped_portal_gun", Color.GREEN, null);
+    public static final Item SQUARE_PORTAL_GUN = registerGun("square_portal_gun", Color.GREEN, null);
+    public static final Item SYMMETRICAL_PORTAL_GUN = registerGun("symmetrical_portal_gun", Color.GREEN, null);
 
     public static final Item PORTAL_FLUID = registerFluid("portal_fluid");
     public static final Item BOOTLEG_PORTAL_FLUID = registerFluid("bootleg_portal_fluid");
     public static final Item QUANTUM_LEAP_ELIXIR = registerFluid("quantum_leap_elixir");
 
     public static final Item DATA_CARD = register("data_card", DataCardItem::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item DISC_TEMPLATE = register("disc_template", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
@@ -92,7 +102,9 @@ public class PGItems {
     }
 
     private static Item registerGun(String name, Color color, ResourceKey<CreativeModeTab> tab) {
-        return register(name, PortalGunItem::new, gunProperties(color), tab);
+        Item item = register(name, PortalGunItem::new, gunProperties(color), tab);
+        PORTAL_GUNS.add((PortalGunItem) item);
+        return item;
     }
 
     public static Item.Properties gunProperties(Color color) {
