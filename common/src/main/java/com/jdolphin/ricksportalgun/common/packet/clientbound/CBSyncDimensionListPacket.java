@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import java.util.List;
 
 public record CBSyncDimensionListPacket(List<String> dimensions) implements CustomPacketPayload {
-    public static final Type<CBSyncDimensionListPacket> ID = new Type<>(PGHelper.createLocation("sync_dimensions"));
+    public static final Type<CBSyncDimensionListPacket> ID = new Type<>(PGHelper.id("sync_dimensions"));
     public static final StreamCodec<FriendlyByteBuf, CBSyncDimensionListPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
             CBSyncDimensionListPacket::dimensions, CBSyncDimensionListPacket::new);
 

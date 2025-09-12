@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public record SBSetWorkbenchTypePacket(int id) implements PGPayload {
     public static final StreamCodec<ByteBuf, SBSetWorkbenchTypePacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT, SBSetWorkbenchTypePacket::id, SBSetWorkbenchTypePacket::new);
-    public static final Type<SBSetWorkbenchTypePacket> ID = new Type<>(PGHelper.createLocation("set_workbench_type"));
+    public static final Type<SBSetWorkbenchTypePacket> ID = new Type<>(PGHelper.id("set_workbench_type"));
 
     @Override
     public void handle(ServerPlayer player) {

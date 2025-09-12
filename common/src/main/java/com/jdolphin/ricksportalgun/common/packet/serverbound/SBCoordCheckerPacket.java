@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -21,12 +22,12 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBCoordCheckerPacket(String dim) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBCoordCheckerPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBCoordCheckerPacket::dim, SBCoordCheckerPacket::new);
-    public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.createLocation("coord_check"));
+    public static final Type<SBCoordCheckerPacket> ID = new Type<>(PGHelper.id("coord_check"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
-        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGHelper.getRandomizerMax()), player.serverLevel());
+        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
 
         ResourceLocation dim = ResourceLocation.parse(this.dim);
         ServerLevel level;

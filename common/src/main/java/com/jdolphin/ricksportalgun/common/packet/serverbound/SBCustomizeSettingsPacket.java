@@ -14,7 +14,7 @@ public record SBCustomizeSettingsPacket(double size, int age) implements PGPaylo
     public static final StreamCodec<ByteBuf, SBCustomizeSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.DOUBLE,
             SBCustomizeSettingsPacket::size, ByteBufCodecs.INT, SBCustomizeSettingsPacket::age, SBCustomizeSettingsPacket::new);
 
-    public static final Type<SBCustomizeSettingsPacket> ID = new Type<>(PGHelper.createLocation("portal_settings"));
+    public static final Type<SBCustomizeSettingsPacket> ID = new Type<>(PGHelper.id("portal_settings"));
 
     @Override
     public void handle(ServerPlayer player) {

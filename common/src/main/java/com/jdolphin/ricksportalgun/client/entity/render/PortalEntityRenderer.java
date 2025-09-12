@@ -24,7 +24,7 @@ import java.util.List;
 
 
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
-    public static final ResourceLocation PORTAL_TEXTURE = PGHelper.createLocation("textures/entity/portal.png");
+    public static final ResourceLocation PORTAL_TEXTURE = PGHelper.id("textures/entity/portal.png");
     public PortalEntityModel model;
     private static int textureFrame = 0;
     private static final int frames = 8;
@@ -42,7 +42,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     }
 
     public ResourceLocation getPortalTexture(int i) {
-        return PGHelper.createLocation("textures/entity/portal_" + i + ".png");
+        return PGHelper.id("textures/entity/portal_" + i + ".png");
     }
 
     protected void openAnimation(PortalEntity state, PoseStack stack) {

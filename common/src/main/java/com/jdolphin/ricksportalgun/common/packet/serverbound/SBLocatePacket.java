@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,7 @@ import java.util.Optional;
 public record SBLocatePacket(String name, int value) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBLocatePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SBLocatePacket::name, ByteBufCodecs.INT, SBLocatePacket::value, SBLocatePacket::new);
-    public static final Type<SBLocatePacket> ID = new Type<>(PGHelper.createLocation("locate"));
+    public static final Type<SBLocatePacket> ID = new Type<>(PGHelper.id("locate"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
@@ -38,7 +39,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
         ItemStack stack = player.getMainHandItem();
         if (value == 0) {
-            if (PGHelper.disableBiomeLocating()) {
+            if (PGConfigHelper.disableBiomeLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));
                 return;
             }
@@ -57,7 +58,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 }
         }
         if (value == 1) {
-            if (PGHelper.disablePlayerLocating()) {
+            if (PGConfigHelper.disablePlayerLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.disabled"));
                 return;
             }
@@ -71,7 +72,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
         }
         if (value == 2) {
-            if (PGHelper.disableStructureLocating()) {
+            if (PGConfigHelper.disableStructureLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
                 return;
             }

@@ -40,11 +40,11 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     private final List<String> dimSuggestions;
     private PGTextButton select, cancel;
 
-    public static ResourceLocation WAYPOINT_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/waypoint.png");
-    public static ResourceLocation PLAYER_LOC_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/locator.png");
-    public static ResourceLocation RANDOMIZER_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/randomizer.png");
-    public static ResourceLocation SETTINGS_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/settings.png");
-    public static ResourceLocation SELF_DESTRUCT_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/self_destruct.png");
+    public static ResourceLocation WAYPOINT_TEXTURE = PGHelper.id("textures/gui/sprites/icon/waypoint.png");
+    public static ResourceLocation PLAYER_LOC_TEXTURE = PGHelper.id("textures/gui/sprites/icon/locator.png");
+    public static ResourceLocation RANDOMIZER_TEXTURE = PGHelper.id("textures/gui/sprites/icon/randomizer.png");
+    public static ResourceLocation SETTINGS_TEXTURE = PGHelper.id("textures/gui/sprites/icon/settings.png");
+    public static ResourceLocation SELF_DESTRUCT_TEXTURE = PGHelper.id("textures/gui/sprites/icon/self_destruct.png");
 
 
     public CoordTravelScreen(List<String> suggestions) {

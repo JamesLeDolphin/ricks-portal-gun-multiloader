@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
+import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetPortalGunTypePacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -29,16 +31,17 @@ import java.awt.*;
 import java.util.List;
 
 public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMenu> {
-    public static final ResourceLocation BG = PGHelper.createLocation("textures/gui/workbench/skin_select.png");
-    public static ResourceLocation NEXT = PGHelper.createLocation("textures/gui/sprites/next.png");
-    public static ResourceLocation NEXT_HL = PGHelper.createLocation("textures/gui/sprites/next_highlighted.png");
-    public static ResourceLocation PREVIOUS = PGHelper.createLocation("textures/gui/sprites/previous.png");
-    public static ResourceLocation PREVIOUS_HL = PGHelper.createLocation("textures/gui/sprites/previous_highlighted.png");
+    public static final ResourceLocation BG = PGHelper.id("textures/gui/workbench/skin_select.png");
+    public static ResourceLocation NEXT = PGHelper.id("textures/gui/sprites/next.png");
+    public static ResourceLocation NEXT_HL = PGHelper.id("textures/gui/sprites/next_highlighted.png");
+    public static ResourceLocation PREVIOUS = PGHelper.id("textures/gui/sprites/previous.png");
+    public static ResourceLocation PREVIOUS_HL = PGHelper.id("textures/gui/sprites/previous_highlighted.png");
 
     private PGImageButton next, previous;
     private Button select;
     private int index = 0;
     private float rot = 0;
+    private double scroll = 0;
 
     public SkinSelectingScreen(SkinSelectorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -61,8 +64,10 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         previous.setRenderBackground(false);
 
         this.select = this.addWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), button -> {
-
-                    //PGHelper.sendPacketToServer(packet);
+                    PortalGunItem item = PGItems.PORTAL_GUNS.get(this.index);
+                    ResourceLocation rl = BuiltInRegistries.ITEM.getKey(item);
+                    SBSetPortalGunTypePacket packet = new SBSetPortalGunTypePacket(rl, item.getTints());
+                    PGHelper.sendPacketToServer(packet);
                 })
                 .bounds(this.width / 2 + 20, this.height / 2 - 18, 48, 16).build());
 
@@ -123,8 +128,6 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
     }
 
     private void renderPortalGunType(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-
-
         ItemStack stack = getStack(36);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
             ItemStack fakeStack = PGItems.PORTAL_GUNS.get(this.index).getDefaultInstance();
@@ -163,12 +166,27 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         poseStack.translate(x, y, z);
         poseStack.scale(scale, -scale, scale);
 
-        if (hasShiftDown()) poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
-        else poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
+        if (hasShiftDown()) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(mouseX));
+            poseStack.mulPose(Axis.XN.rotationDegrees(((float) mouseY * 2) + 180));
+            float zoom = (float) (scroll / 2);
+            if (zoom > 0) poseStack.scale(zoom, zoom, zoom);
+        }
+        else {
+            poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(20));
+        }
         Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, poseStack, graphics.bufferSource(), null, 0);
-      //  graphics.drawSpecial(source -> state.render(poseStack, source, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
 
         poseStack.popPose();
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (hasShiftDown()) {
+            scroll += dragY > 0 ? Mth.clamp(dragY, 0.1, 2) : Mth.clamp(dragY, -2, -0.1);
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override

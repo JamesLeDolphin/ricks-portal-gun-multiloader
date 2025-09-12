@@ -22,7 +22,7 @@ public class WaypointScreen extends AbstractBaseScreen {
     public WaypointListWidget waypointList;
     public PGImageButton addWaypoint, backButton;
 
-    public static ResourceLocation NEW_WAYPOINT_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/new_waypoint.png");
+    public static ResourceLocation NEW_WAYPOINT_TEXTURES = PGHelper.id("textures/gui/sprites/icon/new_waypoint.png");
 
     public WaypointScreen() {
         super("menu.ricksportalgun.waypoints");

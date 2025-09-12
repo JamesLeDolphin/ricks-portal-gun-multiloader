@@ -16,7 +16,7 @@ import net.minecraftforge.network.SimpleChannel;
 public class ForgePackets {
 
     static int index = 0;
-    public static final SimpleChannel INSTANCE = ChannelBuilder.named(PGHelper.createLocation("main")).simpleChannel();
+    public static final SimpleChannel INSTANCE = ChannelBuilder.named(PGHelper.id("main")).simpleChannel();
 
     public static void init() {
         //Server bound
@@ -74,6 +74,10 @@ public class ForgePackets {
                 .add();
         INSTANCE.messageBuilder(SBActivateSelfDestructPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .codec(SBActivateSelfDestructPacket.CODEC.cast())
+                .consumerMainThread(ForgePackets::handle)
+                .add();
+        INSTANCE.messageBuilder(SBSetPortalGunTypePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SBSetPortalGunTypePacket.CODEC.cast())
                 .consumerMainThread(ForgePackets::handle)
                 .add();
 

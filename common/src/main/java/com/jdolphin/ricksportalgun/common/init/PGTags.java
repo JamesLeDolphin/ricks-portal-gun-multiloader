@@ -13,14 +13,14 @@ public class PGTags {
         public static final TagKey<Item> UPGRADES = makeTag("upgrades");
 
         public static TagKey<Item> makeTag(String name) {
-            return TagKey.create(Registries.ITEM, PGHelper.createLocation(name));
+            return TagKey.create(Registries.ITEM, PGHelper.id(name));
         }
     }
     public static class Blocks {
         public static final TagKey<Block> RANDOMIZER_AVOID = makeTag("randomizer_avoid");
 
         public static TagKey<Block> makeTag(String name) {
-            return TagKey.create(Registries.BLOCK, PGHelper.createLocation(name));
+            return TagKey.create(Registries.BLOCK, PGHelper.id(name));
         }
     }
 }

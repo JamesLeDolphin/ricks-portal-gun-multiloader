@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import java.awt.*;
 
 public abstract class AbstractBaseScreen extends Screen {
-    public static ResourceLocation BG_LOCATION = PGHelper.createLocation("textures/gui/pg_background.png");
-    public static ResourceLocation BACK_BUTTON_TEXTURE = PGHelper.createLocation("textures/gui/sprites/icon/arrow_back.png");
+    public static ResourceLocation BG_LOCATION = PGHelper.id("textures/gui/pg_background.png");
+    public static ResourceLocation BACK_BUTTON_TEXTURE = PGHelper.id("textures/gui/sprites/icon/arrow_back.png");
     public static int WHITE = Color.WHITE.getRGB();
 
     protected AbstractBaseScreen(Component title) {

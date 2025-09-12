@@ -25,8 +25,8 @@ import java.awt.*;
 import java.util.Optional;
 
 public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTransferMenu> {
-    public static final ResourceLocation BG = PGHelper.createLocation("textures/gui/workbench/waypoint_transfer.png");
-    public static final ResourceLocation WP_INFO_BG = PGHelper.createLocation("textures/gui/workbench/waypoint_info_bg.png");
+    public static final ResourceLocation BG = PGHelper.id("textures/gui/workbench/waypoint_transfer.png");
+    public static final ResourceLocation WP_INFO_BG = PGHelper.id("textures/gui/workbench/waypoint_info_bg.png");
     private WaypointListWidget leftWaypointList, rightWaypointList;
     private Pair<Waypoint, Side> selectedWaypoint;
     private Button copy, moveTo, delete;

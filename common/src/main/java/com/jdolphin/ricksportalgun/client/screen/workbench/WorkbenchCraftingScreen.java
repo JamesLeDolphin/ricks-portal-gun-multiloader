@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Items;
 
 public class WorkbenchCraftingScreen extends AbstractWorkbenchScreen<WorkbenchCraftingMenu> {
-    public static final ResourceLocation CRAFT_BG = PGHelper.createLocation("textures/gui/workbench/crafting.png");
+    public static final ResourceLocation CRAFT_BG = PGHelper.id("textures/gui/workbench/crafting.png");
 
     public WorkbenchCraftingScreen(WorkbenchCraftingMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

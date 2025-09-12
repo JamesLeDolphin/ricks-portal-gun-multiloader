@@ -31,7 +31,7 @@ public class PGMenuTypes {
 
     private static <M extends AbstractContainerMenu> MenuType<M> register(String name, BiFunction<Integer, Inventory, M> constructor) {
         MenuType<M> menu = PGServices.PLATFORM.createMenuType(constructor);
-        ALL.put(PGHelper.createLocation(name), menu);
+        ALL.put(PGHelper.id(name), menu);
         return menu;
     }
 

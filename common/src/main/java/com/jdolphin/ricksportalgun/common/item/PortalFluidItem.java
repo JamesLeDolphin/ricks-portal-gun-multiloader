@@ -14,10 +14,10 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 public class PortalFluidItem extends Item {
+
     public PortalFluidItem(Properties pProperties) {
         super(pProperties);
     }
-
 
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {

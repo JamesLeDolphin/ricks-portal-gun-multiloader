@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record SBColourPacket(int colour) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBColourPacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT, SBColourPacket::colour, SBColourPacket::new);
-    public static final Type<SBColourPacket> ID = new Type<>(PGHelper.createLocation("color"));
+    public static final Type<SBColourPacket> ID = new Type<>(PGHelper.id("color"));
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();

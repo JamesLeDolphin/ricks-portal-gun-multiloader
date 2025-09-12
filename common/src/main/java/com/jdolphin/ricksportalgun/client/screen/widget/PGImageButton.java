@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
 import java.util.function.Consumer;
@@ -53,7 +54,13 @@ public class PGImageButton extends AbstractButton {
             }
             int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
             int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
+            float r = FastColor.ARGB32.red(color) / 255f;
+            float g = FastColor.ARGB32.green(color) / 255f;
+            float b = FastColor.ARGB32.blue(color) / 255f;
+            float a = FastColor.ARGB32.alpha(color) / 255f;
+            graphics.setColor(r,g, b, a);
             graphics.blit(this.texture, i, j,0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 

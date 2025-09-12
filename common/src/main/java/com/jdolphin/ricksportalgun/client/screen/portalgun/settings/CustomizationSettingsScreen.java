@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class CustomizationSettingsScreen extends AbstractBaseScreen {
-    public static ResourceLocation RESET_LOCATION = PGHelper.createLocation("textures/gui/sprites/icon/reset.png");
+    public static ResourceLocation RESET_LOCATION = PGHelper.id("textures/gui/sprites/icon/reset.png");
     private PGSlider portalSize, portalAge;
     private PGTextButton portalColor, menuTheme, select, cancel;
     private PGImageButton resetSize, resetAge, backButton;

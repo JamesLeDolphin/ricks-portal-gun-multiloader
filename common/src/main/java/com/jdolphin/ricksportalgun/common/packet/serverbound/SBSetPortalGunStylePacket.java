@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBSetPortalGunStylePacket> CODEC = StreamCodec.composite(PortalGunStyle.PACKET_CODEC, SBSetPortalGunStylePacket::style, SBSetPortalGunStylePacket::new);
-    public static final Type<SBSetPortalGunStylePacket> ID = new Type<>(PGHelper.createLocation("portal_gun_style"));
+    public static final Type<SBSetPortalGunStylePacket> ID = new Type<>(PGHelper.id("portal_gun_style"));
 
     @Override
     public void handle(ServerPlayer player) {

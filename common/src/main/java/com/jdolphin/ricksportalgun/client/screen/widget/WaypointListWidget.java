@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.WaypointEntry> {
-    public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.createLocation("textures/gui/sprites/icon/waypoint_info.png");
+    public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.id("textures/gui/sprites/icon/waypoint_info.png");
 
     public boolean showInfoButton;
     public int rowWidth = 188;

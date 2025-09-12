@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
 
 public class PortalEntityModel extends EntityModel<PortalEntity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(PGHelper.createLocation("portal"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(PGHelper.id("portal"), "main");
     private final ModelPart bb_main;
 
     public PortalEntityModel(ModelPart root) {

@@ -31,7 +31,7 @@ public class PGBlocks {
 
     private static Block register(String id, Function<BlockBehaviour.Properties, Block> func, BlockBehaviour.Properties properties) {
         Block block = func.apply(properties);
-        ALL.put(PGHelper.createLocation(id), block);
+        ALL.put(PGHelper.id(id), block);
         return block;
     }
 
@@ -42,6 +42,6 @@ public class PGBlocks {
     }
 
     private static ResourceKey<Block> keyOf(String id) {
-        return ResourceKey.create(Registries.BLOCK, PGHelper.createLocation(id));
+        return ResourceKey.create(Registries.BLOCK, PGHelper.id(id));
     }
 }

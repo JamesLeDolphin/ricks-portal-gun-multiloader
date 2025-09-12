@@ -1,0 +1,19 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:circuitboard"
+    },
+    {
+      "id": "minecraft:redstone",
+      "count": 2
+    },
+    {
+      "id": "minecraft:copper_ingot"
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:disc_template",
+    "count": 1
+  }
+}

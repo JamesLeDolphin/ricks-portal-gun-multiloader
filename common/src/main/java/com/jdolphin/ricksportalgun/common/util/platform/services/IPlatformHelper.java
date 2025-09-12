@@ -47,4 +47,6 @@ public interface IPlatformHelper {
     int getRandomizerMax();
 
     boolean disablePortalGunColorTint();
+
+    List<? extends String> getDisabledEntities();
 }

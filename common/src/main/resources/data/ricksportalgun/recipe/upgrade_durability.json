@@ -1,0 +1,20 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:disc_template"
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "count": 1
+    },
+    {
+      "id": "minecraft:netherite_upgrade_smithing_template",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:upgrade_durability",
+    "count": 1
+  }
+}

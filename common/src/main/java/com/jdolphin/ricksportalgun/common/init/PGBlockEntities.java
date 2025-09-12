@@ -25,7 +25,7 @@ public class PGBlockEntities {
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
         var bet = PGServices.PLATFORM.createBlockEntityType(func, blocks);
-        ALL.put(PGHelper.createLocation(id), bet);
+        ALL.put(PGHelper.id(id), bet);
         return bet;
     }
 

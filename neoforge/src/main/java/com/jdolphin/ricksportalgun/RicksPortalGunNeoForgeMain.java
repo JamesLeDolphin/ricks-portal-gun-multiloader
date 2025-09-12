@@ -4,21 +4,33 @@ package com.jdolphin.ricksportalgun;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
+import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -28,7 +40,7 @@ public class RicksPortalGunNeoForgeMain {
 
     public RicksPortalGunNeoForgeMain(IEventBus bus) {
         RicksPortalGunCommonMain.init();
-
+        NeoForge.EVENT_BUS.addListener(this::onPlayerJoin);
         bus.addListener(this::buildContents);
         bus.addListener(this::registerPackets);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
@@ -47,6 +59,19 @@ public class RicksPortalGunNeoForgeMain {
     public void registerPackets(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
         NeoForgePackets.init(registrar);
+    }
+
+    private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer serverPlayer) {
+            MinecraftServer server = serverPlayer.getServer();
+            if (server != null) {
+                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
+                if (!dims.contains(PGHelper.id("blender").toString()) && !PGConfigHelper.getDisabledDimensions().contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
+                CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
+                PacketDistributor.sendToPlayer(serverPlayer, dimSync);
+            }
+        }
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

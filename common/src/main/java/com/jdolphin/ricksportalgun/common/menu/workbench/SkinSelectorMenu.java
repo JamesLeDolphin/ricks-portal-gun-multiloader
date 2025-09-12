@@ -4,6 +4,8 @@ import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -14,6 +16,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -70,9 +73,12 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
                     if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
-            //Set type here
-            if (primary != 0) PortalGunItem.setPrimaryDye(gun, primary);
-            if (secondary != 0) PortalGunItem.setSecondaryDye(gun, secondary);
+            Item newType = BuiltInRegistries.ITEM.get(type);
+            ItemStack newStack = newType.getDefaultInstance();
+            DataComponentMap components = gun.getComponents();
+            newStack.applyComponents(components);
+            if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
+            if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);
         });
     }
 

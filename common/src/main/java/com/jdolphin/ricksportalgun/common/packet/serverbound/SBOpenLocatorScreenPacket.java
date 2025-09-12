@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public record SBOpenLocatorScreenPacket() implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBOpenLocatorScreenPacket> CODEC = StreamCodec.unit(new SBOpenLocatorScreenPacket());
-    public static final Type<SBOpenLocatorScreenPacket> ID = new Type<>(PGHelper.createLocation("open_locator_screen"));
+    public static final Type<SBOpenLocatorScreenPacket> ID = new Type<>(PGHelper.id("open_locator_screen"));
 
     @Override
     public void handle(ServerPlayer player) {

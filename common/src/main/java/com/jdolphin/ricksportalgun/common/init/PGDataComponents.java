@@ -59,7 +59,7 @@ public class PGDataComponents {
 
     private static <T> DataComponentType<T> registerComponent(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
-        ALL.put(PGHelper.createLocation(name), type);
+        ALL.put(PGHelper.id(name), type);
         return type;
     }
 

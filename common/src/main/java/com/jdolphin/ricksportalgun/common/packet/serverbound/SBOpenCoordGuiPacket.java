@@ -15,15 +15,15 @@ import java.util.List;
 
 public record SBOpenCoordGuiPacket() implements PGPayload {
     public static final StreamCodec<FriendlyByteBuf, SBOpenCoordGuiPacket> CODEC = StreamCodec.unit(new SBOpenCoordGuiPacket());
-    public static final Type<SBOpenCoordGuiPacket> ID = new Type<>(PGHelper.createLocation("open_coord_menu"));
+    public static final Type<SBOpenCoordGuiPacket> ID = new Type<>(PGHelper.id("open_coord_menu"));
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         ItemStack stack = player.getMainHandItem();
         if (PGHelper.canPlayerAccessGun(player, stack)) {
             List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-            if (!dims.contains(PGHelper.createLocation("blender").toString()))
-                dims.add(PGHelper.createLocation("blender").toString());
+            if (!dims.contains(PGHelper.id("blender").toString()))
+                dims.add(PGHelper.id("blender").toString());
             PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
         }
     }

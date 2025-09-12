@@ -40,15 +40,21 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
-
-    public PortalGunItem(Properties properties) {
+    private final int tints;
+    public PortalGunItem(Properties properties, int tints) {
         super(properties);
+        this.tints = tints;
+    }
+
+    public int getTints() {
+        return tints;
     }
 
     public static int getMaxFuel(ItemStack stack) {
@@ -100,19 +106,21 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     public static boolean refuel(ItemStack stack, Player player) {
-        ItemStack offhand = player.getOffhandItem();
-        ItemStack mainHand = player.getMainHandItem();
-        if (getFuel(stack) < getMaxFuel(stack) && mainHand.is(PGTags.Items.PORTAL_GUNS)) {
-            if (offhand.is(PGItems.PORTAL_FLUID)) {
+        InteractionHand pgHand = PGHelper.getPortalGunHand(player);
+        InteractionHand fluidHand = PGHelper.getOppositeHand(pgHand);
+        ItemStack gunStack = player.getItemInHand(pgHand);
+        ItemStack fluidStack = player.getItemInHand(fluidHand);
+        if (getFuel(stack) < getMaxFuel(stack) && gunStack.is(PGTags.Items.PORTAL_GUNS)) {
+            if (fluidStack.is(PGItems.PORTAL_FLUID)) {
                 refillFuel(stack);
-                offhand.shrink(1);
+                fluidStack.shrink(1);
                 stack.set(PGDataComponents.BOOTLEG, false);
                 return true;
             }
-            if (offhand.is(PGItems.BOOTLEG_PORTAL_FLUID)) {
+            if (fluidStack.is(PGItems.BOOTLEG_PORTAL_FLUID)) {
                 refillFuel(stack);
                 stack.set(PGDataComponents.BOOTLEG, true);
-                offhand.shrink(1);
+                fluidStack.shrink(1);
                 return true;
             }
         }
@@ -121,36 +129,36 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
 
     private Vec3 getLocation(Level level, BlockPos bPos, Direction dir, Vec3 loc) {
         if (isAir(level, bPos.below()) && (dir == Direction.DOWN)) {
-            loc = loc.add(0, -0.2, 0);
+            return loc.add(0, -0.2, 0);
         }
-        boolean air = true;
-        switch (dir) {
-            case NORTH -> {
-                if (isAir(level, bPos.north())) {
+        if (dir.equals(Direction.UP)) {
+            return loc;
+        }
+        if (!isAir(level, bPos.relative(dir))) {
+            switch (dir) {
+                case NORTH -> {
                     Vec3 vec = bPos.north().getBottomCenter();
                     loc = vec.add(0, 0, 0.4);
-                } else  air = false;
-            }
-            case SOUTH -> {
-                if (isAir(level, bPos.south())) {
+
+                }
+                case SOUTH -> {
                     Vec3 vec = bPos.south().getBottomCenter();
                     loc = vec.add(0, 0, -0.4);
-                } else  air = false;
-            }
-            case WEST -> {
-                if (isAir(level, bPos.west())) {
+                }
+                case WEST -> {
                     Vec3 vec = bPos.west().getBottomCenter();
-                    loc =vec.add(0.4, 0, 0);
-                } else  air = false;
-            }
-            case EAST -> {
-                if (isAir(level, bPos.east())) {
+                    loc = vec.add(0.4, 0, 0);
+                }
+                case EAST -> {
                     Vec3 vec = bPos.east().getBottomCenter();
                     loc = vec.add(-0.4, 0, 0);
-                } else air = false;
+                }
             }
+        } else {
+            float x = dir.getAxis().equals(Direction.Axis.X) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            float z = dir.getAxis().equals(Direction.Axis.Z) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            loc = new Vec3(loc.x() + x, bPos.getY(), loc.z() + z);
         }
-        if (!air) loc = new Vec3(loc.x(), bPos.getY() - 1, loc.z());
 
         return loc;
     }
@@ -255,7 +263,8 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pContext, List<Component> toolTips, @NotNull TooltipFlag pTooltipFlag) {
+    @ParametersAreNonnullByDefault
+    public void appendHoverText(ItemStack stack, TooltipContext pContext, List<Component> toolTips, TooltipFlag pTooltipFlag) {
         List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
         if (!Screen.hasShiftDown()) {
         toolTips.add(Component.translatable("ricksportalgun.destination",
@@ -381,7 +390,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public int getColor(ItemStack itemStack, int i) {
+    public int getColor(@NotNull ItemStack itemStack, int i) {
         return getColor(itemStack);
     }
 }

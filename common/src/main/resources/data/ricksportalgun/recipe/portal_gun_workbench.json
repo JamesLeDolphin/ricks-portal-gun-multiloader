@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "BTB",
+    " S "
+  ],
+  "key": {
+    "C": "minecraft:copper_block",
+    "B": "minecraft:redstone",
+    "T": "minecraft:crafting_table",
+    "S": "minecraft:smithing_table"
+  },
+  "result": {
+    "id": "ricksportalgun:portal_gun_workbench"
+  }
+}

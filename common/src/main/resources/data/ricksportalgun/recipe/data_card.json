@@ -1,0 +1,18 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:disc_template"
+    },
+    {
+      "id": "minecraft:writable_book"
+    },
+    {
+      "id": "minecraft:gold_nugget"
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:data_card",
+    "count": 1
+  }
+}

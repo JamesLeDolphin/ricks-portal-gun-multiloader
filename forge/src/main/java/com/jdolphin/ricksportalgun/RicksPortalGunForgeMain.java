@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -52,26 +54,25 @@ public class RicksPortalGunForgeMain {
         context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
     }
 
+    private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer serverPlayer) {
+            MinecraftServer server = serverPlayer.getServer();
+            if (server != null) {
+                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
+                if (!dims.contains(PGHelper.id("blender").toString()) && !PGConfigHelper.getDisabledDimensions().contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
+                CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
+                ForgePackets.sendToPlayer(serverPlayer, dimSync);
+            }
+        }
+    }
+
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {
         bus.addListener((RegisterEvent event) -> {
             if (registry.equals(event.getRegistryKey())) {
                 source.accept((t, rl) -> event.register(registry, rl, () -> t));
             }
         });
-    }
-
-
-    private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
-        if (player instanceof ServerPlayer serverPlayer) {
-            MinecraftServer server = serverPlayer.getServer();
-            if (server != null) {
-                List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-                if (!dims.contains(PGHelper.createLocation("blender").toString())) dims.add(PGHelper.createLocation("blender").toString());
-                CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
-                ForgePackets.sendToPlayer(serverPlayer, dimSync);
-            }
-        }
     }
 
 

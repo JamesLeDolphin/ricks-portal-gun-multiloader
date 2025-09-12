@@ -31,18 +31,18 @@ public class PGItems {
     public static final List<PortalGunItem> PORTAL_GUNS = new ArrayList<>();
 
     public static final Item PORTAL_GUN = registerGun("portal_gun");
-    public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", Color.YELLOW, null);
-    public static final Item PRIME_PORTAL_GUN = registerGun("prime_portal_gun", Color.GREEN, null);
+    public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", 2, Color.YELLOW, null);
+    public static final Item PRIME_PORTAL_GUN = registerGun("prime_portal_gun", 2, Color.GREEN, null);
 
-    public static final Item ALT_PORTAL_GUN = registerGun("alt_portal_gun", Color.GREEN, null);
-    public static final Item FLINTLOCK_PORTAL_GUN = registerGun("flintlock_portal_gun", Color.GREEN, null);
-    public static final Item FUTURISTIC_PORTAL_GUN = registerGun("futuristic_portal_gun", Color.GREEN, null);
-    public static final Item JUNK_PORTAL_GUN = registerGun("junk_portal_gun", Color.GREEN, null);
-    public static final Item PORTAL_GUN_MK_II = registerGun("portal_gun_mk2", Color.GREEN, null);
-    public static final Item SIDESTEP_PORTAL_GUN = registerGun("sidestep_portal_gun", Color.GREEN, null);
-    public static final Item SLOPED_PORTAL_GUN = registerGun("sloped_portal_gun", Color.GREEN, null);
-    public static final Item SQUARE_PORTAL_GUN = registerGun("square_portal_gun", Color.GREEN, null);
-    public static final Item SYMMETRICAL_PORTAL_GUN = registerGun("symmetrical_portal_gun", Color.GREEN, null);
+    public static final Item ALT_PORTAL_GUN = registerGun("alt_portal_gun", 3, Color.GREEN, null);
+    public static final Item FLINTLOCK_PORTAL_GUN = registerGun("flintlock_portal_gun", 3, Color.GREEN, null);
+    public static final Item FUTURISTIC_PORTAL_GUN = registerGun("futuristic_portal_gun", 3, Color.GREEN, null);
+    public static final Item JUNK_PORTAL_GUN = registerGun("junk_portal_gun", 3, Color.GREEN, null);
+    public static final Item PORTAL_GUN_MK_II = registerGun("portal_gun_mk2", 2, Color.GREEN, null);
+    public static final Item SIDESTEP_PORTAL_GUN = registerGun("sidestep_portal_gun", 3, Color.GREEN, null);
+    public static final Item SLOPED_PORTAL_GUN = registerGun("sloped_portal_gun", 2, Color.GREEN, null);
+    public static final Item SQUARE_PORTAL_GUN = registerGun("square_portal_gun", 2, Color.GREEN, null);
+    public static final Item SYMMETRICAL_PORTAL_GUN = registerGun("symmetrical_portal_gun", 3,  Color.GREEN, null);
 
     public static final Item PORTAL_FLUID = registerFluid("portal_fluid");
     public static final Item BOOTLEG_PORTAL_FLUID = registerFluid("bootleg_portal_fluid");
@@ -99,11 +99,11 @@ public class PGItems {
             Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     private static Item registerGun(String name) {
-        return registerGun(name, Color.GREEN, PGCreativeModeTabs.TOOLS_AND_UTILITIES);
+        return registerGun(name, 2, Color.GREEN, PGCreativeModeTabs.TOOLS_AND_UTILITIES);
     }
 
-    private static Item registerGun(String name, Color color, ResourceKey<CreativeModeTab> tab) {
-        Item item = register(name, PortalGunItem::new, gunProperties(color), tab);
+    private static Item registerGun(String name, int tints, Color color, ResourceKey<CreativeModeTab> tab) {
+        Item item = register(name, properties -> new PortalGunItem(properties, tints), gunProperties(color), tab);
         PORTAL_GUNS.add((PortalGunItem) item);
         return item;
     }
@@ -136,7 +136,7 @@ public class PGItems {
     private static Item register(String name, Function<Item.Properties, Item> factory, Item.Properties properties, ResourceKey<CreativeModeTab> tab) {
         Item item = factory.apply(properties);
         TABS.put(item, tab);
-        ALL.put(PGHelper.createLocation(name), item);
+        ALL.put(PGHelper.id(name), item);
         return item;
     }
 
@@ -147,6 +147,6 @@ public class PGItems {
     }
 
     private static ResourceKey<Item> keyOf(String id) {
-        return ResourceKey.create(Registries.ITEM, PGHelper.createLocation(id));
+        return ResourceKey.create(Registries.ITEM, PGHelper.id(id));
     }
 }

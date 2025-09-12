@@ -1,0 +1,22 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "id": "ricksportalgun:disc_template"
+    },
+    {
+      "id": "minecraft:ender_eye",
+      "count": 5
+    },
+    {
+      "id": "minecraft:compass"
+    },
+    {
+      "id": "minecraft:map"
+    }
+  ],
+  "result": {
+    "id": "ricksportalgun:upgrade_player_locator",
+    "count": 1
+  }
+}
