@@ -53,7 +53,8 @@ public class PGItems {
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
-
+    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new BlockItem(PGBlocks.SUBETHER_BARRIER, properties),
+            new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
 

@@ -77,6 +77,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
         PGItemButton craft = this.addRenderableWidget(new PGItemButton(this.width / 2 + 91, this.height / 2 - 45, 24, 24,
                 Component.translatable("menu.ricksportalgun.workbench.craft"), button -> setScreen(2), Items.CRAFTING_TABLE.getDefaultInstance()));
+
         craft.setRenderBackground(false);
 
         GuiHelper.setTooltip(skin, Component.translatable("menu.ricksportalgun.workbench.skin"));

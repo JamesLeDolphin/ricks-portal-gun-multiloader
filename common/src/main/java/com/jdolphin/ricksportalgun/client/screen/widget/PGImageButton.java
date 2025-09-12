@@ -53,7 +53,7 @@ public class PGImageButton extends AbstractButton {
             }
             int i = this.getX() + (this.getWidth() / 2 - this.textureWidth / 2);
             int j = this.getY() + (this.getHeight() / 2 - this.textureHeight / 2);
-            graphics.blit(this.texture, i, j, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, this.color);
+            graphics.blit(this.texture, i, j,0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
         }
     }
 

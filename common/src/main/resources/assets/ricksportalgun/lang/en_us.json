@@ -4,9 +4,7 @@
   "item.ricksportalgun.prime_portal_gun": "Prime Portal Gun",
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
   "item.ricksportalgun.circuitboard": "Circuit Board",
-
-  "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
-  "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
+  "item.ricksportalgun.disc_template": "Disc Template",
 
   "item.ricksportalgun.portalgun.alt": "Alternative Portal Gun",
   "item.ricksportalgun.portalgun.flintlock": "Flintlock Portal Gun",
@@ -22,9 +20,12 @@
   "item.ricksportalgun.bootleg_portal_fluid": "Bootleg Portal Fluid",
   "item.ricksportalgun.portal_fluid_bottle": "Portal Fluid Bottle",
   "item.ricksportalgun.bootleg_portal_fluid_bottle": "Bootleg Portal Fluid",
+  "item.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
+  "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
+  "item.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
   "item.ricksportalgun.data_card": "Data Card",
 
-  "item.ricksportalgun.upgrade_durability": "Portal Gun Durability Upgrade",
+  "item.ricksportalgun.upgrade_durability": "Portal Gun Fire Resistance Upgrade",
   "item.ricksportalgun.upgrade_waypoint": "Portal Gun Waypoint Upgrade",
   "item.ricksportalgun.upgrade_dimension_mk1": "Portal Gun Dimension Upgrade Mk.I",
   "item.ricksportalgun.upgrade_dimension_mk2": "Portal Gun Dimension Upgrade Mk.II",
@@ -172,6 +173,8 @@
 
   "entity.ricksportalgun.portal": "Portal",
 
-  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots"
+  "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
+  "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
+  "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket"
 
 }
