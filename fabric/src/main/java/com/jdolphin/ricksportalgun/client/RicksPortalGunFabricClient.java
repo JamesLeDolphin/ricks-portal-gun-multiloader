@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.config.ModConfig;
@@ -32,6 +33,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGCommonConfig.SPEC, "ricksportalgun-client.toml");
 
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
+        EntityRendererRegistry.register(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
 
         PGMenuScreens.ALL.forEach((type, func) -> {

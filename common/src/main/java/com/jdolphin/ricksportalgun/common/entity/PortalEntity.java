@@ -84,7 +84,7 @@ public class PortalEntity extends Entity {
     }
 
     public void setLifetime(int lifetime) {
-        this.entityData.set(LIFETIME, PGHelper.seconds(lifetime));
+        this.entityData.set(LIFETIME, lifetime);
     }
 
     public int getLifetime() {

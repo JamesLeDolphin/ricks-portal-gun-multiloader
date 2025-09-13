@@ -13,6 +13,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -55,6 +56,7 @@ public class NeoForgeClientMain {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(PGEntities.PORTAL, PortalEntityRenderer::new);
+        event.registerEntityRenderer(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
     }
 
     @EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT)

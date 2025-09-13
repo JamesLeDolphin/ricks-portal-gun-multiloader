@@ -190,7 +190,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                     Direction dir = hitResult.getDirection();
                     Direction facing = player.getDirection();
                     float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
-                    int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
+                    int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, PGHelper.seconds(10));
 
                     PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
                     PortalEntity exPortal = new PortalEntity(level, getHopCoords(stack).above().getBottomCenter(), dir, facing, size);
@@ -200,9 +200,11 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
 
                     doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
 
-                    Component customName = stack.getDisplayName();
-                    doForBoth(entity -> entity.setCustomName(customName), portal, exPortal);
-
+                    if (stack.has(DataComponents.CUSTOM_NAME)) {
+                        Component component = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
+                        String s = component.getString();
+                        doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
+                    }
                     portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
