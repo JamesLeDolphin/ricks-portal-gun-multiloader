@@ -1,8 +1,0 @@
-{
-  "name": {
-    "translate": "item.ricksportalgun.portalgun.sidestep"
-  },
-  "tint_amount": 3,
-  "id": "ricksportalgun:sidestep",
-  "model": "ricksportalgun:sidestep_portal_gun"
-}

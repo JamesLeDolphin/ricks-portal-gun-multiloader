@@ -39,11 +39,13 @@ public class ForgeClientMain {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
                 Minecraft minecraft = Minecraft.getInstance();
                 LocalPlayer player = minecraft.player;
-                ItemStack gun = player.getMainHandItem();
+                if (player != null) {
+                    ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-                if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    PGHelper.sendPacketToServer(packet);
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                        PGHelper.sendPacketToServer(packet);
+                    }
                 }
             }
         }

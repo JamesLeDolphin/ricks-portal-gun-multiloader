@@ -19,7 +19,7 @@ public record SBOpenCoordGuiPacket() implements PGPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         if (PGHelper.canPlayerAccessGun(player, stack)) {
             List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
             if (!dims.contains(PGHelper.id("blender").toString()))

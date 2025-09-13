@@ -21,7 +21,7 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
 
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         stack.set(PGDataComponents.LOCK, lock);
         stack.set(PGDataComponents.SELF_DESTRUCT, selfDestruct);
 

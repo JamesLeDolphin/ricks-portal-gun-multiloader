@@ -19,7 +19,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGPayl
     public static final Type<SBSetDestinationPacket> ID = new Type<>(PGHelper.id("destination"));
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
             PortalGunItem.setHopLocation(stack, ResourceLocation.parse(dim), pos);
         } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");

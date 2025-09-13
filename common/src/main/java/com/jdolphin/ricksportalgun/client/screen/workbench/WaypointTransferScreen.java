@@ -165,7 +165,7 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-        this.renderTooltip(graphics, mouseX, mouseY);
+
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, leftWaypointList, rightWaypointList);
 
         if (selectedWaypoint != null) {
@@ -182,6 +182,7 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
                 }
             renderWaypointInfo(graphics, mouseX, mouseY, delta);
         }
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     private void renderWaypointInfo(GuiGraphics graphics, int mouseX, int mouseY, float delta) {

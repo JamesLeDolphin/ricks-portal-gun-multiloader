@@ -1,8 +1,0 @@
-{
-  "name": {
-    "translate": "item.ricksportalgun.portalgun.futuristic"
-  },
-  "tint_amount": 3,
-  "id": "ricksportalgun:futuristic",
-  "model": "ricksportalgun:futuristic_portal_gun"
-}

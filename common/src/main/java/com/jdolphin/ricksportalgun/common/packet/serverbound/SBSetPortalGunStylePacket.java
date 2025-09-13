@@ -16,7 +16,7 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPaylo
 
     @Override
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         PortalGunItem.setStyle(stack, style);
     }
 

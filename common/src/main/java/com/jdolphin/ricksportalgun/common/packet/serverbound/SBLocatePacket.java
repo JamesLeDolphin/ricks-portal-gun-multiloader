@@ -37,7 +37,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         MinecraftServer server = player.server;
         ServerLevel level = player.serverLevel();
 
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         if (value == 0) {
             if (PGConfigHelper.disableBiomeLocating()) {
                 PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));

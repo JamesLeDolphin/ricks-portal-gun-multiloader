@@ -6,10 +6,18 @@
     " S "
   ],
   "key": {
-    "C": "minecraft:copper_block",
-    "B": "minecraft:redstone",
-    "T": "minecraft:crafting_table",
-    "S": "minecraft:smithing_table"
+    "C": {
+      "item": "minecraft:copper_block"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "S": {
+      "item": "minecraft:smithing_table"
+    }
   },
   "result": {
     "id": "ricksportalgun:portal_gun_workbench"

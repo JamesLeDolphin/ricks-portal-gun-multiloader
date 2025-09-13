@@ -12,7 +12,6 @@ import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +31,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         super.init();
         assert minecraft != null && minecraft.player != null;
 
-        LocalPlayer player = minecraft.player;
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = getItemStack();
 
         float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
         int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);

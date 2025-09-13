@@ -1,8 +1,0 @@
-{
-  "name": {
-    "translate": "item.ricksportalgun.portalgun.flintlock"
-  },
-  "tint_amount": 3,
-  "id": "ricksportalgun:flintlock",
-  "model": "ricksportalgun:flintlock_portal_gun"
-}

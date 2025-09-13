@@ -1,8 +1,0 @@
-{
-  "name": {
-    "translate": "item.ricksportalgun.portal_gun"
-  },
-  "tint_amount": 2,
-  "id": "ricksportalgun:portal_gun",
-  "model": "ricksportalgun:portal_gun"
-}

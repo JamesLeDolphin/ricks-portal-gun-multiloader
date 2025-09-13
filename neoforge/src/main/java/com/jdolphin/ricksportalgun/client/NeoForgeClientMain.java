@@ -19,6 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 
+@SuppressWarnings("removal")
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD, modid = PGConstants.MODID)
 public class NeoForgeClientMain {
 
@@ -64,11 +65,13 @@ public class NeoForgeClientMain {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
                 Minecraft minecraft = Minecraft.getInstance();
                 LocalPlayer player = minecraft.player;
-                ItemStack gun = player.getMainHandItem();
+                if (player != null) {
+                    ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-                if (gun.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    PGHelper.sendPacketToServer(packet);
+                    if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+                        SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                        PGHelper.sendPacketToServer(packet);
+                    }
                 }
             }
         }

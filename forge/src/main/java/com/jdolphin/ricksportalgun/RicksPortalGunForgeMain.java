@@ -75,10 +75,10 @@ public class RicksPortalGunForgeMain {
         });
     }
 
-
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ForgePackets::init);
     }
+
     public void buildContents(BuildCreativeModeTabContentsEvent event) {
         ResourceKey<CreativeModeTab> key = event.getTabKey();
         for (Map.Entry<Item, ResourceKey<CreativeModeTab>> entry : PGItems.TABS.entrySet()) {

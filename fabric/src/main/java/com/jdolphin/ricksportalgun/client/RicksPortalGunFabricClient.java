@@ -8,6 +8,7 @@ import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -19,6 +20,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.config.ModConfig;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
@@ -48,9 +51,13 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
     private void initEvents() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && client.player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
-                SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                ClientPlayNetworking.send(packet);
+            Player player = client.player;
+            if (player != null) {
+                ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+                if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && stack.is(PGTags.Items.PORTAL_GUNS)) {
+                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
+                    ClientPlayNetworking.send(packet);
+                }
             }
         });
 

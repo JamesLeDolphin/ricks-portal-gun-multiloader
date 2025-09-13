@@ -10,12 +10,13 @@ import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 
 public class WaypointScreen extends AbstractBaseScreen {
 
@@ -33,12 +34,10 @@ public class WaypointScreen extends AbstractBaseScreen {
         super.init();
         assert minecraft != null && minecraft.screen != null && minecraft.player != null;
 
-        LocalPlayer player = minecraft.player;
-
         this.addWaypoint = this.addRenderableWidget(new PGImageButton(this.width / 2 + 68, this.height / 2 - 94, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
                 (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
 
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = getItemStack();
         this.waypointList = this.addWidget(new WaypointListWidget(170, 152, this.width / 2 - 75, this.height / 2 - 70,
                 24, stack, true, 128, 20));
 
@@ -80,9 +79,10 @@ public class WaypointScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, waypointList, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
-        if (waypointList != null)
+        if (waypointList != null) {
             this.waypointList.render(graphics, pMouseX, pMouseY, pPartialTick);
-
+            GuiHelper.renderOutline(graphics, waypointList, Color.YELLOW.getRGB());
+        }
         graphics.drawCenteredString(this.font, Component.translatable("ricksportalgun.button.waypoint.saved"), this.width / 2, this.height / 2 - 92, style.textColor());
 
 

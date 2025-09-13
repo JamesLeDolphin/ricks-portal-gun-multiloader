@@ -16,7 +16,7 @@ public record SBColourPacket(int colour) implements PGPayload {
     public static final Type<SBColourPacket> ID = new Type<>(PGHelper.id("color"));
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         PortalGunItem.setColor(stack, this.colour);
     }
 

@@ -52,7 +52,7 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
         for (Waypoint waypoint : waypoints) {
             if (waypoint != null) {
-                this.addEntryToTop(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
+                this.addEntry(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
             } else LogManager.getLogger().warn("Failed to get Waypoint");
         }
     }

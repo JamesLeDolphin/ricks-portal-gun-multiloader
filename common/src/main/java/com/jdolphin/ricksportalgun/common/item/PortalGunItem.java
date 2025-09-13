@@ -40,7 +40,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -165,20 +164,18 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getMainHandItem();
-        ItemStack offhandStack = player.getOffhandItem();
-        ItemStack resultStack = player.getItemInHand(hand);
+        ItemStack stack = player.getItemInHand(hand);
+        ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
             migrateNBT(stack);
             if (PGHelper.canPlayerAccessGun(player, stack)) {
-                if (offhandStack.getItem() instanceof AbstractUpgradeItem upgrade) {
+                if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
                     InteractionResult result = upgrade.applyUpgrade(player, stack, this);
-                    if (!player.isCreative()) offhandStack.shrink(1);
-                    return InteractionResultHolder.success(resultStack);
+                    if (!player.isCreative()) oppositeStack.shrink(1);
+                    return InteractionResultHolder.success(stack);
                 }
-
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
 
                     Vec3 loc = hitResult.getLocation();
@@ -215,38 +212,42 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                     boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
                     doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
 
-                    if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                    if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                        if (!portal.isFlat()) {
+                            portal.setYRot(player.getYRot());
+                        }
+                        level.addFreshEntity(portal);
+                        player.awardStat(Stats.ITEM_USED.get(this));
+                        player.getCooldowns().addCooldown(this, 20 * 3);
 
-                        if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
+                        if (!player.isCreative()) {
+                            lowerFuel(stack, 1);
+                        }
+
+                        return InteractionResultHolder.success(stack);
+                    }
+                    if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
+                        if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                            if (!portal.isFlat()) {
+                                doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                            }
+                            serverlevel.addFreshEntity(exPortal);
                             level.addFreshEntity(portal);
+
+                            player.awardStat(Stats.ITEM_USED.get(this));
+                            player.getCooldowns().addCooldown(this, 20 * 3);
                             if (!player.isCreative()) {
                                 lowerFuel(stack, 1);
-                                player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(this, 20 * 3);
                             }
                         } else {
-                            if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                                if (!portal.isFlat()) {
-                                    doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
-                                }
-                                serverlevel.addFreshEntity(exPortal);
-                                level.addFreshEntity(portal);
-
-                                player.awardStat(Stats.ITEM_USED.get(this));
-                                player.getCooldowns().addCooldown(this, 20 * 3);
-                                if (!player.isCreative()) {
-                                    lowerFuel(stack, 1);
-                                }
-                            } else {
-                                PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
-                                return InteractionResultHolder.fail(resultStack);
-                            }
+                            PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
+                            return InteractionResultHolder.fail(stack);
                         }
                     } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
                 }
             }
-            return InteractionResultHolder.success(resultStack);
-        } else return InteractionResultHolder.fail(resultStack);
+            return InteractionResultHolder.success(stack);
+        } else return InteractionResultHolder.fail(stack);
     }
 
     private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {
@@ -263,7 +264,6 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, TooltipContext pContext, List<Component> toolTips, TooltipFlag pTooltipFlag) {
         List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
         if (!Screen.hasShiftDown()) {

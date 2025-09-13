@@ -16,7 +16,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -37,8 +36,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
     protected void init() {
         assert minecraft != null && minecraft.player != null;
 
-        LocalPlayer player = minecraft.player;
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = getItemStack();
         int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
         this.r = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
                 Component.empty(), new Color(color).getRed(), 0, 255, false));

@@ -1,8 +1,0 @@
-{
-  "name": {
-    "translate": "item.ricksportalgun.portalgun.symmetrical"
-  },
-  "tint_amount": 3,
-  "id": "ricksportalgun:symmetrical",
-  "model": "ricksportalgun:symmetrical_portal_gun"
-}

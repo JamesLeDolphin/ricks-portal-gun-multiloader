@@ -18,8 +18,7 @@ public record SBCustomizeSettingsPacket(double size, int age) implements PGPaylo
 
     @Override
     public void handle(ServerPlayer player) {
-
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         stack.set(PGDataComponents.PORTAL_SIZE, ((float) size));
         stack.set(PGDataComponents.PORTAL_LIFETIME, this.age);
     }

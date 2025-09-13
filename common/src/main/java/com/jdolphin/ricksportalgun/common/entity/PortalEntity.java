@@ -4,6 +4,8 @@ import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,10 +21,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.RelativeMovement;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
@@ -40,6 +40,7 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
 
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
@@ -54,7 +55,6 @@ public class PortalEntity extends Entity {
 
     private BlockPos targetPos;
     private boolean bootleg;
-    private int maxLifeTime;
     private boolean exists;
 
     private Vec3 pos;
@@ -84,19 +84,11 @@ public class PortalEntity extends Entity {
     }
 
     public void setLifetime(int lifetime) {
-        this.lifetime = lifetime * 20;
+        this.entityData.set(LIFETIME, PGHelper.seconds(lifetime));
     }
 
     public int getLifetime() {
-        return lifetime;
-    }
-
-    public void setMaxLifeTime(int lifetime) {
-        this.maxLifeTime = lifetime;
-    }
-
-    public int getMaxLifeTime() {
-        return this.maxLifeTime;
+        return this.entityData.get(LIFETIME);
     }
 
     public void setColor(int color) {
@@ -187,7 +179,7 @@ public class PortalEntity extends Entity {
         this.targetDim = tag.getString(TAG_DIMENSION);
         this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS).orElse(BlockPos.ZERO);
         this.setColor(tag.getInt(TAG_COLOR));
-        this.lifetime = tag.getInt(TAG_OPEN);
+        this.setLifetime(tag.getInt(TAG_OPEN));
         this.delay = tag.getInt(TAG_COOLDOWN);
         this.exists = tag.getBoolean(TAG_NEW);
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
@@ -202,7 +194,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_DIMENSION, getHopDim());
         tag.put(TAG_BPOS, NbtUtils.writeBlockPos(getHopLoc()));
         tag.putInt(TAG_COLOR, this.getColor());
-        tag.putInt(TAG_OPEN, this.lifetime);
+        tag.putInt(TAG_OPEN, this.getLifetime());
         tag.putInt(TAG_COOLDOWN, this.delay);
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
@@ -219,10 +211,10 @@ public class PortalEntity extends Entity {
     protected final void recalculateBoundingBox() {
         Direction direction = this.entityData.get(DATA_DIR);
         Direction facing = this.entityData.get(DATA_FACING);
-            AABB aabb = calculateBoundingBox(this.pos, direction, facing);
-            Vec3 vec3 = aabb.getCenter();
-            this.setPosRaw(vec3.x, vec3.y, vec3.z);
-            this.setBoundingBox(aabb);
+        AABB aabb = calculateBoundingBox(this.pos, direction, facing);
+        Vec3 vec3 = aabb.getCenter();
+        this.setPosRaw(vec3.x, vec3.y, vec3.z);
+        this.setBoundingBox(aabb);
     }
 
     protected AABB calculateBoundingBox(Vec3 vec3, Direction dir, Direction facing) {
@@ -246,15 +238,15 @@ public class PortalEntity extends Entity {
             AABB boundingBox = entity.getBoundingBox().inflate(range);
             List<Entity> entities = entity.level().getEntitiesOfClass(Entity.class, boundingBox);
             entities.remove(entity);
-            entities.removeIf(e -> e instanceof PortalEntity);
-            entities.removeIf(e -> e instanceof EnderDragon);
-            entities.removeIf(e -> e instanceof WitherBoss);
-            entities.removeIf(e -> e instanceof Warden);
-//            entities.removeIf(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
+            entities.removeIf(e -> {
+                String entityAsString = PGHelper.getEntityAsString(e.getType());
+                return PGConfigHelper.getDisabledEntities().contains(entityAsString);
+            });
             entities.removeIf(e -> {
                 if (e instanceof ServerPlayer player) {
                     return player.isOnPortalCooldown() || player.isChangingDimension() || !player.canUsePortal(false);
-                }  return false;
+                }
+                return false;
             });
             return entities;
         }
@@ -267,6 +259,7 @@ public class PortalEntity extends Entity {
         builder.define(DATA_DIR, Direction.SOUTH);
         builder.define(DATA_FACING, Direction.SOUTH);
         builder.define(DATA_SIZE, 1.0f);
+        builder.define(LIFETIME, PGHelper.seconds(10));
     }
 
     @Override
@@ -278,9 +271,12 @@ public class PortalEntity extends Entity {
                 LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
                 this.exists = true;
             }
-            if (lifetime > 0) lifetime--;
+            if (getLifetime() > 0) {
+                int l = getLifetime();
+                setLifetime(l - 1);
+            }
             if (delay > 0) delay--;
-            if (!firstTick && lifetime == 0) {
+            if (!firstTick && getLifetime() == 0) {
                 this.kill();
                 return;
             }
@@ -299,17 +295,18 @@ public class PortalEntity extends Entity {
                     }
                     if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                         if (this.bootleg || LevelHelper.isBlenderDestination(getHopDim())) {
-                            nearby.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Integer.MAX_VALUE);
-                        }
-                        if (destinationDim != null && !destinationDim.isClientSide()) {
+                            if (nearby instanceof LivingEntity living)
+                                living.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG),
+                                        living.getMaxHealth() * 10);
+                        } else if (destinationDim != null && !destinationDim.isClientSide()) {
                             if (nearby.canUsePortal(false) && delay == 0) {
                                 Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
                                 double dx = (double) destinationPos.getX() + look.x * 2d;
                                 double dz = (double) destinationPos.getZ() + look.z * 2d;
-                                Set<RelativeMovement> set = new HashSet<>();
-                                set.add(RelativeMovement.Y_ROT);
-                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, set, nearby.getYRot(), nearby.getXRot());
-
+                                Set<RelativeMovement> relativeSet = new HashSet<>();
+                                relativeSet.add(RelativeMovement.Y_ROT);
+                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot());
+                                nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
                             }
                         }
