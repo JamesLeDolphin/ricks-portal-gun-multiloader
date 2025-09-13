@@ -2,8 +2,8 @@ package com.jdolphin.ricksportalgun.client.init;
 
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,13 +18,13 @@ public class PGTintHandler {
             switch (index) {
                 case 0 -> {
                     int i = stack.is(PGItems.GOLDEN_PORTAL_GUN) ? Color.YELLOW.getRGB() : PortalGunItem.getPrimaryDye(stack);
-                    return FastColor.ARGB32.opaque(i);
+                    return GuiHelper.opaqueColor(i);
                 }
                 case 1 -> {
-                    return FastColor.ARGB32.opaque(PortalGunItem.getColor(stack));
+                    return GuiHelper.opaqueColor(PortalGunItem.getColor(stack));
                 }
                 case 2 -> {
-                    return FastColor.ARGB32.opaque(PortalGunItem.getSecondaryDye(stack));
+                    return GuiHelper.opaqueColor(PortalGunItem.getSecondaryDye(stack));
                 }
             }
         }

@@ -5,7 +5,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBLocatePacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -15,6 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -62,8 +63,9 @@ public class LocatorScreen extends AbstractBaseScreen {
 
     private LocatorType[] getAllowedLocators() {
         ItemStack stack = getItemStack();
-        boolean canPlayerLocate = stack.getOrDefault(PGDataComponents.PLAYER_LOC, false);
-        boolean canStructureLocate = stack.getOrDefault(PGDataComponents.STRUCTURE_LOC, false);
+        CompoundTag tag = stack.getOrCreateTag();
+        boolean canPlayerLocate = tag.contains(PGNbtKeys.UPGRADE_PLAYER_LOC) && tag.getBoolean(PGNbtKeys.UPGRADE_PLAYER_LOC);
+        boolean canStructureLocate = tag.contains(PGNbtKeys.UPGRADE_STRUCTURE_LOC) && tag.getBoolean(PGNbtKeys.UPGRADE_STRUCTURE_LOC);
 
         if (canPlayerLocate && canStructureLocate) {
             return LocatorType.values();

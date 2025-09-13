@@ -5,13 +5,14 @@ import com.jdolphin.ricksportalgun.client.screen.portalgun.SettingsScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCustomizeSettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -32,9 +33,10 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.player != null;
 
         ItemStack stack = getItemStack();
+        CompoundTag tag = stack.getOrCreateTag();
 
-        float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
-        int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
+        float size = tag.contains(PGNbtKeys.TAG_SIZE) ? tag.getFloat(PGNbtKeys.TAG_SIZE) : 1.0f;
+        int age = tag.contains(PGNbtKeys.TAG_AGE) ? tag.getInt(PGNbtKeys.TAG_AGE) : 10;
 
         this.portalSize = this.addWidget(new PGSlider(this.width / 2 + 62, this.height / 2 - 64, 42, 18,
                 Component.empty(), size, 1.0f, 3.0f, true));

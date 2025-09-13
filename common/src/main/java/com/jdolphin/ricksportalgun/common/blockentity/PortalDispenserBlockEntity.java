@@ -8,7 +8,6 @@ import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -17,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -88,7 +88,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     @Override
     public void setChanged() {
         if (!hasFuel()) {
-            ItemStack stack = this.items.getFirst();
+            ItemStack stack = this.items.get(0);
             if (stack.is(PGItems.PORTAL_FLUID)) {
                 stack.shrink(1);
                 this.fuel = maxFuel;
@@ -98,18 +98,13 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
+    public boolean stillValid(Player player) {
+        return false;
+    }
+
+    @Override
     protected Component getDefaultName() {
         return Component.translatable("menu.ricksportalgun.portal_dispenser");
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> list) {
-        this.items = list;
     }
 
     @Override
@@ -150,7 +145,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
                     }
                 }
                 if (!getDestinationDim().isEmpty() && getDestinationPos() != null) {
-                    ResourceLocation dim = ResourceLocation.parse(getDestinationDim());
+                    ResourceLocation dim = new ResourceLocation(getDestinationDim());
                     ServerLevel destLevel = LevelHelper.getServerWorld(level, LevelHelper.getWorldKey(dim));
                     if (LevelHelper.canPortalTo(destLevel, getDestinationPos(), null)) {
                         Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
@@ -177,21 +172,22 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.dir = direction;
     }
 
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.fuel = tag.getInt(TAG_FUEL);
         this.maxFuel = tag.getInt(TAG_MAX_FUEL);
-        this.desPos = NbtUtils.readBlockPos(tag, TAG_DEST_BPOS).orElse(BlockPos.ZERO);
+        CompoundTag bpTag = tag.getCompound(TAG_DEST_BPOS);
+        this.desPos = NbtUtils.readBlockPos(bpTag);
         this.desDim = tag.getString(TAG_DEST_DIM);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         this.dir = Direction.fromYRot(tag.getDouble(TAG_DIRECTION));
-        ContainerHelper.loadAllItems(tag, this.items, registries);
+        ContainerHelper.loadAllItems(tag, this.items);
 
     }
 
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        ContainerHelper.saveAllItems(tag, this.items, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        ContainerHelper.saveAllItems(tag, this.items);
         tag.putInt(TAG_FUEL, this.fuel);
         tag.putInt(TAG_MAX_FUEL, this.maxFuel);
         tag.putString(TAG_DEST_DIM, this.desDim);
@@ -201,6 +197,36 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public int getContainerSize() {
-        return 1;
+        return this.items.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    @Override
+    public ItemStack getItem(int i) {
+        return items.get(i);
+    }
+
+    @Override
+    public ItemStack removeItem(int i, int i1) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int i) {
+        return null;
+    }
+
+    @Override
+    public void setItem(int i, ItemStack itemStack) {
+        items.set(i, itemStack);
+    }
+
+    @Override
+    public void clearContent() {
+        items.clear();
     }
 }

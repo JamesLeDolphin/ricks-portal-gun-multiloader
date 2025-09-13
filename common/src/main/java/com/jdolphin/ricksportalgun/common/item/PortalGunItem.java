@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.upgrade.AbstractUpgradeItem;
@@ -14,7 +13,6 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -32,7 +30,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -136,20 +133,20 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
         if (!isAir(level, bPos.relative(dir))) {
             switch (dir) {
                 case NORTH -> {
-                    Vec3 vec = bPos.north().getBottomCenter();
+                    Vec3 vec = bPos.north().getCenter();
                     loc = vec.add(0, 0, 0.4);
 
                 }
                 case SOUTH -> {
-                    Vec3 vec = bPos.south().getBottomCenter();
+                    Vec3 vec = bPos.south().getCenter();
                     loc = vec.add(0, 0, -0.4);
                 }
                 case WEST -> {
-                    Vec3 vec = bPos.west().getBottomCenter();
+                    Vec3 vec = bPos.west().getCenter();
                     loc = vec.add(0.4, 0, 0);
                 }
                 case EAST -> {
-                    Vec3 vec = bPos.east().getBottomCenter();
+                    Vec3 vec = bPos.east().getCenter();
                     loc = vec.add(-0.4, 0, 0);
                 }
             }

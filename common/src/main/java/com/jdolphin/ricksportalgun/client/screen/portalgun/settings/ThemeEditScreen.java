@@ -96,7 +96,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getTextColor() {
         try {
-            return FastColor.ARGB32.color((int) rText.getValue(), (int) gText.getValue(), (int) bText.getValue());
+            return FastColor.ARGB32.color(255, (int) rText.getValue(), (int) gText.getValue(), (int) bText.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }
@@ -105,7 +105,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getHighlightColor() {
         try {
-            return FastColor.ARGB32.color((int) rH.getValue(), (int) gH.getValue(), (int) bH.getValue());
+            return FastColor.ARGB32.color(255, (int) rH.getValue(), (int) gH.getValue(), (int) bH.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }
@@ -114,7 +114,7 @@ public class ThemeEditScreen extends AbstractBaseScreen {
 
     private int getBackgroundColor() {
         try {
-            return FastColor.ARGB32.color((int) rBG.getValue(), (int) gBG.getValue(), (int) bBG.getValue());
+            return FastColor.ARGB32.color(255, (int) rBG.getValue(), (int) gBG.getValue(), (int) bBG.getValue());
         } catch (Exception e) {
             PGConstants.LOGGER.warn(e.getMessage());
         }

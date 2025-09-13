@@ -48,7 +48,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
     private E hovered;
 
     public ScrollableList(Minecraft pMinecraft, int pWidth, int pHeight, int x0, int pY0, int pItemHeight) {
-        this.children = new ScrollableList.TrackedList();
+        this.children = new TrackedList();
         this.minecraft = pMinecraft;
         this.width = pWidth;
         this.height = pHeight;
@@ -143,7 +143,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         int l = j + i;
         int i1 = Mth.floor(mouseY - (double)this.getTop()) - this.headerHeight + (int)this.scrollAmount() - 4;
         int j1 = i1 / this.itemHeight;
-        return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (ScrollableList.Entry)this.children().get(j1) : null);
+        return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (Entry)this.children().get(j1) : null);
     }
 
     public void updateSize(int pWidth, int pHeight, int pY0, int pY1) {
@@ -412,7 +412,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         return this.getRowTop(pIndex) + this.itemHeight;
     }
 
-    public NarratableEntry.NarrationPriority narrationPriority() {
+    public NarrationPriority narrationPriority() {
         if (this.isFocused()) {
             return NarrationPriority.FOCUSED;
         } else {

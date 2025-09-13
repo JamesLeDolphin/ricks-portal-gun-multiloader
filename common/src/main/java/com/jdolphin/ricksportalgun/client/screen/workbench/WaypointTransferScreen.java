@@ -3,8 +3,8 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBWorkbenchWaypointEditPackage;
@@ -14,6 +14,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -172,9 +173,9 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
             delete.render(graphics, mouseX, mouseY, delta);
             ItemStack opposite = getItem(selectedWaypoint.getB().opposite());
             if (!opposite.isEmpty()) {
-
+                CompoundTag tag = opposite.getOrCreateTag();
                 if (!opposite.is(PGTags.Items.PORTAL_GUNS) || (opposite.is(PGTags.Items.PORTAL_GUNS) &&
-                        opposite.getOrDefault(PGDataComponents.HAS_WAYPOINTS, false)) ) {
+                        tag.contains(PGNbtKeys.UPGRADE_WAYPOINT)) ) {
 
                 copy.render(graphics, mouseX, mouseY, delta);
                 moveTo.render(graphics, mouseX, mouseY, delta);

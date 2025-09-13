@@ -2,14 +2,15 @@ package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +24,15 @@ public class PGHelper {
     public static MutableComponent COORDS_SET = Component.translatable("notice.ricksportalgun.destination.set");
 
     public static ResourceLocation id(String string) {
-        return ResourceLocation.fromNamespaceAndPath(PGConstants.MODID, string);
+        return new ResourceLocation(PGConstants.MODID, string);
+    }
+
+    public static ResourceLocation vanilla(String string) {
+        return new ResourceLocation("minecraft", string);
+    }
+
+    public static boolean checkTagBoolean(CompoundTag tag, String key) {
+        return tag.contains(key) && tag.getBoolean(key);
     }
 
     public static int seconds(int amount) {
@@ -35,8 +44,10 @@ public class PGHelper {
     }
 
     public static boolean canPlayerAccessGun(Player player, ItemStack stack) {
-        boolean locked = stack.getOrDefault(PGDataComponents.LOCK, false);
-        String uuid = stack.getOrDefault(PGDataComponents.OWNER, "");
+        CompoundTag tag = stack.getOrCreateTag();
+        boolean locked = tag.contains(PGNbtKeys.TAG_LOCK) && tag.getBoolean(PGNbtKeys.TAG_LOCK);
+        String uuid = tag.contains(PGNbtKeys.TAG_OWNER) ? tag.getUUID(PGNbtKeys.TAG_OWNER).toString() : "";
+
         if (locked) {
             return player.getStringUUID().equals(uuid);
         }
@@ -84,11 +95,11 @@ public class PGHelper {
         sendFailMsg(player, Component.translatable(msg));
     }
 
-    public static <P extends CustomPacketPayload> void sendPacketToServer(P packet) {
+    public static <P extends PGPayload> void sendPacketToServer(P packet) {
         PGServices.PLATFORM.sendPacketToServer(packet);
     }
 
-    public static <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packet) {
+    public static <P extends PGPayload> void sendPacketToClient(ServerPlayer player, P... packet) {
         PGServices.PLATFORM.sendPacketToClient(player, packet);
     }
 

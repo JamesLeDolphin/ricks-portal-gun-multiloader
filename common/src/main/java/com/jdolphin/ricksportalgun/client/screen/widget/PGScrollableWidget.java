@@ -1,10 +1,11 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.google.common.collect.Lists;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -25,11 +26,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> extends AbstractContainerWidget {
-    private static final ResourceLocation MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/menu_list_background.png");
-    private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
-    private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller");
-    private static final ResourceLocation SCROLLER_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller_background");
+public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> extends AbstractSelectionList {
+    private static final ResourceLocation MENU_LIST_BACKGROUND = PGHelper.vanilla("textures/gui/menu_list_background.png");
+    private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND = PGHelper.vanilla("textures/gui/inworld_menu_list_background.png");
+    private static final ResourceLocation SCROLLER_SPRITE = PGHelper.vanilla("widget/scroller");
+    private static final ResourceLocation SCROLLER_BACKGROUND_SPRITE = PGHelper.vanilla("widget/scroller_background");
     protected final Minecraft minecraft;
     protected final int itemHeight;
     private final TrackedList children;
@@ -46,7 +47,7 @@ public abstract class PGScrollableWidget<E extends PGScrollableWidget.Entry<E>> 
 
     public PGScrollableWidget(Minecraft minecraft, int width, int height, int x, int y, int itemHeight) {
         super(x, y, width, height, CommonComponents.EMPTY);
-        this.children = new PGScrollableWidget.TrackedList();
+        this.children = new TrackedList();
         this.centerListVertically = true;
         this.minecraft = minecraft;
         this.itemHeight = itemHeight;

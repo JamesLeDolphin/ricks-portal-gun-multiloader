@@ -102,21 +102,24 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
         }
 
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
-        int i = entity.getColor();
+        int color = entity.getColor();
+        float r = FastColor.ARGB32.red(color);
+        float g = FastColor.ARGB32.green(color);
+        float b = FastColor.ARGB32.blue(color);
         entity.getName();
         if (names.contains(entity.getName().getString().toLowerCase())) {
-            int j = 25;
-            int k = Mth.floor(entity.tickCount);
-            int l = k / 25;
-            int i1 = DyeColor.values().length;
-            int j1 = l % i1;
-            int k1 = (l + 1) % i1;
-            float f = ((float)(k % 25) + Mth.frac(entity.tickCount)) / 25.0F;
-            int l1 = Sheep.getColor(DyeColor.byId(j1));
-            int i2 = Sheep.getColor(DyeColor.byId(k1));
-            i = FastColor.ARGB32.lerp(f, l1, i2);
+            int i = entity.tickCount / 25 + entity.getId();
+            int j = DyeColor.values().length;
+            int k = i % j;
+            int l = (i + 1) % j;
+            float f3 = ((float)(entity.tickCount % 25) + partialTick) / 25.0F;
+            float[] afloat1 = Sheep.getColorArray(DyeColor.byId(k));
+            float[] afloat2 = Sheep.getColorArray(DyeColor.byId(l));
+            r = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
+            g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
+            b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
         }
-        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, i);
+        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, r, g, b, 1);
 
         stack.popPose();
         super.render(entity, yaw, partialTick, stack, source, packedLight);

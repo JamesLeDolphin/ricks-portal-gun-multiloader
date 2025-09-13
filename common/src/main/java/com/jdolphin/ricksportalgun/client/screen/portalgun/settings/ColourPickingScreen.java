@@ -6,7 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -16,6 +16,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,10 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.player != null;
 
         ItemStack stack = getItemStack();
-        int color = stack.getOrDefault(PGDataComponents.PORTAL_COLOUR, Color.GREEN.getRGB());
+        CompoundTag tag = stack.getOrCreateTag();
+
+        int color = tag.contains(PGNbtKeys.TAG_COLOR) ? tag.getInt(PGNbtKeys.TAG_COLOR) : Color.GREEN.getRGB();
+
         this.r = this.addRenderableWidget(new PGSlider(this.width / 2 - 44, this.height / 2 - 60, 36, 20,
                 Component.empty(), new Color(color).getRed(), 0, 255, false));
 
@@ -65,7 +69,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         this.reset = this.addRenderableWidget(new PGTextButton(this.width / 2 + 72, this.height / 2 + 42, 64, 20,
                 Component.translatable("ricksportalgun.button.colour.reset"), (button) -> {
-                    int rgb = stack.getOrDefault(PGDataComponents.DEFAULT_PORTAL_COLOUR, Color.GREEN.getRGB());
+                    int rgb = tag.contains(PGNbtKeys.TAG_DEFAULT_COLOR) ? tag.getInt(PGNbtKeys.TAG_DEFAULT_COLOR) : Color.GREEN.getRGB();
 
                     try {
                         this.r.setValue(new Color(rgb).getRed());

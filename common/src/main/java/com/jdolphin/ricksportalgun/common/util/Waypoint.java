@@ -2,16 +2,12 @@ package com.jdolphin.ricksportalgun.common.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 public class Waypoint implements Comparable<Waypoint> {
     public static final Codec<Waypoint> CODEC;
-    public static final StreamCodec<ByteBuf, Waypoint> PACKET_CODEC;
     public static final Waypoint ZERO = new Waypoint(BlockPos.ZERO, "minecraft:overworld", "");
     private int x;
     private int y;
@@ -140,10 +136,5 @@ public class Waypoint implements Comparable<Waypoint> {
                                 Codec.STRING.fieldOf("dimension").forGetter(Waypoint::getDimension),
                                 Codec.STRING.fieldOf("name").forGetter(Waypoint::getName))
                         .apply(instance, Waypoint::new));
-
-        PACKET_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
-                Waypoint::getBlockPos, ByteBufCodecs.STRING_UTF8,
-                Waypoint::getDimension, ByteBufCodecs.STRING_UTF8,
-                Waypoint::getName, Waypoint::new);
     }
 }

@@ -6,7 +6,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
@@ -15,6 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -49,8 +50,10 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         super.init();
         assert minecraft != null;
         ItemStack stack = getItemStack();
-        boolean destruct = stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false);
-        boolean lock = stack.getOrDefault(PGDataComponents.LOCK, false);
+        CompoundTag tag = stack.getOrCreateTag();
+
+        boolean destruct = PGHelper.checkTagBoolean(tag, PGNbtKeys.SELF_DESTRUCT);
+        boolean lock = PGHelper.checkTagBoolean(tag, PGNbtKeys.TAG_LOCK);
         MutableComponent sTrue = Component.translatable("ricksportalgun.button.true");
         MutableComponent sFalse = Component.translatable("ricksportalgun.button.false");
 

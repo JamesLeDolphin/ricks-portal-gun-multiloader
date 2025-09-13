@@ -9,7 +9,6 @@ import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
 import com.jdolphin.ricksportalgun.common.recipe.WorkbenchRecipeInput;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,8 +19,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -74,17 +73,17 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         return menuType.fac.create(pContainerId, inventory, this, this.data, ContainerLevelAccess.create(this.level, this.worldPosition));
     }
 
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.menuType = MenuType.values()[tag.getInt(TAG_MODE)];
-        ContainerHelper.loadAllItems(tag, items, registries);
+        ContainerHelper.loadAllItems(tag, items);
         progress = tag.getInt(TAG_PROGRESS);
     }
 
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(TAG_MODE, this.menuType.ordinal());
-        ContainerHelper.saveAllItems(tag, this.items, registries);
+        ContainerHelper.saveAllItems(tag, this.items);
         tag.putInt(TAG_PROGRESS, this.progress);
     }
 

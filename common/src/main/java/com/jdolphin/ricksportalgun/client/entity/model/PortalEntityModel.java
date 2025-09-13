@@ -39,7 +39,7 @@ public class PortalEntityModel extends EntityModel<PortalEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int i1, int i2) {
-        bb_main.render(poseStack, vertexConsumer, i, i1, i2);
+    public void renderToBuffer(PoseStack stack, VertexConsumer consumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        bb_main.render(stack, consumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

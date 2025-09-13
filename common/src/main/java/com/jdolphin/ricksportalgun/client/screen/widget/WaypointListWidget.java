@@ -74,7 +74,7 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         this.renderButtonBg = renderButtonBg;
     }
 
-    public static class WaypointEntry extends Entry<WaypointListWidget.WaypointEntry> {
+    public static class WaypointEntry extends Entry<WaypointEntry> {
 
         private final Button button;
         private final PGImageButton infoButton;

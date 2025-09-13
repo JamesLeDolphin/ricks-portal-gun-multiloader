@@ -26,18 +26,18 @@ public class PGCycleButton<T> extends AbstractButton {
     public static ResourceLocation ARROW_TEXTURES = PGHelper.id("textures/gui/sprites/icon/arrow.png");
     private int index;
     private T value;
-    private final PGCycleButton.ValueListSupplier<T> values;
+    private final ValueListSupplier<T> values;
     private final Function<T, Component> valueStringifier;
     private final Function<PGCycleButton<T>, MutableComponent> narrationProvider;
-    private final PGCycleButton.OnValueChange<T> onValueChange;
+    private final OnValueChange<T> onValueChange;
     private final OptionInstance.TooltipSupplier<T> tooltipSupplier;
     private boolean renderBG = true;
     private boolean renderArrows = false;
     private int color = this.active ? 16777215 : 10526880 | Mth.ceil(this.alpha * 255.0F) << 24;
 
     PGCycleButton(int x, int y, int width, int height, Component message, int index,
-                  T value, PGCycleButton.ValueListSupplier<T> values, Function<T, Component> valueStringifier, Function<PGCycleButton<T>, MutableComponent> narrationProvider,
-                  PGCycleButton.OnValueChange<T> onValueChange, OptionInstance.TooltipSupplier<T> tooltipSupplier) {
+                  T value, ValueListSupplier<T> values, Function<T, Component> valueStringifier, Function<PGCycleButton<T>, MutableComponent> narrationProvider,
+                  OnValueChange<T> onValueChange, OptionInstance.TooltipSupplier<T> tooltipSupplier) {
         super(x, y, width, height, message);
         this.index = index;
         this.value = value;
@@ -150,12 +150,12 @@ public class PGCycleButton<T> extends AbstractButton {
         return wrapDefaultNarrationMessage(this.getMessage());
     }
 
-    public static <T> PGCycleButton.Builder<T> builder(Function<T, Component> valueStringifier) {
-        return new PGCycleButton.Builder<>(valueStringifier);
+    public static <T> Builder<T> builder(Function<T, Component> valueStringifier) {
+        return new Builder<>(valueStringifier);
     }
 
-    public static PGCycleButton.Builder<Boolean> booleanBuilder(Component componentOn, Component componentOff) {
-        return (new PGCycleButton.Builder<Boolean>((b) -> b ? componentOn : componentOff)).withValues(BOOLEAN_OPTIONS);
+    public static Builder<Boolean> booleanBuilder(Component componentOn, Component componentOff) {
+        return (new Builder<Boolean>((b) -> b ? componentOn : componentOff)).withValues(BOOLEAN_OPTIONS);
     }
 
     static {
@@ -169,27 +169,27 @@ public class PGCycleButton<T> extends AbstractButton {
         private final Function<T, Component> valueStringifier;
         private OptionInstance.TooltipSupplier<T> tooltipSupplier = (p_168964_) -> null;
         private Function<PGCycleButton<T>, MutableComponent> narrationProvider = PGCycleButton::createDefaultNarrationMessage;
-        private PGCycleButton.ValueListSupplier<T> values = PGCycleButton.ValueListSupplier.create(ImmutableList.of());
+        private ValueListSupplier<T> values = ValueListSupplier.create(ImmutableList.of());
 
         public Builder(Function<T, Component> valueStringifier) {
             this.valueStringifier = valueStringifier;
         }
 
-        public PGCycleButton.Builder<T> withValues(Collection<T> values) {
-            return this.withValues(PGCycleButton.ValueListSupplier.create(values));
+        public Builder<T> withValues(Collection<T> values) {
+            return this.withValues(ValueListSupplier.create(values));
         }
 
         @SafeVarargs
-        public final PGCycleButton.Builder<T> withValues(T... values) {
+        public final Builder<T> withValues(T... values) {
             return this.withValues(ImmutableList.copyOf(values));
         }
 
-        public PGCycleButton.Builder<T> withValues(PGCycleButton.ValueListSupplier<T> values) {
+        public Builder<T> withValues(ValueListSupplier<T> values) {
             this.values = values;
             return this;
         }
 
-        public PGCycleButton.Builder<T> withInitialValue(T initialValue) {
+        public Builder<T> withInitialValue(T initialValue) {
             this.initialValue = initialValue;
             int i = this.values.getDefaultList().indexOf(initialValue);
             if (i != -1) {
@@ -199,7 +199,7 @@ public class PGCycleButton<T> extends AbstractButton {
             return this;
         }
 
-        public PGCycleButton<T> create(Component message, PGCycleButton.OnValueChange<T> onValueChange) {
+        public PGCycleButton<T> create(Component message, OnValueChange<T> onValueChange) {
             return this.create(0, 0, 150, 20, message, onValueChange);
         }
 
@@ -208,7 +208,7 @@ public class PGCycleButton<T> extends AbstractButton {
             });
         }
 
-        public PGCycleButton<T> create(int x, int y, int width, int height, Component name, PGCycleButton.OnValueChange<T> onValueChange) {
+        public PGCycleButton<T> create(int x, int y, int width, int height, Component name, OnValueChange<T> onValueChange) {
             List<T> list = this.values.getDefaultList();
             if (list.isEmpty()) {
                 throw new IllegalStateException("No values for cycle button");
@@ -225,9 +225,9 @@ public class PGCycleButton<T> extends AbstractButton {
 
         List<T> getDefaultList();
 
-        static <T> PGCycleButton.ValueListSupplier<T> create(Collection<T> values) {
+        static <T> ValueListSupplier<T> create(Collection<T> values) {
             final List<T> list = ImmutableList.copyOf(values);
-            return new PGCycleButton.ValueListSupplier<T>() {
+            return new ValueListSupplier<T>() {
                 public List<T> getSelectedList() {
                     return list;
                 }
@@ -238,10 +238,10 @@ public class PGCycleButton<T> extends AbstractButton {
             };
         }
 
-        static <T> PGCycleButton.ValueListSupplier<T> create(final BooleanSupplier altListSelector, List<T> defaultList, List<T> selectedList) {
+        static <T> ValueListSupplier<T> create(final BooleanSupplier altListSelector, List<T> defaultList, List<T> selectedList) {
             final List<T> list = ImmutableList.copyOf(defaultList);
             final List<T> list1 = ImmutableList.copyOf(selectedList);
-            return new PGCycleButton.ValueListSupplier<T>() {
+            return new ValueListSupplier<T>() {
                 public List<T> getSelectedList() {
                     return altListSelector.getAsBoolean() ? list1 : list;
                 }

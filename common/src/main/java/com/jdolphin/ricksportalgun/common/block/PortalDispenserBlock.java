@@ -2,12 +2,12 @@ package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,20 +41,15 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
         super.setPlacedBy(level, pos, state, placer, stack);
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return simpleCodec(PortalDispenserBlock::new);
-    }
-
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, TRIGGERED);
     }
 
-    protected BlockState rotate(BlockState state, Rotation rot) {
+    public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
@@ -62,14 +57,14 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof PortalDispenserBlockEntity blockEntity) {
             blockEntity.onActivation(level, pos);
         }
     }
 
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof PortalDispenserBlockEntity) {
@@ -86,7 +81,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
         }
     }
 
-        protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean movedByPiston) {
+        public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean movedByPiston) {
             boolean bl = level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.above());
             boolean bl2 = state.getValue(TRIGGERED);
             if (bl && !bl2) {
@@ -98,7 +93,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
         }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
        BlockEntity entity = level.getBlockEntity(pos);
        if (entity instanceof PortalDispenserBlockEntity block) {
             player.openMenu(block);

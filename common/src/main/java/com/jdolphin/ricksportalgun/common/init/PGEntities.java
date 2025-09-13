@@ -21,7 +21,7 @@ public class PGEntities {
 
     public static final EntityType<ExplosiveItemEntity> EXPLOSIVE_ITEM = register("explosive_item",
             EntityType.Builder.<ExplosiveItemEntity>of((ExplosiveItemEntity::new), MobCategory.MISC).sized(0.25f, 0.25f)
-                    .eyeHeight(0.2125F).clientTrackingRange(6).updateInterval(20));
+                    .clientTrackingRange(6).updateInterval(20));
 
 
     private static <E extends Entity> EntityType<E> register(String name, EntityType.Builder<E> builder) {

@@ -2,9 +2,9 @@ package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
-    public static final MapCodec<GunWorkbenchBlock> CODEC = simpleCodec(GunWorkbenchBlock::new);
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public GunWorkbenchBlock(Properties properties) {
@@ -34,7 +33,7 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -46,11 +45,11 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
-    protected BlockState rotate(BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
@@ -58,7 +57,7 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
         builder.add(FACING);
     }
 
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = Shapes.empty();
         switch (state.getValue(FACING)) {
             case NORTH -> {
@@ -81,8 +80,8 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
         return Shapes.join(makeBaseShape(), shape, BooleanOp.OR);
     }
 
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        Containers.dropContentsOnDestroy(state, newState, level, pos);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        Containers.dropContents(level, pos, (Container) level.getBlockEntity(pos));
         super.onRemove(state, level, pos, newState, isMoving);
     }
 
@@ -105,11 +104,6 @@ public class GunWorkbenchBlock extends BaseEntityBlock implements EntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

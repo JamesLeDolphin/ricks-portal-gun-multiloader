@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.menu.workbench;
 
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;

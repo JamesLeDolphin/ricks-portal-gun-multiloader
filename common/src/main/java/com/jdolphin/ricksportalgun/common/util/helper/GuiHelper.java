@@ -16,6 +16,10 @@ import java.awt.*;
 
 public class GuiHelper {
 
+    public static int opaqueColor(int color) {
+        return color | -16777216;
+    }
+
     public static void renderWidgets(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, AbstractWidget... widgets) {
         for (AbstractWidget widget : widgets) {
             if (widget != null) {

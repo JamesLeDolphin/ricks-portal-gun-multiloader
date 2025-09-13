@@ -58,8 +58,8 @@ public class WaypointTransferMenu extends AbstractWorkbenchMenu {
             if (!level.isClientSide) {
                 ItemStack left = this.getSlot(36).getItem();
                 ItemStack right = this.getSlot(37).getItem();
-                //True for left side, false for right side
                 if (copy) {
+                    //True for left side, false for right side
                     if (side) IWaypointStorage.addWaypoint(right, waypoint);
                     else IWaypointStorage.addWaypoint(left, waypoint);
                 } else if (remove) {

@@ -24,9 +24,9 @@ public class ExplosiveItemEntity extends ItemEntity {
         super(type, level);
     }
 
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(FUSE, PGHelper.seconds(10));
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(FUSE, PGHelper.seconds(10));
     }
 
     public ExplosiveItemEntity(Level level, BlockPos pos, ItemStack stack) {

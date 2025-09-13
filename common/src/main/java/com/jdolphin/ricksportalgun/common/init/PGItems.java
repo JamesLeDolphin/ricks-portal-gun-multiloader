@@ -8,15 +8,12 @@ import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleConditionalUpgradeI
 import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleUpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 
 import java.awt.*;
 import java.util.*;
@@ -109,23 +106,7 @@ public class PGItems {
     }
 
     public static Item.Properties gunProperties(Color color) {
-        return new Item.Properties().stacksTo(1)
-                .component(PGDataComponents.PORTAL_COLOUR, color.getRGB())
-                .component(PGDataComponents.DEFAULT_PORTAL_COLOUR, color.getRGB())
-                .component(PGDataComponents.BOOTLEG, false)
-                .component(PGDataComponents.WAYPOINTS, List.of())
-                .component(PGDataComponents.PORTAL_SIZE, 1.0f)
-                .component(PGDataComponents.MAX_FUEL, 64)
-                .component(PGDataComponents.FUEL, 64)
-                .component(PGDataComponents.LOCK, false)
-                .component(PGDataComponents.HAS_WAYPOINTS, false)
-                .component(PGDataComponents.EXTRA_DIMENSIONS, false)
-                .component(PGDataComponents.SETTINGS, false)
-                .component(PGDataComponents.BIOME_LOC, false)
-                .component(PGDataComponents.PLAYER_LOC, false)
-                .component(PGDataComponents.STRUCTURE_LOC, false)
-                .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
-                .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location());
+        return new Item.Properties().stacksTo(1);
     }
 
     private static Item registerFluid(String name) {

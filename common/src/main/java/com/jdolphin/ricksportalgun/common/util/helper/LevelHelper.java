@@ -3,9 +3,10 @@ package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -80,7 +81,8 @@ public class LevelHelper {
 
     public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
         if (level != null) {
-            String code = stack.getOrDefault(PGDataComponents.CODE, "");
+            CompoundTag tag = stack.getOrCreateTag();
+            String code = tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
             List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
 
             for (BlockEntity be : blockEntities) {
@@ -112,8 +114,7 @@ public class LevelHelper {
         int xCoord = rand.nextInt(min, radius);
         int yCoord = Mth.nextInt(rand,level.getMinBuildHeight() + 1, level.getMaxBuildHeight());
         int zCoord =  rand.nextInt(min, radius);
-        BlockPos posNew = new BlockPos(xCoord, yCoord, zCoord);
-        return border.clampToBounds(posNew);
+        return border.clampToBounds(xCoord, yCoord, zCoord);
     }
 
     public static ServerLevel getRandomServerLevel(MinecraftServer server) {

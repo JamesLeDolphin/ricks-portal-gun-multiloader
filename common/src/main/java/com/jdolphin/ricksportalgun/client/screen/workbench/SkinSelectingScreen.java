@@ -130,6 +130,14 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         }
     }
 
+    private int getTextureDiffuseColor(DyeItem dyeItem) {
+        float[] rgb = dyeItem.getDyeColor().getTextureDiffuseColors();
+        float r = rgb[0];
+        float g = rgb[1];
+        float b = rgb[2];
+        return new Color(r, g, b).getRGB();
+    }
+
     private void renderPortalGunType(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         ItemStack stack = getStack(36);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
@@ -142,12 +150,12 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
             if (!dyeStack1.isEmpty()) {
                 if (dyeStack1.getItem() instanceof DyeItem dyeItem) {
-                    primary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    primary = getTextureDiffuseColor(dyeItem);
                 } else if (dyeStack1.is(Items.WATER_BUCKET)) primary = 0;
             }
             if (!dyeStack2.isEmpty()) {
                 if (dyeStack2.getItem() instanceof DyeItem dyeItem) {
-                    secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    secondary = getTextureDiffuseColor(dyeItem);
                 } else if (dyeStack2.is(Items.WATER_BUCKET)) secondary = 0;
             }
             int color = PortalGunItem.getColor(stack);

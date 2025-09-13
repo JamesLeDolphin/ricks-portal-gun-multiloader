@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common.util;
 
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 
 public class PGCreativeModeTabs {
@@ -20,6 +20,6 @@ public class PGCreativeModeTabs {
     public static final ResourceKey<CreativeModeTab> OP_BLOCKS = createKey("op_blocks");
 
     private static ResourceKey<CreativeModeTab> createKey(String name) {
-        return ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.withDefaultNamespace(name));
+        return ResourceKey.create(Registries.CREATIVE_MODE_TAB, PGHelper.vanilla(name));
     }
 }

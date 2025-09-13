@@ -164,7 +164,7 @@ public class SuggestionTextFieldWidget extends EditBox {
             return super.getRowRight() - 6;
         }
 
-        public static class SuggestionEntry extends PGScrollableWidget.Entry<SuggestionEntry> {
+        public static class SuggestionEntry extends Entry<SuggestionEntry> {
 
             private final String string;
             private final PGTextButton button;

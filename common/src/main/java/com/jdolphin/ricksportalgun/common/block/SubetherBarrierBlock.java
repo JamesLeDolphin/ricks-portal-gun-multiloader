@@ -3,11 +3,11 @@ package com.jdolphin.ricksportalgun.common.block;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenBarrierGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -30,7 +30,7 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false));
     }
 
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -39,7 +39,7 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
         builder.add(ACTIVE);
     }
 
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         if (!level.isClientSide) {
             boolean flag = state.getValue(ACTIVE);
             if (flag != level.hasNeighborSignal(pos)) {
@@ -53,19 +53,14 @@ public class SubetherBarrierBlock extends BaseEntityBlock {
 
     }
 
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
         if (state.getValue(ACTIVE) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(ACTIVE), 2);
         }
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(SubetherBarrierBlock::new);
-    }
-
-    @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             PGHelper.sendPacketToClient(serverPlayer, new CBOpenBarrierGuiPacket(pos));
             return InteractionResult.SUCCESS;

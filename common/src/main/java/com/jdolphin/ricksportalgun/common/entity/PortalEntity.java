@@ -177,7 +177,8 @@ public class PortalEntity extends Entity {
     protected void readAdditionalSaveData(CompoundTag tag) {
         this.bootleg = tag.getBoolean(TAG_ACIDIC);
         this.targetDim = tag.getString(TAG_DIMENSION);
-        this.targetPos = NbtUtils.readBlockPos(tag, TAG_BPOS).orElse(BlockPos.ZERO);
+        CompoundTag bpTag = tag.getCompound(TAG_BPOS);
+        this.targetPos = NbtUtils.readBlockPos(bpTag);
         this.setColor(tag.getInt(TAG_COLOR));
         this.setLifetime(tag.getInt(TAG_OPEN));
         this.delay = tag.getInt(TAG_COOLDOWN);
@@ -244,7 +245,7 @@ public class PortalEntity extends Entity {
             });
             entities.removeIf(e -> {
                 if (e instanceof ServerPlayer player) {
-                    return player.isOnPortalCooldown() || player.isChangingDimension() || !player.canUsePortal(false);
+                    return player.isOnPortalCooldown() || player.isChangingDimension();
                 }
                 return false;
             });
@@ -254,12 +255,12 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_COLOR_ID, Color.GREEN.getRGB());
-        builder.define(DATA_DIR, Direction.SOUTH);
-        builder.define(DATA_FACING, Direction.SOUTH);
-        builder.define(DATA_SIZE, 1.0f);
-        builder.define(LIFETIME, PGHelper.seconds(10));
+    protected void defineSynchedData() {
+        this.entityData.define(DATA_COLOR_ID, Color.GREEN.getRGB());
+        this.entityData.define(DATA_DIR, Direction.SOUTH);
+        this.entityData.define(DATA_FACING, Direction.SOUTH);
+        this.entityData.define(DATA_SIZE, 1.0f);
+        this.entityData.define(LIFETIME, PGHelper.seconds(10));
     }
 
     @Override
@@ -286,7 +287,7 @@ public class PortalEntity extends Entity {
                     ServerLevel destinationDim;
                     BlockPos destinationPos;
                     if (!this.bootleg && !LevelHelper.isBlenderDestination(getHopDim())) {
-                        ResourceKey<Level> key = LevelHelper.getWorldKey(ResourceLocation.parse(getHopDim()));
+                        ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(getHopDim()));
                         destinationDim = LevelHelper.getServerWorld(this.level(), key);
                         destinationPos = getHopLoc();
                     } else {
@@ -299,7 +300,9 @@ public class PortalEntity extends Entity {
                                 living.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG),
                                         living.getMaxHealth() * 10);
                         } else if (destinationDim != null && !destinationDim.isClientSide()) {
-                            if (nearby.canUsePortal(false) && delay == 0) {
+                            if (delay == 0) {
+                                //TODO Fix for player
+                                banana for error :)
                                 Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
                                 double dx = (double) destinationPos.getX() + look.x * 2d;
                                 double dz = (double) destinationPos.getZ() + look.z * 2d;

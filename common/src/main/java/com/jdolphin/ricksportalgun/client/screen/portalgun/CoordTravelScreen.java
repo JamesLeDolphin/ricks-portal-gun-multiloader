@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBActivateSelfDestructPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCoordCheckerPacket;
@@ -21,6 +21,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -59,6 +61,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         LocalPlayer player = minecraft.player;
         assert player != null;
         ItemStack stack = getItemStack();
+        CompoundTag tag = stack.getOrCreateTag();
 
         this.dimInput = this.addWidget(new SuggestionTextFieldWidget(this.width / 2 - 32, this.height / 2 - 64, 112, 16,
                 Component.translatable("chat.editBox"), dimSuggestions));
@@ -103,7 +106,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     }
                     this.onClose();
                 }, 20, 18, SELF_DESTRUCT_TEXTURE));
-        selfDestruct.active = stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false);
+        selfDestruct.active = tag.contains(PGNbtKeys.SELF_DESTRUCT) && tag.getBoolean(PGNbtKeys.SELF_DESTRUCT);
 
         this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
                 button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
@@ -127,18 +130,18 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         this.cancel = this.addRenderableWidget(new PGTextButton(this.width / 2 + 8, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.cancel"), (button) -> this.onClose(), this.font));
 
-        if (!stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, true)) {
+        if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.EXTRA_DIM)) {
             this.randomiseDim.active = false;
             this.dimInput.setEditable(false);
             this.dimInput.getSuggestionList().active = false;
         }
-        if (!stack.getOrDefault(PGDataComponents.HAS_WAYPOINTS, true)) {
+        if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_WAYPOINT)) {
             this.waypoints.active = false;
         }
-        if (!stack.getOrDefault(PGDataComponents.BIOME_LOC, true)) {
+        if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_BIOME_LOC)) {
             this.locator.active = false;
         }
-        if (!stack.getOrDefault(PGDataComponents.SETTINGS, true)) {
+        if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
             this.settings.active = false;
         }
 
@@ -162,7 +165,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 location.getPath() : location.toString();
         this.dimInput.setSuggestion(dS);
 
-        BlockPos dest = stack.getOrDefault(PGDataComponents.PORTAL_POS, player.blockPosition());
+        BlockPos dest = tag.contains(PGNbtKeys.TAG_BPOS) ? NbtUtils.readBlockPos(tag.getCompound(PGNbtKeys.TAG_BPOS)) : player.blockPosition();
         this.xS = String.valueOf(dest.getX());
         this.yS = String.valueOf(dest.getY());
         this.zS = String.valueOf(dest.getZ());
@@ -230,14 +233,14 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
         ItemStack stack = getItemStack();
-
-        if (stack.getOrDefault(PGDataComponents.SELF_DESTRUCT, false)) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.SELF_DESTRUCT)) {
             GuiHelper.renderOutline(graphics, selfDestruct, style.highlightColor());
             selfDestruct.render(graphics, pMouseX, pMouseY, delta);
             GuiHelper.setTooltip(selfDestruct, Component.translatable("ricksportalgun.button.self_destruct.activate"));
         }
 
-        if (stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, false)) {
+        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.EXTRA_DIM)) {
             dimInput.render(graphics, pMouseX, pMouseY, delta);
             randomiseDim.render(graphics, pMouseX, pMouseY, delta);
             graphics.drawString(this.font, Component.translatable("ricksportalgun.dimension", ""), this.width / 2 - 88, this.dimInput.getY() + 3, style.textColor());
@@ -245,17 +248,17 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             GuiHelper.renderOutline(graphics, randomiseDim, style.highlightColor());
             GuiHelper.renderOutline(graphics, dimInput, style.highlightColor());
         }
-        if (stack.getOrDefault(PGDataComponents.HAS_WAYPOINTS, false)) {
+        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_WAYPOINT)) {
             waypoints.render(graphics, pMouseX, pMouseY, delta);
             GuiHelper.renderOutline(graphics, waypoints, style.highlightColor());
             GuiHelper.setTooltip(waypoints, Component.translatable("ricksportalgun.button.waypoint"));
         }
-        if (stack.getOrDefault(PGDataComponents.SETTINGS, false)) {
+        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
             settings.render(graphics, pMouseX, pMouseY, delta);
             GuiHelper.renderOutline(graphics, settings, style.highlightColor());
             GuiHelper.setTooltip(settings, Component.translatable("ricksportalgun.button.settings"));
         }
-        if (stack.getOrDefault(PGDataComponents.BIOME_LOC, false)) {
+        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_BIOME_LOC)) {
             locator.render(graphics, pMouseX, pMouseY, delta);
             GuiHelper.renderOutline(graphics, locator, style.highlightColor());
             GuiHelper.setTooltip(locator, Component.translatable("ricksportalgun.button.locator"));
@@ -301,7 +304,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             if (value.equals("end")) dimInput.setValue("the_end");
             if (value.equals("nether")) dimInput.setValue("the_nether");
             ResourceLocation resourceLocation =
-                    ResourceLocation.parse(value.isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : value);
+                    new ResourceLocation(value.isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : value);
 
             SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
             PGHelper.sendPacketToServer(packet);

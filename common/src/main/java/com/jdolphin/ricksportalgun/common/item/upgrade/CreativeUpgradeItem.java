@@ -1,6 +1,5 @@
 package com.jdolphin.ricksportalgun.common.item.upgrade;
 
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Unit;

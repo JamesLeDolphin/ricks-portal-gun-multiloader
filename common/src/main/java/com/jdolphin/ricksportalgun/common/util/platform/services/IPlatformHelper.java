@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.platform.services;
 
+import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,9 +22,9 @@ public interface IPlatformHelper {
 
     boolean isDevelopmentEnvironment();
 
-    <P extends CustomPacketPayload> void sendPacketToServer(P packet);
+    <P extends PGPayload> void sendPacketToServer(P packet);
 
-    <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packet);
+    <P extends PGPayload> void sendPacketToClient(ServerPlayer player, P... packet);
 
     String getConfigPath();
 
