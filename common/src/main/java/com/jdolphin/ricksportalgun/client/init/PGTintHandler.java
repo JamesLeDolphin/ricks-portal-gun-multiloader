@@ -7,6 +7,8 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
+
 public class PGTintHandler {
     public static Item[] TINTABLES = PGItems.PORTAL_GUNS.toArray(new PortalGunItem[0]);
 
@@ -15,7 +17,8 @@ public class PGTintHandler {
         if (!PGConfigHelper.disablePortalColourTint()) {
             switch (index) {
                 case 0 -> {
-                    return FastColor.ARGB32.opaque(PortalGunItem.getPrimaryDye(stack));
+                    int i = stack.is(PGItems.GOLDEN_PORTAL_GUN) ? Color.YELLOW.getRGB() : PortalGunItem.getPrimaryDye(stack);
+                    return FastColor.ARGB32.opaque(i);
                 }
                 case 1 -> {
                     return FastColor.ARGB32.opaque(PortalGunItem.getColor(stack));

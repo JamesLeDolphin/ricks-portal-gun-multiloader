@@ -77,6 +77,7 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             ItemStack newStack = newType.getDefaultInstance();
             DataComponentMap components = gun.getComponents();
             newStack.applyComponents(components);
+            this.getSlot(36).set(newStack);
             if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);
         });

@@ -19,6 +19,7 @@ public interface IWaypointStorage {
         waypoints.add(waypoint);
         stack.set(PGDataComponents.WAYPOINTS, waypoints);
     }
+
     static void deleteWaypoint(ItemStack stack, Waypoint waypoint) {
         List<Waypoint> list = stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());
         ArrayList<Waypoint> waypoints = new ArrayList<>(list);

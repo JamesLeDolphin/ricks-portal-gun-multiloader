@@ -3,6 +3,15 @@
   "values": [
     "ricksportalgun:golden_portal_gun",
     "ricksportalgun:portal_gun",
-    "ricksportalgun:prime_portal_gun"
+    "ricksportalgun:prime_portal_gun",
+    "ricksportalgun:alt_portal_gun",
+    "ricksportalgun:flintlock_portal_gun",
+    "ricksportalgun:futuristic_portal_gun",
+    "ricksportalgun:junk_portal_gun",
+    "ricksportalgun:portal_gun_mk2",
+    "ricksportalgun:sidestep_portal_gun",
+    "ricksportalgun:sloped_portal_gun",
+    "ricksportalgun:square_portal_gun",
+    "ricksportalgun:symmetrical_portal_gun"
   ]
 }

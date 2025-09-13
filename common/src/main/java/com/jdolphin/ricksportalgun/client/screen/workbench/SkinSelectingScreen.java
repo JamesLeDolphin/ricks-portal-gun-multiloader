@@ -2,7 +2,6 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
@@ -103,27 +102,31 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
         this.renderTooltip(graphics, mouseX, mouseY);
-
         ItemStack stack = getStack(36);
         if (!stack.isEmpty() && stack.is(PGTags.Items.PORTAL_GUNS)) {
             List<PortalGunItem> list = PGItems.PORTAL_GUNS;
             PortalGunItem item = list.get(this.index);
 
             if (item != null) {
-                Component currentTypeName = stack.getItem().getDefaultInstance().getDisplayName();
+                Component currentTypeName = stack.getItem().getName(stack);
+                graphics.enableScissor(this.width / 2 - 91, this.height / 2 - 84, this.width / 2 - 3, this.height / 2 - 28);
                 GuiHelper.drawWordWrap(graphics, this.font, Component.translatable("ricksportalgun.gun_type", "").append(currentTypeName),
                         this.width / 2 - 44, this.height / 2 - 62, 86, Color.WHITE.getRGB());
+                graphics.disableScissor();
 
-                Component name = item.getDefaultInstance().getDisplayName();
+                Component name = item.getName(item.getDefaultInstance());
+                graphics.enableScissor(this.width / 2, this.height / 2 - 84, this.width / 2 + 81, this.height / 2 - 60);
                 GuiHelper.drawWordWrap(graphics, this.font, name, this.width / 2 + 44, this.height / 2 - 82, 86, Color.WHITE.getRGB());
+                graphics.disableScissor();
                 this.select.render(graphics, mouseX, mouseY, delta);
             }
-
+            this.renderTooltip(graphics, mouseX, mouseY);
 
             this.next.setTexture(next.isHovered() ? NEXT_HL : NEXT);
             this.previous.setTexture(previous.isHovered() ? PREVIOUS_HL : PREVIOUS);
 
             renderPortalGunType(graphics, mouseX, mouseY, delta);
+
         }
     }
 
@@ -134,18 +137,18 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             ItemStack dyeStack1 = getStack(37);
             ItemStack dyeStack2 = getStack(38);
 
-            int primary = 0;
-            int secondary = 0;
+            int primary = PortalGunItem.getPrimaryDye(stack);
+            int secondary = PortalGunItem.getSecondaryDye(stack);
 
             if (!dyeStack1.isEmpty()) {
                 if (dyeStack1.getItem() instanceof DyeItem dyeItem) {
                     primary = dyeItem.getDyeColor().getTextureDiffuseColor();
-                } else if (dyeStack1.is(Items.WATER_BUCKET)) fakeStack.remove(PGDataComponents.PRIMARY_DYE);
+                } else if (dyeStack1.is(Items.WATER_BUCKET)) primary = 0;
             }
             if (!dyeStack2.isEmpty()) {
                 if (dyeStack2.getItem() instanceof DyeItem dyeItem) {
                     secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
-                } else if (dyeStack2.is(Items.WATER_BUCKET)) fakeStack.remove(PGDataComponents.SECONDARY_DYE);
+                } else if (dyeStack2.is(Items.WATER_BUCKET)) secondary = 0;
             }
             int color = PortalGunItem.getColor(stack);
 
@@ -155,7 +158,9 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             if (primary != 0) PortalGunItem.setPrimaryDye(fakeStack, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(fakeStack, secondary);
 
+            graphics.enableScissor(this.width / 2, this.height / 2 - 62, this.width / 2 + 81, this.height / 2 - 18);
             renderFakeItem(graphics, fakeStack, 48, this.width / 2 + 40, this.height / 2 - 44, 32, mouseX, mouseY);
+            graphics.disableScissor();
         }
     }
 
@@ -176,7 +181,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             poseStack.mulPose(Axis.YP.rotationDegrees((rot++) / 3));
             poseStack.mulPose(Axis.ZN.rotationDegrees(20));
         }
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, poseStack, graphics.bufferSource(), null, 0);
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.NONE, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, poseStack, graphics.bufferSource(), null, 0);
 
         poseStack.popPose();
     }
