@@ -4,7 +4,8 @@ import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -95,7 +96,7 @@ public class PGHelper {
         sendFailMsg(player, Component.translatable(msg));
     }
 
-    public static <P extends PGPayload> void sendPacketToServer(P packet) {
+    public static <P extends PGServerPayload> void sendPacketToServer(P packet) {
         PGServices.PLATFORM.sendPacketToServer(packet);
     }
 

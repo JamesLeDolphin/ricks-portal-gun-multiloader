@@ -1,10 +1,10 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -13,9 +13,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -28,10 +25,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import java.util.Optional;
 
 
-public record SBLocatePacket(String name, int value) implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBLocatePacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, SBLocatePacket::name, ByteBufCodecs.INT, SBLocatePacket::value, SBLocatePacket::new);
-    public static final Type<SBLocatePacket> ID = new Type<>(PGHelper.id("locate"));
+public record SBLocatePacket(String name, int value) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
@@ -45,7 +39,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
             }
                 Optional<HolderLookup.RegistryLookup<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
                 if (optionalRegistry.isPresent()) {
-                    ResourceLocation location = ResourceLocation.parse(name);
+                    ResourceLocation location = new ResourceLocation(name);
                     Pair<BlockPos, Holder<Biome>> pair = level.findClosestBiome3d((biomeHolder -> biomeHolder.is(location)),
                             player.blockPosition(), 6400, 32, 64);
                     if (pair != null) {
@@ -79,7 +73,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
             Optional<HolderLookup.RegistryLookup<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
             if (optionalRegistry.isPresent()) {
                 HolderLookup.RegistryLookup<Structure> registry = optionalRegistry.get();
-                ResourceLocation location = ResourceLocation.parse(name);
+                ResourceLocation location = new ResourceLocation(name);
                 Optional<Holder.Reference<Structure>> structureReference = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
                 if (structureReference.isPresent()) {
                     Structure structure = structureReference.get().value();
@@ -101,8 +95,19 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
         }
     }
 
+    public static SBLocatePacket decode(FriendlyByteBuf buf) {
+        String name = buf.readUtf();
+        int value = buf.readInt();
+        return new SBLocatePacket(name, value);
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(name);
+        buf.writeInt(value);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("locate");
     }
 }

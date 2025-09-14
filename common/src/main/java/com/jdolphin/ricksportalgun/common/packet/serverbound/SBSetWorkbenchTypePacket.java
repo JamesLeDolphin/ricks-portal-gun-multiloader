@@ -1,17 +1,13 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.menu.workbench.AbstractWorkbenchMenu;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public record SBSetWorkbenchTypePacket(int id) implements PGPayload {
-    public static final StreamCodec<ByteBuf, SBSetWorkbenchTypePacket> CODEC = StreamCodec.composite(ByteBufCodecs.INT, SBSetWorkbenchTypePacket::id, SBSetWorkbenchTypePacket::new);
-    public static final Type<SBSetWorkbenchTypePacket> ID = new Type<>(PGHelper.id("set_workbench_type"));
+public record SBSetWorkbenchTypePacket(int id) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
@@ -20,8 +16,17 @@ public record SBSetWorkbenchTypePacket(int id) implements PGPayload {
         }
     }
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public static SBSetWorkbenchTypePacket decode(FriendlyByteBuf buf) {
+        return new SBSetWorkbenchTypePacket(buf.readInt());
     }
+
+    @Override
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeInt(id);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("set_workbench_type");
+    }
+
 }

@@ -1,18 +1,15 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBSetPortalGunStylePacket> CODEC = StreamCodec.composite(PortalGunStyle.PACKET_CODEC, SBSetPortalGunStylePacket::style, SBSetPortalGunStylePacket::new);
-    public static final Type<SBSetPortalGunStylePacket> ID = new Type<>(PGHelper.id("portal_gun_style"));
+public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
@@ -20,8 +17,16 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGPaylo
         PortalGunItem.setStyle(stack, style);
     }
 
+    public static SBSetPortalGunStylePacket decode(FriendlyByteBuf buf) {
+        return new SBSetPortalGunStylePacket(PortalGunStyle.fromNetwork(buf));
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        style.toNetwork(buf);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("portal_gun_style");
     }
 }

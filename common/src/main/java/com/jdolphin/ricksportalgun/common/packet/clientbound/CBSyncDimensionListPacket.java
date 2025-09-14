@@ -1,20 +1,24 @@
 package com.jdolphin.ricksportalgun.common.packet.clientbound;
 
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public record CBSyncDimensionListPacket(List<String> dimensions) implements CustomPacketPayload {
-    public static final Type<CBSyncDimensionListPacket> ID = new Type<>(PGHelper.id("sync_dimensions"));
-    public static final StreamCodec<FriendlyByteBuf, CBSyncDimensionListPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
-            CBSyncDimensionListPacket::dimensions, CBSyncDimensionListPacket::new);
+public record CBSyncDimensionListPacket(List<String> dimensions) implements PGPayload {
+
+    public static CBSyncDimensionListPacket decode(FriendlyByteBuf buf) {
+        return new CBSyncDimensionListPacket(buf.readList(FriendlyByteBuf::readUtf));
+    }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeCollection(dimensions, FriendlyByteBuf::writeUtf);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("sync_dimensions");
     }
 }

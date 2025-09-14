@@ -3,13 +3,19 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
-import com.jdolphin.ricksportalgun.common.init.*;
+import com.jdolphin.ricksportalgun.common.init.PGBlocks;
+import com.jdolphin.ricksportalgun.common.init.PGEntities;
+import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
+import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -21,9 +27,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class RicksPortalGunFabricClient implements ClientModInitializer {
 
@@ -45,10 +56,18 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
 
         initEvents();
+        initClientPackets();
+    }
 
-        FabricPackets.registerS2CPackets();
+    private void initClientPackets() {
+        registerGlobalReceiver(CBOpenCoordGuiPacket.getID(), CBOpenCoordGuiPacket::decode, pgPayload -> ClientPacketHandler.openCoordTravelScreen(pgPayload.strings()));
 
+        registerGlobalReceiver(CBSyncDimensionListPacket.getID(), CBSyncDimensionListPacket::decode, packet -> ClientPacketHandler.syncClientDimensions(packet.dimensions()));
+        registerGlobalReceiver(CBOpenBarrierGuiPacket.getID(), CBOpenBarrierGuiPacket::decode,packet -> ClientPacketHandler.openBarrierGui(packet.pos()));
+        registerGlobalReceiver(CBOpenLocatorScreenPacket.getID(), CBOpenLocatorScreenPacket::decode, packet ->
+                ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
 
+        registerGlobalReceiver(CBOpenSecurityGuiPacket.getID(), CBOpenSecurityGuiPacket::decode, packet -> ClientPacketHandler.openSecurityScreen(packet.strings()));
     }
 
     private void initEvents() {
@@ -65,6 +84,14 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         ClientTickEvents.START_CLIENT_TICK.register(minecraft -> {
             PortalEntityRenderer.tickTexture();
+        });
+    }
+
+    private static  <P extends PGPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func, Consumer<P> consumer) {
+        ClientPlayNetworking.registerGlobalReceiver(rl,
+                (client, handler, buf, responseSender) -> {
+            P p = func.apply(buf);
+            consumer.accept(p);
         });
     }
 }

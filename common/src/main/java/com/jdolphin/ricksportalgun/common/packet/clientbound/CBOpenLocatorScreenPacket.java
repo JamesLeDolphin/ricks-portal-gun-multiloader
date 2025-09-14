@@ -1,25 +1,28 @@
 package com.jdolphin.ricksportalgun.common.packet.clientbound;
 
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public record CBOpenLocatorScreenPacket(List<String> playerList, List<String> biomeList, List<String> structureList) implements CustomPacketPayload {
-    public static final Type<CBOpenLocatorScreenPacket> ID = new Type<>(PGHelper.id("open_client_locator_screen"));
-    public static final StreamCodec<FriendlyByteBuf, CBOpenLocatorScreenPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), CBOpenLocatorScreenPacket::playerList,
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), CBOpenLocatorScreenPacket::biomeList,
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), CBOpenLocatorScreenPacket::structureList,
-            CBOpenLocatorScreenPacket::new);
+public record CBOpenLocatorScreenPacket(List<String> playerList, List<String> biomeList, List<String> structureList) implements PGPayload {
 
-
+    public static CBOpenLocatorScreenPacket decode(FriendlyByteBuf buf) {
+        return new CBOpenLocatorScreenPacket(buf.readList(FriendlyByteBuf::readUtf),
+                buf.readList(FriendlyByteBuf::readUtf),
+                buf.readList(FriendlyByteBuf::readUtf));
+    }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeCollection(playerList, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(biomeList, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(structureList, FriendlyByteBuf::writeUtf);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("open_client_locator_screen");
     }
 }

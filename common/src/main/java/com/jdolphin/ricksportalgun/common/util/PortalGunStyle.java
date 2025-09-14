@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.FastColor;
 
@@ -21,6 +22,14 @@ public record PortalGunStyle(int highlightColor, int bgColor, int textColor) {
 
     public static PortalGunStyle fromNBT(CompoundTag tag) {
         return new PortalGunStyle(tag.getInt("HighlightColor"), tag.getInt("bgColor"), tag.getInt("textColor"));
+    }
+
+    public ByteBuf toNetwork(ByteBuf buf) {
+        return buf.writeInt(highlightColor).writeInt(bgColor).writeInt(textColor);
+    }
+
+    public static PortalGunStyle fromNetwork(ByteBuf buf) {
+        return new PortalGunStyle(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
     static {

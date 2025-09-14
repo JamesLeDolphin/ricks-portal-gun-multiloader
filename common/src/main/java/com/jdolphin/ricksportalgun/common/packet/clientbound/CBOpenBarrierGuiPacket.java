@@ -1,19 +1,23 @@
 package com.jdolphin.ricksportalgun.common.packet.clientbound;
 
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-public record CBOpenBarrierGuiPacket(BlockPos pos) implements CustomPacketPayload {
-    public static final Type<CBOpenBarrierGuiPacket> ID = new Type<>(PGHelper.id("open_menu"));
+public record CBOpenBarrierGuiPacket(BlockPos pos) implements PGPayload {
 
-    public static final StreamCodec<FriendlyByteBuf, CBOpenBarrierGuiPacket> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
-            CBOpenBarrierGuiPacket::pos, CBOpenBarrierGuiPacket::new);
+    public static CBOpenBarrierGuiPacket decode(FriendlyByteBuf buf) {
+        return new CBOpenBarrierGuiPacket(buf.readBlockPos());
+    }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeBlockPos(pos);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("open_menu");
     }
 }

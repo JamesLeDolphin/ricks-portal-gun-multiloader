@@ -1,22 +1,17 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGPayload {
-    public static final StreamCodec<ByteBuf, SBSetBarrierCodePacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8,
-            SBSetBarrierCodePacket::code, BlockPos.STREAM_CODEC, SBSetBarrierCodePacket::pos, SBSetBarrierCodePacket::new);
-    public static final Type<SBSetBarrierCodePacket> ID = new Type<>(PGHelper.id("barrier_code"));
+public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         Level level = player.serverLevel();
@@ -27,8 +22,19 @@ public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGPay
         }
     }
 
+    public static SBSetBarrierCodePacket decode(FriendlyByteBuf buf) {
+        String code = buf.readUtf();
+        BlockPos pos = buf.readBlockPos();
+        return new SBSetBarrierCodePacket(code, pos);
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(code);
+        buf.writeBlockPos(pos);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("barrier_code");
     }
 }

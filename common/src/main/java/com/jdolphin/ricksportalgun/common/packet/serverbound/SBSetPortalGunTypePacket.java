@@ -1,19 +1,13 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public record SBSetPortalGunTypePacket(ResourceLocation loc, int tints) implements PGPayload {
-    public static final StreamCodec<ByteBuf, SBSetPortalGunTypePacket> CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC, SBSetPortalGunTypePacket::loc,
-            ByteBufCodecs.INT, SBSetPortalGunTypePacket::tints, SBSetPortalGunTypePacket::new);
-    public static final Type<SBSetPortalGunTypePacket> ID = new Type<>(PGHelper.id("set_portalgun_type"));
+public record SBSetPortalGunTypePacket(ResourceLocation loc, int tints) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         if (player.containerMenu instanceof SkinSelectorMenu menu) {
@@ -21,8 +15,16 @@ public record SBSetPortalGunTypePacket(ResourceLocation loc, int tints) implemen
         }
     }
 
+    public static SBSetPortalGunTypePacket decode(FriendlyByteBuf buf) {
+        return new SBSetPortalGunTypePacket(buf.readResourceLocation(), buf.readInt());
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(loc).writeInt(tints);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("set_portalgun_type");
     }
 }

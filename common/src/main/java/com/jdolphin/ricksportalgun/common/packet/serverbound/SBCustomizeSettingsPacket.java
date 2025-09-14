@@ -1,29 +1,37 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBCustomizeSettingsPacket(double size, int age) implements PGPayload {
-    public static final StreamCodec<ByteBuf, SBCustomizeSettingsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.DOUBLE,
-            SBCustomizeSettingsPacket::size, ByteBufCodecs.INT, SBCustomizeSettingsPacket::age, SBCustomizeSettingsPacket::new);
-
-    public static final Type<SBCustomizeSettingsPacket> ID = new Type<>(PGHelper.id("portal_settings"));
+public record SBCustomizeSettingsPacket(double size, int age) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        stack.set(PGDataComponents.PORTAL_SIZE, ((float) size));
-        stack.set(PGDataComponents.PORTAL_LIFETIME, this.age);
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putDouble(PGNbtKeys.TAG_SIZE, size);
+        tag.putInt(PGNbtKeys.TAG_AGE, age);
+    }
+
+    public static SBCustomizeSettingsPacket decode(FriendlyByteBuf buf) {
+        double size = buf.readDouble();
+        int age = buf.readInt();
+        return new SBCustomizeSettingsPacket(size, age);
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeDouble(size);
+        buf.writeInt(age);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("portal_settings");
     }
 }

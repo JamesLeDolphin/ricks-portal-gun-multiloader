@@ -1,20 +1,17 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenSecurityGuiPacket;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Arrays;
 import java.util.List;
 
-public record SBOpenSecuritySettingsPacket() implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBOpenSecuritySettingsPacket> CODEC = StreamCodec.unit(new SBOpenSecuritySettingsPacket());
-    public static final Type<SBOpenSecuritySettingsPacket> ID = new Type<>(PGHelper.id("open_security_screen"));
+public record SBOpenSecuritySettingsPacket() implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
@@ -27,8 +24,14 @@ public record SBOpenSecuritySettingsPacket() implements PGPayload {
         }
     }
 
+    public static SBOpenSecuritySettingsPacket decode(FriendlyByteBuf buf) {
+        return new SBOpenSecuritySettingsPacket();
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {}
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("open_security_screen");
     }
 }

@@ -1,23 +1,16 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBManageWaypointsPacket(String waypoint, boolean remove) implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBManageWaypointsPacket> CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SBManageWaypointsPacket::waypoint,
-            ByteBufCodecs.BOOL, SBManageWaypointsPacket::remove, SBManageWaypointsPacket::new);
-
-    public static final Type<SBManageWaypointsPacket> ID = new Type<>(PGHelper.id("manage_waypoint"));
-
+public record SBManageWaypointsPacket(String waypoint, boolean remove) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
@@ -35,8 +28,19 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
         }
     }
 
+    public static SBManageWaypointsPacket decode(FriendlyByteBuf buf) {
+        String wp = buf.readUtf();
+        boolean delete = buf.readBoolean();
+        return new SBManageWaypointsPacket(wp, delete);
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(waypoint);
+        buf.writeBoolean(remove);
+    }
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("manage_waypoint");
     }
 }

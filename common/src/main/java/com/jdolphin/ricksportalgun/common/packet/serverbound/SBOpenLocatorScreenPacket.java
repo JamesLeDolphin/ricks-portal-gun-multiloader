@@ -1,13 +1,12 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenLocatorScreenPacket;
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.biome.Biome;
@@ -18,9 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public record SBOpenLocatorScreenPacket() implements PGPayload {
-    public static final StreamCodec<FriendlyByteBuf, SBOpenLocatorScreenPacket> CODEC = StreamCodec.unit(new SBOpenLocatorScreenPacket());
-    public static final Type<SBOpenLocatorScreenPacket> ID = new Type<>(PGHelper.id("open_locator_screen"));
+public record SBOpenLocatorScreenPacket() implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
@@ -59,8 +56,14 @@ public record SBOpenLocatorScreenPacket() implements PGPayload {
         }
     }
 
+    public static SBOpenLocatorScreenPacket decode(FriendlyByteBuf buf) {
+        return new SBOpenLocatorScreenPacket();
+    }
+
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return ID;
+    public void encode(FriendlyByteBuf buf) {}
+
+    public static ResourceLocation getID() {
+        return PGHelper.id("open_locator_screen");
     }
 }

@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.util.platform.services;
 
-import com.jdolphin.ricksportalgun.common.util.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +23,7 @@ public interface IPlatformHelper {
 
     boolean isDevelopmentEnvironment();
 
-    <P extends PGPayload> void sendPacketToServer(P packet);
+    <P extends PGServerPayload> void sendPacketToServer(P packet);
 
     <P extends PGPayload> void sendPacketToClient(ServerPlayer player, P... packet);
 
