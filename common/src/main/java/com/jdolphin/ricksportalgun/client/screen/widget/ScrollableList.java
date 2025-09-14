@@ -46,6 +46,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
     private E selected;
     @Nullable
     private E hovered;
+    private boolean renderScrollbar = true;
 
     public ScrollableList(Minecraft pMinecraft, int pWidth, int pHeight, int x0, int pY0, int pItemHeight) {
         this.children = new TrackedList();
@@ -59,6 +60,13 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         this.x1 = x0 + pWidth;
     }
 
+    public void setRenderScrollbar(boolean renderScrollbar) {
+        this.renderScrollbar = renderScrollbar;
+    }
+
+    public boolean renderScrollbar() {
+        return renderScrollbar;
+    }
 
     public int getRowWidth() {
         return 110;
@@ -136,7 +144,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
     }
 
     @Nullable
-    protected final E getEntryAtPosition(double mouseX, double mouseY) {
+    public final E getEntryAtPosition(double mouseX, double mouseY) {
         int i = this.getRowWidth() / 2;
         int j = this.getLeft() + this.width / 2;
         int k = j - i;
@@ -186,6 +194,7 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
             this.renderList(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             pGuiGraphics.disableScissor();
 
+            if (this.renderScrollbar) {
             int i2 = this.getMaxScroll();
             if (i2 > 0) {
                 int j2 = (int) ((float) ((this.y1 - this.y0) * (this.y1 - this.y0)) / (float) this.getMaxPosition());
@@ -195,14 +204,15 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
                     k1 = this.y0;
                 }
 
-                //pGuiGraphics.fill(i, this.y0, j, this.y1, -16777216);
-               // pGuiGraphics.fill(i, k1, j, k1 + j2, -8355712);
-               // pGuiGraphics.fill(i, k1, j - 1, k1 + j2 - 1, -4144960);
+               pGuiGraphics.fill(i, this.y0, j, this.y1, -16777216);
+               pGuiGraphics.fill(i, k1, j, k1 + j2, -8355712);
+               pGuiGraphics.fill(i, k1, j - 1, k1 + j2 - 1, -4144960);
             }
 
             this.renderDecorations(pGuiGraphics, pMouseX, pMouseY);
             RenderSystem.disableBlend();
         }
+            }
     }
 
     protected void enableScissor(GuiGraphics pGuiGraphics) {

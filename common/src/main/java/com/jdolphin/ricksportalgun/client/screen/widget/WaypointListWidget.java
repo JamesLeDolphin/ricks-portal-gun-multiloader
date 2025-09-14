@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.WaypointEntry> {
+public class WaypointListWidget extends ScrollableList<WaypointListWidget.WaypointEntry> {
     public static ResourceLocation WAYPOINT_INFO_TEXTURES = PGHelper.id("textures/gui/sprites/icon/waypoint_info.png");
 
     public boolean showInfoButton;
@@ -48,11 +48,11 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
     public void refreshEntries(ItemStack stack) {
         this.children().clear();
-        List<Waypoint> waypoints = IWaypointStorage.getWaypoints(stack);
+        List<String> waypoints = IWaypointStorage.getWaypoints(stack);
 
-        for (Waypoint waypoint : waypoints) {
+        for (String waypoint : waypoints) {
             if (waypoint != null) {
-                this.addEntry(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
+                this.addEntry(new WaypointEntry(Waypoint.getWaypoint(waypoint), this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
             } else LogManager.getLogger().warn("Failed to get Waypoint");
         }
     }
@@ -65,13 +65,13 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
         this.onPress = onPress;
     }
 
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.USAGE, Component.empty());
-    }
-
     public void setRenderButtonBackground(boolean renderButtonBg) {
         this.renderButtonBg = renderButtonBg;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
     }
 
     public static class WaypointEntry extends Entry<WaypointEntry> {
@@ -134,6 +134,11 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
                     this.infoButton.render(graphics, pMouseX, pMouseY, pPartialTick);
                 }
             }
+        }
+
+        @Override
+        public List<? extends GuiEventListener> children() {
+            return List.of(button, infoButton);
         }
 
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {

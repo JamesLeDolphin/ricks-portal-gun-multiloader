@@ -17,8 +17,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
 import java.util.List;
 
 public class PGHelper {
@@ -42,6 +44,14 @@ public class PGHelper {
 
     public static int minutes(int amount) {
         return 60 * seconds(amount);
+    }
+
+    public static int getTextureDiffuseColor(DyeItem dyeItem) {
+        float[] rgb = dyeItem.getDyeColor().getTextureDiffuseColors();
+        float r = rgb[0];
+        float g = rgb[1];
+        float b = rgb[2];
+        return new Color(r, g, b).getRGB();
     }
 
     public static boolean canPlayerAccessGun(Player player, ItemStack stack) {

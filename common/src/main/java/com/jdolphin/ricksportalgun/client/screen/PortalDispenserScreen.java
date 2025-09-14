@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen;
 
-import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
+import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDispenserDestinationPacket;
@@ -53,14 +53,14 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         dimInput.setTextColor(0xffffff);
     }
 
-    public boolean mouseScrolled(double d, double d1, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d1, double d2) {
         Optional<GuiEventListener> optional = this.getChildAt(d, d1);
         if (optional.isPresent()) {
-            if (optional.get() instanceof PGScrollableWidget<?> list) {
-                return list.mouseScrolled(d, d1, d2, d3);
+            if (optional.get() instanceof ScrollableList<?> list) {
+                return list.mouseScrolled(d, d1, d2);
             }
         }
-        return super.mouseScrolled(d, d1, d2, d3);
+        return super.mouseScrolled(d, d1, d2);
     }
 
     protected void init() {

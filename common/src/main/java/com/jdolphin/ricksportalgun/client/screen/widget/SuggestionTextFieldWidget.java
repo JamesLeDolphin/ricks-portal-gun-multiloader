@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -46,10 +47,8 @@ public class SuggestionTextFieldWidget extends EditBox {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.isFocused()) {
             this.suggestionListWidget.visible = false;
-            this.suggestionListWidget.active = false;
         } else {
             this.suggestionListWidget.visible = true;
-            this.suggestionListWidget.active = true;
             this.suggestionListWidget.render(graphics, mouseX, mouseY, delta);
         }
         super.renderWidget(graphics, mouseX, mouseY, delta);
@@ -59,7 +58,7 @@ public class SuggestionTextFieldWidget extends EditBox {
         List<String> suggestions = this.sortSuggestions(this.suggestions);
         this.suggestionListWidget.setSuggestions(suggestions);
         //this.suggestionListWidget.setScrollAmount(0);
-        this.suggestionListWidget.setHeight(this.height * Math.min(3, suggestions.size()));
+        this.suggestionListWidget.height = this.height * Math.min(3, suggestions.size());
     }
 
     private List<String> sortSuggestions(List<String> suggestions) {
@@ -98,7 +97,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     }
 
 
-    public static class SuggestionList extends PGScrollableWidget<SuggestionList.SuggestionEntry> {
+    public static class SuggestionList extends ScrollableList<SuggestionList.SuggestionEntry> {
         private final SuggestionTextFieldWidget widget;
         private int borderColor = Color.WHITE.getRGB();
         public SuggestionList(Minecraft minecraft, int width, int height, int x, int y, int itemHeight, SuggestionTextFieldWidget widget) {
@@ -125,7 +124,7 @@ public class SuggestionTextFieldWidget extends EditBox {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (this.active && this.visible) {
+            if (this.visible) {
                 SuggestionEntry hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
                 if (hoveredEntry == null) {
                     this.widget.setFocused(false);
@@ -134,25 +133,20 @@ public class SuggestionTextFieldWidget extends EditBox {
             } return false;
         }
 
-        @Override
-        protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
-            output.add(NarratedElementType.USAGE, Component.translatable("narration.selection.usage"));
-        }
-
         public void setBorderColor(int color) {
             this.borderColor = color;
         }
 
-        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            int x1 = this.getX();
-            int y1 = this.getY();
+        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            int x1 = this.getLeft();
+            int y1 = this.getTop();
             int x2 = this.getRight();
             int y2 = this.getBottom();
             graphics.enableScissor(x1, y1, x2, y2);
             graphics.fill(x1, y1, x2, y2, -805306368);
             graphics.disableScissor();
             graphics.renderOutline(x1, y1, this.getWidth(), this.getHeight(), borderColor);
-            super.renderWidget(graphics, mouseX, mouseY, delta);
+            super.render(graphics, mouseX, mouseY, delta);
         }
 
         public int getRowWidth() {
@@ -164,7 +158,12 @@ public class SuggestionTextFieldWidget extends EditBox {
             return super.getRowRight() - 6;
         }
 
-        public static class SuggestionEntry extends Entry<SuggestionEntry> {
+        @Override
+        public void updateNarration(NarrationElementOutput output) {
+            output.add(NarratedElementType.USAGE, "");
+        }
+
+        public static class SuggestionEntry extends ScrollableList.Entry<SuggestionEntry> {
 
             private final String string;
             private final PGTextButton button;
@@ -187,11 +186,16 @@ public class SuggestionTextFieldWidget extends EditBox {
             public void render(@NotNull GuiGraphics context, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 SuggestionList wpList = this.list;
                 if (top > wpList.headerHeight ) {
-                    this.button.setX(wpList.getX() + 2);
+                    this.button.setX(wpList.getLeft() + 2);
                     this.button.setY(top);
                     this.button.setMessage(Component.literal(this.string));
                     button.render(context, mouseX, mouseY, tickDelta);
                 }
+            }
+
+            @Override
+            public List<? extends GuiEventListener> children() {
+                return List.of(this.button);
             }
 
             public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {

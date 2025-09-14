@@ -4,10 +4,9 @@ import com.jdolphin.ricksportalgun.common.init.PGRecipeSerializers;
 import com.jdolphin.ricksportalgun.common.init.PGRecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -16,7 +15,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
+public class PortalGunWorkbenchRecipe implements Recipe<Container> {
     private final List<ItemStack> items;
     final ItemStack result;
 
@@ -34,9 +33,9 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     }
 
     @Override
-    public boolean matches(WorkbenchRecipeInput input, Level level) {
+    public boolean matches(Container container, Level level) {
         if (!level.isClientSide) {
-            if (input.ingredientCount() == this.items.size()) {
+            if (container..ingredientCount() == this.items.size()) {
                 for (int i = 0; i < this.items.size(); i++) {
                     ItemStack stack = input.getItem(i);
                     ItemStack ingredient = this.items.get(i);;
@@ -54,7 +53,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(WorkbenchRecipeInput workbenchRecipeInput, HolderLookup.Provider provider) {
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
         return this.result.copy();
     }
 
@@ -64,17 +63,22 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return this.result;
     }
 
     @Override
-    public RecipeSerializer<? extends Recipe<WorkbenchRecipeInput>> getSerializer() {
+    public ResourceLocation getId() {
+        return null;
+    }
+
+    @Override
+    public RecipeSerializer<? extends Recipe<Container>> getSerializer() {
         return PGRecipeSerializers.WORKBENCH_SERIALIZER;
     }
 
     @Override
-    public RecipeType<? extends Recipe<WorkbenchRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<Container>> getType() {
         return PGRecipeTypes.WORKBENCH_TYPE;
     }
 

@@ -1,10 +1,12 @@
 package com.jdolphin.ricksportalgun.common.menu.workbench;
 
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import net.minecraft.core.component.DataComponentMap;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -48,34 +50,33 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             ItemStack gun = this.getSlot(36).getItem();
             ItemStack dye1 = this.getSlot(37).getItem();
             ItemStack dye2 = this.getSlot(38).getItem();
-
+            CompoundTag tag = gun.getOrCreateTag();
             int primary = 0;
             int secondary = 0;
 
             if (!(tints < 2) && !dye1.isEmpty()) {
                 if (!dye1.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye1.getItem();
-                    primary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    primary = PGHelper.getTextureDiffuseColor(dyeItem);
                     if (!player.isCreative()) dye1.shrink(1);
                 } else {
-                    gun.remove(PGDataComponents.PRIMARY_DYE);
+                    tag.remove(PGNbtKeys.PRIMARY_COLOR);
                     if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
             if (!(tints < 3) && !dye2.isEmpty()) {
                 if (!dye2.is(Items.WATER_BUCKET)) {
                     DyeItem dyeItem = (DyeItem) dye2.getItem();
-                    secondary = dyeItem.getDyeColor().getTextureDiffuseColor();
+                    secondary = PGHelper.getTextureDiffuseColor(dyeItem);
                     if (!player.isCreative()) dye2.shrink(1);
                 } else {
-                    gun.remove(PGDataComponents.SECONDARY_DYE);
+                    tag.remove(PGNbtKeys.SECONDARY_COLOR);
                     if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
                 }
             }
             Item newType = BuiltInRegistries.ITEM.get(type);
             ItemStack newStack = newType.getDefaultInstance();
-            DataComponentMap components = gun.getComponents();
-            newStack.applyComponents(components);
+            newStack.setTag(tag);
             this.getSlot(36).set(newStack);
             if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
             if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);

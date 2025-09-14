@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.workbench;
 
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
+import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
@@ -42,14 +42,14 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
         this.titleLabelY = this.imageHeight - 207;
     }
 
-    public boolean mouseScrolled(double d, double d1, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d1, double d2) {
         Optional<GuiEventListener> optional = this.getChildAt(d, d1);
         if (optional.isPresent()) {
-            if (optional.get() instanceof PGScrollableWidget<?> list) {
-                return list.mouseScrolled(d, d1, d2, d3);
+            if (optional.get() instanceof ScrollableList<?> list) {
+                return list.mouseScrolled(d, d1, d2);
             }
         }
-        return super.mouseScrolled(d, d1, d2, d3);
+        return super.mouseScrolled(d, d1, d2);
     }
 
     @Override
@@ -167,7 +167,9 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
 
-        GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, leftWaypointList, rightWaypointList);
+        GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta);
+        if (leftWaypointList != null) leftWaypointList.render(graphics, mouseX, mouseY, delta);
+        if (rightWaypointList != null) rightWaypointList.render(graphics, mouseX, mouseY, delta);
 
         if (selectedWaypoint != null) {
             delete.render(graphics, mouseX, mouseY, delta);

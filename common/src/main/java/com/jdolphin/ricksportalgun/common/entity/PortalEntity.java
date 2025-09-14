@@ -301,14 +301,18 @@ public class PortalEntity extends Entity {
                                         living.getMaxHealth() * 10);
                         } else if (destinationDim != null && !destinationDim.isClientSide()) {
                             if (delay == 0) {
-                                //TODO Fix for player
-                                banana for error :)
                                 Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
                                 double dx = (double) destinationPos.getX() + look.x * 2d;
                                 double dz = (double) destinationPos.getZ() + look.z * 2d;
                                 Set<RelativeMovement> relativeSet = new HashSet<>();
                                 relativeSet.add(RelativeMovement.Y_ROT);
-                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot());
+                                if (nearby instanceof ServerPlayer player) {
+                                    player.changeDimension(destinationDim);
+                                    player.connection.teleport(dx, destinationPos.getY(), dz, player.getYRot(), player.getXRot());
+                                }
+                                else
+                                    nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot());
+
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
                             }
