@@ -10,7 +10,6 @@ import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +44,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
+public class PortalGunItem extends Item implements IWaypointStorage {
     private final int tints;
     public PortalGunItem(Properties properties, int tints) {
         super(properties);
@@ -61,12 +60,13 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     public static int getFuel(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.FUEL, 64);
+        return stack.getOrDefault(PGDataComponents.FUEL, getMaxFuel(stack));
     }
 
-    public static void lowerFuel(ItemStack stack, int amount) {
+    public void lowerFuel(ItemStack stack, int amount) {
         int i = getFuel(stack);
-        stack.set(PGDataComponents.FUEL, Math.max(0, i - amount));
+        int fuel = Math.max(0, i - amount);
+        stack.set(PGDataComponents.FUEL, fuel);
     }
 
     public static void setPrimaryDye(ItemStack stack, int color) {
@@ -85,7 +85,6 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
         return stack.getOrDefault(PGDataComponents.SECONDARY_DYE, 15989755);
     }
 
-
     public static void setCode(ItemStack stack, String code) {
         stack.set(PGDataComponents.CODE, code);
     }
@@ -99,9 +98,11 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     public static void migrateDamage(ItemStack stack) {
-        int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
-        stack.set(PGDataComponents.FUEL, fuel);
-        stack.remove(DataComponents.DAMAGE);
+        if (stack.has(DataComponents.DAMAGE)) {
+            int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
+            stack.set(PGDataComponents.FUEL, fuel);
+            stack.remove(DataComponents.DAMAGE);
+        }
     }
 
     public static boolean refuel(ItemStack stack, Player player) {
@@ -389,10 +390,5 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                 tag.remove(defaultColor);
             }
         }
-    }
-
-    @Override
-    public int getColor(@NotNull ItemStack itemStack, int i) {
-        return getColor(itemStack);
     }
 }

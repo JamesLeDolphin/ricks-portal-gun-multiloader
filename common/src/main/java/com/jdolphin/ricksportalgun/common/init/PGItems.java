@@ -115,8 +115,6 @@ public class PGItems {
                 .component(PGDataComponents.BOOTLEG, false)
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.PORTAL_SIZE, 1.0f)
-                .component(PGDataComponents.MAX_FUEL, 64)
-                .component(PGDataComponents.FUEL, 64)
                 .component(PGDataComponents.LOCK, false)
                 .component(PGDataComponents.HAS_WAYPOINTS, false)
                 .component(PGDataComponents.EXTRA_DIMENSIONS, false)

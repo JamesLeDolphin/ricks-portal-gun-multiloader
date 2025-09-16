@@ -204,6 +204,6 @@ public class LevelHelper {
     }
 
     public static void playSound(Level world, BlockPos pos, SoundEvent sound, SoundSource category) {
-        world.playSound(null, pos, sound, category, 100, 1);
+        world.playSound(null, pos, sound, category, 10, 1);
     }
 }
