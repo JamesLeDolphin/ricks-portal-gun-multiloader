@@ -1,15 +1,14 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.google.common.base.Stopwatch;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
+import net.minecraft.Util;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -39,10 +38,8 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
         ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         if (value == 0) {
-            if (PGConfigHelper.disableBiomeLocating()) {
-                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));
-                return;
-            }
+            if (!PGConfigHelper.disableBiomeLocating()) {
+
                 Optional<HolderLookup.RegistryLookup<Biome>> optionalRegistry = server.registryAccess().lookup(Registries.BIOME);
                 if (optionalRegistry.isPresent()) {
                     ResourceLocation location = ResourceLocation.parse(name);
@@ -50,54 +47,53 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
                             player.blockPosition(), 6400, 32, 64);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                        BlockPos safePos = LevelHelper.safeY(level, pos.getX(), player.getY(), pos.getZ());
                         PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else
                         PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
+                    return;
                 }
+            } else {
+                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.disabled"));
+                return;
+            }
         }
         if (value == 1) {
-            if (PGConfigHelper.disablePlayerLocating()) {
-                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.disabled"));
+            if (!PGConfigHelper.disablePlayerLocating()) {
+
+                ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
+                if (targetPlayer != null) {
+                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
+                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+
+                } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
                 return;
-            }
-
-            ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
-            if (targetPlayer != null) {
-                PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), targetPlayer.blockPosition().above());
-                PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-
-            } else
-                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
+            } PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.disabled"));
+            return;
         }
         if (value == 2) {
-            if (PGConfigHelper.disableStructureLocating()) {
-                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
-                return;
-            }
-            Optional<HolderLookup.RegistryLookup<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
-            if (optionalRegistry.isPresent()) {
-                HolderLookup.RegistryLookup<Structure> registry = optionalRegistry.get();
-                ResourceLocation location = ResourceLocation.parse(name);
-                Optional<Holder.Reference<Structure>> structureReference = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
-                if (structureReference.isPresent()) {
-                    Structure structure = structureReference.get().value();
+            if (!PGConfigHelper.disableStructureLocating()) {
 
-                    HolderSet<Structure> set = HolderSet.direct(Holder.direct(structure));
+                ResourceLocation rl = ResourceLocation.parse(name);
+                ResourceKey<Structure> resourceKey = ResourceKey.create(Registries.STRUCTURE, rl);
+                Registry<Structure> registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+                HolderSet<Structure> holderset = registry.getHolder(resourceKey).map(HolderSet::direct).orElseThrow();
 
-                    Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator()
-                            .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
-                    if (pair != null) {
-                        BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-                    } else {
-                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
-                    }
-                } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
-            }
+                Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
+
+                Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator().findNearestMapStructure(level, holderset, player.blockPosition(), 100, false);
+                stopwatch.stop();
+                if (pair == null) {
+                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
+                } else {
+                    BlockPos pos = pair.getFirst();
+                    BlockPos safePos = LevelHelper.safeY(level, pos.getX(), player.getY(), pos.getZ());
+                    System.out.println(pos + " compared to " + safePos);
+                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                }
+            } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
         }
     }
 

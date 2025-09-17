@@ -135,6 +135,18 @@ public class LevelHelper {
         return getSafePos(bPos, level, 0);
     }
 
+    public static BlockPos safeY(ServerLevel level, double x, double y, double z) {
+        BlockPos blockpos = BlockPos.containing(x, y, z);
+        BlockPos result = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, blockpos);
+
+        if (result.getY() >= level.getMaxBuildHeight() || result.getY() <= level.getMinBuildHeight()) {
+            ChunkPos pos = new ChunkPos(result);
+            level.setChunkForced(pos.x, pos.z, true);
+            return level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, result);
+        }
+        return result;
+    }
+
     private static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
         iteration++;
         ChunkAccess chunk = level.getChunk(bPos);
