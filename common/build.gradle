@@ -16,7 +16,9 @@ neoForge {
     }
 }
 
-dependencies {}
+dependencies {
+    compileOnly "mezz.jei:jei-${minecraft_version}-common:${jei_version}"
+}
 
 configurations {
     commonJava {
