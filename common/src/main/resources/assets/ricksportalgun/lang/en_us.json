@@ -25,6 +25,10 @@
   "item.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
   "item.ricksportalgun.data_card": "Data Card",
 
+  "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
+  "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
+  "block.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
+
   "item.ricksportalgun.upgrade_durability": "Portal Gun Fire Resistance Upgrade",
   "item.ricksportalgun.upgrade_waypoint": "Portal Gun Waypoint Upgrade",
   "item.ricksportalgun.upgrade_dimension_mk1": "Portal Gun Dimension Upgrade Mk.I",
