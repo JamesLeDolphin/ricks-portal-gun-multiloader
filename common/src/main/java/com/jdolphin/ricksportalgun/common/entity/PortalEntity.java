@@ -60,7 +60,6 @@ public class PortalEntity extends Entity {
     private Vec3 pos;
     private String targetDim;
     private int delay = 0;
-    public int lifetime = 20 * 10;
 
     public boolean exists() {
         return exists;
@@ -84,7 +83,7 @@ public class PortalEntity extends Entity {
     }
 
     public void setLifetime(int lifetime) {
-        this.entityData.set(LIFETIME, lifetime);
+        this.entityData.set(LIFETIME, PGHelper.seconds(lifetime));
     }
 
     public int getLifetime() {
@@ -272,8 +271,8 @@ public class PortalEntity extends Entity {
                 this.exists = true;
             }
             if (getLifetime() > 0) {
-                int l = getLifetime();
-                setLifetime(l - 1);
+                int i = getLifetime();
+                setLifetime(i - 1);
             }
             if (delay > 0) delay--;
             if (!firstTick && getLifetime() == 0) {

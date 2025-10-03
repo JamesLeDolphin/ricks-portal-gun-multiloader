@@ -54,7 +54,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
             f *= f;
             stack.scale(f, f, f);
         }
-        if (state.tickCount > state.lifetime * 0.9) {
+        if (state.tickCount > state.getLifetime() * 0.9) {
             f = Mth.lerp((float) state.tickCount / 20, 1.0f, 0.0f);
             f = Mth.clamp(f, 1.0f, 0.0f);
             f *= f;
