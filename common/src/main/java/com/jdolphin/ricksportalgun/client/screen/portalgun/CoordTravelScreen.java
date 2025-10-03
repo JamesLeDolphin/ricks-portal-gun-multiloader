@@ -133,7 +133,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.EXTRA_DIM)) {
             this.randomiseDim.active = false;
             this.dimInput.setEditable(false);
-            this.dimInput.getSuggestionList().active = false;
+            this.dimInput.getSuggestionList().visible = false;
         }
         if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_WAYPOINT)) {
             this.waypoints.active = false;

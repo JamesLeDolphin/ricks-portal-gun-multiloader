@@ -6,20 +6,18 @@ import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
-import com.jdolphin.ricksportalgun.common.recipe.WorkbenchRecipeInput;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -69,6 +67,10 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         };
     }
 
+    public List<ItemStack> ingredients() {
+        return items.subList(0, 4);
+    }
+
     public @NotNull AbstractContainerMenu createMenu(int pContainerId, Inventory inventory) {
         return menuType.fac.create(pContainerId, inventory, this, this.data, ContainerLevelAccess.create(this.level, this.worldPosition));
     }
@@ -115,9 +117,9 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private boolean craftItem() {
-        Optional<RecipeHolder<PortalGunWorkbenchRecipe>> holder = getCurrentRecipe();
+        Optional<PortalGunWorkbenchRecipe> holder = getCurrentRecipe();
         if (holder.isPresent()) {
-            PortalGunWorkbenchRecipe recipe = holder.get().value();
+            PortalGunWorkbenchRecipe recipe = holder.get();
 
             ItemStack output = recipe.getResult();
             ItemStack result = output.copy();
@@ -128,7 +130,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
                 this.setItem(OUTPUT_SLOT, result);
                 return true;
             } else {
-                if (ItemStack.isSameItemSameComponents(inOutputSlot, result)) {
+                if (ItemStack.matches(inOutputSlot, result)) {
                     int i = inOutputSlot.getCount();
                     int j = result.getCount();
                     result.setCount(i + j);
@@ -150,7 +152,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         List<ItemStack> stacks = recipe.getInputs();
         for (ItemStack stack : stacks) {
             for (ItemStack invStack : this.items) {
-                if (ItemStack.isSameItemSameComponents(stack, invStack)) {
+                if (ItemStack.matches(stack, invStack)) {
                     int i = stack.getCount();
                     int j = invStack.getCount();
                     int result = Math.max(j - i, 0);
@@ -172,19 +174,21 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private boolean hasRecipe() {
-        Optional<RecipeHolder<PortalGunWorkbenchRecipe>> recipe = getCurrentRecipe();
+        Optional<PortalGunWorkbenchRecipe> recipe = getCurrentRecipe();
         if (recipe.isPresent()) {
-            ItemStack output = recipe.get().value().getResult();
+            ItemStack output = recipe.get().getResult();
             return this.canPlaceItem(OUTPUT_SLOT, output);
         }
         return false;
     }
 
-    private Optional<RecipeHolder<PortalGunWorkbenchRecipe>> getCurrentRecipe() {
-        if (this.level instanceof ServerLevel serverLevel) {
-            List<ItemStack> recipeItems = items.subList(0, 3);
-            return serverLevel.getRecipeManager().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, new WorkbenchRecipeInput(recipeItems), serverLevel);
-        } return Optional.empty();
+    private Optional<PortalGunWorkbenchRecipe> getCurrentRecipe() {
+        SimpleContainer inventory = new SimpleContainer(4);
+        for (int i = 0; i < 4; i++) {
+            ItemStack stack = this.items.get(i);
+            inventory.setItem(i, stack);
+        }
+        return this.level.getRecipeManager().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, inventory, level);
     }
 
     @Override
