@@ -23,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +70,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
         return items.subList(0, 4);
     }
 
-    public @NotNull AbstractContainerMenu createMenu(int pContainerId, Inventory inventory) {
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory inventory) {
         return menuType.fac.create(pContainerId, inventory, this, this.data, ContainerLevelAccess.create(this.level, this.worldPosition));
     }
 

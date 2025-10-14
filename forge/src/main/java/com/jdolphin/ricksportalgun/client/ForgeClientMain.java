@@ -38,11 +38,13 @@ public class ForgeClientMain {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {
             if (PGKeyBinds.KEY_PORTAL_MENU.consumeClick()) {
+
                 Minecraft minecraft = Minecraft.getInstance();
                 LocalPlayer player = minecraft.player;
                 if (player != null) {
-                    ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
+                    ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+                    System.out.println(stack);
                     if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                         SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                         PGHelper.sendPacketToServer(packet);

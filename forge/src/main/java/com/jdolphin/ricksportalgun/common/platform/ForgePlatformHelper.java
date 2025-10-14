@@ -3,11 +3,12 @@ package com.jdolphin.ricksportalgun.common.platform;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,13 +45,13 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToServer(P packet) {
+    public <P extends PGServerPayload> void sendPacketToServer(P packet) {
         ForgePackets.sendToServer(packet);
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packets) {
-        ForgePackets.sendToPlayer(player, packets);
+    public <P extends PGPayload> void sendPacketToClient(ServerPlayer player, P... packet) {
+        ForgePackets.sendToPlayer(player, packet);
     }
 
     @Override

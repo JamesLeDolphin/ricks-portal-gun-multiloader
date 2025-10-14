@@ -13,7 +13,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import org.jetbrains.annotations.NotNull;
 
 public class SettingsScreen extends AbstractBaseScreen {
     private PGTextButton security, customization;
@@ -52,7 +51,7 @@ public class SettingsScreen extends AbstractBaseScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         PortalGunStyle style = getStyle();
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());

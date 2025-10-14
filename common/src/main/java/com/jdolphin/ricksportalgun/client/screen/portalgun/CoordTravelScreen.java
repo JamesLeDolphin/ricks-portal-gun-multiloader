@@ -28,7 +28,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -318,7 +317,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         return box.getValue().isEmpty() ? fallback : Integer.parseInt(box.getValue());
     }
 
-    private @NotNull BlockPos getCoords(LocalPlayer player) {
+    private BlockPos getCoords(LocalPlayer player) {
         int x = getInt(xInput, (int) player.getX());
         int y = getInt(yInput, (int) player.getY());
         int z = getInt(zInput, (int) player.getZ());

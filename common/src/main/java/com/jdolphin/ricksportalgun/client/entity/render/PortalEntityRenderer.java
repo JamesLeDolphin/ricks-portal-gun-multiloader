@@ -18,7 +18,6 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     }
 
     @Override
-    public void render(@NotNull PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
+    public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
         stack.pushPose();
         openAnimation(entity, stack);
         Direction direction = entity.getPortalDirection();

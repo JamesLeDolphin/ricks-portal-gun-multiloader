@@ -8,12 +8,11 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractWorkbenchMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
-    protected AbstractWorkbenchMenu(@Nullable MenuType<?> menuType, int containerId, ContainerLevelAccess access) {
+    protected AbstractWorkbenchMenu(MenuType<?> menuType, int containerId, ContainerLevelAccess access) {
         super(menuType, containerId);
         this.access = access;
     }

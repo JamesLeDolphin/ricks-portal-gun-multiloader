@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 public class SubetherBarrierScreen extends AbstractBaseScreen {
@@ -35,7 +34,7 @@ public class SubetherBarrierScreen extends AbstractBaseScreen {
                 .size(128, 20).pos(this.width / 2 + 8, this.height / 2 + 32).build());
     }
 
-    public void render(@NotNull GuiGraphics stack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics stack, int pMouseX, int pMouseY, float pPartialTick) {
         GuiHelper.drawWhiteCenteredString(stack, Component.translatable("menu.ricksportalgun.sub_ether_barrier"), this.width / 2, 30);
         GuiHelper.drawWhiteCenteredString(stack, Component.translatable("ricksportalgun.barrier_code", ""), this.width / 2, this.codeBox.getY() - 16);
         this.codeBox.render(stack, pMouseX, pMouseY, pPartialTick);

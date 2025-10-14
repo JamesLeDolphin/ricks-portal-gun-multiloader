@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.NotNull;
 
 public class Waypoint implements Comparable<Waypoint> {
     public static final Codec<Waypoint> CODEC;
@@ -107,7 +106,7 @@ public class Waypoint implements Comparable<Waypoint> {
     }
 
     @Override
-    public int compareTo(@NotNull Waypoint wp) {
+    public int compareTo(Waypoint wp) {
         return this.getBlockPos().compareTo(wp.getBlockPos()) + this.getDimension().compareTo(wp.getDimension()) + this.getName().compareTo(wp.getName());
     }
 

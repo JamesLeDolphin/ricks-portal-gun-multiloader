@@ -11,7 +11,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -183,7 +182,7 @@ public class SuggestionTextFieldWidget extends EditBox {
             }
 
             @Override
-            public void render(@NotNull GuiGraphics context, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            public void render(GuiGraphics context, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 SuggestionList wpList = this.list;
                 if (top > wpList.headerHeight ) {
                     this.button.setX(wpList.getLeft() + 2);

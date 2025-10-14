@@ -41,7 +41,7 @@ public class RicksPortalGunForgeMain {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
         bus.addListener(this::commonSetup);
         bus.addListener(this::buildContents);
-        bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
+        //bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
         bind(bus, Registries.BLOCK, PGBlocks::init);
         bind(bus, Registries.ITEM, PGItems::init);
         bind(bus, Registries.BLOCK_ENTITY_TYPE, PGBlockEntities::init);

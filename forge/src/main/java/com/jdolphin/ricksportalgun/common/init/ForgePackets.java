@@ -17,7 +17,9 @@ import java.util.function.Supplier;
 public class ForgePackets {
 
     static int index = 0;
-    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(PGHelper.id("main")).simpleChannel();
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            PGHelper.id("main"), () -> "1", "1"::equals,
+            "1"::equals);
 
     public static void init() {
         //Server bound

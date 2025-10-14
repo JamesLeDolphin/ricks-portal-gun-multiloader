@@ -33,9 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -171,7 +170,8 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    @ParametersAreNonnullByDefault
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
@@ -276,7 +276,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltips, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, Level pLevel, List<Component> tooltips, TooltipFlag pIsAdvanced) {
         CompoundTag tag = stack.getOrCreateTag();
         List<String> list = IWaypointStorage.getWaypoints(stack);
         if (!Screen.hasShiftDown()) {
@@ -295,17 +295,17 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public int getBarColor(@NotNull ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         return getColor(stack);
     }
 
     @Override
-    public boolean isBarVisible(@NotNull ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return getFuel(stack) < getMaxFuel(stack);
     }
 
     @Override
-    public int getBarWidth(@NotNull ItemStack stack) {
+    public int getBarWidth(ItemStack stack) {
         return Math.round((float)getFuel(stack) * 13.0F / (float)getMaxFuel(stack));
     }
 
@@ -354,7 +354,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
     }
 
     @Override
-    public int getColor(@NotNull ItemStack itemStack, int i) {
+    public int getColor(ItemStack itemStack, int i) {
         return getColor(itemStack);
     }
 }

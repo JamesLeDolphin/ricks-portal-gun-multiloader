@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -142,7 +141,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float v, int i, int i1) {
+    protected void renderBg(GuiGraphics graphics, float v, int i, int i1) {
         int i2 = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         graphics.blit(CONTAINER_LOCATION, i2, j, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);

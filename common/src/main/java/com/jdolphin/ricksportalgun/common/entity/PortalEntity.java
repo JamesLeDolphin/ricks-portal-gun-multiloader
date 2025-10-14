@@ -27,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -151,7 +150,7 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource damageSource, float v) {
+    public boolean hurt(DamageSource damageSource, float v) {
         return false;
     }
 

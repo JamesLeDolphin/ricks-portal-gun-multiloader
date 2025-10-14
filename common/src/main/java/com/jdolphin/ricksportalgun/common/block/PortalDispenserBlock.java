@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class PortalDispenserBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -33,7 +31,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof PortalDispenserBlockEntity dispenser && placer != null) {
             dispenser.setDirection(placer.getDirection());
@@ -93,7 +91,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
         }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
        BlockEntity entity = level.getBlockEntity(pos);
        if (entity instanceof PortalDispenserBlockEntity block) {
             player.openMenu(block);
@@ -103,7 +101,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return PGBlockEntities.PORTAL_DISPENSER.create(pos, state);
     }
 }

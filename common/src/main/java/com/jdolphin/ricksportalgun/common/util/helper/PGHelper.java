@@ -71,11 +71,9 @@ public class PGHelper {
     }
 
     public static InteractionHand getPortalGunHand(Player player) {
-        InteractionHand hand;
-        if (!player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
-            hand = InteractionHand.OFF_HAND;
-        } else hand = InteractionHand.MAIN_HAND;
-        return hand;
+        if (player.getMainHandItem().is(PGTags.Items.PORTAL_GUNS)) {
+            return InteractionHand.MAIN_HAND;
+        }return InteractionHand.OFF_HAND;
     }
 
     public static InteractionHand getOppositeHand(InteractionHand hand) {
