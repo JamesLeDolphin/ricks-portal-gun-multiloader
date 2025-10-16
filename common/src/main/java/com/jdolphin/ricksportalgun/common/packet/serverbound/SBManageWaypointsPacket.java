@@ -28,6 +28,11 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
         }
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static SBManageWaypointsPacket decode(FriendlyByteBuf buf) {
         String wp = buf.readUtf();
         boolean delete = buf.readBoolean();

@@ -16,6 +16,11 @@ public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implemen
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeBlockPos(pos).writeUtf(dim);
     }

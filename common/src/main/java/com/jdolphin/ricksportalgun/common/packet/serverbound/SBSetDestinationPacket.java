@@ -24,6 +24,11 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeBlockPos(pos).writeUtf(dim);
     }

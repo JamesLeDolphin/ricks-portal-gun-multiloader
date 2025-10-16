@@ -22,6 +22,11 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGServe
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         style.toNetwork(buf);
     }

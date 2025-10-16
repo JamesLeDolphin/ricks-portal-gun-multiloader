@@ -20,6 +20,11 @@ public record SBSetPortalGunTypePacket(ResourceLocation loc, int tints) implemen
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeResourceLocation(loc).writeInt(tints);
     }

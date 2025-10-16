@@ -95,6 +95,11 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
         }
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static SBLocatePacket decode(FriendlyByteBuf buf) {
         String name = buf.readUtf();
         int value = buf.readInt();

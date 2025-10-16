@@ -137,15 +137,17 @@ public class SuggestionTextFieldWidget extends EditBox {
         }
 
         public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            int x1 = this.getLeft();
-            int y1 = this.getTop();
-            int x2 = this.getRight();
-            int y2 = this.getBottom();
-            graphics.enableScissor(x1, y1, x2, y2);
-            graphics.fill(x1, y1, x2, y2, -805306368);
-            graphics.disableScissor();
-            graphics.renderOutline(x1, y1, this.getWidth(), this.getHeight(), borderColor);
-            super.render(graphics, mouseX, mouseY, delta);
+            if (this.visible) {
+                int x1 = this.getLeft();
+                int y1 = this.getTop();
+                int x2 = this.getRight();
+                int y2 = this.getBottom();
+                graphics.enableScissor(x1, y1, x2, y2);
+                graphics.fill(x1, y1, x2, y2, -805306368);
+                graphics.disableScissor();
+                graphics.renderOutline(x1, y1, this.getWidth(), this.getHeight(), borderColor);
+                super.render(graphics, mouseX, mouseY, delta);
+            }
         }
 
         public int getRowWidth() {

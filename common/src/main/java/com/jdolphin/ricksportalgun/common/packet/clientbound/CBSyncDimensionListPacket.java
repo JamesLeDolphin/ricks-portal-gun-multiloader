@@ -18,6 +18,11 @@ public record CBSyncDimensionListPacket(List<String> dimensions) implements PGPa
         buf.writeCollection(dimensions, FriendlyByteBuf::writeUtf);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("sync_dimensions");
     }

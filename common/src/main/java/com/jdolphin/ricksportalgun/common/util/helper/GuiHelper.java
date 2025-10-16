@@ -33,7 +33,6 @@ public class GuiHelper {
             graphics.drawCenteredString(font, formattedcharsequence, x, y, color);
             y += 9;
         }
-
     }
 
     public static void renderScrollingString(GuiGraphics guiGraphics, Component text, int minX, int minY, int maxX, int maxY, int color) {

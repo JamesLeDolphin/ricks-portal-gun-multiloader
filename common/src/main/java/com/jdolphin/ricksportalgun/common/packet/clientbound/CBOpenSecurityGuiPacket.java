@@ -18,6 +18,11 @@ public record CBOpenSecurityGuiPacket(List<String> strings) implements PGPayload
         buf.writeCollection(strings, FriendlyByteBuf::writeUtf);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("open_client_security_screen");
     }

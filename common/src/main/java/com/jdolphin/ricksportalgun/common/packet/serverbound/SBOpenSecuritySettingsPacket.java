@@ -29,6 +29,11 @@ public record SBOpenSecuritySettingsPacket() implements PGServerPayload {
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {}
 
     public static ResourceLocation getID() {

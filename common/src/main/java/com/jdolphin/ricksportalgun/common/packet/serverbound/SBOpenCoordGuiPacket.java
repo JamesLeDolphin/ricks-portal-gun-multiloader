@@ -25,6 +25,11 @@ public record SBOpenCoordGuiPacket() implements PGServerPayload {
         }
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static SBOpenCoordGuiPacket decode(FriendlyByteBuf buf) {
         return new SBOpenCoordGuiPacket();
     }

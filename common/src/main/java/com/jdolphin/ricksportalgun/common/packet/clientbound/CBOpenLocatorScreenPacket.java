@@ -22,6 +22,11 @@ public record CBOpenLocatorScreenPacket(List<String> playerList, List<String> bi
         buf.writeCollection(structureList, FriendlyByteBuf::writeUtf);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("open_client_locator_screen");
     }

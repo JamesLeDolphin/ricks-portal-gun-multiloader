@@ -56,6 +56,11 @@ public record SBOpenLocatorScreenPacket() implements PGServerPayload {
         }
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static SBOpenLocatorScreenPacket decode(FriendlyByteBuf buf) {
         return new SBOpenLocatorScreenPacket();
     }

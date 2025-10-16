@@ -30,6 +30,10 @@ public record SBActivateSelfDestructPacket() implements PGServerPayload {
 
         }
     }
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
 
     public static SBActivateSelfDestructPacket decode(FriendlyByteBuf buf) {
         return new SBActivateSelfDestructPacket();

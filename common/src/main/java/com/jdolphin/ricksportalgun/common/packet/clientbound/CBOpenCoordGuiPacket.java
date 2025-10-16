@@ -21,4 +21,9 @@ public record CBOpenCoordGuiPacket(List<String> strings) implements PGPayload {
     public static ResourceLocation getID() {
         return PGHelper.id("open_client_coord_menu");
     }
+
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
 }

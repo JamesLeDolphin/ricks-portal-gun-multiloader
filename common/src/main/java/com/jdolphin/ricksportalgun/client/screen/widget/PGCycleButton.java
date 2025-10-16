@@ -14,6 +14,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
 import java.util.Collection;
@@ -70,9 +71,15 @@ public class PGCycleButton<T> extends AbstractButton {
             super.renderWidget(graphics, mouseX, mouseY, delta);
         }
         if (renderArrows) {
-            graphics.blit(ARROW_TEXTURES, this.getX() + 1, this.getY() + this.height - 18, 0, 0, 16, 16, 32, 16, this.color);
+            float r = FastColor.ARGB32.red(color) / 255f;
+            float g = FastColor.ARGB32.green(color) / 255f;
+            float b = FastColor.ARGB32.blue(color) / 255f;
+            float a = FastColor.ARGB32.alpha(color) / 255f;
+            graphics.setColor(r,g, b, a);
+            graphics.blit(ARROW_TEXTURES, this.getX() + 1, this.getY() + this.height - 18, 16, 16, 0, 0, 16, 16, 32, 16);
             graphics.blit(ARROW_TEXTURES,
-                    this.getX() + this.width - 17, this.getY() + this.height - 18, 16, 0, 16, 16, 32, 16, this.color);
+                    this.getX() + this.width - 17, this.getY() + this.height - 18, 16, 16, 16, 0, 16, 16, 32, 16);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
         Component component = this.isHovered() ? ComponentUtils.mergeStyles(this.getMessage().copy(), Style.EMPTY.withUnderlined(true)) : this.getMessage();
         renderScrollingString(graphics, Minecraft.getInstance().font, component, this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), this.color);

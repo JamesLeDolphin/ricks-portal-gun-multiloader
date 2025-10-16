@@ -29,6 +29,11 @@ public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGSer
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeUtf(code);
         buf.writeBlockPos(pos);

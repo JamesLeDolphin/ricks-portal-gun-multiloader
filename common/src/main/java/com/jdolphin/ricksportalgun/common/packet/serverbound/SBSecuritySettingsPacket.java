@@ -46,6 +46,11 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
         return new SBSecuritySettingsPacket(lock, name, code, selfDestruct);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public void encode(FriendlyByteBuf buf) {
         buf.writeBoolean(lock);
         buf.writeUtf(name);

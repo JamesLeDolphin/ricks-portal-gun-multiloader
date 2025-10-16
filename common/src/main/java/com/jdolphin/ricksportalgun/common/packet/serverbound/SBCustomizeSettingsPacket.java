@@ -26,6 +26,11 @@ public record SBCustomizeSettingsPacket(double size, int age) implements PGServe
     }
 
     @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
+    @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeDouble(size);
         buf.writeInt(age);

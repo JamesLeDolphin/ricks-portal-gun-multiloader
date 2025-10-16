@@ -44,6 +44,11 @@ public record SBCoordCheckerPacket(String dim) implements PGServerPayload {
         buf.writeUtf(dim);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("coord_check");
     }

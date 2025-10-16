@@ -17,6 +17,11 @@ public record CBOpenBarrierGuiPacket(BlockPos pos) implements PGPayload {
         buf.writeBlockPos(pos);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("open_menu");
     }

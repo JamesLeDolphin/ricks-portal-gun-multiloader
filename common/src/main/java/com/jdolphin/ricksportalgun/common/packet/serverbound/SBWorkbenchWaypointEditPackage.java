@@ -19,6 +19,11 @@ public record SBWorkbenchWaypointEditPackage(Waypoint waypoint, boolean leftSide
         buf.writeUtf(waypoint.getWaypointString()).writeBoolean(leftSide).writeBoolean(copy).writeBoolean(delete);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("manage_waypoint_workbench");
     }

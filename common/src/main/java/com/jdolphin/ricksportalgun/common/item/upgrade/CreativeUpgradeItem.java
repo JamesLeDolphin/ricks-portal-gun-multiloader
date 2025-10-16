@@ -1,6 +1,8 @@
 package com.jdolphin.ricksportalgun.common.item.upgrade;
 
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,14 +15,15 @@ public class CreativeUpgradeItem extends AbstractUpgradeItem {
 
     @Override
     public InteractionResult applyUpgrade(Player player, ItemStack stack, PortalGunItem item) {
-        //stack.set(PGDataComponents.HAS_WAYPOINTS, true);
-        //stack.set(PGDataComponents.EXTRA_DIMENSIONS, true);
-        //stack.set(PGDataComponents.EXTRA_DIMENSIONS_2, true);
-        //stack.set(PGDataComponents.SETTINGS, true);
-        //stack.set(PGDataComponents.BIOME_LOC, true);
-        //stack.set(PGDataComponents.PLAYER_LOC, true);
-        //stack.set(PGDataComponents.STRUCTURE_LOC, true);
-        //stack.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putBoolean(PGNbtKeys.UPGRADE_PLAYER_LOC, true);
+        tag.putBoolean(PGNbtKeys.UPGRADE_BIOME_LOC, true);
+        tag.putBoolean(PGNbtKeys.UPGRADE_STRUCTURE_LOC, true);
+        tag.putBoolean(PGNbtKeys.UPGRADE_WAYPOINT, true);
+        tag.putBoolean(PGNbtKeys.EXTRA_DIM, true);
+        tag.putBoolean(PGNbtKeys.EXTRA_DIM_2, true);
+        tag.putBoolean(PGNbtKeys.SETTINGS, true);
+        tag.putInt(PGNbtKeys.TAG_MAX_FUEL, 128);
         return InteractionResult.SUCCESS;
     }
 }

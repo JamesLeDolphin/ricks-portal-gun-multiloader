@@ -25,6 +25,11 @@ public record SBSetWorkbenchTypePacket(int id) implements PGServerPayload {
         buf.writeInt(id);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("set_workbench_type");
     }

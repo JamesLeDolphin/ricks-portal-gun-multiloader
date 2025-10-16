@@ -28,6 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -185,7 +186,6 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                     return InteractionResultHolder.success(stack);
                 }
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
-
                     Vec3 loc = hitResult.getLocation();
                     Vec3 newLoc = loc;
                     if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
@@ -197,16 +197,17 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
 
                     Direction dir = hitResult.getDirection();
                     Direction facing = player.getDirection();
+
                     float size = tag.contains(PGNbtKeys.TAG_SIZE) ? tag.getFloat(PGNbtKeys.TAG_SIZE) : 1.0f;
                     int age = tag.contains(PGNbtKeys.TAG_AGE) ? tag.getInt(PGNbtKeys.TAG_AGE) : PGHelper.seconds(10);
 
                     PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
                     PortalEntity exPortal = new PortalEntity(level, getHopCoords(stack).above().getCenter(), dir, facing, size);
 
-                    ResourceLocation dim = tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : null;
-                    ResourceKey<Level> key = LevelHelper.getWorldKey(dim != null ? dim : Level.OVERWORLD.location());
+                    ResourceLocation dim = tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : Level.OVERWORLD.location();
+                    ResourceKey<Level> key = LevelHelper.getWorldKey(dim);
                     ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
-
+                    serverlevel.getChunkSource().updateChunkForced(new ChunkPos(getHopCoords(stack)), true);
                     doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
 
                     if (stack.hasCustomHoverName()) {
@@ -228,12 +229,6 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                             portal.setYRot(player.getYRot());
                         }
                         level.addFreshEntity(portal);
-                        player.awardStat(Stats.ITEM_USED.get(this));
-                        player.getCooldowns().addCooldown(this, 20 * 3);
-
-                        if (!player.isCreative()) {
-                            lowerFuel(stack, 1);
-                        }
 
                         return InteractionResultHolder.success(stack);
                     }
@@ -242,19 +237,19 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                             if (!portal.isFlat()) {
                                 doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
                             }
-                            serverlevel.addFreshEntity(exPortal);
-                            level.addFreshEntity(portal);
 
-                            player.awardStat(Stats.ITEM_USED.get(this));
-                            player.getCooldowns().addCooldown(this, 20 * 3);
-                            if (!player.isCreative()) {
-                                lowerFuel(stack, 1);
-                            }
+                            serverlevel.getServer().executeIfPossible(() -> serverlevel.addFreshEntity(exPortal));
+                            level.addFreshEntity(portal);
                         } else {
                             PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
                             return InteractionResultHolder.fail(stack);
                         }
                     } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
+                    player.awardStat(Stats.ITEM_USED.get(this));
+                    player.getCooldowns().addCooldown(this, 20 * 3);
+                    if (!player.isCreative()) {
+                        lowerFuel(stack, 1);
+                    }
                 }
             }
             return InteractionResultHolder.success(stack);

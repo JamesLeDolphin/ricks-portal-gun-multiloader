@@ -102,10 +102,10 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
 
         VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
         int color = entity.getColor();
-        float r = FastColor.ARGB32.red(color);
-        float g = FastColor.ARGB32.green(color);
-        float b = FastColor.ARGB32.blue(color);
-        entity.getName();
+        float r = FastColor.ARGB32.red(color) / 255f;
+        float g = FastColor.ARGB32.green(color) / 255f;
+        float b = FastColor.ARGB32.blue(color) / 255f;
+
         if (names.contains(entity.getName().getString().toLowerCase())) {
             int i = entity.tickCount / 25 + entity.getId();
             int j = DyeColor.values().length;
@@ -121,7 +121,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
         this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, r, g, b, 1);
 
         stack.popPose();
-        super.render(entity, yaw, partialTick, stack, source, packedLight);
+        super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
     }
 
 

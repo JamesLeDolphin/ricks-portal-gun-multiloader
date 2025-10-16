@@ -24,6 +24,11 @@ public record SBColourPacket(int colour) implements PGServerPayload {
         buf.writeInt(this.colour);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return getID();
+    }
+
     public static ResourceLocation getID() {
         return PGHelper.id("color");
     }

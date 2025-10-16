@@ -44,7 +44,6 @@ public class ForgeClientMain {
                 if (player != null) {
 
                     ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-                    System.out.println(stack);
                     if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                         SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
                         PGHelper.sendPacketToServer(packet);

@@ -2,13 +2,16 @@ package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
+import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlags;
@@ -40,14 +43,18 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToServer(P packet) {
-        ClientPlayNetworking.send(packet);
+    public <P extends PGServerPayload> void sendPacketToServer(P packet) {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        packet.encode(buf);
+        ClientPlayNetworking.send(packet.getId(), buf);
     }
 
     @Override
-    public <P extends CustomPacketPayload> void sendPacketToClient(ServerPlayer player, P... packets) {
+    public <P extends PGPayload> void sendPacketToClient(ServerPlayer player, P... packets) {
         for (P packet : packets) {
-            ServerPlayNetworking.send(player, packet);
+            FriendlyByteBuf buf = PacketByteBufs.create();
+            packet.encode(buf);
+            ServerPlayNetworking.send(player, packet.getId(), buf);
         }
     }
 
