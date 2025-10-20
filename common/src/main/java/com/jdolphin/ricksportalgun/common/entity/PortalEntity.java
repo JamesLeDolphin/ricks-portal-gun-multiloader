@@ -62,7 +62,6 @@ public class PortalEntity extends Entity {
     private String targetDim;
     private ServerLevel destinationLevel;
     private int delay = 0;
-    public int lifetime = 20 * 10;
 
     public boolean exists() {
         return exists;
@@ -285,7 +284,7 @@ public class PortalEntity extends Entity {
                 return;
             }
             if (destinationLevel == null) {
-                if (!this.bootleg && !LevelHelper.isBlenderDestination(getHopDim())) {
+                if (!isBootleg() && !LevelHelper.isBlenderDestination(getHopDim())) {
                     ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(getHopDim()));
                     destinationLevel = LevelHelper.getServerWorld(this.level(), key);
                 } else {
@@ -300,22 +299,22 @@ public class PortalEntity extends Entity {
                 targetVec = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
             }
 
-            boolean shouldHurt = this.bootleg || LevelHelper.isBlenderDestination(getHopDim());
+            boolean shouldHurt = isBootleg() || LevelHelper.isBlenderDestination(getHopDim());
             if (shouldHurt || (destinationLevel != null && targetPos != null)) {
                 List<Entity> entityList = getEntitiesNearby(this, 0.3D);
                 if (entityList != null && !entityList.isEmpty()) {
                     for (Entity nearby : entityList) {
                         if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger() && delay == 0) {
+                            if (!shouldHurt) {
+                                Set<RelativeMovement> relativeSet = new HashSet<>();
+                                relativeSet.add(RelativeMovement.Y_ROT);
+                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, relativeSet, nearby.getYRot(), nearby.getXRot());
 
-                           Set<RelativeMovement> relativeSet = new HashSet<>();
-                           relativeSet.add(RelativeMovement.Y_ROT);
-                           nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, relativeSet, nearby.getYRot(), nearby.getXRot());
-
-                            nearby.resetFallDistance();
-                            nearby.setPortalCooldown();
-                            if (shouldHurt) {
-                                nearby.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG),
-                                        1000000);
+                                nearby.resetFallDistance();
+                                nearby.setPortalCooldown();
+                            } else {
+                                if (nearby instanceof ServerPlayer player) player.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Float.MAX_VALUE);
+                                else nearby.kill();
                             }
                         }
                     }

@@ -109,6 +109,7 @@
   "notice.ricksportalgun.upgrade": "Upgrade applied successfully",
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
+  "error.ricksportalgun.security": "Error 403: Portal Gun locked!",
   "error.ricksportalgun.destination.unreachable": "Error 401: Destination is unreachable!",
   "error.ricksportalgun.dimension.disabled": "Error 403: You are forbidden from entering this dimension!",
   "error.ricksportalgun.destination_not_found": "Error 404: Destination level not found!",

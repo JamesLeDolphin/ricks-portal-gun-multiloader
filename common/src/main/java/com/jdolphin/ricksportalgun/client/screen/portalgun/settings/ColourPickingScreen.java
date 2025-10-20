@@ -19,6 +19,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -72,9 +73,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
                     int rgb = tag.contains(PGNbtKeys.TAG_DEFAULT_COLOR) ? tag.getInt(PGNbtKeys.TAG_DEFAULT_COLOR) : Color.GREEN.getRGB();
 
                     try {
-                        this.r.setValue(new Color(rgb).getRed());
-                        this.g.setValue(new Color(rgb).getRed());
-                        this.b.setValue(new Color(rgb).getRed());
+                        this.r.setValue(FastColor.ARGB32.red(rgb));
+                        this.g.setValue(FastColor.ARGB32.green(rgb));
+                        this.b.setValue(FastColor.ARGB32.blue(rgb));
                     } catch (Exception e) {
                         PGConstants.LOGGER.warn(e.getMessage());
                     }
@@ -133,8 +134,16 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
         RenderSystem.disableBlend();
         int x = 64, y = 82, multiplier = size.getValueInt();
+        int color = getColor();
+        float r = FastColor.ARGB32.red(color) / 255f;
+        float g = FastColor.ARGB32.green(color) / 255f;
+        float b = FastColor.ARGB32.blue(color) / 255f;
+        float a = FastColor.ARGB32.alpha(color) / 255f;
+
+        graphics.setColor(r, g, b, a);
         graphics.blit(PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
-                this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y, this.getColor());
+                this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y);
+        graphics.setColor(1, 1, 1, 1);
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
