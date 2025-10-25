@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
@@ -182,12 +181,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private Optional<PortalGunWorkbenchRecipe> getCurrentRecipe() {
-        SimpleContainer inventory = new SimpleContainer(4);
-        for (int i = 0; i < 4; i++) {
-            ItemStack stack = this.items.get(i);
-            inventory.setItem(i, stack);
-        }
-        return this.level.getRecipeManager().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, inventory, level);
+        return level.getRecipeManager().getRecipeFor(PGRecipeTypes.WORKBENCH_TYPE, this, level);
     }
 
     @Override

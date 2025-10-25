@@ -18,7 +18,6 @@ public class SubetherBarrierScreen extends AbstractBaseScreen {
     public SubetherBarrierScreen(BlockPos pos) {
         super("menu.ricksportalgun.sub_ether_barrier");
         this.pos = pos;
-        System.out.println(pos);
     }
 
     public void init() {

@@ -94,7 +94,6 @@ public class CreateWaypointScreen extends AbstractBaseScreen {
         if (waypointName.getValue().isEmpty()) return;
         Waypoint waypoint = new Waypoint(pos, LevelHelper.getPlayerDimensionLocation(player).toString(), waypointName.getValue());
         SBManageWaypointsPacket packet = new SBManageWaypointsPacket(waypoint.getWaypointString(), false);
-        System.out.println("Sent");
         PGHelper.sendPacketToServer(packet);
         this.minecraft.setScreen(new WaypointScreen());
     }

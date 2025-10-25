@@ -42,11 +42,11 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
     public boolean matches(Container container, Level level) {
         if (!level.isClientSide && container instanceof GunWorkbenchBlockEntity workbench) {
             List<ItemStack> ingredients = workbench.ingredients();
-            int count = ingredients.stream().filter(stack -> !stack.isEmpty()).toList().size();
+            int count = ingredients.stream().toList().size();
             if (count == this.items.size()) {
                 for (int i = 0; i < this.items.size(); i++) {
                     ItemStack stack = ingredients.get(i);
-                    ItemStack ingredient = this.items.get(i);;
+                    ItemStack ingredient = this.items.get(i);
                     if (stack.getCount() < ingredient.getCount()) {
                         return false;
                     }
