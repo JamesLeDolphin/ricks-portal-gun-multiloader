@@ -201,7 +201,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                         Direction playerDir = player.getDirection();
 
                         float size = tag.contains(PGNbtKeys.TAG_SIZE) ? tag.getFloat(PGNbtKeys.TAG_SIZE) : 1.0f;
-                        int age = tag.contains(PGNbtKeys.TAG_AGE) ? tag.getInt(PGNbtKeys.TAG_AGE) : PGHelper.seconds(10);
+                        int age = tag.contains(PGNbtKeys.TAG_AGE) ? tag.getInt(PGNbtKeys.TAG_AGE) : 10;
 
                         if (serverlevel != null) {
                             if (LevelHelper.canPortalTo(serverlevel, destination, stack) && LevelHelper.canPortalTo(((ServerLevel) level), hitResult.getBlockPos(), stack)) {
@@ -212,7 +212,12 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                                     serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
                                     PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
 
-                                    doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
+                                    boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
+                                    doForBoth(entity -> {
+                                        entity.setLifetime(PGHelper.seconds(age));
+                                        entity.setColor(getColor(stack));
+                                        entity.setBootleg(bootleg);
+                                    }, portal, exPortal);
 
                                     if (stack.hasCustomHoverName()) {
                                         Component component = stack.getHoverName();
@@ -221,11 +226,6 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                                     }
                                     portal.setHopLocation(dim, destination);
                                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
-
-                                    doForBoth(entity -> entity.setColor(getColor(stack)), portal, exPortal);
-
-                                    boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
-                                    doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
 
                                     if (!portal.isFlat()) doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
 
