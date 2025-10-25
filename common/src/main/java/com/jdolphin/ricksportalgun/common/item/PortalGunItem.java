@@ -247,7 +247,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                             }
                         } else if (LevelHelper.isBlenderDestination(dim.toString())) {
                             PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
-                            portal.setLifetime(age);
+                            portal.setLifetime(PGHelper.seconds(age));
 
                             if (stack.hasCustomHoverName()) {
                                 Component component = stack.getHoverName();

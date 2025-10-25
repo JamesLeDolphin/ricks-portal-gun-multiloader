@@ -57,7 +57,7 @@ public class ForgeClientMain {
     public static class ClientModBusEvents {
 
         @SubscribeEvent
-        public void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
             event.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
         }
 
