@@ -288,6 +288,11 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         } else return false;
     }
 
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        this.setScrollAmount(this.getScrollAmount() - delta * (double)this.itemHeight / (double)2.0F);
+        return true;
+    }
+
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
         if (this.getFocused() != null) {
             this.getFocused().mouseReleased(pMouseX, pMouseY, pButton);

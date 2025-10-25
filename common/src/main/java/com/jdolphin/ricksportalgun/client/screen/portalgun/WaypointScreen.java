@@ -73,7 +73,7 @@ public class WaypointScreen extends AbstractBaseScreen {
 
         GuiHelper.renderTooltip(graphics, Component.translatable("ricksportalgun.button.waypoint.new"), addWaypoint);
         GuiHelper.renderOutline(graphics, addWaypoint, style.highlightColor());
-        //GuiHelper.renderOutline(graphics, waypointList, style.highlightColor());
+        graphics.renderOutline(waypointList.getLeft(), waypointList.getTop(), waypointList.getWidth(), waypointList.getHeight(), style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 
         if (waypointList != null) {

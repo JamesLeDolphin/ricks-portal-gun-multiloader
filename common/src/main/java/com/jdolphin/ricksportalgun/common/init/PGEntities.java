@@ -3,8 +3,6 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.entity.ExplosiveItemEntity;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -34,9 +32,5 @@ public class PGEntities {
         for (var e : ALL.entrySet()) {
             r.accept(e.getValue(), e.getKey());
         }
-    }
-
-    private static ResourceKey<EntityType<?>> keyOf(String id) {
-        return ResourceKey.create(Registries.ENTITY_TYPE, PGHelper.id(id));
     }
 }

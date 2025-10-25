@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -99,7 +100,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public boolean stillValid(Player player) {
-        return false;
+        return Container.stillValidBlockEntity(this, player);
     }
 
     @Override

@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public record SBSetBarrierCodePacket(String code, BlockPos pos) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
-        Level level = player.serverLevel();
+        Level level = player.level();
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof SubetherBarrierBlockEntity barrier) {
             barrier.setCode(code);

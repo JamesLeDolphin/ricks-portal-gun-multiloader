@@ -37,13 +37,12 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
         this.buttonWidth = buttonWidth;
         this.buttonHeight = buttonHeight;
         this.refreshEntries(stack);
+        this.setRenderScrollbar(false);
     }
 
     public void setStyle(PortalGunStyle style) {
         this.style = style;
     }
-
-    protected void renderListBackground(GuiGraphics guiGraphics) {}
 
     public void refreshEntries(ItemStack stack) {
         this.children().clear();

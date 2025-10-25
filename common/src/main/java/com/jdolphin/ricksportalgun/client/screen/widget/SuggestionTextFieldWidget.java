@@ -99,12 +99,14 @@ public class SuggestionTextFieldWidget extends EditBox {
     public static class SuggestionList extends ScrollableList<SuggestionList.SuggestionEntry> {
         private final SuggestionTextFieldWidget widget;
         private int borderColor = Color.WHITE.getRGB();
+
         public SuggestionList(Minecraft minecraft, int width, int height, int x, int y, int itemHeight, SuggestionTextFieldWidget widget) {
             super(minecraft, width, height, x, y, itemHeight);
             this.widget = widget;
 
             List<String> suggestions = widget.suggestions;
             setSuggestions(suggestions);
+            this.setRenderScrollbar(false);
         }
 
         public void setSuggestions(List<String> suggestions) {

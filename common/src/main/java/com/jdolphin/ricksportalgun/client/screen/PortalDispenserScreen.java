@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.List;
@@ -92,12 +93,10 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
                 BlockPos pos = new BlockPos(x, y, z);
                 SBSetDispenserDestinationPacket packet = new SBSetDispenserDestinationPacket(pos, dim);
                 PGHelper.sendPacketToServer(packet);
-
+                this.onClose();
             } catch (Exception e) {
                 dimInput.setSuggestion(" §c" + e.getLocalizedMessage());
             }
-            this.onClose();
-
         }).pos(this.width / 2 - 32, this.height / 2 - 32).size(112, 16).build());
     }
 
@@ -113,8 +112,8 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
-            this.minecraft.player.closeContainer();
+        if (GLFW.GLFW_KEY_ESCAPE == keyCode) {
+            this.onClose();
         }
         return this.dimInput.keyPressed(keyCode, scanCode, modifiers) || this.dimInput.canConsumeInput() || super.keyPressed(keyCode, scanCode, modifiers);
     }
