@@ -1,0 +1,19 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "ricksportalgun:disc_template"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "minecraft:chorus_fruit",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:upgrade_dimension_mk2",
+    "count": 1
+  }
+}

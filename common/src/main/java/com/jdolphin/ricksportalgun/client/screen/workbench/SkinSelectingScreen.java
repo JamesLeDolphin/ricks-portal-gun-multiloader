@@ -101,7 +101,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-        this.renderTooltip(graphics, mouseX, mouseY);
+
         ItemStack stack = getStack(36);
         if (!stack.isEmpty() && stack.is(PGTags.Items.PORTAL_GUNS)) {
             List<PortalGunItem> list = PGItems.PORTAL_GUNS;
@@ -120,7 +120,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
                 graphics.disableScissor();
                 this.select.render(graphics, mouseX, mouseY, delta);
             }
-            this.renderTooltip(graphics, mouseX, mouseY);
+
 
             this.next.setTexture(next.isHovered() ? NEXT_HL : NEXT);
             this.previous.setTexture(previous.isHovered() ? PREVIOUS_HL : PREVIOUS);
@@ -128,6 +128,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
             renderPortalGunType(graphics, mouseX, mouseY, delta);
 
         }
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     private void renderPortalGunType(GuiGraphics graphics, int mouseX, int mouseY, float delta) {

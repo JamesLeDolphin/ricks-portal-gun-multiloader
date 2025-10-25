@@ -1,0 +1,23 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "minecraft:end_crystal"
+    },
+    {
+      "item": "ricksportalgun:portal_fluid"
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 2
+    },
+    {
+      "item": "ricksportalgun:circuitboard",
+      "count": 3
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:portal_gun",
+    "count": 1
+  }
+}

@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGRecipeSerializers;
 import com.jdolphin.ricksportalgun.common.init.PGRecipeTypes;
@@ -11,7 +12,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
@@ -38,7 +42,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
     public boolean matches(Container container, Level level) {
         if (!level.isClientSide && container instanceof GunWorkbenchBlockEntity workbench) {
             List<ItemStack> ingredients = workbench.ingredients();
-            int count = ingredients.stream().filter(ItemStack::isEmpty).toList().size();
+            int count = ingredients.stream().filter(stack -> !stack.isEmpty()).toList().size();
             if (count == this.items.size()) {
                 for (int i = 0; i < this.items.size(); i++) {
                     ItemStack stack = ingredients.get(i);
@@ -92,15 +96,35 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
         @Override
         public PortalGunWorkbenchRecipe fromJson(ResourceLocation resourceLocation, JsonObject json) {
-            ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack output = itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 
             NonNullList<ItemStack> inputs = NonNullList.withSize(4, ItemStack.EMPTY);
             for (int i = 0; i < ingredients.size(); i++) {
-                inputs.set(i, ShapedRecipe.itemStackFromJson(ingredients.get(i).getAsJsonObject()));
+                inputs.set(i, itemStackFromJson(ingredients.get(i).getAsJsonObject()));
             }
             return new PortalGunWorkbenchRecipe(inputs, output);
+        }
+
+        public static ItemStack itemStackFromJson(JsonObject stackObject) {
+            Item item = ShapedRecipe.itemFromJson(stackObject);
+            ItemStack stack = item.getDefaultInstance();
+            if (stackObject.has("data")) {
+                JsonObject dataObject = stackObject.getAsJsonObject("data");
+                if (dataObject.has("potion")) {
+                    Potion potion = Potion.byName(GsonHelper.getAsString(dataObject, "potion"));
+                    PotionUtils.setPotion(stack, potion);
+                }
+            } else {
+                int i = GsonHelper.getAsInt(stackObject, "count", 1);
+                if (i < 1) {
+                    throw new JsonSyntaxException("Invalid output count: " + i);
+                } else {
+                    stack.setCount(i);
+                }
+            }
+            return stack;
         }
 
         @Override

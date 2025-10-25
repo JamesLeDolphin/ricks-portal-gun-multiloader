@@ -1,0 +1,23 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "ricksportalgun:disc_template"
+    },
+    {
+      "item": "minecraft:compass"
+    },
+    {
+      "item": "minecraft:cherry_sapling",
+      "count": 4
+    },
+    {
+      "item": "minecraft:weeping_vines",
+      "count": 16
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:upgrade_biome_locator",
+    "count": 1
+  }
+}

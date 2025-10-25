@@ -1,0 +1,23 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "ricksportalgun:disc_template"
+    },
+    {
+      "item": "minecraft:recovery_compass"
+    },
+    {
+      "item": "minecraft:ender_eye",
+      "count": 4
+    },
+    {
+      "item": "minecraft:end_crystal",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:upgrade_structure_locator",
+    "count": 1
+  }
+}

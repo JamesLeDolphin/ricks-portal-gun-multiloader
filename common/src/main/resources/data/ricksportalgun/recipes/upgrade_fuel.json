@@ -2,23 +2,23 @@
   "type": "ricksportalgun:portal_gun_workbench",
   "ingredients": [
     {
-      "id": "ricksportalgun:disc_template"
+      "item": "ricksportalgun:disc_template"
     },
     {
-      "id": "ricksportalgun:portal_fluid",
+      "item": "ricksportalgun:portal_fluid",
       "count": 4
     },
     {
-      "id": "minecraft:glowstone_dust",
+      "item": "minecraft:glowstone_dust",
       "count": 2
     },
     {
-      "id": "minecraft:redstone",
+      "item": "minecraft:redstone",
       "count": 2
     }
   ],
   "result": {
-    "id": "ricksportalgun:upgrade_fuel",
+    "item": "ricksportalgun:upgrade_fuel",
     "count": 1
   }
 }

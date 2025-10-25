@@ -1,0 +1,15 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "ricksportalgun:bootleg_portal_fluid"
+    },
+    {
+      "item": "ricksportalgun:quantum_leap_elixir"
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:portal_fluid",
+    "count": 1
+  }
+}

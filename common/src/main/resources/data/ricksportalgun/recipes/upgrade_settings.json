@@ -1,0 +1,22 @@
+{
+  "type": "ricksportalgun:portal_gun_workbench",
+  "ingredients": [
+    {
+      "item": "ricksportalgun:disc_template"
+    },
+    {
+      "item": "minecraft:comparator"
+    },
+    {
+      "item": "minecraft:writable_book"
+    },
+    {
+      "item": "minecraft:repeater",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "ricksportalgun:upgrade_settings",
+    "count": 1
+  }
+}
