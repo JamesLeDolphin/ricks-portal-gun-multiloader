@@ -54,9 +54,9 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
         KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
-
-        initEvents();
         initClientPackets();
+        initEvents();
+
     }
 
     private void initClientPackets() {
@@ -77,7 +77,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
                 ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
                 if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && stack.is(PGTags.Items.PORTAL_GUNS)) {
                     SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    ClientPlayNetworking.send(packet);
+                    PGHelper.sendPacketToServer(packet);
                 }
             }
         });
@@ -90,8 +90,8 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
     private static  <P extends PGPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func, Consumer<P> consumer) {
         ClientPlayNetworking.registerGlobalReceiver(rl,
                 (client, handler, buf, responseSender) -> {
-            P p = func.apply(buf);
-            consumer.accept(p);
+                    P p = func.apply(buf);
+            client.execute(() -> consumer.accept(p));
         });
     }
 }

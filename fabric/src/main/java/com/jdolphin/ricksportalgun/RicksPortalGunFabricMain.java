@@ -35,7 +35,6 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGBlockEntities.init(bind(BuiltInRegistries.BLOCK_ENTITY_TYPE));
         PGItems.init(bind(BuiltInRegistries.ITEM));
         PGEntities.init(bind(BuiltInRegistries.ENTITY_TYPE));
-        PGDataComponents.init(bind(BuiltInRegistries.DATA_COMPONENT_TYPE));
         PGMenuTypes.init(bind(BuiltInRegistries.MENU));
         PGRecipeSerializers.init(bind(BuiltInRegistries.RECIPE_SERIALIZER));
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
