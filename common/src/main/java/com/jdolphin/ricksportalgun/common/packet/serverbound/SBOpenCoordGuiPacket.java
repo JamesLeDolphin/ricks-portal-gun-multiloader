@@ -16,13 +16,15 @@ public record SBOpenCoordGuiPacket() implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        if (PGHelper.canPlayerAccessGun(player, stack)) {
-            List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-            if (!dims.contains(PGHelper.id("blender").toString()))
-                dims.add(PGHelper.id("blender").toString());
-            PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
-        }
+        server.executeIfPossible(() -> {
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            if (PGHelper.canPlayerAccessGun(player, stack)) {
+                List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
+                if (!dims.contains(PGHelper.id("blender").toString()))
+                    dims.add(PGHelper.id("blender").toString());
+                PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
+            }
+        });
     }
 
     @Override

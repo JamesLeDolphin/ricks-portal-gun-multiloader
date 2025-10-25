@@ -27,7 +27,7 @@ public class PGBlocks {
             .mapColor(MapColor.COLOR_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
 
     public static final Block SUBETHER_BARRIER = register("subether_barrier", SubetherBarrierBlock::new, BlockBehaviour.Properties.of()
-            .mapColor(MapColor.COLOR_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
 
     private static Block register(String id, Function<BlockBehaviour.Properties, Block> func, BlockBehaviour.Properties properties) {
         Block block = func.apply(properties);

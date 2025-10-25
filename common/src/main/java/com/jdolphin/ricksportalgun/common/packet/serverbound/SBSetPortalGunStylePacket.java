@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -13,8 +14,11 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGServe
 
     @Override
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        PortalGunItem.setStyle(stack, style);
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            PortalGunItem.setStyle(stack, style);
+        });
     }
 
     public static SBSetPortalGunStylePacket decode(FriendlyByteBuf buf) {

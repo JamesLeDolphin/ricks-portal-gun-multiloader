@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -13,10 +14,13 @@ public record SBCustomizeSettingsPacket(double size, int age) implements PGServe
 
     @Override
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putDouble(PGNbtKeys.TAG_SIZE, size);
-        tag.putInt(PGNbtKeys.TAG_AGE, age);
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putDouble(PGNbtKeys.TAG_SIZE, size);
+            tag.putInt(PGNbtKeys.TAG_AGE, age);
+        });
     }
 
     public static SBCustomizeSettingsPacket decode(FriendlyByteBuf buf) {

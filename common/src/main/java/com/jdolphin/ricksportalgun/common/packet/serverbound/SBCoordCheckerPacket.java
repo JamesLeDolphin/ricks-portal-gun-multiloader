@@ -21,18 +21,20 @@ public record SBCoordCheckerPacket(String dim) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
-        BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
+        server.executeIfPossible(() -> {
+            player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
+            BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
 
-        ResourceLocation dim = new ResourceLocation(this.dim);
-        ServerLevel level;
-        level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
-        if (level == null) level = player.serverLevel();
+            ResourceLocation dim = new ResourceLocation(this.dim);
+            ServerLevel level;
+            level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
+            if (level == null) level = player.serverLevel();
 
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-        PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
-        player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
+            PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
+            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
+        });
     }
 
     public static SBCoordCheckerPacket decode(FriendlyByteBuf buf) {

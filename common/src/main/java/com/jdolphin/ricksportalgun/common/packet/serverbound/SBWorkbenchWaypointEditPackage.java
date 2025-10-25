@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public record SBWorkbenchWaypointEditPackage(Waypoint waypoint, boolean leftSide, boolean copy, boolean delete) implements PGServerPayload {
@@ -30,8 +31,11 @@ public record SBWorkbenchWaypointEditPackage(Waypoint waypoint, boolean leftSide
 
     @Override
     public void handle(ServerPlayer player) {
-        if (player.containerMenu instanceof WaypointTransferMenu waypointMenu) {
-            waypointMenu.editWaypoints(waypoint, leftSide, copy, delete);
-        }
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            if (player.containerMenu instanceof WaypointTransferMenu waypointMenu) {
+                waypointMenu.editWaypoints(waypoint, leftSide, copy, delete);
+            }
+        });
     }
 }

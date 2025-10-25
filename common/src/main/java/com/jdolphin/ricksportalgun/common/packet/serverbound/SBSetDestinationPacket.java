@@ -7,16 +7,20 @@ import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
-            PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
-        } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
+                PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+            } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
+        });
     }
 
     public static SBSetDestinationPacket decode(FriendlyByteBuf buf) {

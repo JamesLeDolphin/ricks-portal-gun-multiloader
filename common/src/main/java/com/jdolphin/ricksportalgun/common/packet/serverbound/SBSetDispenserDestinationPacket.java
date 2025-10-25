@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implements PGServerPayload {
@@ -30,11 +31,14 @@ public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implemen
     }
 
     public void handle(ServerPlayer player) {
-        if (player.containerMenu instanceof PortalDispenserMenu menu) {
-            if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
-                menu.setCoords(pos, dim);
-            } else
-                PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
-        }
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            if (player.containerMenu instanceof PortalDispenserMenu menu) {
+                if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
+                    menu.setCoords(pos, dim);
+                } else
+                    PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
+            }
+        });
     }
 }

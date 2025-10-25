@@ -17,25 +17,27 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
 
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putBoolean(PGNbtKeys.TAG_LOCK, lock);
-        tag.putBoolean(PGNbtKeys.SELF_DESTRUCT, selfDestruct);
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putBoolean(PGNbtKeys.TAG_LOCK, lock);
+            tag.putBoolean(PGNbtKeys.SELF_DESTRUCT, selfDestruct);
 
-        if (!code.isEmpty()) {
-            PortalGunItem.setCode(stack, this.code);
-        }
-
-        if (!name.isEmpty()) {
-            Player newOwner = server.getPlayerList().getPlayerByName(name);
-            if (newOwner != null) {
-                tag.putUUID(PGNbtKeys.TAG_OWNER, newOwner.getUUID());
-            } else {
-                PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
+            if (!code.isEmpty()) {
+                PortalGunItem.setCode(stack, this.code);
             }
-        }
-        PGHelper.sendSuccessMsg(player, "notice.ricksportalgun.settings.applied");
+
+            if (!name.isEmpty()) {
+                Player newOwner = server.getPlayerList().getPlayerByName(name);
+                if (newOwner != null) {
+                    tag.putUUID(PGNbtKeys.TAG_OWNER, newOwner.getUUID());
+                } else {
+                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
+                }
+            }
+            PGHelper.sendSuccessMsg(player, "notice.ricksportalgun.settings.applied");
+        });
     }
 
     public static SBSecuritySettingsPacket decode(FriendlyByteBuf buf) {

@@ -5,14 +5,18 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public record SBSetPortalGunTypePacket(ResourceLocation loc, int tints) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
-        if (player.containerMenu instanceof SkinSelectorMenu menu) {
-            menu.setPortalGunType(player, loc, tints);
-        }
+        MinecraftServer server = player.server;
+        server.executeIfPossible(() -> {
+            if (player.containerMenu instanceof SkinSelectorMenu menu) {
+                menu.setPortalGunType(player, loc, tints);
+            }
+        });
     }
 
     public static SBSetPortalGunTypePacket decode(FriendlyByteBuf buf) {

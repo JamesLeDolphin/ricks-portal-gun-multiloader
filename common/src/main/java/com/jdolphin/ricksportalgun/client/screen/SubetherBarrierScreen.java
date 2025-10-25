@@ -13,11 +13,12 @@ import org.lwjgl.glfw.GLFW;
 
 public class SubetherBarrierScreen extends AbstractBaseScreen {
     private EditBox codeBox;
-    private BlockPos pos;
+    private final BlockPos pos;
 
     public SubetherBarrierScreen(BlockPos pos) {
         super("menu.ricksportalgun.sub_ether_barrier");
         this.pos = pos;
+        System.out.println(pos);
     }
 
     public void init() {

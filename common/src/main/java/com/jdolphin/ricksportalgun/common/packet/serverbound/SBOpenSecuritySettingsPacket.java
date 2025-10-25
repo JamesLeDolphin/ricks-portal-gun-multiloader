@@ -16,12 +16,14 @@ public record SBOpenSecuritySettingsPacket() implements PGServerPayload {
     @Override
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        List<String> players = Arrays.asList(server.getPlayerNames());
-        int playerCount = server.getPlayerNames().length;
-        if (playerCount == players.size()) {
-            CBOpenSecurityGuiPacket packet = new CBOpenSecurityGuiPacket(players);
-            PGHelper.sendPacketToClient(player, packet);
-        }
+        server.executeIfPossible(() -> {
+            List<String> players = Arrays.asList(server.getPlayerNames());
+            int playerCount = server.getPlayerNames().length;
+            if (playerCount == players.size()) {
+                CBOpenSecurityGuiPacket packet = new CBOpenSecurityGuiPacket(players);
+                PGHelper.sendPacketToClient(player, packet);
+            }
+        });
     }
 
     public static SBOpenSecuritySettingsPacket decode(FriendlyByteBuf buf) {
