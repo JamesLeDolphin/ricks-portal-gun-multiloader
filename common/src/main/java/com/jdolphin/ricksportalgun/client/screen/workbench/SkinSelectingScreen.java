@@ -100,6 +100,7 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, delta);
 
         ItemStack stack = getStack(36);

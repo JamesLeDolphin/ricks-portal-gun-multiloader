@@ -30,7 +30,7 @@ public class PortalFluidItem extends Item {
             player.addEffect(new MobEffectInstance(MobEffects.POISON));
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 2, 2));
             ServerLevel serverLevel = (ServerLevel) level;
-            player.hurt(PGDamageTypes.of(serverLevel, PGDamageTypes.TELEPORT), 3);
+            player.hurt(PGDamageTypes.teleport(), 3);
             LevelHelper.randomTP(player, 500, true);
         }
         return stack;

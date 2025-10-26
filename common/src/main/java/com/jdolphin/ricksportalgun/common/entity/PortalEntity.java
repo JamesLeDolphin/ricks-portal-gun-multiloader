@@ -300,6 +300,7 @@ public class PortalEntity extends Entity {
             }
 
             boolean shouldHurt = isBootleg() || LevelHelper.isBlenderDestination(getHopDim());
+
             if (shouldHurt || (destinationLevel != null && targetPos != null)) {
                 List<Entity> entityList = getEntitiesNearby(this, 0.3D);
                 if (entityList != null && !entityList.isEmpty()) {
@@ -313,7 +314,7 @@ public class PortalEntity extends Entity {
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
                             } else {
-                                if (nearby instanceof ServerPlayer player) player.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG), Float.MAX_VALUE);
+                                if (nearby instanceof ServerPlayer player) player.hurt(LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.blender() : PGDamageTypes.bootleg(), Float.MAX_VALUE);
                                 else nearby.kill();
                             }
                         }

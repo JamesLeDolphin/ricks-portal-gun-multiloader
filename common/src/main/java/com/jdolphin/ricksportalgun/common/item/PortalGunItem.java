@@ -182,8 +182,10 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
                     if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
                         InteractionResult result = upgrade.applyUpgrade(player, stack, this);
-                        if (!player.isCreative()) oppositeStack.shrink(1);
-                        return InteractionResultHolder.success(stack);
+                        if (!result.equals(InteractionResult.FAIL)) {
+                            if (!player.isCreative()) oppositeStack.shrink(1);
+                            return InteractionResultHolder.success(stack);
+                        } else return InteractionResultHolder.fail(stack);
                     } else {
                         ResourceLocation dim = tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : Level.OVERWORLD.location();
                         ResourceKey<Level> key = LevelHelper.getWorldKey(dim);

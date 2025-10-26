@@ -165,6 +165,7 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, delta);
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta);
         if (leftWaypointList != null) leftWaypointList.render(graphics, mouseX, mouseY, delta);

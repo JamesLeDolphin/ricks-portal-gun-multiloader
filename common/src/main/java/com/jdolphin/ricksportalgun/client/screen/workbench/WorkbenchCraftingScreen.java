@@ -48,6 +48,7 @@ public class WorkbenchCraftingScreen extends AbstractWorkbenchScreen<WorkbenchCr
 
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(graphics);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(graphics, pMouseX, pMouseY);
     }

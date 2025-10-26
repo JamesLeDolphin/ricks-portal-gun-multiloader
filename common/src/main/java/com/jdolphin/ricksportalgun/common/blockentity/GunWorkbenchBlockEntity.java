@@ -92,7 +92,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private boolean hasCraftingFinished() {
-        return this.progress >= this.maxProgress;
+        return this.progress == this.maxProgress;
     }
 
     private void increaseCraftingProgress() {
@@ -168,7 +168,6 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     private void resetProgress() {
         this.progress = 0;
-        this.maxProgress = PGHelper.seconds(3);
     }
 
     private boolean hasRecipe() {
