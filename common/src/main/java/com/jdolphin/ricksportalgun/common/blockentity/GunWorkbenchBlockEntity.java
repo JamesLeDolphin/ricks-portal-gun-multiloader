@@ -92,7 +92,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private boolean hasCraftingFinished() {
-        return this.progress == this.maxProgress;
+        return this.progress >= this.maxProgress;
     }
 
     private void increaseCraftingProgress() {
@@ -101,7 +101,8 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
     private void baseTick(Level level, BlockPos pos, BlockState state) {
         if (hasRecipe()) {
-            increaseCraftingProgress();
+            if (!hasCraftingFinished()) increaseCraftingProgress();
+            System.out.println(progress);
             setChanged();
 
             if (hasCraftingFinished()) {
@@ -128,7 +129,7 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
                 this.setItem(OUTPUT_SLOT, result);
                 return true;
             } else {
-                if (ItemStack.matches(inOutputSlot, result)) {
+                if (ItemStack.isSameItemSameTags(inOutputSlot, result)) {
                     int i = inOutputSlot.getCount();
                     int j = result.getCount();
                     result.setCount(i + j);
@@ -149,8 +150,8 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     private void lowerInputs(PortalGunWorkbenchRecipe recipe) {
         List<ItemStack> stacks = recipe.getInputs();
         for (ItemStack stack : stacks) {
-            for (ItemStack invStack : this.items) {
-                if (ItemStack.matches(stack, invStack)) {
+            for (ItemStack invStack : this.ingredients()) {
+                if (ItemStack.isSameItemSameTags(stack, invStack)) {
                     int i = stack.getCount();
                     int j = invStack.getCount();
                     int result = Math.max(j - i, 0);

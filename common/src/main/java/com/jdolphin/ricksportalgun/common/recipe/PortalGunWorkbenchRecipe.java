@@ -52,7 +52,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
                     if (stack.getCount() < ingredient.getCount()) {
                         return false;
                     }
-                    if (!ItemStack.matches(stack, ingredient)) {
+                    if (!ItemStack.isSameItemSameTags(stack, ingredient)) {
                         return false;
                     }
                 }
