@@ -24,10 +24,12 @@ import java.util.List;
 public class PortalGunWorkbenchRecipe implements Recipe<Container> {
     private final List<ItemStack> items;
     final ItemStack result;
+    private final ResourceLocation id;
 
-    public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result) {
-        this.items = itemStacks; //Temp
+    public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result, ResourceLocation id) {
+        this.items = itemStacks;
         this.result = result;
+        this.id = id;
     }
 
     public ItemStack getResult() {
@@ -77,7 +79,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
     @Override
     public ResourceLocation getId() {
-        return null;
+        return id;
     }
 
     @Override
@@ -104,7 +106,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
             for (int i = 0; i < ingredients.size(); i++) {
                 inputs.set(i, itemStackFromJson(ingredients.get(i).getAsJsonObject()));
             }
-            return new PortalGunWorkbenchRecipe(inputs, output);
+            return new PortalGunWorkbenchRecipe(inputs, output, resourceLocation);
         }
 
         public static ItemStack itemStackFromJson(JsonObject stackObject) {
@@ -134,7 +136,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
             inputs.replaceAll(ignored -> buf.readItem());
 
             ItemStack output = buf.readItem();
-            return new PortalGunWorkbenchRecipe(inputs, output);
+            return new PortalGunWorkbenchRecipe(inputs, output, resourceLocation);
         }
 
         @Override
