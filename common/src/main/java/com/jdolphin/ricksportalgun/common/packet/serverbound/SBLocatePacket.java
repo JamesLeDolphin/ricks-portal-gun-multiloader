@@ -6,10 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -71,29 +68,24 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.disabled"));
                     return;
                 }
-                Optional<HolderLookup.RegistryLookup<Structure>> optionalRegistry = server.registryAccess().lookup(Registries.STRUCTURE);
-                if (optionalRegistry.isPresent()) {
-                    HolderLookup.RegistryLookup<Structure> registry = optionalRegistry.get();
-                    ResourceLocation location = new ResourceLocation(name);
-                    Optional<Holder.Reference<Structure>> structureReference = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
-                    if (structureReference.isPresent()) {
-                        Structure structure = structureReference.get().value();
+                Registry<Structure> registry = server.registryAccess().registryOrThrow(Registries.STRUCTURE);
+                ResourceLocation location = new ResourceLocation(name);
+                Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
+                if (structure != null) {
+                    HolderSet<Structure> set = HolderSet.direct(Holder.direct(structure));
+                    Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator()
+                            .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
+                    if (pair != null) {
+                        BlockPos pos = pair.getFirst();
+                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                    } else {
+                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
+                    }
+                } else
+                    PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
 
-                        HolderSet<Structure> set = HolderSet.direct(Holder.direct(structure));
-
-                        Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator()
-                                .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
-                        if (pair != null) {
-                            BlockPos pos = pair.getFirst();
-                            BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                            PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-                        } else {
-                            PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
-                        }
-                    } else
-                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
-                }
             }
         });
     }
