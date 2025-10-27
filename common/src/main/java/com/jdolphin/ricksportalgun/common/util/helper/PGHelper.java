@@ -60,7 +60,7 @@ public class PGHelper {
         String uuid = tag.contains(PGNbtKeys.TAG_OWNER) ? tag.getUUID(PGNbtKeys.TAG_OWNER).toString() : "";
 
         if (locked) {
-            return player.getStringUUID().equals(uuid);
+            return uuid.isEmpty() || player.getStringUUID().equals(uuid);
         }
         return true;
     }
