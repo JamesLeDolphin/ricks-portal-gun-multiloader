@@ -43,7 +43,6 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
     }
 
     private void onEdited(String string) {
-
         this.dimInput.setSuggestion("");
         dimInput.update();
 

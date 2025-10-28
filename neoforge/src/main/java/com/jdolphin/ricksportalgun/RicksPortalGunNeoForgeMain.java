@@ -24,6 +24,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -41,6 +42,7 @@ public class RicksPortalGunNeoForgeMain {
     public RicksPortalGunNeoForgeMain(IEventBus bus) {
         RicksPortalGunCommonMain.init();
         NeoForge.EVENT_BUS.addListener(this::onPlayerJoin);
+        NeoForge.EVENT_BUS.addListener(this::onServerStart);
         bus.addListener(this::buildContents);
         bus.addListener(this::registerPackets);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
@@ -59,6 +61,10 @@ public class RicksPortalGunNeoForgeMain {
     public void registerPackets(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
         NeoForgePackets.init(registrar);
+    }
+
+    public void onServerStart(ServerStartedEvent event) {
+        new PGDamageTypes(event.getServer().registryAccess());
     }
 
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
