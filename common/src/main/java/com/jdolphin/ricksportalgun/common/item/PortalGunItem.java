@@ -32,6 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -163,94 +164,115 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return loc;
     }
 
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
-        BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
+
         if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
-            migrateNBT(stack);
             if (PGHelper.canPlayerAccessGun(player, stack)) {
-                if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
-                    InteractionResult result = upgrade.applyUpgrade(player, stack, this);
-                    if (!player.isCreative()) oppositeStack.shrink(1);
-                    return InteractionResultHolder.success(stack);
-                }
+                ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
+                BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
+
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
-
-                    Vec3 loc = hitResult.getLocation();
-                    Vec3 newLoc = loc;
-                    if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
-                        Direction dir = hitResult.getDirection();
-                        BlockPos bPos = hitResult.getBlockPos();
-
-                        newLoc = getLocation(level, bPos, dir, loc);
-                    }
-
-                    Direction dir = hitResult.getDirection();
-                    Direction facing = player.getDirection();
-                    float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
-                    int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, PGHelper.seconds(10));
-
-                    PortalEntity portal = new PortalEntity(level, newLoc, dir, facing, size);
-                    PortalEntity exPortal = new PortalEntity(level, getHopCoords(stack).above().getBottomCenter(), dir, facing, size);
-
-                    ResourceKey<Level> key = LevelHelper.getWorldKey(stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location()));
-                    ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
-
-                    doForBoth(entity -> entity.setLifetime(age), portal, exPortal);
-
-                    if (stack.has(DataComponents.CUSTOM_NAME)) {
-                        Component component = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
-                        String s = component.getString();
-                        doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
-                    }
-                    portal.setHopLocation(getHopDimension(stack), getHopCoords(stack));
-                    exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
-
-                    int color = getColor(stack);
-                    doForBoth(entity -> entity.setColor(color), portal, exPortal);
-
-                    boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
-                    doForBoth(entity -> entity.setBootleg(bootleg), portal, exPortal);
-
-                    if (LevelHelper.isBlenderDestination(getHopDimension(stack).toString())) {
-                        if (!portal.isFlat()) {
-                            portal.setYRot(player.getYRot());
+                    if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
+                        InteractionResult result = upgrade.applyUpgrade(player, stack, this);
+                        if (!result.equals(InteractionResult.FAIL)) {
+                            if (!player.isCreative()) oppositeStack.shrink(1);
                         }
-                        level.addFreshEntity(portal);
-                        player.awardStat(Stats.ITEM_USED.get(this));
-                        player.getCooldowns().addCooldown(this, 20 * 3);
+                        return new InteractionResultHolder<>(result, stack);
+                    } else {
+                        ResourceLocation dim = stack.getOrDefault(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location());
+                        ResourceKey<Level> key = LevelHelper.getWorldKey(dim);
+                        ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
+                        BlockPos destination = getHopCoords(stack);
 
-                        if (!player.isCreative()) {
-                            lowerFuel(stack, 1);
+                        Vec3 loc = hitResult.getLocation();
+                        if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
+                            Direction dir = hitResult.getDirection();
+                            BlockPos bPos = hitResult.getBlockPos();
+
+                            loc = getLocation(level, bPos, dir, loc);
                         }
+                        Direction hitDir = hitResult.getDirection();
+                        Direction playerDir = player.getDirection();
 
-                        return InteractionResultHolder.success(stack);
-                    }
-                    if (LevelHelper.canPortalTo(serverlevel, getHopCoords(stack), stack)) {
-                        if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
-                            if (!portal.isFlat()) {
-                                doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                        float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
+                        int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
+
+                        if (serverlevel != null) {
+                            if (LevelHelper.canPortalTo(serverlevel, destination, stack) && LevelHelper.canPortalTo(((ServerLevel) level), hitResult.getBlockPos(), stack)) {
+                                if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                                    //No errors: actually make the portal
+
+                                    PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
+                                    serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
+                                    PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
+
+                                    boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
+                                    doForBoth(entity -> {
+                                        entity.setLifetime(PGHelper.seconds(age));
+                                        entity.setColor(getColor(stack));
+                                        entity.setBootleg(bootleg);
+                                    }, portal, exPortal);
+
+                                    if (stack.has(DataComponents.CUSTOM_NAME)) {
+                                        Component component = stack.getHoverName();
+                                        String s = component.getString();
+                                        doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
+                                    }
+                                    portal.setHopLocation(dim, destination);
+                                    exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
+
+                                    if (!portal.isFlat()) doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+
+                                    serverlevel.getServer().executeIfPossible(() -> serverlevel.addFreshEntity(exPortal));
+                                    level.addFreshEntity(portal);
+
+                                    player.awardStat(Stats.ITEM_USED.get(this));
+                                    player.getCooldowns().addCooldown(this, 20 * 3);
+                                    if (!player.isCreative()) lowerFuel(stack, 1);
+                                } else {
+                                    //Target or Origin is end & dragon is alive
+                                    PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
+                                    return InteractionResultHolder.fail(stack);
+                                }
+                            } else {
+                                //Destination cant be portaled to
+                                PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
+                                return InteractionResultHolder.fail(stack);
                             }
-                            serverlevel.addFreshEntity(exPortal);
+                        } else if (LevelHelper.isBlenderDestination(dim.toString())) {
+                            PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
+                            portal.setLifetime(PGHelper.seconds(age));
+
+                            if (stack.has(DataComponents.CUSTOM_NAME)) {
+                                Component component = stack.getHoverName();
+                                String s = component.getString();
+                                portal.setCustomName(Component.literal(s));
+                            }
+                            portal.setHopLocation(dim, destination);
+                            portal.setColor(getColor(stack));
+
+                            boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
+                            portal.setBootleg(bootleg);
+
+                            if (!portal.isFlat()) portal.setYRot(player.getYRot());
+                            if (!player.isCreative()) lowerFuel(stack, 1);
+
                             level.addFreshEntity(portal);
 
                             player.awardStat(Stats.ITEM_USED.get(this));
                             player.getCooldowns().addCooldown(this, 20 * 3);
-                            if (!player.isCreative()) {
-                                lowerFuel(stack, 1);
-                            }
-                        } else {
-                            PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
-                            return InteractionResultHolder.fail(stack);
+                            return InteractionResultHolder.success(stack);
                         }
-                    } else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
+                    }
                 }
+            } else {
+                //Player isnt allowed to open gun
+                PGHelper.sendFailMsg(player, "error.ricksportalgun.security");
+                return InteractionResultHolder.fail(stack);
             }
-            return InteractionResultHolder.success(stack);
-        } else return InteractionResultHolder.fail(stack);
+        } return InteractionResultHolder.pass(stack);
     }
 
     private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {

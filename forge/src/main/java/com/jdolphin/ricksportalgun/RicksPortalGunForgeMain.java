@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -39,6 +40,7 @@ public class RicksPortalGunForgeMain {
         IEventBus bus = context.getModEventBus();
         RicksPortalGunCommonMain.init();
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
         bus.addListener(this::commonSetup);
         bus.addListener(this::buildContents);
         bind(bus, Registries.DATA_COMPONENT_TYPE, PGDataComponents::init);
@@ -52,6 +54,10 @@ public class RicksPortalGunForgeMain {
 
         context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
+    }
+
+    public void onServerStart(ServerStartedEvent event) {
+        new PGDamageTypes(event.getServer().registryAccess());
     }
 
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

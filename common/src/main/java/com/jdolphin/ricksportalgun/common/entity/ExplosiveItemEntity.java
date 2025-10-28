@@ -56,7 +56,7 @@ public class ExplosiveItemEntity extends ItemEntity {
                 boolean kaboom = level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
                 Level.ExplosionInteraction interaction = kaboom ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE;
                 ExplosionDamageCalculator calc = new EntityBasedExplosionDamageCalculator(this); //Short for calculator
-                level.explode(this, PGDamageTypes.of(level, PGDamageTypes.SELF_DESTRUCT), calc, pos.getX(), pos.getY(), pos.getZ(), 5, true, interaction);
+                level.explode(this, PGDamageTypes.selfDestruct(), calc, pos.getX(), pos.getY(), pos.getZ(), 5, true, interaction);
                 this.kill();
             }
         }

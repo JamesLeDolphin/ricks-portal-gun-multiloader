@@ -21,8 +21,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.RelativeMovement;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
@@ -56,7 +56,8 @@ public class PortalEntity extends Entity {
     private BlockPos targetPos;
     private boolean bootleg;
     private boolean exists;
-
+    private ServerLevel destinationLevel;
+    private Vec3 targetVec;
     private Vec3 pos;
     private String targetDim;
     private int delay = 0;
@@ -265,48 +266,53 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide()) {
-            ServerLevel serverLevel = (ServerLevel) this.level();
             if (!exists) {
                 LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
                 this.exists = true;
             }
             if (getLifetime() > 0) {
-                int i = getLifetime();
-                setLifetime(i - 1);
+                int l = getLifetime();
+                setLifetime(l - 1);
             }
             if (delay > 0) delay--;
             if (!firstTick && getLifetime() == 0) {
+                level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
                 this.kill();
                 return;
             }
-            List<Entity> entityList = getEntitiesNearby(this, 0.3D);
-            if (entityList != null) {
-                for (Entity nearby : entityList) {
-                    ServerLevel destinationDim;
-                    BlockPos destinationPos;
-                    if (!this.bootleg && !LevelHelper.isBlenderDestination(getHopDim())) {
-                        ResourceKey<Level> key = LevelHelper.getWorldKey(ResourceLocation.parse(getHopDim()));
-                        destinationDim = LevelHelper.getServerWorld(this.level(), key);
-                        destinationPos = getHopLoc();
-                    } else {
-                        destinationDim = LevelHelper.getRandomServerLevel(serverLevel.getServer());
-                        destinationPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(serverLevel, 5000), serverLevel);
-                    }
-                    if (colliding(this, nearby) && !nearby.is(this) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
-                        if (this.bootleg || LevelHelper.isBlenderDestination(getHopDim())) {
-                            if (nearby instanceof LivingEntity living)
-                                living.hurt(PGDamageTypes.of(serverLevel, LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.BLENDER : PGDamageTypes.BOOTLEG),
-                                        living.getMaxHealth() * 10);
-                        } else if (destinationDim != null && !destinationDim.isClientSide()) {
-                            if (nearby.canUsePortal(false) && delay == 0) {
-                                Vec3 look = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
-                                double dx = (double) destinationPos.getX() + look.x * 2d;
-                                double dz = (double) destinationPos.getZ() + look.z * 2d;
+            if (destinationLevel == null) {
+                if (!isBootleg() && !LevelHelper.isBlenderDestination(getHopDim())) {
+                    ResourceKey<Level> key = LevelHelper.getWorldKey(ResourceLocation.parse(getHopDim()));
+                    destinationLevel = LevelHelper.getServerWorld(this.level(), key);
+                } else {
+                    destinationLevel = (ServerLevel) this.level();
+
+                }
+                if (targetPos == null) {
+                    targetPos = getHopLoc();
+                }
+            }
+            if (targetVec == null) {
+                targetVec = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
+            }
+
+            boolean shouldHurt = isBootleg() || LevelHelper.isBlenderDestination(getHopDim());
+
+            if (shouldHurt || (destinationLevel != null && targetPos != null)) {
+                List<Entity> entityList = getEntitiesNearby(this, 0.3D);
+                if (entityList != null && !entityList.isEmpty()) {
+                    for (Entity nearby : entityList) {
+                        if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger() && delay == 0) {
+                            if (!shouldHurt) {
                                 Set<RelativeMovement> relativeSet = new HashSet<>();
                                 relativeSet.add(RelativeMovement.Y_ROT);
-                                nearby.teleportTo(destinationDim, dx, destinationPos.getY(), dz, relativeSet, nearby.getYRot(), nearby.getXRot());
+                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, relativeSet, nearby.getYRot(), nearby.getXRot());
+
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
+                            } else {
+                                if (nearby instanceof ServerPlayer player) player.hurt(LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.blender() : PGDamageTypes.bootleg(), Float.MAX_VALUE);
+                                else nearby.kill();
                             }
                         }
                     }
