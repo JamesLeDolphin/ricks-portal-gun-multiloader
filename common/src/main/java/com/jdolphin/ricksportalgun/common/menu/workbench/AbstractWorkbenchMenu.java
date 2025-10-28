@@ -31,7 +31,6 @@ public abstract class AbstractWorkbenchMenu extends AbstractContainerMenu {
                 this.addSlot(new Slot(container, j + (i + 1) * 9, x + j * 18, y + i * 18));
             }
         }
-
     }
 
     public void setMenuType(int i, Player player) {

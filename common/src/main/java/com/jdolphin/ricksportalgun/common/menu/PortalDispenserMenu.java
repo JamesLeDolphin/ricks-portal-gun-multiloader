@@ -37,7 +37,23 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
             }
         });
         this.addDataSlots(data);
-        //this.addStandardInventorySlots(playerInventory, 8, 84);
+        this.addInventoryExtendedSlots(playerInventory, 8, 84);
+        this.addInventoryHotbarSlots(playerInventory, 8, 142);
+    }
+
+    protected void addInventoryHotbarSlots(Container container, int x, int y) {
+        for(int i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(container, i, x + i * 18, y));
+        }
+
+    }
+
+    protected void addInventoryExtendedSlots(Container container, int x, int y) {
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(container, j + (i + 1) * 9, x + j * 18, y + i * 18));
+            }
+        }
     }
 
     public int getFuel() {

@@ -78,8 +78,6 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
         return PGRecipeTypes.WORKBENCH_TYPE;
     }
 
-
-
     public static class Serializer implements RecipeSerializer<PortalGunWorkbenchRecipe> {
 
         private static final MapCodec<PortalGunWorkbenchRecipe> CODEC;
