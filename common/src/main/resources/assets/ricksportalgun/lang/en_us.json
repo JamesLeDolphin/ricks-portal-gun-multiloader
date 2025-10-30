@@ -82,7 +82,7 @@
   "ricksportalgun.button.settings.security": "Security Settings",
   "ricksportalgun.button.settings.customization": "Customization Settings",
   "ricksportalgun.button.settings.customization.color": "Change Portal Color",
-  "ricksportalgun.button.settings.customization.theme": "Edit Portal Gun Theme",
+  "ricksportalgun.button.settings.customization.theme": "Edit Portal Gun Menu Theme",
   "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
   "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
   "ricksportalgun.button.portal_age.reset": "Reset portal open time",
@@ -154,6 +154,12 @@
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
+
+  "tooltip.ricksportalgun.button.lock": "Biometric lock prevents anyone from using the portal gun, unless they are the owner of the portal gun",
+  "tooltip.ricksportalgun.button.owner_transfer": "Transfer the portal guns ownership to another player. If they have biometric lock enabled, you will lose access to the portal gun!",
+  "tooltip.ricksportalgun.button.portal_code": "Portal code is checked by nearby subether barriers. If the codes does not match, a portal cannot be formed",
+  "tooltip.ricksportalgun.button.self_destruct": "Enables self-destruct button on the coordinate selection screen. When pressed, the portal gun is forcibly dropped and can no longer be picked up. After 10 seconds it will detonate and destroy itself in an explosion",
+  "tooltip.ricksportalgun.button.portal_lifetime": "Amount of seconds the portal stays open. Min 5s, max 45s. Defaults to 10 seconds",
 
   "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
   "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",

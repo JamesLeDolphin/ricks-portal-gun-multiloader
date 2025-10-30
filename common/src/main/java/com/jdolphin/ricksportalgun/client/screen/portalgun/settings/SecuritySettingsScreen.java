@@ -2,10 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.SettingsScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
+import com.jdolphin.ricksportalgun.client.screen.widget.*;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -31,6 +28,7 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
     private EditBox code;
     private PGTextButton select, cancel;
     private PGImageButton backButton;
+    private PGTooltipText lockText, playerTransferTxt, portalCodeTxt, selfDestructTxt;
 
     public SecuritySettingsScreen(List<String> players) {
         super("menu.ricksportalgun.settings.security");
@@ -86,6 +84,18 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
                 (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
+         this.lockText = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.lockButton.getY() + 4,
+                 Component.translatable("ricksportalgun.button.lock"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.lock")));
+
+        this.playerTransferTxt = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.playerInput.getY() + 4,
+                Component.translatable("ricksportalgun.button.ownership"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.owner_transfer")));
+
+        this.portalCodeTxt = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.code.getY() + 4,
+                Component.translatable("ricksportalgun.button.code"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.portal_code")));
+
+        this.selfDestructTxt = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.selfDestruct.getY() + 4,
+                Component.translatable("ricksportalgun.button.self_destruct"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.self_destruct")));
+
         this.lockButton.setTextColor(style.textColor());
         this.lockButton.setRenderBackground(false);
         this.selfDestruct.setTextColor(style.textColor());
@@ -109,11 +119,6 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.security"), this.width / 2, this.height / 2 - 92, style.textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.lock"), this.width / 2 - 128, this.lockButton.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.ownership"), this.width / 2 - 128, this.playerInput.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.code"), this.width / 2 - 128, this.code.getY() + 4, getStyle().textColor());
-        graphics.drawString(this.font, Component.translatable("ricksportalgun.button.self_destruct"), this.width / 2 - 128, this.selfDestruct.getY() + 4, getStyle().textColor());
-
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, delta, playerInput, lockButton, code);
         GuiHelper.renderOutline(graphics, lockButton, style.highlightColor());
         GuiHelper.renderOutline(graphics, playerInput, style.highlightColor());
