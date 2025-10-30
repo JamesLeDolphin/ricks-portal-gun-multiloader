@@ -9,7 +9,6 @@ import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +39,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
+public class PortalGunItem extends Item implements IWaypointStorage {
     private final int tints;
     public PortalGunItem(Properties properties, int tints) {
         super(properties);
@@ -371,10 +370,5 @@ public class PortalGunItem extends Item implements IWaypointStorage, ItemColor {
             CompoundTag bpTag = tag.getCompound(PGNbtKeys.TAG_BPOS);
             return NbtUtils.readBlockPos(bpTag);
         } else return BlockPos.ZERO;
-    }
-
-    @Override
-    public int getColor(ItemStack itemStack, int i) {
-        return getColor(itemStack);
     }
 }

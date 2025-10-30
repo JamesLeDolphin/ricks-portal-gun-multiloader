@@ -1,12 +1,17 @@
 package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
+import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -32,6 +37,16 @@ public class PortalFluidItem extends Item {
             LevelHelper.randomTP(player, 500, true);
         }
         return stack;
+    }
+
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
+
+        if (oppositeStack.is(PGTags.Items.PORTAL_GUNS)) {
+            //Setup for fluid changes
+        }
+        return super.use(level, player, hand);
     }
 
     public int getUseDuration(ItemStack pStack) {
