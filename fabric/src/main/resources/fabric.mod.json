@@ -19,6 +19,9 @@
         ],
         "jei_mod_plugin": [
             "com.jdolphin.ricksportalgun.common.comp.jei.PGJeiPlugin"
+        ],
+        "emi": [
+            "com.jdolphin.ricksportalgun.common.comp.emi.PGEmiPlugin"
         ]
     },
     "depends": {

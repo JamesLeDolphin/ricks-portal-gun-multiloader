@@ -111,6 +111,8 @@
   "notice.ricksportalgun.settings.applied": "Applied new portal gun settings!",
   "notice.ricksportalgun.barrier.code_set": "Code set!",
   "notice.ricksportalgun.upgrade": "Upgrade applied successfully",
+  "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
+  "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket",
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
   "error.ricksportalgun.security": "Error 403: Portal Gun locked!",
@@ -185,7 +187,6 @@
   "entity.ricksportalgun.portal": "Portal",
 
   "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
-  "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
-  "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket"
 
+  "emi.category.ricksportalgun.workbench": "Workbench Crafting"
 }
