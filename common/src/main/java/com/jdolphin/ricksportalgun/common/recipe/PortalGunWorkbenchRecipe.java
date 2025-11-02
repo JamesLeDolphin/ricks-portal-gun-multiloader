@@ -16,7 +16,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -131,7 +134,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
         @Override
         public PortalGunWorkbenchRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
-            NonNullList<ItemStack> inputs = NonNullList.withSize(buf.readInt(), ItemStack.EMPTY);
+            NonNullList<ItemStack> inputs = NonNullList.withSize(buf.readVarInt(), ItemStack.EMPTY);
 
             inputs.replaceAll(ignored -> buf.readItem());
 
@@ -141,12 +144,10 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
         @Override
         public void toNetwork(FriendlyByteBuf buf, PortalGunWorkbenchRecipe recipe) {
-            buf.writeInt(recipe.items.size() - 1);
+            buf.writeVarInt(recipe.items.size());
 
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.toNetwork(buf);
-            }
-            buf.writeItem(recipe.getResultItem(null));
+            recipe.getInputs().forEach(buf::writeItem);
+            buf.writeItem(recipe.getResult());
         }
     }
 }
