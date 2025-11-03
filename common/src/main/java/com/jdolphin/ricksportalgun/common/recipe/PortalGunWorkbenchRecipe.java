@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -55,7 +56,9 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
                     if (stack.getCount() < ingredient.getCount()) {
                         return false;
                     }
-                    if (!ItemStack.isSameItemSameTags(stack, ingredient)) {
+                    if (stack.getItem() == ingredient.getItem()) {
+                        if (PotionUtils.getPotion(ingredient) != Potions.EMPTY && PotionUtils.getPotion(stack) == Potions.EMPTY) return false;
+                    } else {
                         return false;
                     }
                 }
