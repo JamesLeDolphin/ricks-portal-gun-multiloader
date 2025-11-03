@@ -60,20 +60,11 @@ public class PGEmiRecipe implements EmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         widgets.addTexture(WorkbenchCraftingScreen.CRAFT_BG, 49, 20, 34, 46, 76, 36);
-
-        int size = input.size();
         if (!input.isEmpty()) {
             widgets.addSlot(input.get(0), 31, 14);
-
-            if (size > 1) {
-                widgets.addSlot(input.get(1), 83, 14);
-            }
-            if (size > 2) {
-                widgets.addSlot(input.get(2), 31, 37);
-            }
-            if (size > 3) {
-                widgets.addSlot(input.get(3), 83, 37);
-            }
+            widgets.addSlot(input.get(1), 83, 14);
+            widgets.addSlot(input.get(2), 31, 37);
+            widgets.addSlot(input.get(3), 83, 37);
         }
 
         widgets.addSlot(output.get(0), 57, 67).recipeContext(this);

@@ -102,7 +102,6 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     private void baseTick(Level level, BlockPos pos, BlockState state) {
         if (hasRecipe()) {
             if (!hasCraftingFinished()) increaseCraftingProgress();
-            System.out.println(progress);
             setChanged();
 
             if (hasCraftingFinished()) {

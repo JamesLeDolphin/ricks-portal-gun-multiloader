@@ -47,7 +47,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container container, Level level) {
         if (!level.isClientSide && container instanceof GunWorkbenchBlockEntity workbench) {
-            List<ItemStack> ingredients = workbench.ingredients();
+            List<ItemStack> ingredients = workbench.ingredients().stream().filter(stack -> !stack.isEmpty()).toList();
             int count = ingredients.stream().toList().size();
             if (count == this.items.size()) {
                 for (int i = 0; i < this.items.size(); i++) {
@@ -104,14 +104,14 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
         @Override
         public PortalGunWorkbenchRecipe fromJson(ResourceLocation resourceLocation, JsonObject json) {
-            ItemStack output = itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+            NonNullList<ItemStack> inputs = NonNullList.withSize(ingredients.size(), ItemStack.EMPTY);
 
-            NonNullList<ItemStack> inputs = NonNullList.withSize(4, ItemStack.EMPTY);
             for (int i = 0; i < ingredients.size(); i++) {
                 inputs.set(i, itemStackFromJson(ingredients.get(i).getAsJsonObject()));
             }
+
+            ItemStack output = itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new PortalGunWorkbenchRecipe(inputs, output, resourceLocation);
         }
 
