@@ -81,8 +81,11 @@ public class LevelHelper {
 
     public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
         if (level != null) {
-            CompoundTag tag = stack.getOrCreateTag();
-            String code = tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
+            String code = "";
+            if (stack != null) {
+                CompoundTag tag = stack.getOrCreateTag();
+                code = tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
+            }
             List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
 
             for (BlockEntity be : blockEntities) {

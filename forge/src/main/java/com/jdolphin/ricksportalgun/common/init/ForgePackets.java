@@ -98,6 +98,16 @@ public class ForgePackets {
                 .decoder(SBSetPortalGunTypePacket::decode)
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBSetBarrierCodePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SBSetBarrierCodePacket::encode)
+                .decoder(SBSetBarrierCodePacket::decode)
+                .consumerMainThread(ForgePackets::handle)
+                .add();
+        INSTANCE.messageBuilder(SBSetDispenserDestinationPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SBSetDispenserDestinationPacket::encode)
+                .decoder(SBSetDispenserDestinationPacket::decode)
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
