@@ -198,19 +198,17 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                         float size = stack.getOrDefault(PGDataComponents.PORTAL_SIZE, 1.0f);
                         int age = stack.getOrDefault(PGDataComponents.PORTAL_LIFETIME, 10);
-
                         if (serverlevel != null) {
                             if (LevelHelper.canPortalTo(serverlevel, destination, stack) && LevelHelper.canPortalTo(((ServerLevel) level), hitResult.getBlockPos(), stack)) {
                                 if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
                                     //No errors: actually make the portal
-
                                     PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                                     serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
                                     PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
 
                                     boolean bootleg = stack.getOrDefault(PGDataComponents.BOOTLEG, false);
                                     doForBoth(entity -> {
-                                        entity.setLifetime(PGHelper.seconds(age));
+                                        entity.setLifetime(PGHelper.seconds(Math.max(age, 5)));
                                         entity.setColor(getColor(stack));
                                         entity.setBootleg(bootleg);
                                     }, portal, exPortal);
@@ -229,7 +227,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     level.addFreshEntity(portal);
 
                                     player.awardStat(Stats.ITEM_USED.get(this));
-                                    player.getCooldowns().addCooldown(this, 20 * 3);
+                                    player.getCooldowns().addCooldown(this, PGHelper.seconds(3));
                                     if (!player.isCreative()) lowerFuel(stack, 1);
                                 } else {
                                     //Target or Origin is end & dragon is alive
@@ -262,7 +260,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             level.addFreshEntity(portal);
 
                             player.awardStat(Stats.ITEM_USED.get(this));
-                            player.getCooldowns().addCooldown(this, 20 * 3);
+                            player.getCooldowns().addCooldown(this, PGHelper.seconds(3));
                             return InteractionResultHolder.success(stack);
                         }
                     }

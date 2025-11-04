@@ -54,7 +54,7 @@ public class PGDataComponents {
     }
 
     private static DataComponentType<Integer> registerInteger(String name) {
-        return registerComponent(name, tBuilder -> tBuilder.persistent(Codec.INT).cacheEncoding());
+        return registerComponent(name, tBuilder -> tBuilder.persistent(Codec.INT));
     }
 
     private static <T> DataComponentType<T> registerComponent(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {

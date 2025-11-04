@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.client.screen.portalgun.SettingsScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGTooltipText;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCustomizeSettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -44,6 +45,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
         this.portalAge = this.addWidget(new PGSlider(this.width / 2 + 62, this.height / 2 - 40, 42, 18,
                 Component.empty(), age, 5, 45, true));
+        this.portalAge.setStepSize(1);
 
         this.resetAge = this.addRenderableWidget(new PGImageButton(portalAge.getX() + portalAge.getWidth() + 10, portalAge.getY() - 1, 21, 21,
                 Component.translatable("ricksportalgun.button.portal_age.reset"), button -> this.portalAge.setValue(10), 16, 16, RESET_LOCATION));
@@ -68,6 +70,8 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.portalAge.getY() + 4,
+                Component.translatable("ricksportalgun.button.portal_age"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.portal_lifetime")));
         this.resetAge.setRenderBackground(false);
         this.resetSize.setRenderBackground(false);
         this.resetAge.setColor(style.highlightColor());

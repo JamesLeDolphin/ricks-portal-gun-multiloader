@@ -52,6 +52,10 @@ public class PGSlider extends AbstractSliderButton {
         this(x, y, width, height, message, currentValue, minValue, maxValue, 0.1F, 0, drawString);
     }
 
+    public void setStepSize(double stepSize) {
+        this.stepSize = stepSize;
+    }
+
     public void setRenderBG(boolean renderBG) {
         this.renderBG = renderBG;
     }

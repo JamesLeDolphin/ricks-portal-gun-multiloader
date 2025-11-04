@@ -2,10 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.SettingsScreen;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
+import com.jdolphin.ricksportalgun.client.screen.widget.*;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -83,6 +80,18 @@ public class SecuritySettingsScreen extends AbstractBaseScreen {
                 (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.lockButton.getY() + 4,
+                Component.translatable("ricksportalgun.button.lock"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.lock")));
+
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.playerInput.getY() + 4,
+                Component.translatable("ricksportalgun.button.ownership"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.owner_transfer")));
+
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.code.getY() + 4,
+                Component.translatable("ricksportalgun.button.code"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.portal_code")));
+
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.selfDestruct.getY() + 4,
+                Component.translatable("ricksportalgun.button.self_destruct"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.self_destruct")));
+
         this.lockButton.setTextColor(style.textColor());
         this.lockButton.setRenderBackground(false);
         this.selfDestruct.setTextColor(style.textColor());

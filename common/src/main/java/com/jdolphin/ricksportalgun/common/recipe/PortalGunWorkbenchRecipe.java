@@ -5,10 +5,12 @@ import com.jdolphin.ricksportalgun.common.init.PGRecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -43,9 +45,10 @@ public class PortalGunWorkbenchRecipe implements Recipe<WorkbenchRecipeInput> {
                     if (stack.getCount() < ingredient.getCount()) {
                         return false;
                     }
-                    if (!ItemStack.isSameItemSameComponents(stack, ingredient)) {
-                        return false;
-                    }
+                    if (stack.getItem() == ingredient.getItem()) {
+                        if (ingredient.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY) != PotionContents.EMPTY &&
+                                stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY) == PotionContents.EMPTY) return false;
+                    } else return false;
                 }
                 return true;
             }
