@@ -34,8 +34,7 @@ public class UpgradesInfoScreen extends AbstractBaseScreen {
     protected void init() {
         super.init();
 
-        upgradeListWidget = this.addWidget(new UpgradeListWidget(Minecraft.getInstance(), 170, 152, this.width / 2 - 75, this.height / 2 - 70,
-                24));
+        upgradeListWidget = this.addWidget(new UpgradeListWidget(Minecraft.getInstance(), 170, 152, this.width / 2 - 75, this.height / 2 - 70, 24));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> {
@@ -56,6 +55,10 @@ public class UpgradesInfoScreen extends AbstractBaseScreen {
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings.upgrades"), this.width / 2, this.height / 2 - 92, style.textColor());
 
+        if (upgradeListWidget != null) {
+            upgradeListWidget.render(graphics, mouseX, mouseY, partialTick);
+            graphics.renderOutline(upgradeListWidget.getLeft(), upgradeListWidget.getTop(), upgradeListWidget.getWidth(), upgradeListWidget.getHeight(), style.highlightColor());
+        }
 
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
 

@@ -47,7 +47,6 @@ public class PGUpgradeTypes {
     }
 
     public static UpgradeType getFromString(String s) {
-        ResourceLocation rl = new ResourceLocation(s);
-        return UPGRADE_TYPES.getOrDefault(rl, null);
+       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(s)).toList().get(0);
     }
 }
