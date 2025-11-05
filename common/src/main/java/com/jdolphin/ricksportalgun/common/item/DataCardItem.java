@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
+import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -17,7 +18,7 @@ public class DataCardItem extends Item implements IWaypointStorage {
 
     @Override
     public void appendHoverText(ItemStack stack, Level pLevel, List<Component> tooltipComponents, TooltipFlag pIsAdvanced) {
-        List<String> list = IWaypointStorage.getWaypoints(stack);
+        List<Waypoint> list = IWaypointStorage.getWaypoints(stack);
         tooltipComponents.add(Component.translatable("tooltip.ricksportalgun.waypoints", list.size()).withStyle(ChatFormatting.DARK_GRAY));
     }
 

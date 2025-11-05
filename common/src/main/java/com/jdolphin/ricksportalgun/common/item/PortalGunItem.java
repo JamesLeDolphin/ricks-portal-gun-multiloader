@@ -4,16 +4,18 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.item.upgrade.AbstractUpgradeItem;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +39,8 @@ import net.minecraft.world.phys.Vec3;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_UPGRADES;
 
 @SuppressWarnings("unused")
 public class PortalGunItem extends Item implements IWaypointStorage {
@@ -179,12 +183,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
-                    if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
-                        InteractionResult result = upgrade.applyUpgrade(player, stack, this);
-                        if (!result.equals(InteractionResult.FAIL)) {
-                            if (!player.isCreative()) oppositeStack.shrink(1);
-                            return InteractionResultHolder.success(stack);
-                        } else return InteractionResultHolder.fail(stack);
+                    if (oppositeStack.getItem() instanceof UpgradeItem upgrade) {
+                        InteractionResult result = upgrade.onApply(player, stack);
+                        if (!result.equals(InteractionResult.FAIL) && !player.isCreative())
+                                oppositeStack.shrink(1);
+                            return new InteractionResultHolder<>(result, stack);
                     } else {
                         ResourceLocation dim = tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : Level.OVERWORLD.location();
                         ResourceKey<Level> key = LevelHelper.getWorldKey(dim);
@@ -297,7 +300,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     @Override
     public void appendHoverText(ItemStack stack, Level pLevel, List<Component> tooltips, TooltipFlag pIsAdvanced) {
         CompoundTag tag = stack.getOrCreateTag();
-        List<String> list = IWaypointStorage.getWaypoints(stack);
+        List<Waypoint> list = IWaypointStorage.getWaypoints(stack);
         if (!Screen.hasShiftDown()) {
         tooltips.add(Component.translatable("ricksportalgun.destination",
                 getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
@@ -370,5 +373,29 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             CompoundTag bpTag = tag.getCompound(PGNbtKeys.TAG_BPOS);
             return NbtUtils.readBlockPos(bpTag);
         } else return BlockPos.ZERO;
+    }
+
+    public static List<UpgradeType> getUpgrades(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).map(PGUpgradeTypes::getFromString).toList();
+    }
+
+    public static void addUpgrade(ItemStack stack, UpgradeType type) {
+        CompoundTag tag = stack.getOrCreateTag();
+        ListTag listtag = tag.getList(TAG_UPGRADES, Tag.TAG_STRING);
+        String upTag = type.getUpgradeTag();
+        if (!upTag.isEmpty()) {
+            listtag.add(StringTag.valueOf(upTag));
+            tag.put(TAG_UPGRADES, listtag);
+        }
+    }
+
+    public static void removeUpgrade(ItemStack stack, UpgradeType type) {
+        CompoundTag tag = stack.getOrCreateTag();
+        ListTag listtag = tag.getList(TAG_UPGRADES, Tag.TAG_STRING);
+        String upTag = type.getUpgradeTag();
+        if (!upTag.isEmpty()) {
+            listtag.remove(StringTag.valueOf(upTag));
+            tag.put(TAG_UPGRADES, listtag);
+        }
     }
 }

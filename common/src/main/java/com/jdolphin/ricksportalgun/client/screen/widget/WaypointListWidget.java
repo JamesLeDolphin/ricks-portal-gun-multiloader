@@ -46,11 +46,11 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
 
     public void refreshEntries(ItemStack stack) {
         this.children().clear();
-        List<String> waypoints = IWaypointStorage.getWaypoints(stack);
+        List<Waypoint> waypoints = IWaypointStorage.getWaypoints(stack);
 
-        for (String waypoint : waypoints) {
+        for (Waypoint waypoint : waypoints) {
             if (waypoint != null) {
-                this.addEntry(new WaypointEntry(Waypoint.getWaypoint(waypoint), this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
+                this.addEntry(new WaypointEntry(waypoint, this, this.showInfoButton, this.renderButtonBg, this.style.highlightColor()));
             } else LogManager.getLogger().warn("Failed to get Waypoint");
         }
     }

@@ -140,9 +140,6 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_BIOME_LOC)) {
             this.locator.active = false;
         }
-        if (!PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
-            this.settings.active = false;
-        }
 
         PortalGunStyle style = getStyle();
 
@@ -252,16 +249,15 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             GuiHelper.renderOutline(graphics, waypoints, style.highlightColor());
             GuiHelper.setTooltip(waypoints, Component.translatable("ricksportalgun.button.waypoint"));
         }
-        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
-            settings.render(graphics, pMouseX, pMouseY, delta);
-            GuiHelper.renderOutline(graphics, settings, style.highlightColor());
-            GuiHelper.setTooltip(settings, Component.translatable("ricksportalgun.button.settings"));
-        }
         if (PGHelper.checkTagBoolean(tag, PGNbtKeys.UPGRADE_BIOME_LOC)) {
             locator.render(graphics, pMouseX, pMouseY, delta);
             GuiHelper.renderOutline(graphics, locator, style.highlightColor());
             GuiHelper.setTooltip(locator, Component.translatable("ricksportalgun.button.locator"));
         }
+        settings.render(graphics, pMouseX, pMouseY, delta);
+        GuiHelper.renderOutline(graphics, settings, style.highlightColor());
+        GuiHelper.setTooltip(settings, Component.translatable("ricksportalgun.button.settings"));
+
         RenderSystem.enableBlend();
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
         RenderSystem.disableBlend();

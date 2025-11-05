@@ -8,6 +8,7 @@ public class PGNbtKeys {
     public static final String TAG_BOOTLEG = "Bootleg";
     public static final String TAG_COLOR = "Color";
     public static final String TAG_WAYPOINTS = "Waypoints";
+    public static final String TAG_UPGRADES = "Upgrades";
     public static final String TAG_LOCK = "Lock";
     public static final String TAG_OWNER = "Owner";
     public static final String TAG_DEFAULT_COLOR = "DefaultColor";
@@ -28,4 +29,5 @@ public class PGNbtKeys {
     public static final String EXTRA_DIM = "ExtraDims";
     public static final String EXTRA_DIM_2 = "ExtraDimMk2";
     public static final String SETTINGS = "Settings";
+    public static final String FUEL_UPG = "MaxFuel";
 }

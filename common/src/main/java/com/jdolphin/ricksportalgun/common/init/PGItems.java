@@ -3,14 +3,10 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.CreativeUpgradeItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleConditionalUpgradeItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -58,54 +54,32 @@ public class PGItems {
     public static final Item CIRCUIT_BOARD = register("circuitboard", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     //Upgrades
-    public static final Item CREATIVE_UPGRADE = register("upgrade_creative", CreativeUpgradeItem::new, new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item CREATIVE_UPGRADE = register("upgrade_creative", properties -> new UpgradeItem(properties, PGUpgradeTypes.CREATIVE),
+            new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.UPGRADE_WAYPOINT)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
-
-    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.EXTRA_DIM)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
-
-    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.EXTRA_DIM_2),
-            ((stack, portalGun) -> hasUpgrade(stack, PGNbtKeys.EXTRA_DIM)),
-                    Component.translatable("error.ricksportalgun.upgrade.needs_dimension")),
+    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new UpgradeItem(properties, PGUpgradeTypes.WAYPOINTS),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.SETTINGS)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new UpgradeItem(properties,
+            PGUpgradeTypes.DIM_1), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.TAG_MAX_FUEL, 128);
-            }), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new UpgradeItem(properties, PGUpgradeTypes.DIM_2),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.UPGRADE_BIOME_LOC)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new UpgradeItem(properties, PGUpgradeTypes.SETTINGS),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.UPGRADE_PLAYER_LOC),
-            (stack, item) -> hasUpgrade(stack, PGNbtKeys.UPGRADE_BIOME_LOC),
-            Component.translatable("error.ricksportalgun.upgrade.needs_biome")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new UpgradeItem(properties, PGUpgradeTypes.MAX_FUEL),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> setUpgrade(stack, PGNbtKeys.UPGRADE_STRUCTURE_LOC),
-            (stack, item) -> hasUpgrade(stack, PGNbtKeys.UPGRADE_PLAYER_LOC),
-            Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.BIOME_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    private static boolean hasUpgrade(ItemStack stack, String tag) {
-        CompoundTag tag1 = stack.getOrCreateTag();
-        if (tag1.contains(tag)) {
-            return tag1.getBoolean(tag);
-        }
-        return false;
-    }
+    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.PLAYER_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    private static void setUpgrade(ItemStack stack, String tag) {
-        CompoundTag tag1 = stack.getOrCreateTag();
-        tag1.putBoolean(tag, true);
-    }
+    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.STRUCTURE_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     private static Item registerGun(String name) {
         return registerGun(name, 2, Color.GREEN, PGCreativeModeTabs.TOOLS_AND_UTILITIES);

@@ -13,8 +13,8 @@ import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_WAYPOINTS;
 
 public interface IWaypointStorage {
 
-    static List<String> getWaypoints(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getList(TAG_WAYPOINTS, Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
+    static List<Waypoint> getWaypoints(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getList(TAG_WAYPOINTS, Tag.TAG_STRING).stream().map(Tag::getAsString).map(Waypoint::getWaypoint).toList();
     }
 
     static void addWaypoint(ItemStack stack, Waypoint waypoint) {
