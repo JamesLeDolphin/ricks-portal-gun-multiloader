@@ -117,8 +117,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
 
         @Override
         public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            WaypointListWidget wpList = this.list;
-            if (pTop > wpList.headerHeight) {
+            if (pTop > this.list.headerHeight) {
 
                 this.button.setX(pLeft + (showInfo ? 18 : 56));
                 this.button.setY(pTop);

@@ -118,12 +118,12 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
             g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
             b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
         }
+
         this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, r, g, b, 1);
 
         stack.popPose();
         super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
     }
-
 
     public static void tickTexture() {
         tickTimer++;

@@ -19,6 +19,9 @@ public class UpgradeType {
         this.description = desc;
         this.tag = tag;
     }
+    public Component getName() {
+        return Component.translatable("upgrade.ricksportalgun." + id);
+    }
 
     public Component getDescription() {
         return description;

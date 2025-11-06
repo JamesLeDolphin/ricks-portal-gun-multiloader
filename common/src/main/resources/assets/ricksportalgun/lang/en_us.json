@@ -40,6 +40,15 @@
   "item.ricksportalgun.upgrade_structure_locator": "Portal Gun Structure Locator Upgrade",
   "item.ricksportalgun.upgrade_creative": "Creative Portal Gun Upgrade",
 
+  "upgrade.ricksportalgun.settings": "Settings Upgrade",
+  "upgrade.ricksportalgun.biome_loc": "Biome Locator Upgrade",
+  "upgrade.ricksportalgun.waypoints": "Waypoints Upgrade",
+  "upgrade.ricksportalgun.max_fuel": "Maximum Fuel Upgrade",
+  "upgrade.ricksportalgun.player_loc": "Player Locator Upgrade",
+  "upgrade.ricksportalgun.structure_loc": "Structure Locator Upgrade",
+  "upgrade.ricksportalgun.dim_1": "Dimension Upgrade Mk.I",
+  "upgrade.ricksportalgun.dim_2": "Dimension Upgrade Mk.II",
+
   "menu.ricksportalgun.coord": "Portal Gun Coordinate Travel",
   "menu.ricksportalgun.waypoints.new": "New Waypoint",
   "menu.ricksportalgun.locator": "Locating",
@@ -56,7 +65,7 @@
   "menu.ricksportalgun.settings.customization": "Customization Settings",
   "menu.ricksportalgun.settings.customization.theme": "Edit Portal Gun Theme",
   "menu.ricksportalgun.settings.customization.theme.example": "Example Text",
-  "menu.ricksportalgun.settings.upgrades": "Upgrade Settings",
+  "menu.ricksportalgun.settings.upgrades": "Installed Upgrades",
   "menu.ricksportalgun.workbench.skin": "Edit Portal Gun Appearance",
   "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
   "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
@@ -114,6 +123,7 @@
   "notice.ricksportalgun.upgrade": "Upgrade applied successfully",
   "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
   "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket",
+  "notice.ricksportalgun.no_upgrades": "No upgrades installed",
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
   "error.ricksportalgun.security": "Error 403: Portal Gun locked!",
@@ -156,6 +166,7 @@
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
+  "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for more info",
 
   "tooltip.ricksportalgun.upgrade.settings": "Unlocks Security & Customization settings.",
   "tooltip.ricksportalgun.upgrade.waypoints": "Unlocks the ability to store & travel to waypoints.",
