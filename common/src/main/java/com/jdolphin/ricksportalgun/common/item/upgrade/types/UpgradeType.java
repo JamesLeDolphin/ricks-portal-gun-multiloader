@@ -38,7 +38,7 @@ public class UpgradeType {
     public boolean applyUpgrade(Player player, ItemStack gunStack) {
         CompoundTag tag = gunStack.getOrCreateTag();
         ListTag listTag = tag.getList(PGNbtKeys.TAG_UPGRADES, 8);
-        if (listTag.add(StringTag.valueOf(this.tag))) {
+        if (!listTag.contains(StringTag.valueOf(this.tag)) && listTag.add(StringTag.valueOf(this.tag))) {
             PGHelper.sendSuccessMsg(player, Component.translatable("notice.ricksportalgun.upgrade"));
             tag.put(PGNbtKeys.TAG_UPGRADES, listTag);
             return true;

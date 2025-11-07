@@ -28,6 +28,7 @@ public class FabricPackets {
         registerGlobalReceiver(SBWorkbenchWaypointEditPackage.getID(), SBWorkbenchWaypointEditPackage::decode);
         registerGlobalReceiver(SBActivateSelfDestructPacket.getID(), SBActivateSelfDestructPacket::decode);
         registerGlobalReceiver(SBSetPortalGunTypePacket.getID(), SBSetPortalGunTypePacket::decode);
+        registerGlobalReceiver(SBAddUpgradePacket.getID(), SBAddUpgradePacket::decode);
     }
 
     private static  <P extends PGServerPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func) {

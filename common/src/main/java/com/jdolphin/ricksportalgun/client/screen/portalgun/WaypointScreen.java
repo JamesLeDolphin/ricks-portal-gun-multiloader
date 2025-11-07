@@ -3,9 +3,9 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,7 +32,7 @@ public class WaypointScreen extends AbstractBaseScreen {
         assert minecraft != null && minecraft.screen != null && minecraft.player != null;
 
         this.addWaypoint = this.addRenderableWidget(new PGImageButton(this.width / 2 + 68, this.height / 2 - 94, 20, 20, Component.translatable("ricksportalgun.button.waypoint.new"),
-                (button) -> this.minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
+                (button) -> minecraft.setScreen(new CreateWaypointScreen()), 20, 20, NEW_WAYPOINT_TEXTURES));
 
         ItemStack stack = getItemStack();
         this.waypointList = this.addWidget(new WaypointListWidget(170, 152, this.width / 2 - 75, this.height / 2 - 70,

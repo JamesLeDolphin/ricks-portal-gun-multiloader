@@ -5,10 +5,10 @@ import com.jdolphin.ricksportalgun.client.screen.portalgun.settings.Customizatio
 import com.jdolphin.ricksportalgun.client.screen.portalgun.settings.UpgradesInfoScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
-import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenSecuritySettingsPacket;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -34,7 +34,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         ItemStack stack = getItemStack();
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
+        if (PGHelper.hasUpgrade(tag, PGUpgradeTypes.SETTINGS)) {
             this.security = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 38, 128, 20,
                     Component.translatable("ricksportalgun.button.settings.security"), button -> {
                 SBOpenSecuritySettingsPacket packet = new SBOpenSecuritySettingsPacket();
@@ -45,7 +45,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         this.upgrades = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 10, 128, 20,
                 Component.translatable("menu.ricksportalgun.settings.upgrades"), button -> this.minecraft.setScreen(new UpgradesInfoScreen()), this.font));
 
-        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.SETTINGS)) {
+        if (PGHelper.hasUpgrade(tag, PGUpgradeTypes.SETTINGS)) {
             this.customization = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 + 18, 128, 20,
                     Component.translatable("ricksportalgun.button.settings.customization"), button -> this.minecraft.setScreen(new CustomizationSettingsScreen()), this.font));
         }

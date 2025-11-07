@@ -4,12 +4,15 @@ import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -36,6 +39,11 @@ public class PGHelper {
 
     public static boolean checkTagBoolean(CompoundTag tag, String key) {
         return tag.contains(key) && tag.getBoolean(key);
+    }
+
+    public static boolean hasUpgrade(CompoundTag tag, UpgradeType type) {
+        ListTag listTag = tag.getList(PGNbtKeys.TAG_UPGRADES, 8);
+        return listTag.contains(StringTag.valueOf(type.getUpgradeTag()));
     }
 
     public static int seconds(int amount) {

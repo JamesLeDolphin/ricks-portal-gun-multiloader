@@ -81,10 +81,6 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
                 }
             }
         });
-
-        ClientTickEvents.START_CLIENT_TICK.register(minecraft -> {
-            PortalEntityRenderer.tickTexture();
-        });
     }
 
     private static  <P extends PGPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func, Consumer<P> consumer) {

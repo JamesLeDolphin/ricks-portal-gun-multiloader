@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;

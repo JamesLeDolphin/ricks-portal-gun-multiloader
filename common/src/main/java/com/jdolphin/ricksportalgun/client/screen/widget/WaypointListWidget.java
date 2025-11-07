@@ -1,9 +1,9 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.jdolphin.ricksportalgun.client.screen.portalgun.WaypointInfoScreen;
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;

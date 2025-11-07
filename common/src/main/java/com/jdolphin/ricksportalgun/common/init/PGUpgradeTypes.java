@@ -43,7 +43,7 @@ public class PGUpgradeTypes {
         return type;
     }
 
-    public static UpgradeType getFromString(String s) {
-       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(s)).toList().get(0);
+    public static UpgradeType getFromString(String upgradeTag) {
+       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(upgradeTag)).toList().get(0);
     }
 }

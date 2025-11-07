@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
@@ -7,7 +8,6 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
