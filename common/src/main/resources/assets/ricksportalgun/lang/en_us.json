@@ -172,7 +172,8 @@
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
-  "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for more info",
+  "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for upgrade info",
+  "tooltip.ricksportalgun.upgrade.tutorial": "Applied in portal gun settings menu",
 
   "tooltip.ricksportalgun.upgrade.settings": "Unlocks Security & Customization settings.",
   "tooltip.ricksportalgun.upgrade.waypoints": "Unlocks the ability to store & travel to waypoints.",

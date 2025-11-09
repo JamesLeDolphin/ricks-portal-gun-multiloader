@@ -108,19 +108,18 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 }, 20, 18, SELF_DESTRUCT_TEXTURE));
         selfDestruct.active = tag.contains(PGNbtKeys.SELF_DESTRUCT) && tag.getBoolean(PGNbtKeys.SELF_DESTRUCT);
 
-        this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
-                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
-
-        this.locator = this.addRenderableWidget(new PGImageButton(this.width / 2 - 10, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.locator"),
+        this.locator = this.addRenderableWidget(new PGImageButton(this.width / 2 + 16, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.locator"),
                 (button) -> {
                     SBOpenLocatorScreenPacket packet = new SBOpenLocatorScreenPacket();
                     PGHelper.sendPacketToServer(packet);
 
                 }, 20, 18, PLAYER_LOC_TEXTURE));
 
-        this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 + 16, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.settings"),
+        this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 - 10, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.settings"),
                 (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURE));
 
+        this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
+                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20, Component.translatable("ricksportalgun.button.select"), (button) -> {
             this.setCoords();

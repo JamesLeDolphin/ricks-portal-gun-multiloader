@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
-import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
+import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
@@ -40,7 +40,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
 
-        ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGClientConfig.SPEC, "ricksportalgun-common.toml");
+        ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         initEvents();
     }
 

@@ -10,6 +10,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.PreConditionUpgrade;
@@ -70,20 +71,20 @@ public class UpgradesInfoScreen extends AbstractBaseScreen {
         itemButtons.clear();
 
         int i = 0;
-        List<UpgradeType> types = PortalGunItem.getUpgrades(getItemStack());
+        List<String> types = PortalGunItem.getUpgrades(getItemStack());
         for (UpgradeItem upgrade : PGItems.UPGRADES) {
             int offsetX = x + (i % 3) * 20;
             int offsetY = y + (i / 3) * 20;
 
             Player player = minecraft.player;
             boolean hasItem = player.getInventory().hasAnyMatching(stack -> stack.getItem().equals(upgrade));
-            boolean hasPrevious = !(upgrade.getUpgradeType() instanceof PreConditionUpgrade pre) || types.contains(pre);
-            boolean hasUpgradePreviously = types.contains(upgrade.getUpgradeType());
+            boolean hasPrevious = (upgrade.getUpgradeType() instanceof PreConditionUpgrade pre && types.contains(pre.getConditionTag())) || !(upgrade.getUpgradeType() instanceof PreConditionUpgrade);
+            boolean hasUpgradePreviously = types.contains(upgrade.getUpgradeType().getUpgradeTag());
             boolean canApply = player.isCreative() || (hasItem && !hasUpgradePreviously && hasPrevious);
 
             PGItemButton button = this.addRenderableWidget(new PGItemButton(offsetX, offsetY, 20, 20,  upgrade.getUpgradeType().getName(), btn -> {
                 if (canApply) {
-                    SBAddUpgradePacket packet = new SBAddUpgradePacket(upgrade.getUpgradeType().getUpgradeTag());
+                    SBAddUpgradePacket packet = new SBAddUpgradePacket(upgrade.getUpgradeType().getId());
                     PGHelper.sendPacketToServer(packet);
                 }
             }, upgrade.getDefaultInstance()));
@@ -158,11 +159,11 @@ public class UpgradesInfoScreen extends AbstractBaseScreen {
 
         public void refreshEntries(ItemStack stack) {
             this.children().clear();
-            List<UpgradeType> upgrades = PortalGunItem.getUpgrades(stack);
+            List<String> upgrades = PortalGunItem.getUpgrades(stack);
 
-            for (UpgradeType upgrade : upgrades) {
+            for (String upgrade : upgrades) {
                 if (upgrade != null) {
-                    this.addEntry(new UpgradeEntry(upgrade, this, this.style.highlightColor()));
+                    this.addEntry(new UpgradeEntry(PGUpgradeTypes.getFromTag(upgrade), this, this.style.highlightColor()));
                 } else LogManager.getLogger().warn("Failed to get upgrade");
             }
         }

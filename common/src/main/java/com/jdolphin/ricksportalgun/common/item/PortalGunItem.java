@@ -379,8 +379,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         } else return BlockPos.ZERO;
     }
 
-    public static List<UpgradeType> getUpgrades(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).map(PGUpgradeTypes::getFromString).toList();
+    public static List<String> getUpgrades(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
     }
 
     public static void addUpgrade(ItemStack stack, UpgradeType type) {

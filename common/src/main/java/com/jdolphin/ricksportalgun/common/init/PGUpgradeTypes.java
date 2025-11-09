@@ -43,7 +43,11 @@ public class PGUpgradeTypes {
         return type;
     }
 
-    public static UpgradeType getFromString(String upgradeTag) {
-       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(upgradeTag)).toList().get(0);
+    public static UpgradeType getFromTag(String upgradeTag) {
+       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(upgradeTag)).findFirst().orElseThrow();
+    }
+
+    public static UpgradeType getFromId(String id) {
+        return UPGRADE_TYPES.values().stream().filter(type -> type.getId().equals(id)).findFirst().orElseThrow();
     }
 }

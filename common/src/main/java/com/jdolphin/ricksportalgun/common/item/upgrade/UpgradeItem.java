@@ -29,7 +29,7 @@ public class UpgradeItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
         super.appendHoverText(stack, level, components, isAdvanced);
-
+        components.add(Component.translatable("tooltip.ricksportalgun.upgrade.tutorial").withStyle(ChatFormatting.GRAY));
         if (type.getDescription() != null) {
             if (Screen.hasShiftDown()) {
                 components.add(type.getDescription());
