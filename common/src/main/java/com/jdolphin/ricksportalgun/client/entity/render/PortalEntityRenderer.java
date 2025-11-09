@@ -1,18 +1,14 @@
 package com.jdolphin.ricksportalgun.client.entity.render;
 
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -25,10 +21,7 @@ import java.util.List;
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.id("textures/entity/portal.png");
     public PortalEntityModel model;
-    private static int textureFrame = 0;
-    private static final int frames = 8;
     private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
-    private static int tickTimer = 0;
 
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -40,21 +33,17 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
         return PORTAL_TEXTURE;
     }
 
-    public ResourceLocation getPortalTexture(int i) {
-        return PGHelper.id("textures/entity/portal_" + i + ".png");
-    }
-
-    protected void openAnimation(PortalEntity state, PoseStack stack) {
+    protected void openAnimation(PortalEntity entity, PoseStack stack) {
         float f;
-        if (!state.exists() && state.tickCount < state.getLifetime() * 0.1) {
-            f = Mth.lerp((float) state.tickCount / 20, 0.0f, 1.0f);
+        if (!entity.exists() && entity.tickCount < entity.getLifetime() * 0.1) {
+            f = Mth.lerp((float) entity.tickCount / 20, 0.0f, 1.0f);
             f = Mth.clamp(f, 0.0f, 1.0f);
             f *= f;
             f *= f;
             stack.scale(f, f, f);
         }
-        if (state.tickCount > state.getLifetime() * 0.9) {
-            f = Mth.lerp((float) state.tickCount / 20, 1.0f, 0.0f);
+        if (entity.tickCount > entity.getLifetime() * 0.9) {
+            f = Mth.lerp((float) entity.tickCount / 20, 1.0f, 0.0f);
             f = Mth.clamp(f, 1.0f, 0.0f);
             f *= f;
             f *= f;
@@ -64,43 +53,11 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
 
     @Override
     public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
-        stack.pushPose();
+        PGPortalType type = entity.getPortalType();
+        if (type.getModel() == null && type.needsModel()) type.setModel(model);
+
         openAnimation(entity, stack);
-        Direction direction = entity.getPortalDirection();
-        Direction facing = entity.getPortalFacing();
-        stack.translate(0, -1, 0);
-        if (direction != null) {
-            Direction.Axis axis = facing.getAxis();
 
-        float zRot = 0;
-        float yRot = 0;
-        float xRot = 0;
-
-            float height = entity.getSize() > 2 ? entity.getSize() / 2 : 1;
-           if (direction.getAxis().isVertical()) {
-               if (axis.equals(Direction.Axis.Z)) {
-                   stack.scale(entity.getSize(), 1, height);
-                   zRot = 180;
-                   yRot = 180;
-                   xRot = 90;
-                   stack.translate(0, 1.1, -1);
-               }
-               if (axis.equals(Direction.Axis.X)) {
-                   stack.scale(height, 1,  entity.getSize());
-                   xRot = 0;
-                   yRot = 270;
-                   zRot = 90;
-                   stack.translate(-1, 1.1, 0);
-               }
-           } else {
-               stack.scale(entity.getSize(), height, entity.getSize());
-           }
-            stack.mulPose(Axis.XN.rotationDegrees(xRot));
-            stack.mulPose(Axis.ZN.rotationDegrees(zRot));
-            stack.mulPose(Axis.YN.rotationDegrees(direction.getAxis().isVertical() ? yRot : entity.getYRot()));
-        }
-
-        VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getPortalTexture(textureFrame)));
         int color = entity.getColor();
         float r = FastColor.ARGB32.red(color) / 255f;
         float g = FastColor.ARGB32.green(color) / 255f;
@@ -111,26 +68,15 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
             int j = DyeColor.values().length;
             int k = i % j;
             int l = (i + 1) % j;
-            float f3 = ((float)(entity.tickCount % 25) + partialTick) / 25.0F;
+            float f3 = ((float) (entity.tickCount % 25) + partialTick) / 25.0F;
             float[] afloat1 = Sheep.getColorArray(DyeColor.byId(k));
             float[] afloat2 = Sheep.getColorArray(DyeColor.byId(l));
             r = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
             g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
             b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
         }
-        this.model.renderToBuffer(stack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, r, g, b, 1);
+        type.renderPortal(entity, yaw, partialTick, stack, source, packedLight, r, g, b);
 
-        stack.popPose();
         super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
-    }
-
-
-    public static void tickTexture() {
-        tickTimer++;
-
-        if (tickTimer >= 4) {
-            tickTimer = 0;
-            textureFrame = (textureFrame + 1) % frames;
-        }
     }
 }

@@ -1,6 +1,8 @@
 package com.jdolphin.ricksportalgun.common.item.upgrade;
 
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,9 +28,11 @@ public class UpgradeItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> components, TooltipFlag isAdvanced) {
         super.appendHoverText(stack, level, components, isAdvanced);
-
+        components.add(Component.translatable("tooltip.ricksportalgun.upgrade.tutorial").withStyle(ChatFormatting.GRAY));
         if (type.getDescription() != null) {
-            components.add(type.getDescription());
+            if (Screen.hasShiftDown()) {
+                components.add(type.getDescription());
+            } else components.add(Component.translatable("tooltip.ricksportalgun.hold_shift").withStyle(ChatFormatting.GRAY));
         }
     }
 

@@ -26,27 +26,28 @@ public class PGUpgradeTypes {
     public static final UpgradeType DIM_2 = registerPreCondition("dim_2", Component.translatable("tooltip.ricksportalgun.upgrade.dim_2"), "dim_2", "dim_1");
 
     private static UpgradeType registerCreative(String name, Component desc) {
-        ResourceLocation rl = PGHelper.id(name);
-        CreativeUpgrade type = new CreativeUpgrade(rl.toString(), desc);
-        UPGRADE_TYPES.put(rl, type);
+        CreativeUpgrade type = new CreativeUpgrade(name, desc);
+        UPGRADE_TYPES.put(PGHelper.id(name), type);
         return type;
     }
 
     private static UpgradeType registerSimple(String name, Component component, String tag) {
-        ResourceLocation rl = PGHelper.id(name);
-        UpgradeType type = new UpgradeType(rl.toString(), component, tag);
-        UPGRADE_TYPES.put(rl, type);
+        UpgradeType type = new UpgradeType(name, component, tag);
+        UPGRADE_TYPES.put(PGHelper.id(name), type);
         return type;
     }
 
     private static UpgradeType registerPreCondition(String name, Component component, String tag, String condition) {
-        ResourceLocation rl = PGHelper.id(name);
-        UpgradeType type = new PreConditionUpgrade(rl.toString(), component, tag, condition);
-        UPGRADE_TYPES.put(rl, type);
+        UpgradeType type = new PreConditionUpgrade(name, component, tag, condition);
+        UPGRADE_TYPES.put(PGHelper.id(name), type);
         return type;
     }
 
-    public static UpgradeType getFromString(String s) {
-       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(s)).toList().get(0);
+    public static UpgradeType getFromTag(String upgradeTag) {
+       return UPGRADE_TYPES.values().stream().filter(type -> type.getUpgradeTag().equals(upgradeTag)).findFirst().orElseThrow();
+    }
+
+    public static UpgradeType getFromId(String id) {
+        return UPGRADE_TYPES.values().stream().filter(type -> type.getId().equals(id)).findFirst().orElseThrow();
     }
 }

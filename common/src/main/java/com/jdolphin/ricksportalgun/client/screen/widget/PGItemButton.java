@@ -13,6 +13,8 @@ public class PGItemButton extends AbstractButton {
     protected Consumer<AbstractButton> onPress;
     protected ItemStack stack;
     protected boolean renderBG = true;
+    public boolean active = true;
+    public boolean visible = true;
 
     public PGItemButton(int x, int y, int width, int height, Component message, Consumer<AbstractButton> onPress, ItemStack stack) {
         super(x, y, width, height, message);
@@ -28,11 +30,16 @@ public class PGItemButton extends AbstractButton {
     public void renderString(GuiGraphics guiGraphics, Font font, int color) {}
 
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        if (renderBG) super.renderWidget(graphics, mouseX, mouseY, delta);
+        if (visible) {
+            if (renderBG) super.renderWidget(graphics, mouseX, mouseY, delta);
 
-        int x = this.getX() + (this.getWidth() / 2 - 8);
-        int y = this.getY() + (this.getHeight() / 2 - 8);
-        graphics.renderFakeItem(stack, x, y);
+            int x = this.getX() + (this.getWidth() / 2 - 8);
+            int y = this.getY() + (this.getHeight() / 2 - 8);
+            if (!this.active)
+                graphics.setColor(100 / 255f, 100 / 255f, 100 / 255f, 1);
+            graphics.renderFakeItem(stack, x, y);
+            graphics.setColor(1, 1, 1, 1);
+        }
     }
 
     @Override

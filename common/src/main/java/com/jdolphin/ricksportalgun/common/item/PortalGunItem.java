@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
@@ -7,7 +8,6 @@ import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -177,10 +177,14 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
         if (!level.isClientSide() && player instanceof ServerPlayer) {
             migrateDamage(stack);
+            migrateOldUpgrades(stack);
+            CompoundTag tag = stack.getOrCreateTag();
+            if (!tag.contains(PGNbtKeys.TAG_OWNER)) {
+                tag.putUUID(PGNbtKeys.TAG_OWNER, player.getUUID());
+            }
             if (PGHelper.canPlayerAccessGun(player, stack)) {
                 ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
                 BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
-                CompoundTag tag = stack.getOrCreateTag();
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
                     if (oppositeStack.getItem() instanceof UpgradeItem upgrade) {
@@ -375,8 +379,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         } else return BlockPos.ZERO;
     }
 
-    public static List<UpgradeType> getUpgrades(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).map(PGUpgradeTypes::getFromString).toList();
+    public static List<String> getUpgrades(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
     }
 
     public static void addUpgrade(ItemStack stack, UpgradeType type) {
@@ -397,5 +401,60 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             listtag.remove(StringTag.valueOf(upTag));
             tag.put(TAG_UPGRADES, listtag);
         }
+    }
+
+    public static void migrateOldUpgrades(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        ListTag listTag = tag.getList(TAG_UPGRADES, 8);
+        if (tag.contains(PGNbtKeys.UPGRADE_PLAYER_LOC)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.PLAYER_LOC.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.UPGRADE_PLAYER_LOC);
+        }
+        if (tag.contains(PGNbtKeys.UPGRADE_WAYPOINT)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.WAYPOINTS.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.UPGRADE_WAYPOINT);
+        }
+        if (tag.contains(PGNbtKeys.UPGRADE_BIOME_LOC)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.BIOME_LOC.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.UPGRADE_BIOME_LOC);
+        }
+        if (tag.contains(PGNbtKeys.UPGRADE_STRUCTURE_LOC)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.STRUCTURE_LOC.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.UPGRADE_STRUCTURE_LOC);
+        }
+        if (tag.contains(PGNbtKeys.EXTRA_DIM)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_1.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.EXTRA_DIM);
+        }
+        if (tag.contains(PGNbtKeys.EXTRA_DIM_2)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_2.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.EXTRA_DIM_2);
+        }
+        if (tag.contains(PGNbtKeys.SETTINGS)) {
+            StringTag st = StringTag.valueOf(PGUpgradeTypes.SETTINGS.getUpgradeTag());
+            if (listTag.contains(st)) {
+                listTag.add(st);
+            }
+            tag.remove(PGNbtKeys.SETTINGS);
+        }
+        tag.put(TAG_UPGRADES, listTag);
     }
 }

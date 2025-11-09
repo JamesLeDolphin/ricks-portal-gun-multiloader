@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -18,6 +19,7 @@ public record SBOpenCoordGuiPacket() implements PGServerPayload {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            PortalGunItem.migrateOldUpgrades(stack);
             if (PGHelper.canPlayerAccessGun(player, stack)) {
                 List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
                 if (!dims.contains(PGHelper.id("blender").toString()))

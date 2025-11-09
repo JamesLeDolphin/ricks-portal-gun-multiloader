@@ -75,36 +75,36 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public List<? extends String> getDisabledDimensions() {
-        return PGCommonConfig.getBlacklistedDims();
+        return PGCommonConfig.COMMON_CONFIG.getBlacklistedDims();
     }
 
     @Override
     public boolean disableStructureLocating() {
-        return PGCommonConfig.disableStructureLocating();
+        return PGCommonConfig.COMMON_CONFIG.disableStructureLocating();
     }
 
     @Override
     public boolean disableBiomeLocating() {
-        return PGCommonConfig.disableBiomeLocating();
+        return PGCommonConfig.COMMON_CONFIG.disableBiomeLocating();
     }
 
     @Override
     public boolean disablePlayerLocating() {
-        return PGCommonConfig.disablePlayerLocating();
+        return PGCommonConfig.COMMON_CONFIG.disablePlayerLocating();
     }
 
     @Override
     public int getRandomizerMax() {
-        return PGCommonConfig.getMaxRandomizerDistance();
+        return PGCommonConfig.COMMON_CONFIG.getMaxRandomizerDistance();
     }
 
     @Override
     public boolean disablePortalGunColorTint() {
-        return PGClientConfig.disablePortalGunColorTint();
+        return PGClientConfig.CLIENT_CONFIG.disablePortalGunColorTint();
     }
 
     @Override
     public List<? extends String> getDisabledEntities() {
-        return PGCommonConfig.getBlacklistedEntities();
+        return PGCommonConfig.COMMON_CONFIG.getBlacklistedEntities();
     }
 }

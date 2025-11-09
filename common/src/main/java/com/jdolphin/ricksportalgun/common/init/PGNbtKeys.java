@@ -21,7 +21,8 @@ public class PGNbtKeys {
 
     public static final String PRIMARY_COLOR = "PrimaryColor";
     public static final String SECONDARY_COLOR = "SecondaryColor";
-    //Upgrades
+
+    //Upgrades -- now only used for migrating from old upgrade system
     public static final String UPGRADE_PLAYER_LOC = "LocatePlayerUpgrade";
     public static final String UPGRADE_BIOME_LOC = "LocateBiomeUpgrade";
     public static final String UPGRADE_STRUCTURE_LOC = "LocateStructureUpgrade";
@@ -29,5 +30,4 @@ public class PGNbtKeys {
     public static final String EXTRA_DIM = "ExtraDims";
     public static final String EXTRA_DIM_2 = "ExtraDimMk2";
     public static final String SETTINGS = "Settings";
-    public static final String FUEL_UPG = "MaxFuel";
 }

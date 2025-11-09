@@ -1,7 +1,9 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
+import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
+import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
@@ -82,6 +84,10 @@ public class PortalEntity extends Entity {
         setPortalFacing(facing);
         setSize(size);
         this.pos = pos;
+    }
+
+    public PGPortalType getPortalType() {
+        return PGPortalTypes.DEFAULT;
     }
 
     public void setLifetime(int lifetime) {

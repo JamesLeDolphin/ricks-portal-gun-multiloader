@@ -1,9 +1,9 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.jdolphin.ricksportalgun.client.screen.portalgun.WaypointInfoScreen;
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -117,8 +117,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
 
         @Override
         public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            WaypointListWidget wpList = this.list;
-            if (pTop > wpList.headerHeight) {
+            if (pTop > this.list.headerHeight) {
 
                 this.button.setX(pLeft + (showInfo ? 18 : 56));
                 this.button.setY(pTop);

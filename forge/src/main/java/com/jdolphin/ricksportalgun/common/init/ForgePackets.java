@@ -108,6 +108,11 @@ public class ForgePackets {
                 .decoder(SBSetDispenserDestinationPacket::decode)
                 .consumerMainThread(ForgePackets::handle)
                 .add();
+        INSTANCE.messageBuilder(SBAddUpgradePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SBAddUpgradePacket::encode)
+                .decoder(SBAddUpgradePacket::decode)
+                .consumerMainThread(ForgePackets::handle)
+                .add();
 
         //Client bound
         INSTANCE.messageBuilder(CBOpenCoordGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

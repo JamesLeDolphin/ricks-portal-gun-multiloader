@@ -20,7 +20,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,11 +28,6 @@ public class ForgeClientMain {
 
     @Mod.EventBusSubscriber(modid = PGConstants.MODID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
-
-        @SubscribeEvent
-        public static void onClientTick(TickEvent.ClientTickEvent event) {
-            PortalEntityRenderer.tickTexture();
-        }
 
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {

@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.util;
+package com.jdolphin.ricksportalgun.common.customization;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

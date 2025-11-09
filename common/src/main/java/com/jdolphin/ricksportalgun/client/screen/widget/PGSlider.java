@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
-import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
