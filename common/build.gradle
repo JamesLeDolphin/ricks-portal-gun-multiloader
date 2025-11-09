@@ -30,6 +30,11 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
+    maven { url 'https://jitpack.io' }
+
+    // the repository for Cloth Config
+    maven { url 'https://maven.shedaniel.me' }
 }
 
 dependencies {
@@ -38,6 +43,11 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "dev.emi:emi-xplat-mojmap:${emi_version}:api"
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
+
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${immersive_portals_version}")
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${immersive_portals_version}")
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:${immersive_portals_version}")
+
 }
 
 configurations {

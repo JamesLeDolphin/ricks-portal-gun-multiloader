@@ -51,6 +51,11 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
+    maven { url 'https://jitpack.io' }
+
+    // the repository for Cloth Config
+    maven { url 'https://maven.shedaniel.me' }
 }
 
 loom {
