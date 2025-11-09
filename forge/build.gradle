@@ -43,6 +43,17 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -54,6 +65,12 @@ dependencies {
 
     modCompileOnlyApi "dev.emi:emi-forge:${emi_version}:api"
     modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
+
+    modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
+    modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
+
+    modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+forge")
+    modRuntimeOnly("maven.modrinth:forgified-fabric-api:0.92.6+1.11.14+1.20.1")
 }
 
 jar {

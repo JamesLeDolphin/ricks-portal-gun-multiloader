@@ -24,6 +24,11 @@ dependencies {
     //EMI
     modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
+
+    modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
+    modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
+
+    modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+fabric")
 }
 
 repositories {
@@ -34,6 +39,17 @@ repositories {
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
     }
 }
 
