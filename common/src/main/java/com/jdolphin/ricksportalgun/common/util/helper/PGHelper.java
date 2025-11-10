@@ -41,6 +41,10 @@ public class PGHelper {
         return tag.contains(key) && tag.getBoolean(key);
     }
 
+    public static boolean hasImmersivePortals() {
+        return PGServices.PLATFORM.isModLoaded("immersive_portals");
+    }
+
     public static boolean hasUpgrade(CompoundTag tag, UpgradeType type) {
         ListTag listTag = tag.getList(PGNbtKeys.TAG_UPGRADES, 8);
         return listTag.contains(StringTag.valueOf(type.getUpgradeTag()));

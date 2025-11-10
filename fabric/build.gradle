@@ -26,9 +26,17 @@ dependencies {
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
 
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
-    modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
+    //modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
 
     modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+fabric")
+
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v3.3.7-mc1.20.1")
+    modRuntimeOnly ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v3.3.7-mc1.20.1")
+    modRuntimeOnly ("com.github.iPortalTeam.ImmersivePortalsMod:build:v3.3.7-mc1.20.1")
+
+    modRuntimeOnly ("me.shedaniel.cloth:cloth-config-forge:11.1.136") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 }
 
 repositories {
@@ -49,6 +57,16 @@ repositories {
         }
         filter {
             includeGroup "maven.modrinth"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
         }
     }
 

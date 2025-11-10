@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
@@ -216,6 +217,10 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                 if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
                                     //No errors: actually make the portal
 
+                                    if (PGHelper.hasImmersivePortals() /*Check for portal type later*/) {
+                                        ImmersivePortalsHandler.spawnPortal(level, loc, key, destination.getCenter(), size);
+                                        System.out.println("E");
+                                    } else {
                                     PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                                     serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
                                     PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
@@ -235,7 +240,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     portal.setHopLocation(dim, destination);
                                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
-                                    if (!portal.isFlat()) doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                                    if (!portal.isFlat())
+                                        doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
 
                                     serverlevel.getServer().executeIfPossible(() -> serverlevel.addFreshEntity(exPortal));
                                     level.addFreshEntity(portal);
@@ -243,6 +249,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     player.awardStat(Stats.ITEM_USED.get(this));
                                     player.getCooldowns().addCooldown(this, 20 * 3);
                                     if (!player.isCreative()) lowerFuel(stack, 1);
+                                }
                                 } else {
                                     //Target or Origin is end & dragon is alive
                                     PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");

@@ -1,7 +1,9 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
@@ -13,6 +15,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -106,5 +110,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public List<? extends String> getDisabledEntities() {
         return PGCommonConfig.COMMON_CONFIG.getBlacklistedEntities();
+    }
+
+    @Override
+    public EntityType<? extends Entity> getPortalEntityType() {
+        return PGHelper.hasImmersivePortals() ? PortalHolder.TYPE : null;
     }
 }

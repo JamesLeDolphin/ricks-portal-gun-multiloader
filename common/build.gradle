@@ -30,6 +30,16 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 
     maven { url 'https://jitpack.io' }
 
@@ -44,9 +54,10 @@ dependencies {
     compileOnly "dev.emi:emi-xplat-mojmap:${emi_version}:api"
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
 
-    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${immersive_portals_version}")
-    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${immersive_portals_version}")
-    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:${immersive_portals_version}")
+    compileOnly("curse.maven:immersive-portals-for-forge-355440:6368524")
+    //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${immersive_portals_version}")
+    //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${immersive_portals_version}")
+    //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:${immersive_portals_version}")
 
 }
 
