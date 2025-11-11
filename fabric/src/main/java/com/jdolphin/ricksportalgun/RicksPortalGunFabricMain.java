@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
@@ -39,7 +40,9 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGRecipeSerializers.init(bind(BuiltInRegistries.RECIPE_SERIALIZER));
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
-
+        if (PGHelper.hasImmersivePortals()) {
+            Registry.register(BuiltInRegistries.ENTITY_TYPE, PGHelper.id("seethrough_portal"), PortalHolder.TYPE);
+        }
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         initEvents();
     }

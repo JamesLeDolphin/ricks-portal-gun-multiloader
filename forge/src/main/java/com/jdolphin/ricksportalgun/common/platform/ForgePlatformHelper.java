@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
@@ -11,6 +12,8 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -103,5 +106,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public List<? extends String> getDisabledEntities() {
         return PGCommonConfig.getBlacklistedEntities();
+    }
+
+    @Override
+    public EntityType<? extends Entity> getPortalEntityType() {
+        return PortalHolder.TYPE;
     }
 }

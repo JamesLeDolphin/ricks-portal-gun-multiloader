@@ -54,6 +54,16 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 
     maven { url 'https://jitpack.io' }
 
@@ -76,6 +86,8 @@ dependencies {
 
     modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+forge")
     modRuntimeOnly("maven.modrinth:forgified-fabric-api:0.92.6+1.11.14+1.20.1")
+
+    modImplementation("curse.maven:immersive-portals-for-forge-355440:6368524")
 }
 
 jar {

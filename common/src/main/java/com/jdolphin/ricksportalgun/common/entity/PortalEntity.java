@@ -58,7 +58,6 @@ public class PortalEntity extends Entity {
     private boolean bootleg;
     private boolean exists;
 
-
     private Vec3 pos;
     private Vec3 targetVec;
     private String targetDim;
@@ -274,7 +273,6 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide()) {
-            ServerLevel serverLevel = (ServerLevel) this.level();
             if (!exists) {
                 LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
                 this.exists = true;

@@ -218,8 +218,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     //No errors: actually make the portal
 
                                     if (PGHelper.hasImmersivePortals() /*Check for portal type later*/) {
-                                        ImmersivePortalsHandler.spawnPortal(level, loc, key, destination.getCenter(), size);
-                                        System.out.println("E");
+                                        return ImmersivePortalsHandler.spawnPortal(stack, level, loc, key, destination.getCenter(), size, playerDir, hitDir);
                                     } else {
                                     PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                                     serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
@@ -301,7 +300,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static boolean canBypassDragon(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.EXTRA_DIM_2) && tag.getBoolean(PGNbtKeys.EXTRA_DIM_2);
+        return getUpgrades(stack).contains(PGUpgradeTypes.DIM_2.getUpgradeTag());
     }
 
     private boolean isAir(Level level, BlockPos pos) {
