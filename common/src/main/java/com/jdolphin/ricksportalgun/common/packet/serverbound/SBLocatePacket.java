@@ -74,7 +74,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                 if (structure != null) {
                     HolderSet<Structure> set = HolderSet.direct(Holder.direct(structure));
                     Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator()
-                            .findNearestMapStructure(level, set, player.blockPosition(), 100, false);
+                            .findNearestMapStructure(level, set, player.blockPosition(), 256, false);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
                         BlockPos safePos = LevelHelper.getSafePos(pos, level);
@@ -85,7 +85,6 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                     }
                 } else
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
-
             }
         });
     }

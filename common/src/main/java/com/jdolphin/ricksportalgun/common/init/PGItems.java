@@ -3,11 +3,13 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.common.item.DataCardItem;
 import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.item.TooltipBlockItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -48,8 +50,9 @@ public class PGItems {
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
-    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new BlockItem(PGBlocks.SUBETHER_BARRIER, properties),
-            new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
+    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new TooltipBlockItem(PGBlocks.SUBETHER_BARRIER, properties,
+                    Component.translatable("tooltip.ricksportalgun.barrier")), new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
+
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
 

@@ -63,6 +63,19 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         return super.mouseScrolled(d, d1, d2);
     }
 
+    protected void renderTooltip(GuiGraphics graphics, int x, int y) {
+        Optional<Component> optional = Optional.empty();
+        if (this.hoveredSlot != null) {
+            if (!hoveredSlot.hasItem()) {
+                if (hoveredSlot.index == 36) {
+                    optional = Optional.of(Component.translatable("notice.ricksportalgun.workbench.insert_portal_fluid"));
+                }
+                optional.ifPresent((component) -> graphics.renderTooltip(this.font, this.font.split(component, 115), x, y));
+            }
+        }
+        super.renderTooltip(graphics, x, y);
+    }
+
     protected void init() {
         super.init();
         this.imageWidth = 176;

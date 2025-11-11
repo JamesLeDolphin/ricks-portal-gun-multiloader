@@ -4,8 +4,9 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
-import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBWorkbenchWaypointEditPackage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -14,7 +15,6 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -163,6 +163,20 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
         }
     }
 
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+        Optional<Component> optional = Optional.empty();
+        if (this.hoveredSlot != null) {
+            if (!hoveredSlot.hasItem()) {
+                if (hoveredSlot.index == 36 || hoveredSlot.index == 37) {
+
+                    optional = Optional.of(Component.translatable("notice.ricksportalgun.workbench.insert_waypoint_item"));
+                }
+                optional.ifPresent((component) -> guiGraphics.renderTooltip(this.font, this.font.split(component, 115), x, y));
+            }
+        }
+        super.renderTooltip(guiGraphics, x, y);
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         this.renderBackground(graphics);
@@ -175,9 +189,8 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
             delete.render(graphics, mouseX, mouseY, delta);
             ItemStack opposite = getItem(selectedWaypoint.getB().opposite());
             if (!opposite.isEmpty()) {
-                CompoundTag tag = opposite.getOrCreateTag();
                 if (!opposite.is(PGTags.Items.PORTAL_GUNS) || (opposite.is(PGTags.Items.PORTAL_GUNS) &&
-                        tag.contains(PGNbtKeys.UPGRADE_WAYPOINT)) ) {
+                        PortalGunItem.getUpgrades(opposite).contains(PGUpgradeTypes.WAYPOINTS.getUpgradeTag()))) {
 
                 copy.render(graphics, mouseX, mouseY, delta);
                 moveTo.render(graphics, mouseX, mouseY, delta);
