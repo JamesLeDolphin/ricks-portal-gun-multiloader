@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.entity.model;
+package com.jdolphin.ricksportalgun.client.model;
 
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;

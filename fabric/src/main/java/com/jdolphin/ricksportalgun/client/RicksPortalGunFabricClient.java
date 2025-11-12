@@ -1,11 +1,11 @@
 package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
-import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
+import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;

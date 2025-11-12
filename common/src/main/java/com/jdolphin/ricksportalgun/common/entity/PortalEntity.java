@@ -87,7 +87,7 @@ public class PortalEntity extends Entity {
     }
 
     public PGPortalType getPortalType() {
-        return PGPortalTypes.DEFAULT;
+        return PGPortalTypes.VORTEX;
     }
 
     public void setLifetime(int lifetime) {
