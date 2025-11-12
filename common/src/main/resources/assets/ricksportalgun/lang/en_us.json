@@ -130,6 +130,8 @@
   "notice.ricksportalgun.workbench.insert_portal_gun": "Insert Portal Gun",
   "notice.ricksportalgun.workbench.insert_dye_or_bucket": "Insert Dye Or Water Bucket",
   "notice.ricksportalgun.no_upgrades": "No upgrades installed",
+  "notice.ricksportalgun.workbench.insert_portal_fluid": "Insert Portal Fluid",
+  "notice.ricksportalgun.workbench.insert_waypoint_item": "Insert Portal Gun Or Data Card",
 
   "error.ricksportalgun.color": "Error 400: Unable to get color: %s!",
   "error.ricksportalgun.security": "Error 403: Portal Gun locked!",
@@ -172,7 +174,7 @@
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
-  "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for upgrade info",
+  "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for info",
   "tooltip.ricksportalgun.upgrade.tutorial": "Applied in portal gun settings menu",
 
   "tooltip.ricksportalgun.upgrade.settings": "Unlocks Security & Customization settings.",
@@ -184,6 +186,7 @@
   "tooltip.ricksportalgun.upgrade.dim_1": "Unlocks interdimensional travel. Does not let you travel to The End if End Dragon is alive.",
   "tooltip.ricksportalgun.upgrade.dim_2": "Bypasses the End Dragon restriction present in the first dimension upgrade.",
   "tooltip.ricksportalgun.upgrade.creative": "Adds all upgrades to the portal gun. Creative only.",
+  "tooltip.ricksportalgun.barrier": "Blocks portals without the matching code from appearing in 3 chunk radius.\u000ARequires redstone power to function.\u000ACode can be set in portal gun security settings menu",
 
   "tooltip.ricksportalgun.button.lock": "Biometric lock prevents anyone from using the portal gun, unless they are the owner of the portal gun",
   "tooltip.ricksportalgun.button.owner_transfer": "Transfer the portal guns ownership to another player. If they have biometric lock enabled, you will lose access to the portal gun!",

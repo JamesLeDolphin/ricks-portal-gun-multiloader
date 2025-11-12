@@ -17,9 +17,7 @@ public class DefaultPortalType extends PGPortalType {
 
     public DefaultPortalType() {
         super("default", true);
-
     }
-
 
     @Override
     public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {

@@ -46,6 +46,7 @@ import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_UPGRADES;
 @SuppressWarnings("unused")
 public class PortalGunItem extends Item implements IWaypointStorage {
     private final int tints;
+
     public PortalGunItem(Properties properties, int tints) {
         super(properties);
         this.tints = tints;
@@ -57,7 +58,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static int getMaxFuel(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.TAG_MAX_FUEL) ? tag.getInt(PGNbtKeys.TAG_MAX_FUEL) : 64;
+        return getUpgrades(stack).contains(PGUpgradeTypes.MAX_FUEL.getUpgradeTag()) ? 128 : 64;
     }
 
     public static int getFuel(ItemStack stack) {
