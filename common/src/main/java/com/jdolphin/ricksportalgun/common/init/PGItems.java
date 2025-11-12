@@ -1,20 +1,14 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.item.DataCardItem;
-import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.CreativeUpgradeItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleConditionalUpgradeItem;
-import com.jdolphin.ricksportalgun.common.item.upgrade.SimpleUpgradeItem;
+import com.jdolphin.ricksportalgun.common.item.*;
+import com.jdolphin.ricksportalgun.common.item.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
@@ -29,6 +23,7 @@ public class PGItems {
     public static final Map<ResourceLocation, Item> ALL = new HashMap<>();
     public static final Map<Item, ResourceKey<CreativeModeTab>> TABS = new LinkedHashMap<>();
     public static final List<PortalGunItem> PORTAL_GUNS = new ArrayList<>();
+    public static final List<UpgradeItem> UPGRADES = new ArrayList<>();
 
     public static final Item PORTAL_GUN = registerGun("portal_gun");
     public static final Item GOLDEN_PORTAL_GUN = registerGun("golden_portal_gun", 2, Color.YELLOW, null);
@@ -53,7 +48,8 @@ public class PGItems {
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
-    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new BlockItem(PGBlocks.SUBETHER_BARRIER, properties),
+    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) ->
+            new TooltipBlockItem(PGBlocks.SUBETHER_BARRIER, properties, Component.translatable("tooltip.ricksportalgun.barrier")),
             new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
@@ -61,42 +57,35 @@ public class PGItems {
     public static final Item CIRCUIT_BOARD = register("circuitboard", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     //Upgrades
-    public static final Item CREATIVE_UPGRADE = register("upgrade_creative", CreativeUpgradeItem::new, new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item CREATIVE_UPGRADE = registerUpgrade("upgrade_creative", properties -> new UpgradeItem(properties, PGUpgradeTypes.CREATIVE),
+            new Item.Properties().rarity(Rarity.EPIC), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item DURABILITY_UPGRADE = register("upgrade_durability", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE)),
+    public static final Item DURABILITY_UPGRADE = registerUpgrade("upgrade_durability", properties -> new UpgradeItem(properties, PGUpgradeTypes.DURABILITY),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item WAYPOINT_UPGRADE = register("upgrade_waypoint", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.HAS_WAYPOINTS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
-
-    public static final Item DIM_UPGRADE = register("upgrade_dimension_mk1", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
-
-    public static final Item BETTER_DIM_UPGRADE = register("upgrade_dimension_mk2", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.EXTRA_DIMENSIONS_2, true),
-            ((stack, portalGun) -> stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS, false)),
-                    Component.translatable("error.ricksportalgun.upgrade.needs_dimension")),
+    public static final Item WAYPOINT_UPGRADE = registerUpgrade("upgrade_waypoint", properties -> new UpgradeItem(properties, PGUpgradeTypes.WAYPOINTS),
             new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item SETTINGS_UPGRADE = register("upgrade_settings", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.SETTINGS, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item DIM_UPGRADE = registerUpgrade("upgrade_dimension_mk1", properties -> new UpgradeItem(properties, PGUpgradeTypes.DIM_1),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item FUEL_UPGRADE = register("upgrade_fuel", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.MAX_FUEL, 128)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item BETTER_DIM_UPGRADE = registerUpgrade("upgrade_dimension_mk2", properties -> new UpgradeItem(properties, PGUpgradeTypes.DIM_2),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item BIOME_LOC_UPGRADE = register("upgrade_biome_locator", properties -> new SimpleUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.BIOME_LOC, true)), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item SETTINGS_UPGRADE = registerUpgrade("upgrade_settings", properties -> new UpgradeItem(properties, PGUpgradeTypes.SETTINGS),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item PLAYER_LOC_UPGRADE = register("upgrade_player_locator", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.PLAYER_LOC, true),
-            (stack, item) -> stack.getOrDefault(PGDataComponents.BIOME_LOC, false),
-            Component.translatable("error.ricksportalgun.upgrade.needs_biome")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item FUEL_UPGRADE = registerUpgrade("upgrade_fuel", properties -> new UpgradeItem(properties, PGUpgradeTypes.MAX_FUEL),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
-    public static final Item STRUCTURE_LOC_UPGRADE = register("upgrade_structure_locator", properties -> new SimpleConditionalUpgradeItem(properties,
-            (stack, portalGun) -> stack.set(PGDataComponents.STRUCTURE_LOC, true),
-            (stack, item) -> stack.getOrDefault(PGDataComponents.PLAYER_LOC, false),
-            Component.translatable("error.ricksportalgun.upgrade.needs_player")), new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item BIOME_LOC_UPGRADE = registerUpgrade("upgrade_biome_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.BIOME_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+
+    public static final Item PLAYER_LOC_UPGRADE = registerUpgrade("upgrade_player_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.PLAYER_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+
+    public static final Item STRUCTURE_LOC_UPGRADE = registerUpgrade("upgrade_structure_locator", properties -> new UpgradeItem(properties, PGUpgradeTypes.STRUCTURE_LOC),
+            new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     private static Item registerGun(String name) {
         return registerGun(name, 2, Color.GREEN, PGCreativeModeTabs.TOOLS_AND_UTILITIES);
@@ -116,12 +105,7 @@ public class PGItems {
                 .component(PGDataComponents.WAYPOINTS, List.of())
                 .component(PGDataComponents.PORTAL_SIZE, 1.0f)
                 .component(PGDataComponents.LOCK, false)
-                .component(PGDataComponents.HAS_WAYPOINTS, false)
-                .component(PGDataComponents.EXTRA_DIMENSIONS, false)
-                .component(PGDataComponents.SETTINGS, false)
-                .component(PGDataComponents.BIOME_LOC, false)
-                .component(PGDataComponents.PLAYER_LOC, false)
-                .component(PGDataComponents.STRUCTURE_LOC, false)
+                .component(PGDataComponents.UPGRADE_LIST, List.of())
                 .component(PGDataComponents.PORTAL_POS, BlockPos.ZERO)
                 .component(PGDataComponents.PORTAL_DIM, Level.OVERWORLD.location());
     }
@@ -129,6 +113,12 @@ public class PGItems {
     private static Item registerFluid(String name) {
         return register(name, PortalFluidItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID),
                 PGCreativeModeTabs.FOOD_AND_DRINKS);
+    }
+
+    private static Item registerUpgrade(String name, Function<Item.Properties, Item> factory, Item.Properties properties, ResourceKey<CreativeModeTab> tab) {
+        Item item = register(name, factory, properties, tab);
+        UPGRADES.add((UpgradeItem) item);
+        return item;
     }
 
     private static Item register(String name, Function<Item.Properties, Item> factory, Item.Properties properties, ResourceKey<CreativeModeTab> tab) {
@@ -146,5 +136,9 @@ public class PGItems {
 
     private static ResourceKey<Item> keyOf(String id) {
         return ResourceKey.create(Registries.ITEM, PGHelper.id(id));
+    }
+
+    public static UpgradeItem getItemFromUpgradeType(UpgradeType type) {
+        return UPGRADES.stream().filter(item -> item.getUpgradeType().equals(type)).findFirst().orElseThrow();
     }
 }

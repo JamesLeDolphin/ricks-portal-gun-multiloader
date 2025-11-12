@@ -15,9 +15,16 @@ neoForge {
         mappingsVersion = parchment_version
     }
 }
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
 
 dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common:${jei_version}"
+    compileOnly "dev.emi:emi-xplat-mojmap:${emi_version}:api"
 }
 
 configurations {

@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IWaypointStorage {
+public interface IWaypointItem {
 
     static List<Waypoint> getWaypoints(ItemStack stack) {
         return stack.getOrDefault(PGDataComponents.WAYPOINTS, List.of());

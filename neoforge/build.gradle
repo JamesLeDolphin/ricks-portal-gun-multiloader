@@ -36,8 +36,18 @@ neoForge {
     }
 }
 
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
 dependencies {
     implementation "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+    compileOnlyApi "dev.emi:emi-neoforge:${emi_version}:api"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

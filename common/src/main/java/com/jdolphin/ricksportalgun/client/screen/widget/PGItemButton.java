@@ -32,7 +32,10 @@ public class PGItemButton extends AbstractButton {
 
         int x = this.getX() + (this.getWidth() / 2 - 8);
         int y = this.getY() + (this.getHeight() / 2 - 8);
+        if (!this.active)
+            graphics.setColor(100 / 255f, 100 / 255f, 100 / 255f, 1);
         graphics.renderFakeItem(stack, x, y);
+        graphics.setColor(1, 1, 1, 1);
     }
 
     @Override

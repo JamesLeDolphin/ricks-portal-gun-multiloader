@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.widget;
 
 import com.jdolphin.ricksportalgun.client.screen.portalgun.WaypointInfoScreen;
-import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
+import com.jdolphin.ricksportalgun.common.item.IWaypointItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDestinationPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -48,7 +48,7 @@ public class WaypointListWidget extends PGScrollableWidget<WaypointListWidget.Wa
 
     public void refreshEntries(ItemStack stack) {
         this.children().clear();
-        List<Waypoint> waypoints = IWaypointStorage.getWaypoints(stack);
+        List<Waypoint> waypoints = IWaypointItem.getWaypoints(stack);
 
         for (Waypoint waypoint : waypoints) {
             if (waypoint != null) {

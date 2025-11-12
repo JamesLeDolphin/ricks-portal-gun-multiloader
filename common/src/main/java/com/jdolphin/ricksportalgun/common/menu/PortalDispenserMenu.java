@@ -28,6 +28,8 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
         this.data = data;
         this.access = access;
         this.dispenser = container;
+        this.addInventoryExtendedSlots(playerInventory, 8, 84);
+        this.addInventoryHotbarSlots(playerInventory, 8, 142);
         container.startOpen(playerInventory.player);
         this.addSlot(new Slot(container, 0, 26, 52) {
 
@@ -37,8 +39,6 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
             }
         });
         this.addDataSlots(data);
-        this.addInventoryExtendedSlots(playerInventory, 8, 84);
-        this.addInventoryHotbarSlots(playerInventory, 8, 142);
     }
 
     protected void addInventoryHotbarSlots(Container container, int x, int y) {

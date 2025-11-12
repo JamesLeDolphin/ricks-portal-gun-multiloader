@@ -4,7 +4,8 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.item.upgrade.AbstractUpgradeItem;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -41,11 +42,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class PortalGunItem extends Item implements IWaypointStorage {
+public class PortalGunItem extends Item implements IWaypointItem {
     private final int tints;
     public PortalGunItem(Properties properties, int tints) {
         super(properties);
@@ -96,14 +98,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static void refillFuel(ItemStack stack) {
         stack.set(PGDataComponents.FUEL, getMaxFuel(stack));
-    }
-
-    public static void migrateDamage(ItemStack stack) {
-        if (stack.has(DataComponents.DAMAGE)) {
-            int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
-            stack.set(PGDataComponents.FUEL, fuel);
-            stack.remove(DataComponents.DAMAGE);
-        }
     }
 
     public static boolean refuel(ItemStack stack, Player player) {
@@ -168,14 +162,17 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide() && player instanceof ServerPlayer) {
-            migrateDamage(stack);
+            migrateOldData(stack);
+            if (stack.getOrDefault(PGDataComponents.OWNER, "").isEmpty()) {
+                stack.set(PGDataComponents.OWNER, player.getUUID().toString());
+            }
             if (PGHelper.canPlayerAccessGun(player, stack)) {
                 ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
                 BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
 
                 if (!refuel(stack, player) && getFuel(stack) > 0) {
-                    if (oppositeStack.getItem() instanceof AbstractUpgradeItem upgrade) {
-                        InteractionResult result = upgrade.applyUpgrade(player, stack, this);
+                    if (oppositeStack.getItem() instanceof UpgradeItem upgrade) {
+                        InteractionResult result = upgrade.onApply(player, stack);
                         if (!result.equals(InteractionResult.FAIL)) {
                             if (!player.isCreative()) oppositeStack.shrink(1);
                         }
@@ -279,7 +276,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     }
 
     public static boolean canBypassDragon(ItemStack stack) {
-        return stack.getOrDefault(PGDataComponents.EXTRA_DIMENSIONS_2, false);
+        return getUpgrades(stack).contains(PGUpgradeTypes.DIM_2.getId());
     }
 
     private boolean isAir(Level level, BlockPos pos) {
@@ -348,7 +345,74 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return stack.getOrDefault(PGDataComponents.PORTAL_POS, BlockPos.ZERO);
     }
 
-    public static void migrateNBT(ItemStack stack) {
+    public static List<String> getUpgrades(ItemStack stack) {
+        return stack.getOrDefault(PGDataComponents.UPGRADE_LIST, List.of());
+    }
+
+    public static void addUpgrade(ItemStack stack, UpgradeType type) {
+        ArrayList<String> waypoints = new ArrayList<>(stack.getOrDefault(PGDataComponents.UPGRADE_LIST, List.of()));
+        waypoints.add(type.getId());
+        stack.set(PGDataComponents.UPGRADE_LIST, waypoints);
+    }
+
+    public static void deleteUpgrade(ItemStack stack, UpgradeType type) {
+        ArrayList<String> waypoints = new ArrayList<>(stack.getOrDefault(PGDataComponents.UPGRADE_LIST, List.of()));
+        waypoints.remove(type.getId());
+        stack.set(PGDataComponents.UPGRADE_LIST, waypoints);
+    }
+
+    public static void migrateOldData(ItemStack stack) {
+        migrateNBT(stack);
+        migrateDamage(stack);
+        migrateUpgrades(stack);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static void migrateUpgrades(ItemStack stack) {
+        ArrayList<String> upgrades = new ArrayList<>(stack.getOrDefault(PGDataComponents.UPGRADE_LIST, List.of()));
+        if (stack.has(PGDataComponents.HAS_WAYPOINTS)) {
+            if (stack.get(PGDataComponents.HAS_WAYPOINTS)) upgrades.add(PGUpgradeTypes.WAYPOINTS.getId());
+            stack.remove(PGDataComponents.HAS_WAYPOINTS);
+        }
+        if (stack.has(PGDataComponents.EXTRA_DIMENSIONS)) {
+            if (stack.get(PGDataComponents.EXTRA_DIMENSIONS)) upgrades.add(PGUpgradeTypes.DIM_1.getId());
+            stack.remove(PGDataComponents.EXTRA_DIMENSIONS);
+        }
+        if (stack.has(PGDataComponents.EXTRA_DIMENSIONS_2)) {
+            if (stack.get(PGDataComponents.EXTRA_DIMENSIONS_2)) upgrades.add(PGUpgradeTypes.DIM_2.getId());
+            stack.remove(PGDataComponents.EXTRA_DIMENSIONS_2);
+        }
+        if (stack.has(PGDataComponents.SETTINGS)) {
+            if (stack.get(PGDataComponents.SETTINGS)) upgrades.add(PGUpgradeTypes.SETTINGS.getId());
+            stack.remove(PGDataComponents.SETTINGS);
+        }
+        if (stack.has(PGDataComponents.BIOME_LOC)) {
+            if (stack.get(PGDataComponents.BIOME_LOC)) upgrades.add(PGUpgradeTypes.BIOME_LOC.getId());
+            stack.remove(PGDataComponents.BIOME_LOC);
+        }
+        if (stack.has(PGDataComponents.PLAYER_LOC)) {
+            if (stack.get(PGDataComponents.PLAYER_LOC)) upgrades.add(PGUpgradeTypes.PLAYER_LOC.getId());
+            stack.remove(PGDataComponents.PLAYER_LOC);
+        }
+        if (stack.has(PGDataComponents.STRUCTURE_LOC)) {
+            if (stack.get(PGDataComponents.STRUCTURE_LOC)) upgrades.add(PGUpgradeTypes.STRUCTURE_LOC.getId());
+            stack.remove(PGDataComponents.STRUCTURE_LOC);
+        }
+        if (stack.has(DataComponents.FIRE_RESISTANT) && !upgrades.contains(PGUpgradeTypes.DURABILITY.getId())) {
+            upgrades.add(PGUpgradeTypes.DURABILITY.getId());
+        }
+        stack.set(PGDataComponents.UPGRADE_LIST, upgrades);
+    }
+
+    private static void migrateDamage(ItemStack stack) {
+        if (stack.has(DataComponents.DAMAGE)) {
+            int fuel = getMaxFuel(stack) - stack.getOrDefault(DataComponents.DAMAGE, 0);
+            stack.set(PGDataComponents.FUEL, fuel);
+            stack.remove(DataComponents.DAMAGE);
+        }
+    }
+
+    private static void migrateNBT(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data != null) {
             String dim = "PortalDimension";

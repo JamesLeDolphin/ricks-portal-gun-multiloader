@@ -82,7 +82,7 @@ public record SBLocatePacket(String name, int value) implements PGPayload {
 
                 Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
 
-                Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator().findNearestMapStructure(level, holderset, player.blockPosition(), 100, false);
+                Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator().findNearestMapStructure(level, holderset, player.blockPosition(), 256, false);
                 stopwatch.stop();
                 if (pair == null) {
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));

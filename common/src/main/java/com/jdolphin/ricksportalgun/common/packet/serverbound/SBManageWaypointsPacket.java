@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
+import com.jdolphin.ricksportalgun.common.item.IWaypointItem;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -22,13 +22,13 @@ public record SBManageWaypointsPacket(String waypoint, boolean remove) implement
     public void handle(ServerPlayer player) {
         ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
         Waypoint wp = Waypoint.getWaypoint(waypoint);
-        if (stack.getItem() instanceof IWaypointStorage) {
+        if (stack.getItem() instanceof IWaypointItem) {
             if (wp != null) {
                 if (!remove) {
-                    IWaypointStorage.addWaypoint(stack, wp);
+                    IWaypointItem.addWaypoint(stack, wp);
                 }
                 if (remove) {
-                    IWaypointStorage.deleteWaypoint(stack, wp);
+                    IWaypointItem.deleteWaypoint(stack, wp);
                     PGHelper.sendSuccessMsg(player, Component.translatable("ricksportalgun.deleted", wp.getName()));
                 }
             }

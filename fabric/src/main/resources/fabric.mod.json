@@ -8,8 +8,8 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "https://fabricmc.net/",
-        "sources": "https://github.com/FabricMC/fabric-example-mod"
+        "homepage": "https://github.com/JamesLeDolphin/mod-wikis/wiki/Rick's-Portal-Gun",
+        "issues": "https://discord.com/invite/mPFZqXpcFF"
     },
     "license": "${license}",
     "icon": "rpg_fabric.png",
@@ -23,16 +23,20 @@
         ],
         "jei_mod_plugin": [
             "com.jdolphin.ricksportalgun.common.comp.jei.PGJeiPlugin"
+        ],
+        "emi": [
+            "com.jdolphin.ricksportalgun.common.comp.emi.PGEmiPlugin"
         ]
     },
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
-        "java": ">=${java_version}"
+        "java": ">=${java_version}",
+        "forgeconfigapiport": "*"
     },
     "suggests": {
-        "another-mod": "*"
+        "emi": "*"
     }
 }
   

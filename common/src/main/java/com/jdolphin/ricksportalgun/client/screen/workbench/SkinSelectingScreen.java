@@ -28,6 +28,7 @@ import net.minecraft.world.item.Items;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 
 public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMenu> {
     public static final ResourceLocation BG = PGHelper.id("textures/gui/workbench/skin_select.png");
@@ -87,6 +88,22 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         GuiHelper.setTooltip(skin, Component.translatable("menu.ricksportalgun.workbench.skin"));
         GuiHelper.setTooltip(waypoint, Component.translatable("menu.ricksportalgun.workbench.waypoint"));
         GuiHelper.setTooltip(craft, Component.translatable("menu.ricksportalgun.workbench.craft"));
+    }
+
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+        Optional<Component> optional = Optional.empty();
+        if (this.hoveredSlot != null) {
+            if (!hoveredSlot.hasItem()) {
+                if (hoveredSlot.index == 36) {
+
+                    optional = Optional.of(Component.translatable("notice.ricksportalgun.workbench.insert_portal_gun"));
+                } else if (hoveredSlot.index == 37 || hoveredSlot.index == 38) {
+                    optional = Optional.of(Component.translatable("notice.ricksportalgun.workbench.insert_dye_or_bucket"));
+                }
+                optional.ifPresent((component) -> guiGraphics.renderTooltip(this.font, this.font.split(component, 115), x, y));
+            }
+        }
+        super.renderTooltip(guiGraphics, x, y);
     }
 
     private ItemStack getStack(int slotId) {

@@ -31,8 +31,12 @@ public class PGDataComponents {
 
     public static final DataComponentType<List<Waypoint>> WAYPOINTS = registerComponent("waypoints", typeBuilder -> typeBuilder
             .persistent(Waypoint.CODEC.listOf()).networkSynchronized(Waypoint.PACKET_CODEC.apply(ByteBufCodecs.list())).cacheEncoding());
+
+    public static final DataComponentType<List<String>> UPGRADE_LIST = registerComponent("upgrades", typeBuilder -> typeBuilder
+            .persistent(Codec.STRING.listOf()).networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())).cacheEncoding());
+
     public static DataComponentType<PortalGunStyle> PORTAL_GUN_STYLE = registerComponent("portal_gun_style", typeBuilder -> typeBuilder
-            .persistent(PortalGunStyle.CODEC).networkSynchronized(PortalGunStyle.PACKET_CODEC).cacheEncoding());
+            .persistent(PortalGunStyle.CODEC).networkSynchronized(PortalGunStyle.PACKET_CODEC));
 
     public static final DataComponentType<Integer> PRIMARY_DYE = registerInteger("primary_dye");
     public static final DataComponentType<Integer> SECONDARY_DYE = registerInteger("secondary_dye");
@@ -40,7 +44,7 @@ public class PGDataComponents {
     public static final DataComponentType<String> CODE = registerComponent("code", typeBuilder -> typeBuilder.persistent(Codec.STRING));
     public static final DataComponentType<Boolean> SELF_DESTRUCT = registerBoolean("self_destruct");
 
-    //Components needed for upgrades
+    //Formerly components needed for upgrades -- now only for data fixing
     public static final DataComponentType<Boolean> HAS_WAYPOINTS = registerBoolean("has_waypoints");
     public static final DataComponentType<Boolean> EXTRA_DIMENSIONS = registerBoolean("more_dimensions");
     public static final DataComponentType<Boolean> EXTRA_DIMENSIONS_2 = registerBoolean("extra_dimensions");

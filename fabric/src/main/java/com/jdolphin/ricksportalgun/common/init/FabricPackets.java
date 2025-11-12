@@ -28,6 +28,7 @@ public class FabricPackets {
         PayloadTypeRegistry.playC2S().register(SBWorkbenchWaypointEditPackage.ID, SBWorkbenchWaypointEditPackage.CODEC);
         PayloadTypeRegistry.playC2S().register(SBActivateSelfDestructPacket.ID, SBActivateSelfDestructPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(SBSetPortalGunTypePacket.ID, SBSetPortalGunTypePacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(SBAddUpgradePacket.ID, SBAddUpgradePacket.CODEC);
 
         PayloadTypeRegistry.playS2C().register(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(CBSyncDimensionListPacket.ID, CBSyncDimensionListPacket.CODEC);
@@ -52,6 +53,7 @@ public class FabricPackets {
         ServerPlayNetworking.registerGlobalReceiver(SBWorkbenchWaypointEditPackage.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBActivateSelfDestructPacket.ID, FabricPackets::handle);
         ServerPlayNetworking.registerGlobalReceiver(SBSetPortalGunTypePacket.ID, FabricPackets::handle);
+        ServerPlayNetworking.registerGlobalReceiver(SBAddUpgradePacket.ID, FabricPackets::handle);
     }
 
     private static  <P extends PGPayload> void handle(P packet, ServerPlayNetworking.Context context) {
