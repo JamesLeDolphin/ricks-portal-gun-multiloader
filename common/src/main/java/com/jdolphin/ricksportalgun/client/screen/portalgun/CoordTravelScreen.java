@@ -296,12 +296,10 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             assert minecraft != null && minecraft.player != null;
             LocalPlayer player = minecraft.player;
             String value = dimInput.getValue();
-            if (value.equals("end")) dimInput.setValue("the_end");
-            if (value.equals("nether")) dimInput.setValue("the_nether");
-            ResourceLocation resourceLocation =
-                    new ResourceLocation(value.isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : value);
+            if (value.equals("end")) dimInput.setValue(Level.END.location().toString());
+            if (value.equals("nether")) dimInput.setValue(Level.NETHER.location().toString());
 
-            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), value);
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         } catch (Exception error) {

@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
+import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
 import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
@@ -291,6 +292,10 @@ public class PortalEntity extends Entity {
                 if (!isBootleg() && !LevelHelper.isBlenderDestination(getHopDim())) {
                     ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(getHopDim()));
                     destinationLevel = LevelHelper.getServerWorld(this.level(), key);
+                    if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
+                        key = InfinityHandler.getOrCreateResourceKey(level().getServer(), getHopDim());
+                        destinationLevel = LevelHelper.getServerWorld(this.level(), key);
+                    }
                 } else {
                     destinationLevel = (ServerLevel) this.level();
 
