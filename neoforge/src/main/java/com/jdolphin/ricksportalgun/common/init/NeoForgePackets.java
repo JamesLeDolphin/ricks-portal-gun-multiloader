@@ -29,6 +29,7 @@ public class NeoForgePackets {
         registrar.commonToServer(SBSetDispenserDestinationPacket.ID, SBSetDispenserDestinationPacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetBarrierCodePacket.ID, SBSetBarrierCodePacket.CODEC, NeoForgePackets::handle);
         registrar.commonToServer(SBSetPortalGunTypePacket.ID, SBSetPortalGunTypePacket.CODEC, NeoForgePackets::handle);
+        registrar.commonToServer(SBAddUpgradePacket.ID, SBAddUpgradePacket.CODEC, NeoForgePackets::handle);
 
         //Client bound
         registrar.commonToClient(CBOpenCoordGuiPacket.ID, CBOpenCoordGuiPacket.CODEC, (packet, context) -> ClientPacketHandler.openCoordTravelScreen(packet.strings()));

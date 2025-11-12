@@ -3,9 +3,10 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGScrollableWidget;
 import com.jdolphin.ricksportalgun.client.screen.widget.WaypointListWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBWorkbenchWaypointEditPackage;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -174,7 +175,7 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
             if (!opposite.isEmpty()) {
 
                 if (!opposite.is(PGTags.Items.PORTAL_GUNS) || (opposite.is(PGTags.Items.PORTAL_GUNS) &&
-                        opposite.getOrDefault(PGDataComponents.HAS_WAYPOINTS, false)) ) {
+                        PortalGunItem.getUpgrades(opposite).contains(PGUpgradeTypes.STRUCTURE_LOC.getId())) ) {
 
                 copy.render(graphics, mouseX, mouseY, delta);
                 moveTo.render(graphics, mouseX, mouseY, delta);
@@ -183,6 +184,20 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
             renderWaypointInfo(graphics, mouseX, mouseY, delta);
         }
         this.renderTooltip(graphics, mouseX, mouseY);
+    }
+
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+        Optional<Component> optional = Optional.empty();
+        if (this.hoveredSlot != null) {
+            if (!hoveredSlot.hasItem()) {
+                if (hoveredSlot.index == 36 || hoveredSlot.index == 37) {
+
+                    optional = Optional.of(Component.translatable("notice.ricksportalgun.workbench.insert_waypoint_item"));
+                }
+                optional.ifPresent((component) -> guiGraphics.renderTooltip(this.font, this.font.split(component, 115), x, y));
+            }
+        }
+        super.renderTooltip(guiGraphics, x, y);
     }
 
     private void renderWaypointInfo(GuiGraphics graphics, int mouseX, int mouseY, float delta) {

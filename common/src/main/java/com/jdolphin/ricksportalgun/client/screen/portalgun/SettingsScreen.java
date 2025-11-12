@@ -2,8 +2,11 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.settings.CustomizationSettingsScreen;
+import com.jdolphin.ricksportalgun.client.screen.portalgun.settings.UpgradesInfoScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenSecuritySettingsPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -13,10 +16,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class SettingsScreen extends AbstractBaseScreen {
-    private PGTextButton security, customization;
+    private PGTextButton security, customization, upgrades;
     private PGImageButton backButton;
     public SettingsScreen() {
         super("menu.ricksportalgun.settings");
@@ -27,16 +31,22 @@ public class SettingsScreen extends AbstractBaseScreen {
         super.init();
 
         assert this.minecraft != null;
+        ItemStack stack = getItemStack();
+        if (PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.SETTINGS.getId())) {
+            this.security = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 38, 128, 20,
+                    Component.translatable("ricksportalgun.button.settings.security"), button -> {
+                SBOpenSecuritySettingsPacket packet = new SBOpenSecuritySettingsPacket();
+                PGHelper.sendPacketToServer(packet);
+            }, this.font));
+        }
 
-        this.security = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 64, 128, 20,
-                Component.translatable("ricksportalgun.button.settings.security"), button -> {
-            SBOpenSecuritySettingsPacket packet = new SBOpenSecuritySettingsPacket();
-            PGHelper.sendPacketToServer(packet);
-        }, this.font));
+        this.upgrades = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 10, 128, 20,
+                Component.translatable("menu.ricksportalgun.settings.upgrades"), button -> this.minecraft.setScreen(new UpgradesInfoScreen()), this.font));
 
-        this.customization = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 - 36, 128, 20,
-                Component.translatable("ricksportalgun.button.settings.customization"), button -> this.minecraft.setScreen(new CustomizationSettingsScreen()), this.font));
-
+        if (PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.SETTINGS.getId())) {
+            this.customization = this.addRenderableWidget(new PGTextButton(this.width / 2 - 64, this.height / 2 + 18, 128, 20,
+                    Component.translatable("ricksportalgun.button.settings.customization"), button -> this.minecraft.setScreen(new CustomizationSettingsScreen()), this.font));
+        }
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> {
                     SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
@@ -44,8 +54,9 @@ public class SettingsScreen extends AbstractBaseScreen {
                 }, 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
-        this.security.setTextColour(style.textColor());
-        this.customization.setTextColour(style.textColor());
+        if (this.security != null) this.security.setTextColour(style.textColor());
+        if (this.customization != null) this.customization.setTextColour(style.textColor());
+        this.upgrades.setTextColour(style.textColor());
         this.backButton.setColor(style.highlightColor());
         this.backButton.setRenderBackground(false);
         GuiHelper.setTooltip(backButton, Component.translatable("ricksportalgun.button.back"));
@@ -59,6 +70,7 @@ public class SettingsScreen extends AbstractBaseScreen {
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.settings"), this.width / 2, this.height / 2 - 92, style.textColor());
 
         GuiHelper.renderOutline(graphics, security, style.highlightColor());
+        GuiHelper.renderOutline(graphics, upgrades, style.highlightColor());
         GuiHelper.renderOutline(graphics, customization, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
         RenderSystem.enableBlend();

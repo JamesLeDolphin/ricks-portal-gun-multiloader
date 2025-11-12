@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.menu.workbench;
 
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
-import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
+import com.jdolphin.ricksportalgun.common.item.IWaypointItem;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -41,14 +41,14 @@ public class WaypointTransferMenu extends AbstractWorkbenchMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof IWaypointStorage;
+                return stack.getItem() instanceof IWaypointItem;
             }
         });
         this.addSlot(new Slot(container, 6, 97, 73) {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof IWaypointStorage;
+                return stack.getItem() instanceof IWaypointItem;
             }
         });
     }
@@ -60,19 +60,19 @@ public class WaypointTransferMenu extends AbstractWorkbenchMenu {
                 ItemStack right = this.getSlot(37).getItem();
                 //True for left side, false for right side
                 if (copy) {
-                    if (side) IWaypointStorage.addWaypoint(right, waypoint);
-                    else IWaypointStorage.addWaypoint(left, waypoint);
+                    if (side) IWaypointItem.addWaypoint(right, waypoint);
+                    else IWaypointItem.addWaypoint(left, waypoint);
                 } else if (remove) {
-                    if (side) IWaypointStorage.deleteWaypoint(left, waypoint);
-                    else IWaypointStorage.deleteWaypoint(right, waypoint);
+                    if (side) IWaypointItem.deleteWaypoint(left, waypoint);
+                    else IWaypointItem.deleteWaypoint(right, waypoint);
                 } else {
                     if (side) {
-                        IWaypointStorage.addWaypoint(right, waypoint);
-                        IWaypointStorage.deleteWaypoint(left, waypoint);
+                        IWaypointItem.addWaypoint(right, waypoint);
+                        IWaypointItem.deleteWaypoint(left, waypoint);
                     }
                     else {
-                        IWaypointStorage.addWaypoint(left, waypoint);
-                        IWaypointStorage.deleteWaypoint(right, waypoint);
+                        IWaypointItem.addWaypoint(left, waypoint);
+                        IWaypointItem.deleteWaypoint(right, waypoint);
                     }
                 }
             }

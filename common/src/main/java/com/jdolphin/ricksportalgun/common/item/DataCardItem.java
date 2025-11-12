@@ -10,7 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class DataCardItem extends Item implements IWaypointStorage {
+public class DataCardItem extends Item implements IWaypointItem {
 
     public DataCardItem(Properties properties) {
         super(properties);

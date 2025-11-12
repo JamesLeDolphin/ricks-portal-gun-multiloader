@@ -5,7 +5,8 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
-import com.jdolphin.ricksportalgun.common.init.PGDataComponents;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBLocatePacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PortalGunStyle;
@@ -62,8 +63,8 @@ public class LocatorScreen extends AbstractBaseScreen {
 
     private LocatorType[] getAllowedLocators() {
         ItemStack stack = getItemStack();
-        boolean canPlayerLocate = stack.getOrDefault(PGDataComponents.PLAYER_LOC, false);
-        boolean canStructureLocate = stack.getOrDefault(PGDataComponents.STRUCTURE_LOC, false);
+        boolean canPlayerLocate = PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.PLAYER_LOC.getId());
+        boolean canStructureLocate = PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.STRUCTURE_LOC.getId());
 
         if (canPlayerLocate && canStructureLocate) {
             return LocatorType.values();
