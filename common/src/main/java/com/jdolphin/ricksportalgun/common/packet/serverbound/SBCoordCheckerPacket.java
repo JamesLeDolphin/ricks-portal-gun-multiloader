@@ -32,7 +32,7 @@ public record SBCoordCheckerPacket(String dim) implements PGServerPayload {
 
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-            PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
+            PortalGunItem.setHopLocation(stack, level.dimension().location().toString(), bPos);
             player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
         });
     }

@@ -15,10 +15,11 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
+        String dimension = dim().toLowerCase().replace(" ", "_");
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
-                PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+            if (!PGConfigHelper.getDisabledDimensions().contains(dimension)) {
+                PortalGunItem.setHopLocation(stack, dimension, pos);
             } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
         });
     }

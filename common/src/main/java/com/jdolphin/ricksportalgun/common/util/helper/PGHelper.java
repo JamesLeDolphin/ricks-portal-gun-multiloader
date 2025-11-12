@@ -41,6 +41,10 @@ public class PGHelper {
         return tag.contains(key) && tag.getBoolean(key);
     }
 
+    public static boolean hasInfiniteDimensions() {
+        return PGServices.PLATFORM.isModLoaded("infinity");
+    }
+
     public static boolean hasImmersivePortals() {
         return PGServices.PLATFORM.isModLoaded("immersive_portals");
     }

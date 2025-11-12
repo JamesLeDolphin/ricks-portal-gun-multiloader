@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
+import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
@@ -195,9 +196,14 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                 oppositeStack.shrink(1);
                             return new InteractionResultHolder<>(result, stack);
                     } else {
-                        ResourceLocation dim = tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : Level.OVERWORLD.location();
+                        String dimension = getHopDimension(stack);
+                        ResourceLocation dim = new ResourceLocation(dimension);
                         ResourceKey<Level> key = LevelHelper.getWorldKey(dim);
-                        ServerLevel serverlevel = LevelHelper.getServerWorld(level, key);
+                        ServerLevel destinationLevel = LevelHelper.getServerWorld(level, key);
+                        if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
+                                ResourceKey<Level> resourceKey = InfinityHandler.a(((ServerLevel) level).getServer(), dimension);
+                                destinationLevel = LevelHelper.getServerWorld(level, resourceKey);
+                        }
                         BlockPos destination = getHopCoords(stack);
 
                         Vec3 loc = hitResult.getLocation();
@@ -213,43 +219,45 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                         float size = tag.contains(PGNbtKeys.TAG_SIZE) ? tag.getFloat(PGNbtKeys.TAG_SIZE) : 1.0f;
                         int age = tag.contains(PGNbtKeys.TAG_AGE) ? tag.getInt(PGNbtKeys.TAG_AGE) : 10;
 
-                        if (serverlevel != null) {
-                            if (LevelHelper.canPortalTo(serverlevel, destination, stack) && LevelHelper.canPortalTo(((ServerLevel) level), hitResult.getBlockPos(), stack)) {
-                                if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(serverlevel))) {
+                        if (destinationLevel != null) {
+                            if (LevelHelper.canPortalTo(destinationLevel, destination, stack) && LevelHelper.canPortalTo(((ServerLevel) level), hitResult.getBlockPos(), stack)) {
+                                if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(destinationLevel))) {
                                     //No errors: actually make the portal
 
                                     if (PGHelper.hasImmersivePortals() /*Check for portal type later*/) {
                                         return ImmersivePortalsHandler.spawnPortal(stack, level, loc, key, destination.getCenter(), size, playerDir, hitDir);
                                     } else {
-                                    PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
-                                    serverlevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
-                                    PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
+                                        PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
+                                        destinationLevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
+                                        PortalEntity exPortal = new PortalEntity(destinationLevel, destination.above().getCenter(), hitDir, playerDir, size);
 
-                                    boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
-                                    doForBoth(entity -> {
-                                        entity.setLifetime(PGHelper.seconds(age));
-                                        entity.setColor(getColor(stack));
-                                        entity.setBootleg(bootleg);
-                                    }, portal, exPortal);
+                                        boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
+                                        doForBoth(entity -> {
+                                            entity.setLifetime(PGHelper.seconds(age));
+                                            entity.setColor(getColor(stack));
+                                            entity.setBootleg(bootleg);
+                                        }, portal, exPortal);
 
-                                    if (stack.hasCustomHoverName()) {
-                                        Component component = stack.getHoverName();
-                                        String s = component.getString();
-                                        doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
+                                        if (stack.hasCustomHoverName()) {
+                                            Component component = stack.getHoverName();
+                                            String s = component.getString();
+                                            doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
+                                        }
+                                        portal.setHopLocation(dim, destination);
+                                        exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
+
+                                        if (!portal.isFlat()) {
+                                            doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                                        }
+
+                                        ServerLevel finalDestinationLevel = destinationLevel;
+                                        destinationLevel.getServer().executeIfPossible(() -> finalDestinationLevel.addFreshEntity(exPortal));
+                                        level.addFreshEntity(portal);
+
+                                        player.awardStat(Stats.ITEM_USED.get(this));
+                                        player.getCooldowns().addCooldown(this, 20 * 3);
+                                        if (!player.isCreative()) lowerFuel(stack, 1);
                                     }
-                                    portal.setHopLocation(dim, destination);
-                                    exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
-
-                                    if (!portal.isFlat())
-                                        doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
-
-                                    serverlevel.getServer().executeIfPossible(() -> serverlevel.addFreshEntity(exPortal));
-                                    level.addFreshEntity(portal);
-
-                                    player.awardStat(Stats.ITEM_USED.get(this));
-                                    player.getCooldowns().addCooldown(this, 20 * 3);
-                                    if (!player.isCreative()) lowerFuel(stack, 1);
-                                }
                                 } else {
                                     //Target or Origin is end & dragon is alive
                                     PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
@@ -260,7 +268,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                 PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
                                 return InteractionResultHolder.fail(stack);
                             }
-                        } else if (LevelHelper.isBlenderDestination(dim.toString())) {
+                        } else if (LevelHelper.isBlenderDestination(dimension)) {
                             PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                             portal.setLifetime(PGHelper.seconds(age));
 
@@ -315,7 +323,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         if (!Screen.hasShiftDown()) {
         tooltips.add(Component.translatable("ricksportalgun.destination",
                 getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
-        tooltips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack).toString())
+        tooltips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack))
                 .withStyle(ChatFormatting.GRAY));
         tooltips.add(Component.translatable("tooltip.ricksportalgun.fuel", getFuel(stack), getMaxFuel(stack)).withStyle(ChatFormatting.GRAY));
 
@@ -367,15 +375,15 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         tag.putInt(PGNbtKeys.TAG_COLOR, color);
     }
 
-    public static void setHopLocation(ItemStack stack, ResourceLocation dimension, BlockPos pos) {
+    public static void setHopLocation(ItemStack stack, String dimension, BlockPos pos) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(PGNbtKeys.TAG_DIMENSION, dimension.toString());
+        tag.putString(PGNbtKeys.TAG_DIMENSION, dimension);
         tag.put(PGNbtKeys.TAG_BPOS, NbtUtils.writeBlockPos(pos));
     }
 
-    public static ResourceLocation getHopDimension(ItemStack stack) {
+    public static String getHopDimension(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.TAG_DIMENSION) ? new ResourceLocation(tag.getString(PGNbtKeys.TAG_DIMENSION)) : Level.OVERWORLD.location();
+        return tag.contains(PGNbtKeys.TAG_DIMENSION) ? tag.getString(PGNbtKeys.TAG_DIMENSION) : Level.OVERWORLD.location().toString();
     }
 
     public static BlockPos getHopCoords(ItemStack stack) {
