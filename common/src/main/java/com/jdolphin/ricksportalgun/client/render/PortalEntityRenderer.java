@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.client.render;
 
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
-import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
+import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 
@@ -30,33 +29,15 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(PortalEntity entity) {
-        return PORTAL_TEXTURE;
-    }
-
-    protected void openAnimation(PortalEntity entity, PoseStack stack) {
-        float f;
-        if (!entity.exists() && entity.tickCount < entity.getLifetime() * 0.1) {
-            f = Mth.lerp((float) entity.tickCount / 20, 0.0f, 1.0f);
-            f = Mth.clamp(f, 0.0f, 1.0f);
-            f *= f;
-            f *= f;
-            stack.scale(f, f, f);
-        }
-        if (entity.tickCount > entity.getLifetime() * 0.9) {
-            f = Mth.lerp((float) entity.tickCount / 20, 1.0f, 0.0f);
-            f = Mth.clamp(f, 1.0f, 0.0f);
-            f *= f;
-            f *= f;
-            stack.scale(f, f, f);
-        }
+        return entity.getPortalType().getTextureLocation(entity);
     }
 
     @Override
     public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
-        PGPortalType type = entity.getPortalType();
-        if (type.getModel() == null && type.needsModel()) type.setModel(model);
+        PortalTypeRenderer type = entity.getPortalType();
 
-        openAnimation(entity, stack);
+        type.openAnimation(entity, stack, partialTick, packedLight);
+        type.closeAnimation(entity, stack, partialTick, packedLight);
 
         int color = entity.getColor();
         float r = FastColor.ARGB32.red(color) / 255f;

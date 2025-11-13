@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
+import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
-import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
@@ -43,12 +43,13 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> MAX_LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
 
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
     public static final String TAG_OPEN = "Open";
+    public static final String TAG_OPEN_MAX = "MaxAge";
     public static final String TAG_NEW = "isSpawned";
-    public static final String TAG_COOLDOWN = "Cooldown";
     public static final String TAG_DIR = "Direction";
     public static final String TAG_FACING = "Facing";
     public static final String TAG_SIZE = "Size";
@@ -63,14 +64,9 @@ public class PortalEntity extends Entity {
     private Vec3 targetVec;
     private String targetDim;
     private ServerLevel destinationLevel;
-    private int delay = 0;
 
     public boolean exists() {
         return exists;
-    }
-
-    public boolean shouldRender(double x, double y, double z) {
-        return true;
     }
 
     public PortalEntity(EntityType<PortalEntity> type, Level level) {
@@ -86,16 +82,30 @@ public class PortalEntity extends Entity {
         this.pos = pos;
     }
 
-    public PGPortalType getPortalType() {
-        return PGPortalTypes.VORTEX;
+    public PortalTypeRenderer getPortalType() {
+        return PGPortalTypes.DEFAULT;
     }
 
     public void setLifetime(int lifetime) {
         this.entityData.set(LIFETIME, lifetime);
+        setMaxLifetime(lifetime);
+    }
+
+    private void lowerLifetime() {
+        int i = getLifetime();
+        this.entityData.set(LIFETIME, i - 1);
     }
 
     public int getLifetime() {
         return this.entityData.get(LIFETIME);
+    }
+
+    public void setMaxLifetime(int lifetime) {
+        this.entityData.set(MAX_LIFETIME, lifetime);
+    }
+
+    public int getMaxLifetime() {
+        return this.entityData.get(MAX_LIFETIME);
     }
 
     public void setColor(int color) {
@@ -143,11 +153,6 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public void kill() {
-        this.remove(RemovalReason.DISCARDED);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return true;
     }
@@ -188,7 +193,7 @@ public class PortalEntity extends Entity {
         this.targetPos = NbtUtils.readBlockPos(bpTag);
         this.setColor(tag.getInt(TAG_COLOR));
         this.setLifetime(tag.getInt(TAG_OPEN));
-        this.delay = tag.getInt(TAG_COOLDOWN);
+        this.setMaxLifetime(tag.getInt(TAG_OPEN_MAX));
         this.exists = tag.getBoolean(TAG_NEW);
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
@@ -203,7 +208,7 @@ public class PortalEntity extends Entity {
         tag.put(TAG_BPOS, NbtUtils.writeBlockPos(getHopLoc()));
         tag.putInt(TAG_COLOR, this.getColor());
         tag.putInt(TAG_OPEN, this.getLifetime());
-        tag.putInt(TAG_COOLDOWN, this.delay);
+        tag.putInt(TAG_OPEN_MAX, this.getMaxLifetime());
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
@@ -268,6 +273,7 @@ public class PortalEntity extends Entity {
         this.entityData.define(DATA_FACING, Direction.SOUTH);
         this.entityData.define(DATA_SIZE, 1.0f);
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
+        this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
     }
 
     @Override
@@ -279,10 +285,8 @@ public class PortalEntity extends Entity {
                 this.exists = true;
             }
             if (getLifetime() > 0) {
-                int l = getLifetime();
-                setLifetime(l - 1);
+                lowerLifetime();
             }
-            if (delay > 0) delay--;
             if (!firstTick && getLifetime() == 0) {
                 level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
                 this.kill();
@@ -314,7 +318,7 @@ public class PortalEntity extends Entity {
                 List<Entity> entityList = getEntitiesNearby(this, 0.3D);
                 if (entityList != null && !entityList.isEmpty()) {
                     for (Entity nearby : entityList) {
-                        if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger() && delay == 0) {
+                        if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                             if (!shouldHurt) {
                                 Set<RelativeMovement> relativeSet = new HashSet<>();
                                 relativeSet.add(RelativeMovement.Y_ROT);
