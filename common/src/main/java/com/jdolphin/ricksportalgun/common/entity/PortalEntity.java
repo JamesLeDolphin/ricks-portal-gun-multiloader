@@ -1,11 +1,10 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
-import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
-import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -44,6 +43,8 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MAX_LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> SHAPE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.STRING);
 
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
@@ -64,6 +65,7 @@ public class PortalEntity extends Entity {
     private Vec3 targetVec;
     private String targetDim;
     private ServerLevel destinationLevel;
+    private PortalType type;
 
     public boolean exists() {
         return exists;
@@ -82,8 +84,13 @@ public class PortalEntity extends Entity {
         this.pos = pos;
     }
 
-    public PortalTypeRenderer getPortalType() {
-        return PGPortalTypes.DEFAULT;
+    public PortalType getPortalType() {
+        String s = entityData.get(TYPE);
+        return PGPortalTypes.TYPES.get(new ResourceLocation(s));
+    }
+
+    public void setPortalType(PortalType type) {
+        this.entityData.set(TYPE, type.getId().toString());
     }
 
     public void setLifetime(int lifetime) {
@@ -198,6 +205,7 @@ public class PortalEntity extends Entity {
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
+        this.entityData.set(TYPE, tag.getString("PortalType"));
     }
 
     @Override
@@ -212,6 +220,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
+        tag.putString("PortalType", getPortalType().getId().toString());
     }
 
     @Override
@@ -274,6 +283,8 @@ public class PortalEntity extends Entity {
         this.entityData.define(DATA_SIZE, 1.0f);
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
         this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
+        this.entityData.define(TYPE, PGPortalTypes.DEFAULT.getId().toString());
+        this.entityData.define(SHAPE, PortalType.PortalShape.SQUARE.toString());
     }
 
     @Override
@@ -281,13 +292,14 @@ public class PortalEntity extends Entity {
         super.tick();
         if (!this.level().isClientSide()) {
             if (!exists) {
-                LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
+                LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getOpenSound(), SoundSource.PLAYERS);
                 this.exists = true;
             }
             if (getLifetime() > 0) {
                 lowerLifetime();
             }
             if (!firstTick && getLifetime() == 0) {
+                LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getCloseSound(), SoundSource.PLAYERS);
                 level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
                 this.kill();
                 return;

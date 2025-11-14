@@ -1,7 +1,8 @@
 package com.jdolphin.ricksportalgun.client.render;
 
-import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,45 +20,46 @@ import java.util.List;
 
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.id("textures/entity/portal.png");
-    public PortalEntityModel model;
     private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
 
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
-        this.model = new PortalEntityModel(pContext.bakeLayer(PortalEntityModel.LAYER_LOCATION));
     }
 
     @Override
     public ResourceLocation getTextureLocation(PortalEntity entity) {
-        return entity.getPortalType().getTextureLocation(entity);
+        PortalType type = entity.getPortalType();
+        return PGPortalTypeRenderers.getRenderer(type).getTextureLocation(entity);
     }
 
     @Override
     public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
-        PortalTypeRenderer type = entity.getPortalType();
+        PortalType type = entity.getPortalType();
+        PortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
+        if (renderer != null) {
+            renderer.openAnimation(entity, stack, partialTick, packedLight);
+            renderer.closeAnimation(entity, stack, partialTick, packedLight);
 
-        type.openAnimation(entity, stack, partialTick, packedLight);
-        type.closeAnimation(entity, stack, partialTick, packedLight);
+            int color = entity.getColor();
+            float r = FastColor.ARGB32.red(color) / 255f;
+            float g = FastColor.ARGB32.green(color) / 255f;
+            float b = FastColor.ARGB32.blue(color) / 255f;
 
-        int color = entity.getColor();
-        float r = FastColor.ARGB32.red(color) / 255f;
-        float g = FastColor.ARGB32.green(color) / 255f;
-        float b = FastColor.ARGB32.blue(color) / 255f;
+            if (names.contains(entity.getName().getString().toLowerCase())) {
+                int i = entity.tickCount / 25 + entity.getId();
+                int j = DyeColor.values().length;
+                int k = i % j;
+                int l = (i + 1) % j;
+                float f3 = ((float) (entity.tickCount % 25) + partialTick) / 25.0F;
+                float[] afloat1 = Sheep.getColorArray(DyeColor.byId(k));
+                float[] afloat2 = Sheep.getColorArray(DyeColor.byId(l));
+                r = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
+                g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
+                b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
+            }
+            renderer.renderPortal(entity, yaw, partialTick, stack, source, packedLight, r, g, b);
 
-        if (names.contains(entity.getName().getString().toLowerCase())) {
-            int i = entity.tickCount / 25 + entity.getId();
-            int j = DyeColor.values().length;
-            int k = i % j;
-            int l = (i + 1) % j;
-            float f3 = ((float) (entity.tickCount % 25) + partialTick) / 25.0F;
-            float[] afloat1 = Sheep.getColorArray(DyeColor.byId(k));
-            float[] afloat2 = Sheep.getColorArray(DyeColor.byId(l));
-            r = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
-            g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
-            b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
+            super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
         }
-        type.renderPortal(entity, yaw, partialTick, stack, source, packedLight, r, g, b);
-
-        super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
     }
 }

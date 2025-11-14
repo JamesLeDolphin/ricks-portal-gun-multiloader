@@ -107,6 +107,7 @@
   "ricksportalgun.button.self_destruct": "Enable self destruct:",
   "ricksportalgun.button.self_destruct.activate": "Activate Self Destruct. Warning: This action will destroy the portal gun!",
   "ricksportalgun.button.upgrade_new": "Install new upgrade",
+  "ricksportalgun.button.portal_type": "Portal Type",
 
   "ricksportalgun.button.next": "Next",
   "ricksportalgun.button.previous": "Previous",
@@ -194,6 +195,8 @@
   "tooltip.ricksportalgun.button.self_destruct": "Enables self-destruct button on the coordinate selection screen. When pressed, the portal gun is forcibly dropped and can no longer be picked up. After 10 seconds it will detonate and destroy itself in an explosion",
   "tooltip.ricksportalgun.button.portal_lifetime": "Amount of seconds the portal stays open. Min 5s, max 45s. Defaults to 10 seconds",
 
+  "portaltype.ricksportalgun.default": "Default Portal Type",
+
   "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
   "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",
   "advancement.ricksportalgun.obtain_portal_gun": "Gateway to infinity!",
@@ -212,8 +215,8 @@
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
   "tag.item.ricksportalgun.upgrades": "Upgrades",
 
-  "key.category.ricksportalgun.portal_menu": "Portal Gun Mod",
-  "key.ricksportalgun.portal_menu": "Open portal gun menu",
+  "key.category.ricksportalgun.portal_menu": "Rick's Portal Gun",
+  "key.ricksportalgun.portal_menu": "Open Portal Gun Menu",
 
   "entity.ricksportalgun.portal": "Portal",
 

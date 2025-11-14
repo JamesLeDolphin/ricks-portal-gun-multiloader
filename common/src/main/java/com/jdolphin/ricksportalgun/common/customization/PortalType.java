@@ -1,19 +1,25 @@
 package com.jdolphin.ricksportalgun.common.customization;
 
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
 import java.awt.*;
 
 public class PortalType {
-    private final String id;
+    private final ResourceLocation id;
 
-    public PortalType(String id) {
+    public PortalType(ResourceLocation id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Component getName() {
+        return Component.translatable("portaltype.ricksportalgun." + id.getPath());
+    }
+
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -33,7 +39,7 @@ public class PortalType {
         return Color.GREEN.getRGB();
     }
 
-    public boolean canShapeChange() {
+    public boolean canChangeShape() {
         return true;
     }
 

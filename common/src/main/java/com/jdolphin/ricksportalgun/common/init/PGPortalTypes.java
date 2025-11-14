@@ -1,21 +1,24 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.client.render.portal.*;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.VortexPortalType;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class PGPortalTypes {
-    public static final Map<ResourceLocation, PortalTypeRenderer> TYPES = new HashMap<>();
+    public static final Map<ResourceLocation, PortalType> TYPES = new HashMap<>();
 
-    public static final PortalTypeRenderer DEFAULT = register("default", new DefaultPortalTypeRenderer());
-    public static final PortalTypeRenderer END_PORTAL = register("end_portal", new EndPortalTypeRenderer());
-    public static final PortalTypeRenderer VORTEX = register("vortex", new VortexTypeRenderer());
-    public static final PortalTypeRenderer WATER = register("water", new WaterPortalTypeRenderer());
+    public static final PortalType DEFAULT = register("default", PortalType::new);
+    public static final PortalType END_PORTAL = register("end_portal", PortalType::new);
+    public static final PortalType VORTEX = register("vortex", VortexPortalType::new);
+    public static final PortalType WATER = register("water", PortalType::new);
 
-    private static PortalTypeRenderer register(String name, PortalTypeRenderer type) {
+    private static PortalType register(String name, Function<ResourceLocation, PortalType> typeFunction) {
+        PortalType type = typeFunction.apply(PGHelper.id(name));
         TYPES.put(PGHelper.id(name), type);
         return type;
     }

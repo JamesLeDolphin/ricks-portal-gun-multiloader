@@ -3,11 +3,9 @@ package com.jdolphin.ricksportalgun.common.item;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
-import com.jdolphin.ricksportalgun.common.init.PGItems;
-import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
-import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.Waypoint;
@@ -93,7 +91,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return tag.contains(PGNbtKeys.SECONDARY_COLOR) ? tag.getInt(PGNbtKeys.SECONDARY_COLOR) : 15989755;
     }
 
-
     public static void setCode(ItemStack stack, String code) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putString(PGNbtKeys.BARRIER_CODE, code);
@@ -102,6 +99,20 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     public static String getCode(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
+    }
+
+    public static void setPortalType(ItemStack stack, PortalType type) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putString(PGNbtKeys.PORTAL_TYPE, type.getId().toString());
+    }
+
+    public static PortalType getPortalType(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (tag.contains(PGNbtKeys.PORTAL_TYPE)) {
+            String s = tag.getString(PGNbtKeys.PORTAL_TYPE);
+            ResourceLocation rl = new ResourceLocation(s);
+            return PGPortalTypes.TYPES.get(rl);
+        } else return PGPortalTypes.DEFAULT;
     }
 
     public static void refillFuel(ItemStack stack) {
@@ -236,6 +247,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                             entity.setLifetime(PGHelper.seconds(age));
                                             entity.setColor(getColor(stack));
                                             entity.setBootleg(bootleg);
+                                            entity.setPortalType(getPortalType(stack));
                                         }, portal, exPortal);
 
                                         if (stack.hasCustomHoverName()) {
@@ -282,7 +294,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                             boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
                             portal.setBootleg(bootleg);
-
+                            portal.setPortalType(getPortalType(stack));
                             if (!portal.isFlat()) portal.setYRot(player.getYRot());
                             if (!player.isCreative()) lowerFuel(stack, 1);
 

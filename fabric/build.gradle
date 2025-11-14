@@ -25,10 +25,11 @@ dependencies {
     modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
 
+    //Infinite Dimensions
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
-    modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
+    //modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-fabric")
 
-    modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+fabric")
+    //modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+fabric")
 
     //Immersive Portals
     modCompileOnly ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v3.3.7-mc1.20.1")

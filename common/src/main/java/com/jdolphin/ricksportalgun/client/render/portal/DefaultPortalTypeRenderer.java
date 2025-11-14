@@ -1,7 +1,8 @@
 package com.jdolphin.ricksportalgun.client.render.portal;
 
-import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
+import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,7 +19,9 @@ import org.joml.Matrix4f;
 
 public class DefaultPortalTypeRenderer extends PortalTypeRenderer {
 
-    public DefaultPortalTypeRenderer() {}
+    public DefaultPortalTypeRenderer(PortalType type) {
+        super(type);
+    }
 
     @Override
     public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
@@ -67,12 +70,12 @@ public class DefaultPortalTypeRenderer extends PortalTypeRenderer {
             Matrix3f matrix3f = stack.last().normal();
             VertexConsumer consumer = source.getBuffer(RenderType.entitySmoothCutout(getTextureLocation(entity)));
 
-            renderVertexes(matrix4f, matrix3f, consumer, -width, width, -height, height, 0.01f, 0.01f,
+            GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, -height, height, 0.01f, 0.01f,
                     red, green, blue, 1,
                     0, 0, 0.5f, 1,
                     OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
                     0, 1, 0);
-            renderVertexes(matrix4f, matrix3f, consumer, -width, width, height, -height, -0.01f, -0.01f,
+            GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, height, -height, -0.01f, -0.01f,
                     red, green, blue, 1,
                     0, 0, 0.5f, 1,
                     OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
@@ -88,7 +91,12 @@ public class DefaultPortalTypeRenderer extends PortalTypeRenderer {
     }
 
     @Override
-    public void renderInGui(ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, PortalGunStyle style) {
-
+    public void renderInGui(int x, int y, int width, int height, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
+        float r = red / 255f;
+        float g = green / 255f;
+        float b = blue / 255f;
+        graphics.setColor(r, g, b, 1);
+        graphics.blit(PGHelper.id("textures/entity/portal.png"), x, y, 0, 0, width, height, width, height);
+        graphics.setColor(1, 1, 1, 1);
     }
 }

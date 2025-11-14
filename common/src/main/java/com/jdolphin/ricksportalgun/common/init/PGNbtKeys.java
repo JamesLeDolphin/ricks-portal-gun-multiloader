@@ -18,7 +18,7 @@ public class PGNbtKeys {
     public static final String TAG_GUN_STYLE = "PortalGunStyle";
     public static final String SELF_DESTRUCT = "SelfDestruct";
     public static final String BARRIER_CODE = "Code";
-
+    public static final String PORTAL_TYPE = "PortalType";
     public static final String PRIMARY_COLOR = "PrimaryColor";
     public static final String SECONDARY_COLOR = "SecondaryColor";
 

@@ -22,9 +22,8 @@ import net.minecraft.world.item.ItemStack;
 public class CustomizationSettingsScreen extends AbstractBaseScreen {
     public static ResourceLocation RESET_LOCATION = PGHelper.id("textures/gui/sprites/icon/reset.png");
     private PGSlider portalSize, portalAge;
-    private PGTextButton portalColor, menuTheme, select, cancel;
+    private PGTextButton portalColor, menuTheme, select, cancel, portalType;
     private PGImageButton resetSize, resetAge, backButton;
-    private PGTooltipText ageTxt;
 
     public CustomizationSettingsScreen() {
         super("menu.ricksportalgun.settings.customization");
@@ -58,6 +57,9 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         this.menuTheme = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 8, 256, 18,
                 Component.translatable("ricksportalgun.button.settings.customization.theme"), button -> minecraft.setScreen(new ThemeEditScreen()), this.font));
 
+        this.portalType = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 32, 256, 18,
+                Component.literal("Placeholder"), button -> minecraft.setScreen(new PortalTypeScreen()), this.font));
+
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64,128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
                     SBCustomizeSettingsPacket packet = new SBCustomizeSettingsPacket(this.portalSize.getValue(), this.portalAge.getValueInt());
@@ -72,7 +74,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
-        this.ageTxt = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.portalAge.getY() + 4,
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.portalAge.getY() + 4,
                 Component.translatable("ricksportalgun.button.portal_age"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.portal_lifetime")));
         this.resetAge.setRenderBackground(false);
         this.resetSize.setRenderBackground(false);
@@ -82,6 +84,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         this.cancel.setTextColour(style.textColor());
         this.portalColor.setTextColour(style.textColor());
         this.menuTheme.setTextColour(style.textColor());
+        this.portalType.setTextColour(style.textColor());
         this.portalSize.setRenderBG(false);
         this.portalAge.setRenderBG(false);
         this.portalSize.setStyle(style);
@@ -103,6 +106,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
         GuiHelper.renderOutline(graphics, this.portalColor, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.menuTheme, style.highlightColor());
+        GuiHelper.renderOutline(graphics, this.portalType, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.resetSize, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.resetAge, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.select, style.highlightColor());

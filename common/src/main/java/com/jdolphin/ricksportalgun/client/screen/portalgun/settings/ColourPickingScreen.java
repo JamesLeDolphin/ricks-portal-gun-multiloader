@@ -1,14 +1,17 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.PGConstants;
-import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
+import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
+import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBColourPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -133,17 +136,17 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         RenderSystem.enableBlend();
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
         RenderSystem.disableBlend();
-        int x = 64, y = 82, multiplier = size.getValueInt();
-        int color = getColor();
-        float r = FastColor.ARGB32.red(color) / 255f;
-        float g = FastColor.ARGB32.green(color) / 255f;
-        float b = FastColor.ARGB32.blue(color) / 255f;
-        float a = FastColor.ARGB32.alpha(color) / 255f;
 
-        graphics.setColor(r, g, b, a);
-        graphics.blit(PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
-                this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y);
-        graphics.setColor(1, 1, 1, 1);
+
+        int x = 72, y = 82, multiplier = size.getValueInt();
+        int color = getColor();
+
+        ItemStack stack = getItemStack();
+        PortalType type = PortalGunItem.getPortalType(stack);
+        PortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
+
+        renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, stack, graphics, pMouseX, pMouseY, pPartialTick,
+                FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

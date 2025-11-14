@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class PGHelper {
     public static MutableComponent COORDS_SET = Component.translatable("notice.ricksportalgun.destination.set");
@@ -128,9 +129,17 @@ public class PGHelper {
         PGServices.PLATFORM.sendPacketToClient(player, packet);
     }
 
+    public static  <K, V> K getKeyFromValue(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public static <T> T getRandomFromList(List<T> list) {
-        int i = list.size();
-        int index = PGConstants.RANDOM.nextInt(i);
+        int index = PGConstants.RANDOM.nextInt(list.size());
         return list.get(index);
     }
 }
