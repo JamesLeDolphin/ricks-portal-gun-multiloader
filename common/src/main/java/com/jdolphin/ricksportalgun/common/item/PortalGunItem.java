@@ -91,7 +91,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return tag.contains(PGNbtKeys.SECONDARY_COLOR) ? tag.getInt(PGNbtKeys.SECONDARY_COLOR) : 15989755;
     }
 
-
     public static void setCode(ItemStack stack, String code) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putString(PGNbtKeys.BARRIER_CODE, code);
@@ -109,9 +108,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static void migrateDamage(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        int fuel = getMaxFuel(stack) - stack.getDamageValue();
-        tag.putInt(PGNbtKeys.TAG_FUEL, fuel);
-        tag.remove("Damage");
+        if (tag.contains("Damage")) {
+            int fuel = getMaxFuel(stack) - stack.getDamageValue();
+            tag.putInt(PGNbtKeys.TAG_FUEL, fuel);
+            tag.remove("Damage");
+        }
     }
 
     public static boolean refuel(ItemStack stack, Player player) {
@@ -409,49 +410,49 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         ListTag listTag = tag.getList(TAG_UPGRADES, 8);
         if (tag.contains(PGNbtKeys.UPGRADE_PLAYER_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.PLAYER_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_PLAYER_LOC);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_WAYPOINT)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.WAYPOINTS.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_WAYPOINT);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_BIOME_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.BIOME_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_BIOME_LOC);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_STRUCTURE_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.STRUCTURE_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_STRUCTURE_LOC);
         }
         if (tag.contains(PGNbtKeys.EXTRA_DIM)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_1.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.EXTRA_DIM);
         }
         if (tag.contains(PGNbtKeys.EXTRA_DIM_2)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_2.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.EXTRA_DIM_2);
         }
         if (tag.contains(PGNbtKeys.SETTINGS)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.SETTINGS.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.SETTINGS);

@@ -34,19 +34,17 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     }
 
     protected void openAnimation(PortalEntity entity, PoseStack stack) {
-        float f;
-        if (!entity.exists() && entity.tickCount < entity.getLifetime() * 0.1) {
-            f = Mth.lerp((float) entity.tickCount / 20, 0.0f, 1.0f);
+        if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20) {
+            float f = Mth.lerp((entity.getMaxLifetime() - entity.getLifetime()) / 20f, 0.0f, 1.0f);
             f = Mth.clamp(f, 0.0f, 1.0f);
             f *= f;
             f *= f;
             stack.scale(f, f, f);
         }
-        if (entity.tickCount > entity.getLifetime() * 0.9) {
-            f = Mth.lerp((float) entity.tickCount / 20, 1.0f, 0.0f);
-            f = Mth.clamp(f, 1.0f, 0.0f);
-            f *= f;
-            f *= f;
+        if (entity.getLifetime() < 20) {
+            float f = (float) entity.getLifetime() / 20.0f;
+            f = Mth.clamp(f, 0.0f, 1.0f);
+            f = f * f * f * f; // easing
             stack.scale(f, f, f);
         }
     }

@@ -90,7 +90,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                     if (stack.is(PGTags.Items.PORTAL_GUNS)) {
                         Level level = player.level();
                         String dim = this.dimInput.getValue().isEmpty() ? LevelHelper.getLevelDimensionLocation(level).toString() : this.dimInput.getValue();
-                        SBCoordCheckerPacket packet = new SBCoordCheckerPacket(dim);
+                        SBCoordCheckerPacket packet = new SBCoordCheckerPacket(getCoords(player), dim);
                         PGHelper.sendPacketToServer(packet);
                     }
                     this.onClose();

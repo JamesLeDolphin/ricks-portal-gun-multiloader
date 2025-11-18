@@ -16,14 +16,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 
-public record SBCoordCheckerPacket(String dim) implements PGServerPayload {
+public record SBCoordCheckerPacket(BlockPos pos, String dim) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
-            BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
+            player.serverLevel().getChunkSource().updateChunkForced(new ChunkPos(pos), true);
+            BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(pos, player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
 
             ResourceLocation dim = new ResourceLocation(this.dim);
             ServerLevel level;
@@ -38,11 +40,12 @@ public record SBCoordCheckerPacket(String dim) implements PGServerPayload {
     }
 
     public static SBCoordCheckerPacket decode(FriendlyByteBuf buf) {
-        return new SBCoordCheckerPacket(buf.readUtf());
+        return new SBCoordCheckerPacket(buf.readBlockPos(), buf.readUtf());
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
+        buf.writeBlockPos(pos);
         buf.writeUtf(dim);
     }
 
