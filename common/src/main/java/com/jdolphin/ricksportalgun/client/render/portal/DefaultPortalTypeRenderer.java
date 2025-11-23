@@ -70,6 +70,8 @@ public class DefaultPortalTypeRenderer extends PortalTypeRenderer {
             Matrix3f matrix3f = stack.last().normal();
             VertexConsumer consumer = source.getBuffer(RenderType.entitySmoothCutout(getTextureLocation(entity)));
 
+         //   drawShapedVertex(stack, -width, -height, width, height, red, green, blue, 1, 0, 0, 0, 0, consumer, entity.getShape());
+
             GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, -height, height, 0.01f, 0.01f,
                     red, green, blue, 1,
                     0, 0, 0.5f, 1,

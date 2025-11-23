@@ -55,8 +55,5 @@ public class PortalType {
             this.name = name;
         }
 
-        public String getShapeName() {
-            return name;
-        }
     }
 }

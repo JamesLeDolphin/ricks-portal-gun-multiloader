@@ -2,17 +2,14 @@ package com.jdolphin.ricksportalgun.client.render.portal;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
-import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -64,11 +61,14 @@ public class WaterPortalTypeRenderer extends PortalTypeRenderer {
         float width = (entity.getSize() / 3) * 1.5f;
         float height = entity.getSize() > 2 ? width : 1;
 
-        GuiHelper.renderVertexes(stack.last().pose(), stack.last().normal(), consumer1,
-                -width, width, -height, height, 0f, 0f, red, green, blue, 1,
-                sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(),
-                OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
-                0, 1, 0);
+        drawShapedVertex(stack, -width, -height, width, height, red, green, blue, 1,
+                sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), consumer1, entity.getShape());
+
+       // GuiHelper.renderVertexes(stack.last().pose(), stack.last().normal(), consumer1,
+       //         -width, width, -height, height, 0f, 0f, red, green, blue, 1,
+       //         sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(),
+       //         OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
+       //         0, 1, 0);
         stack.popPose();
     }
 }

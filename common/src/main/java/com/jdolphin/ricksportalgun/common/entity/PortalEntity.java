@@ -159,6 +159,14 @@ public class PortalEntity extends Entity {
         return entity1.getBoundingBox().intersects(entity2.getBoundingBox());
     }
 
+    public PortalType.PortalShape getShape() {
+        return PortalType.PortalShape.valueOf(entityData.get(SHAPE));
+    }
+
+    public void setShape(PortalType.PortalShape shape) {
+        this.entityData.set(SHAPE, shape.name());
+    }
+
     @Override
     public boolean isNoGravity() {
         return true;
@@ -206,6 +214,7 @@ public class PortalEntity extends Entity {
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
         this.entityData.set(TYPE, tag.getString("PortalType"));
+        setShape(PortalType.PortalShape.valueOf(tag.getString("Shape")));
     }
 
     @Override
@@ -221,6 +230,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
         tag.putString("PortalType", getPortalType().getId().toString());
+        tag.putString("Shape", getShape().toString());
     }
 
     @Override
