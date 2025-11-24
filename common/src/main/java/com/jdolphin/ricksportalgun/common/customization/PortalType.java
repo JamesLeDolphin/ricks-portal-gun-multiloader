@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class PortalType {
     private final ResourceLocation id;
@@ -46,7 +47,6 @@ public class PortalType {
     public enum PortalShape { //Use the strings later to get the premade vertex shape
         SQUARE("square"),
         DIAMOND("diamond"),
-        CUSTOM("custom"),
         TRIANGLE("triangle"),
         OCTAGON("octagon")
         ;
@@ -55,5 +55,16 @@ public class PortalType {
             this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public Component getTranslated() {
+            return Component.translatable("ricksportalgun.shape." + name);
+        }
+
+        public static PortalShape getFromName(String s) {
+            return Arrays.stream(PortalShape.values()).filter(shape -> shape.getName().equals(s)).findFirst().orElseThrow();
+        }
     }
 }

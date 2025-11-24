@@ -11,24 +11,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetPortalTypePacket(PortalType type) implements PGServerPayload {
+public record SBSetPortalTypePacket(PortalType type, PortalType.PortalShape shape) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            PortalGunItem.setPortalType(stack, this.type);
+            if (type != null) PortalGunItem.setPortalType(stack, this.type);
+            if (shape != null) PortalGunItem.setPortalShape(stack, shape);
         });
     }
 
     public static SBSetPortalTypePacket decode(FriendlyByteBuf buf) {
-        return new SBSetPortalTypePacket(PGPortalTypes.TYPES.get(buf.readResourceLocation()));
+        return new SBSetPortalTypePacket(PGPortalTypes.TYPES.get(buf.readResourceLocation()), PortalType.PortalShape.getFromName(buf.readUtf()));
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeResourceLocation(type.getId());
+        buf.writeUtf(shape.getName());
     }
 
     public static ResourceLocation getID() {

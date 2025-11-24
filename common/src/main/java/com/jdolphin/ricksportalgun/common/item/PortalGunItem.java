@@ -106,6 +106,19 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         tag.putString(PGNbtKeys.PORTAL_TYPE, type.getId().toString());
     }
 
+    public static void setPortalShape(ItemStack stack, PortalType.PortalShape shape) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getName());
+    }
+
+    public static PortalType.PortalShape getPortalShape(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (tag.contains(PGNbtKeys.PORTAL_SHAPE)) {
+            String s = tag.getString(PGNbtKeys.PORTAL_SHAPE);
+            return PortalType.PortalShape.getFromName(s);
+        } else return PortalType.PortalShape.SQUARE;
+    }
+
     public static PortalType getPortalType(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.PORTAL_TYPE)) {
@@ -248,6 +261,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                             entity.setColor(getColor(stack));
                                             entity.setBootleg(bootleg);
                                             entity.setPortalType(getPortalType(stack));
+                                            entity.setShape(getPortalShape(stack));
                                         }, portal, exPortal);
 
                                         if (stack.hasCustomHoverName()) {
@@ -295,6 +309,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
                             portal.setBootleg(bootleg);
                             portal.setPortalType(getPortalType(stack));
+                            portal.setShape(getPortalShape(stack));
                             if (!portal.isFlat()) portal.setYRot(player.getYRot());
                             if (!player.isCreative()) lowerFuel(stack, 1);
 

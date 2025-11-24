@@ -22,8 +22,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class PortalTypeScreen extends AbstractBaseScreen {
     private PGCycleButton<PortalType> typeButton;
+    private PGCycleButton<PortalType.PortalShape> shapeButton;
     private PGTextButton select, cancel;
     private PortalType currentType;
+    private PortalType.PortalShape shape;
     private PGImageButton backButton;
 
     public PortalTypeScreen() {
@@ -34,9 +36,16 @@ public class PortalTypeScreen extends AbstractBaseScreen {
     protected void init() {
         super.init();
 
-        this.typeButton = this.addWidget(PGCycleButton.builder(PortalType::getName)
+        ItemStack stack = getItemStack();
+        PortalType defaultType = PortalGunItem.getPortalType(stack);
+        PortalType.PortalShape defShape = PortalGunItem.getPortalShape(stack);
+        this.typeButton = this.addWidget(PGCycleButton.builder(PortalType::getName).withInitialValue(defaultType)
                 .withValues(PGPortalTypes.TYPES.values()).create(this.width / 2 - 64, this.height / 2 - 64, 128, 20, Component.translatable("ricksportalgun.button.portal_type"),
-                        (button, type) -> this.currentType = type));
+                        (button, type) -> {}));
+
+        this.shapeButton = this.addWidget(PGCycleButton.builder(PortalType.PortalShape::getTranslated).withInitialValue(defShape)
+                .withValues(PortalType.PortalShape.values()).create(this.width / 2 - 64, this.height / 2 - 34, 128, 20, Component.translatable("ricksportalgun.button.portal_type"),
+                        (button, type) -> {}));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),
                 (button) -> minecraft.setScreen(new CustomizationSettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
@@ -44,7 +53,7 @@ public class PortalTypeScreen extends AbstractBaseScreen {
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
             if (getItemStack().is(PGTags.Items.PORTAL_GUNS)) {
-                SBSetPortalTypePacket packet = new SBSetPortalTypePacket(typeButton.getValue());
+                SBSetPortalTypePacket packet = new SBSetPortalTypePacket(typeButton.getValue(), shapeButton.getValue());
                 PGHelper.sendPacketToServer(packet);
                 this.onClose();
             }
@@ -69,14 +78,16 @@ public class PortalTypeScreen extends AbstractBaseScreen {
 
         GuiHelper.renderWidgets(graphics, mouseX, mouseY, partialTick, typeButton);
         GuiHelper.renderOutline(graphics, typeButton, style.highlightColor());
+        GuiHelper.renderWidgets(graphics, mouseX, mouseY, partialTick, shapeButton);
+        GuiHelper.renderOutline(graphics, shapeButton, style.highlightColor());
         GuiHelper.renderOutline(graphics, backButton, style.highlightColor());
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
         ItemStack  stack = getItemStack();
-        if (currentType != null) {
+        if (typeButton.getValue() != null) {
             int color = PortalGunItem.getColor(stack);
-            PGPortalTypeRenderers.getRenderer(currentType).renderInGui(this.width / 2, this.height / 2, 64, 82,
+            PGPortalTypeRenderers.getRenderer(typeButton.getValue()).renderInGui(this.width / 2, this.height / 2, 64, 82,
                     stack, graphics, mouseX, mouseY, partialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
         }
 

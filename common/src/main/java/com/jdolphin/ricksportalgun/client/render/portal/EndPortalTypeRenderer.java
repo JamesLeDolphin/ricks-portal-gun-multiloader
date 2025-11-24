@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.client.render.portal;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -9,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
@@ -57,8 +59,10 @@ public class EndPortalTypeRenderer extends PortalTypeRenderer {
         float width = getWidth(entity);
         float height = entity.getSize() > 2 ? getHeight(entity) / 2 : 1;
 
-        //End portal effect
-        VertexConsumer consumer = source.getBuffer(RenderType.endPortal());
+        RenderType renderType = RenderType.endPortal();
+        if (PGHelper.hasIris())  renderType = RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION);
+
+        VertexConsumer consumer = source.getBuffer(renderType);
 
         this.drawShapedVertex(stack, -width, -height, width, height, 1, 1, 1, 1, 0, 0, 0, 0, consumer, entity.getShape());
         this.drawShapedVertex(stack, width, -height, -width, height, 1, 1, 1, 1, 0, 0, 0, 0, consumer, entity.getShape());

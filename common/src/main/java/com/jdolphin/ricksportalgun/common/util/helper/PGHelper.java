@@ -46,6 +46,10 @@ public class PGHelper {
         return PGServices.PLATFORM.isModLoaded("infinity");
     }
 
+    public static boolean hasIris() {
+        return PGServices.PLATFORM.isModLoaded("iris");
+    }
+
     public static boolean hasImmersivePortals() {
         return PGServices.PLATFORM.isModLoaded("immersive_portals");
     }
