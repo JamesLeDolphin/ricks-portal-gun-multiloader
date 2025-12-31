@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +24,7 @@ public record SBSecuritySettingsPacket(boolean lock, String name, String code, b
             tag.putBoolean(PGNbtKeys.SELF_DESTRUCT, selfDestruct);
 
             if (!code.isEmpty()) {
-                PortalGunItem.setCode(stack, this.code);
+                tag.putString(PGNbtKeys.BARRIER_CODE, code);
             }
 
             if (!name.isEmpty()) {

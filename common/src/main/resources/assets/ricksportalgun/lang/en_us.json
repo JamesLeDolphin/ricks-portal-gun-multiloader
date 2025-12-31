@@ -197,13 +197,13 @@
 
   "portaltype.ricksportalgun.default": "Default",
   "portaltype.ricksportalgun.end_portal": "End Portal",
-  "portaltype.ricksportalgun.vortex": "Vortex",
   "portaltype.ricksportalgun.water": "Water",
 
   "ricksportalgun.shape.square": "Square",
   "ricksportalgun.shape.diamond": "Diamond",
   "ricksportalgun.shape.triangle": "Triangle",
   "ricksportalgun.shape.octagon": "Octagon",
+  "ricksportalgun.shape.vortex": "Vortex",
 
   "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
   "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",

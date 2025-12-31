@@ -50,6 +50,10 @@ public class PGHelper {
         return PGServices.PLATFORM.isModLoaded("iris");
     }
 
+    public static boolean hasSodium() {
+        return PGServices.PLATFORM.isModLoaded("sodium");
+    }
+
     public static boolean hasImmersivePortals() {
         return PGServices.PLATFORM.isModLoaded("immersive_portals");
     }

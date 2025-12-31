@@ -1,10 +1,11 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -18,8 +19,14 @@ public record SBSetPortalTypePacket(PortalType type, PortalType.PortalShape shap
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            if (type != null) PortalGunItem.setPortalType(stack, this.type);
-            if (shape != null) PortalGunItem.setPortalShape(stack, shape);
+            if (type != null) {
+                CompoundTag tag = stack.getOrCreateTag();
+                tag.putString(PGNbtKeys.PORTAL_TYPE, type.getId().toString());
+            }
+            if (shape != null) {
+                CompoundTag tag = stack.getOrCreateTag();
+                tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getName());
+            }
         });
     }
 

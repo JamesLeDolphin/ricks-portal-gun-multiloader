@@ -39,6 +39,9 @@ dependencies {
     modRuntimeOnly ("me.shedaniel.cloth:cloth-config-forge:11.1.136") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    modCompileOnly "curse.maven:irisshaders-455508:6258195"
+    modImplementation "curse.maven:sodium-394468:6260639"
 }
 
 repositories {

@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.client.render.portal;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
-import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.platform.Lighting;
@@ -53,7 +52,7 @@ public class VortexTypeRenderer extends PortalTypeRenderer {
             float v = (float) (Math.cos((f2 / 45) * Math.PI * 2));
             entity.setLifetime(Math.round(v));
             entity.setMaxLifetime(PGHelper.seconds(5));
-            entity.setPortalType(PGPortalTypes.VORTEX);
+            //entity.setPortalType(PGPortalTypes.VORTEX);
             entity.setYRot(f * 40.0F);
             float scale = 75;
 
@@ -99,11 +98,9 @@ public class VortexTypeRenderer extends PortalTypeRenderer {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        VertexConsumer consumer = source.getBuffer(RenderType.eyes(getTextureLocation(entity)));
-        renderVortex(2, 1.2f, 0.5f, red, green, blue, 1, partialTick, entity.getLifetime(), stack, consumer);
 
         VertexConsumer consumer1 = source.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity)));
-        renderVortex(1.2f, 1.2f, 1.2f, red, green, blue, 1f, partialTick, entity.getLifetime(), stack, consumer1);
+        renderVortex(1.2f, 1.2f, 1.2f, red, green, blue, 0.5f, partialTick, entity.getLifetime(), stack, consumer1);
 
         RenderSystem.depthMask(true);
         stack.popPose();

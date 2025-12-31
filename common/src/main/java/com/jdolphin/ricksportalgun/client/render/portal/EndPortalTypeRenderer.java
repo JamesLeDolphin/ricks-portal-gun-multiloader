@@ -32,7 +32,7 @@ public class EndPortalTypeRenderer extends PortalTypeRenderer {
 
         int x2 = x + width / 2;
         int y2 = y + height;
-        graphics.fill(RenderType.endPortal(), x, y, x2, y2, FastColor.ARGB32.color(red, green, blue, 255));
+        graphics.fill(RenderType.endPortal(), x, y, x2, y2, FastColor.ARGB32.color(255, red, green, blue));
 
         RenderSystem.enableBlend();
 
@@ -53,23 +53,29 @@ public class EndPortalTypeRenderer extends PortalTypeRenderer {
     @Override
     public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         stack.pushPose();
-        stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
 
+        stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
 
         float width = getWidth(entity);
         float height = entity.getSize() > 2 ? getHeight(entity) / 2 : 1;
 
         RenderType renderType = RenderType.endPortal();
-        if (PGHelper.hasIris())  renderType = RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION);
+        float progress = entity.tickCount * 0.001F % 1.0F; //Scrolls the image if shaders are enabled, otherwise does visually nothing
+        if (PGHelper.hasIris() && net.irisshaders.iris.Iris.getCurrentPack().isPresent()) {
+            renderType = RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION);
+        } else {
+            //Color overlay - We only render when shaders are disabled, otherwise the portal would just glow that colour
+            VertexConsumer consumer1 = source.getBuffer(RenderType.translucent());
+            this.drawShapedVertex(stack, -width, -height, width, height, 0.005f, 0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1, entity.getShape());
+            this.drawShapedVertex(stack, width, -height, -width, height, -0.005f, -0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1, entity.getShape());
+        }
 
+        //End portal
         VertexConsumer consumer = source.getBuffer(renderType);
-
-        this.drawShapedVertex(stack, -width, -height, width, height, 1, 1, 1, 1, 0, 0, 0, 0, consumer, entity.getShape());
-        this.drawShapedVertex(stack, width, -height, -width, height, 1, 1, 1, 1, 0, 0, 0, 0, consumer, entity.getShape());
-
-        VertexConsumer consumer1 = source.getBuffer(RenderType.translucent());
-        this.drawShapedVertex(stack, -width, -height, width, height, red, green, blue, 0.45f, 0, 0, 0,0, consumer1, entity.getShape());
-        this.drawShapedVertex(stack, width, -height, -width, height, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1, entity.getShape());
+        float f = entity.tickCount + partialTick;
+        float f1 = (float) Math.abs((Math.cos(f / 10) + 1) / 2);
+        this.drawShapedVertex(stack, -width, -height, width, height, 0, 0, red, green, blue, f1, 0, 0 + progress, 0.5f, 0.2f + progress, consumer, entity.getShape());
+        this.drawShapedVertex(stack, width, -height, -width, height, 0, 0, red, green, blue, f1, 0, 0 + progress, 0.5f, 0.2f + progress, consumer, entity.getShape());
 
         stack.popPose();
     }

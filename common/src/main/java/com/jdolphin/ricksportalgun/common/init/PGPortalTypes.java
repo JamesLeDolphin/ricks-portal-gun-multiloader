@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
-import com.jdolphin.ricksportalgun.common.customization.VortexPortalType;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,7 +13,6 @@ public class PGPortalTypes {
 
     public static final PortalType DEFAULT = register("default", PortalType::new);
     public static final PortalType END_PORTAL = register("end_portal", PortalType::new);
-    public static final PortalType VORTEX = register("vortex", VortexPortalType::new);
     public static final PortalType WATER = register("water", PortalType::new);
 
     private static PortalType register(String name, Function<ResourceLocation, PortalType> typeFunction) {

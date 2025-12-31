@@ -1,6 +1,9 @@
 package com.jdolphin.ricksportalgun.client.init;
 
-import com.jdolphin.ricksportalgun.client.render.portal.*;
+import com.jdolphin.ricksportalgun.client.render.portal.DefaultPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.EndPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.WaterPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 
@@ -14,7 +17,6 @@ public class PGPortalTypeRenderers {
     public static void init() {
         registerPortalTypeRenderer(PGPortalTypes.DEFAULT, DefaultPortalTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.END_PORTAL, EndPortalTypeRenderer::new);
-        registerPortalTypeRenderer(PGPortalTypes.VORTEX, VortexTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.WATER, WaterPortalTypeRenderer::new);
     }
 

@@ -1,9 +1,10 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -17,7 +18,8 @@ public record SBSetPortalGunStylePacket(PortalGunStyle style) implements PGServe
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            PortalGunItem.setStyle(stack, style);
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.put(PGNbtKeys.TAG_GUN_STYLE, style.toNBT());
         });
     }
 

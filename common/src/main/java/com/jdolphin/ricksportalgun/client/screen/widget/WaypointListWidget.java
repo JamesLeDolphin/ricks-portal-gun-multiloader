@@ -92,7 +92,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
             Button.OnPress press = this.list.onPress;
             if (this.list.onPress == null) {
                 press = (pButton) -> {
-                    SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDimension());
+                    SBSetDestinationPacket packet = new SBSetDestinationPacket(waypoint.getBlockPos(), waypoint.getDimension(), false);
                     PGHelper.sendPacketToServer(packet);
                     Minecraft.getInstance().setScreen(null);
                 };

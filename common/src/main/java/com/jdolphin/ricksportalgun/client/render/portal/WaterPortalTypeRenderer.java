@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.render.portal;
 
+import com.jdolphin.ricksportalgun.common.comp.sodium.SodiumCompat;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -53,22 +54,20 @@ public class WaterPortalTypeRenderer extends PortalTypeRenderer {
     public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         if (sprite == null) {
             sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(getTextureLocation(entity));
+        } else {
+            if (PGHelper.hasSodium()) {
+                SodiumCompat.markSpriteActive(sprite);
+            }
+            stack.pushPose();
+            stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
+            VertexConsumer consumer1 = source.getBuffer(RenderType.entityTranslucent(sprite.atlasLocation()));
+            float width = (entity.getSize() / 3) * 1.5f;
+            float height = entity.getSize() > 2 ? width : 1;
+
+            drawShapedVertex(stack, -width, -height, width, height, 0, 0, red, green, blue, 1,
+                    sprite.getU(0), sprite.getV(0), sprite.getU(16), sprite.getV(16), consumer1, entity.getShape());
+
+            stack.popPose();
         }
-
-        stack.pushPose();
-        stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
-        VertexConsumer consumer1 = source.getBuffer(RenderType.entitySmoothCutout(sprite.atlasLocation()));
-        float width = (entity.getSize() / 3) * 1.5f;
-        float height = entity.getSize() > 2 ? width : 1;
-
-        drawShapedVertex(stack, -width, -height, width, height, red, green, blue, 1,
-                sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), consumer1, entity.getShape());
-
-       // GuiHelper.renderVertexes(stack.last().pose(), stack.last().normal(), consumer1,
-       //         -width, width, -height, height, 0f, 0f, red, green, blue, 1,
-       //         sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(),
-       //         OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
-       //         0, 1, 0);
-        stack.popPose();
     }
 }

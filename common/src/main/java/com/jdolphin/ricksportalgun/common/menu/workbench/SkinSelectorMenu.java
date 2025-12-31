@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.common.menu.workbench;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -78,8 +77,14 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             ItemStack newStack = newType.getDefaultInstance();
             newStack.setTag(tag);
             this.getSlot(36).set(newStack);
-            if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
-            if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);
+            if (primary != 0) {
+                CompoundTag tag1 = newStack.getOrCreateTag();
+                tag1.putInt(PGNbtKeys.PRIMARY_COLOR, primary);
+            }
+            if (secondary != 0) {
+                CompoundTag tag1 = newStack.getOrCreateTag();
+                tag1.putInt(PGNbtKeys.SECONDARY_COLOR, secondary);
+            }
         });
     }
 

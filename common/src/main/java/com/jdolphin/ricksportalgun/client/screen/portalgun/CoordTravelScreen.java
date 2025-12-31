@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
@@ -8,6 +9,7 @@ import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
+import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBActivateSelfDestructPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBCoordCheckerPacket;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenLocatorScreenPacket;
@@ -25,8 +27,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
@@ -41,6 +45,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
     private SuggestionTextFieldWidget dimInput;
     private final List<String> dimSuggestions;
     private PGTextButton select, cancel;
+    private PGCycleButton<Boolean> targetMode;
 
     public static ResourceLocation WAYPOINT_TEXTURE = PGHelper.id("textures/gui/sprites/icon/waypoint.png");
     public static ResourceLocation PLAYER_LOC_TEXTURE = PGHelper.id("textures/gui/sprites/icon/locator.png");
@@ -108,6 +113,12 @@ public class CoordTravelScreen extends AbstractBaseScreen {
                 }, 20, 18, SELF_DESTRUCT_TEXTURE));
         selfDestruct.active = tag.contains(PGNbtKeys.SELF_DESTRUCT) && tag.getBoolean(PGNbtKeys.SELF_DESTRUCT);
 
+        this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
+                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
+
+        this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 - 10, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.settings"),
+                (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURE));
+
         this.locator = this.addRenderableWidget(new PGImageButton(this.width / 2 + 16, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.locator"),
                 (button) -> {
                     SBOpenLocatorScreenPacket packet = new SBOpenLocatorScreenPacket();
@@ -115,14 +126,14 @@ public class CoordTravelScreen extends AbstractBaseScreen {
 
                 }, 20, 18, PLAYER_LOC_TEXTURE));
 
-        this.settings = this.addRenderableWidget(new PGImageButton(this.width / 2 - 10, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.settings"),
-                (button) -> this.minecraft.setScreen(new SettingsScreen()), 20, 18, SETTINGS_TEXTURE));
-
-        this.waypoints = this.addRenderableWidget(new PGImageButton(this.width / 2 - 36, this.height / 2 + 32, 20, 18, Component.translatable("ricksportalgun.button.waypoint"),
-                button -> this.minecraft.setScreen(new WaypointScreen()), 20, 18, WAYPOINT_TEXTURE));
+        MutableComponent sTrue = Component.translatable("ricksportalgun.button.true");
+        MutableComponent sFalse = Component.translatable("ricksportalgun.button.false");
+        boolean projectile = PGHelper.checkTagBoolean(tag, PGNbtKeys.PROJECTILE_MODE);
+        this.targetMode = this.addRenderableWidget(PGCycleButton.booleanBuilder(sTrue, sFalse).withInitialValue(projectile)
+                .create(this.width / 2 + 64, this.height / 2 + 31, 64, 20, Component.literal("Manual targeting")));
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20, Component.translatable("ricksportalgun.button.select"), (button) -> {
-            this.setCoords();
+            this.trySetDestination();
             this.onClose();
         }, this.font));
 
@@ -291,15 +302,10 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         } else this.zInput.setSuggestion("");
     }
 
-    public void setCoords() {
+    public void trySetDestination() {
         try {
             assert minecraft != null && minecraft.player != null;
-            LocalPlayer player = minecraft.player;
-            String value = dimInput.getValue();
-            if (value.equals("end")) dimInput.setValue(Level.END.location().toString());
-            if (value.equals("nether")) dimInput.setValue(Level.NETHER.location().toString());
-
-            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), value);
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(minecraft.player), getDim(), targetMode.getValue());
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         } catch (Exception error) {
@@ -311,10 +317,23 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         return box.getValue().isEmpty() ? fallback : Integer.parseInt(box.getValue());
     }
 
-    private BlockPos getCoords(LocalPlayer player) {
-        int x = getInt(xInput, (int) player.getX());
-        int y = getInt(yInput, (int) player.getY());
-        int z = getInt(zInput, (int) player.getZ());
+    private String getDim() {
+        String value = dimInput.getValue();
+        if (value.equals("end")) dimInput.setValue(Level.END.location().toString());
+        if (value.equals("nether")) dimInput.setValue(Level.NETHER.location().toString());
+        if (value.isEmpty()) {
+            ItemStack stack = getItemStack();
+            value = PortalGunItem.getHopDimension(stack);
+        }
+        return value;
+    }
+
+    private BlockPos getCoords(Player player) {
+        ItemStack stack = getItemStack();
+        BlockPos pos = PortalGunItem.getHopCoords(stack, player.blockPosition());
+        int x = getInt(xInput, pos.getX());
+        int y = getInt(yInput, pos.getY());
+        int z = getInt(zInput, pos.getZ());
         return new BlockPos(x, y, z);
     }
 
@@ -324,7 +343,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             case GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER:
                 if(this.getFocused() instanceof Button)
                     return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-                this.setCoords();
+                this.trySetDestination();
                 break;
             case GLFW.GLFW_KEY_TAB:
                 if (dimInput.isFocused()) dimInput.setValue(dS);

@@ -1,23 +1,27 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServerPayload {
+public record SBSetDestinationPacket(BlockPos pos, String dim, boolean manualTarget) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         String dimension = dim().toLowerCase().replace(" ", "_");
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putBoolean(PGNbtKeys.PROJECTILE_MODE, manualTarget);
             if (!PGConfigHelper.getDisabledDimensions().contains(dimension)) {
                 PortalGunItem.setHopLocation(stack, dimension, pos);
             } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
@@ -25,7 +29,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
     }
 
     public static SBSetDestinationPacket decode(FriendlyByteBuf buf) {
-        return new SBSetDestinationPacket(buf.readBlockPos(), buf.readUtf());
+        return new SBSetDestinationPacket(buf.readBlockPos(), buf.readUtf(), buf.readBoolean());
     }
 
     @Override
@@ -35,7 +39,9 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeBlockPos(pos).writeUtf(dim);
+        buf.writeBlockPos(pos);
+        buf.writeUtf(dim);
+        buf.writeBoolean(manualTarget);
     }
 
     public static ResourceLocation getID() {

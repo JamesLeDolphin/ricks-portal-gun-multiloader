@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.client.screen.workbench;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGItemButton;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -152,12 +154,13 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
     private void renderPortalGunType(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         ItemStack stack = getStack(36);
         if (stack.is(PGTags.Items.PORTAL_GUNS)) {
+            CompoundTag tag = stack.getOrCreateTag();
             ItemStack fakeStack = PGItems.PORTAL_GUNS.get(this.index).getDefaultInstance();
             ItemStack dyeStack1 = getStack(37);
             ItemStack dyeStack2 = getStack(38);
 
-            int primary = PortalGunItem.getPrimaryDye(stack);
-            int secondary = PortalGunItem.getSecondaryDye(stack);
+            int primary = tag.contains(PGNbtKeys.PRIMARY_COLOR) ? tag.getInt(PGNbtKeys.PRIMARY_COLOR) : 15989755;
+            int secondary = tag.contains(PGNbtKeys.SECONDARY_COLOR) ? tag.getInt(PGNbtKeys.SECONDARY_COLOR) : 15989755;
 
             if (!dyeStack1.isEmpty()) {
                 if (dyeStack1.getItem() instanceof DyeItem dyeItem) {
@@ -173,9 +176,14 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
 
 
 
-            PortalGunItem.setColor(fakeStack, color);
-            if (primary != 0) PortalGunItem.setPrimaryDye(fakeStack, primary);
-            if (secondary != 0) PortalGunItem.setSecondaryDye(fakeStack, secondary);
+            CompoundTag tag1 = fakeStack.getOrCreateTag();
+            tag1.putInt(PGNbtKeys.TAG_COLOR, color);
+            if (primary != 0) {
+                tag1.putInt(PGNbtKeys.PRIMARY_COLOR, primary);
+            }
+            if (secondary != 0) {
+                tag1.putInt(PGNbtKeys.SECONDARY_COLOR, secondary);
+            }
 
             graphics.enableScissor(this.width / 2, this.height / 2 - 62, this.width / 2 + 81, this.height / 2 - 18);
             renderFakeItem(graphics, fakeStack, 48, this.width / 2 + 40, this.height / 2 - 44, 32, mouseX, mouseY);

@@ -1,21 +1,23 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBColourPacket(int colour) implements PGServerPayload {
+public record SBColourPacket(int color) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            PortalGunItem.setColor(stack, this.colour);
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putInt(PGNbtKeys.TAG_COLOR, color);
         });
     }
 
@@ -25,7 +27,7 @@ public record SBColourPacket(int colour) implements PGServerPayload {
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.colour);
+        buf.writeInt(this.color);
     }
 
     @Override

@@ -48,7 +48,8 @@ public class PortalType {
         SQUARE("square"),
         DIAMOND("diamond"),
         TRIANGLE("triangle"),
-        OCTAGON("octagon")
+        OCTAGON("octagon"),
+        VORTEX("vortex")
         ;
         final String name;
         PortalShape(String name) {

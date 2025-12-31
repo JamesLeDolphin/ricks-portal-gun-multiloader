@@ -2,7 +2,6 @@ package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
-import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -22,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -71,46 +72,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         tag.putInt(PGNbtKeys.TAG_FUEL, Math.max(0, i - amount));
     }
 
-    public static void setPrimaryDye(ItemStack stack, int color) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.PRIMARY_COLOR, color);
-    }
-
-    public static void setSecondaryDye(ItemStack stack, int color) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.SECONDARY_COLOR, color);
-    }
-
-    public static int getPrimaryDye(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.PRIMARY_COLOR) ? tag.getInt(PGNbtKeys.PRIMARY_COLOR) : 15989755;
-    }
-
-    public static int getSecondaryDye(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.SECONDARY_COLOR) ? tag.getInt(PGNbtKeys.SECONDARY_COLOR) : 15989755;
-    }
-
-    public static void setCode(ItemStack stack, String code) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(PGNbtKeys.BARRIER_CODE, code);
-    }
-
-    public static String getCode(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
-    }
-
-    public static void setPortalType(ItemStack stack, PortalType type) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(PGNbtKeys.PORTAL_TYPE, type.getId().toString());
-    }
-
-    public static void setPortalShape(ItemStack stack, PortalType.PortalShape shape) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getName());
-    }
-
     public static PortalType.PortalShape getPortalShape(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.PORTAL_SHAPE)) {
@@ -128,11 +89,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         } else return PGPortalTypes.DEFAULT;
     }
 
-    public static void refillFuel(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.TAG_FUEL, getMaxFuel(stack));
-    }
-
     public static void migrateDamage(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         int fuel = getMaxFuel(stack) - stack.getDamageValue();
@@ -148,13 +104,13 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         ItemStack fluidStack = player.getItemInHand(fluidHand);
         if (getFuel(stack) < getMaxFuel(stack) && gunStack.is(PGTags.Items.PORTAL_GUNS)) {
             if (fluidStack.is(PGItems.PORTAL_FLUID)) {
-                refillFuel(stack);
+                tag.putInt(PGNbtKeys.TAG_FUEL, getMaxFuel(stack));
                 fluidStack.shrink(1);
                 tag.putBoolean(PGNbtKeys.TAG_BOOTLEG, false);
                 return true;
             }
             if (fluidStack.is(PGItems.BOOTLEG_PORTAL_FLUID)) {
-                refillFuel(stack);
+                tag.putInt(PGNbtKeys.TAG_FUEL, getMaxFuel(stack));
                 tag.putBoolean(PGNbtKeys.TAG_BOOTLEG, false);
                 fluidStack.shrink(1);
                 return true;
@@ -199,6 +155,20 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return loc;
     }
 
+    protected static BlockHitResult getPlayerPOVHitResult(Level level, Player player, ClipContext.Fluid fluidMode, double distance) {
+        float f = player.getXRot();
+        float f1 = player.getYRot();
+        Vec3 vec3 = player.getEyePosition();
+        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
+        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
+        float f6 = f3 * f4;
+        float f7 = f2 * f4;
+        Vec3 vec31 = vec3.add(f6 * distance, f5 * distance, f7 * distance);
+        return level.clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, fluidMode, player));
+    }
+
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
@@ -217,18 +187,29 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                     if (oppositeStack.getItem() instanceof UpgradeItem upgrade) {
                         InteractionResult result = upgrade.onApply(player, stack);
                         if (!result.equals(InteractionResult.FAIL) && !player.isCreative())
-                                oppositeStack.shrink(1);
-                            return new InteractionResultHolder<>(result, stack);
+                            oppositeStack.shrink(1);
+                        return new InteractionResultHolder<>(result, stack);
+
                     } else {
                         String dimension = getHopDimension(stack);
                         ResourceLocation dim = new ResourceLocation(dimension);
                         ResourceKey<Level> key = LevelHelper.getWorldKey(dim);
                         ServerLevel destinationLevel = LevelHelper.getServerWorld(level, key);
-                        if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
-                                ResourceKey<Level> resourceKey = InfinityHandler.getOrCreateResourceKey(((ServerLevel) level).getServer(), dimension);
-                                destinationLevel = LevelHelper.getServerWorld(level, resourceKey);
+
+                        BlockPos destination = getHopCoords(stack, player.blockPosition());
+                        Vec3 exitPortalPos = destination.above().getCenter();
+
+                        if (PGHelper.checkTagBoolean(tag, PGNbtKeys.PROJECTILE_MODE)) {
+                            //Manual target mode
+                            BlockHitResult destinationRay = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY, 128);
+                            destinationLevel = (ServerLevel) level;
+                            destination = destinationRay.getBlockPos();
+                            exitPortalPos = getLocation(level, destination, destinationRay.getDirection(), destinationRay.getLocation()).add(0, 1, 0);
+
+                        } else if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
+                            ResourceKey<Level> resourceKey = InfinityHandler.getOrCreateResourceKey(((ServerLevel) level).getServer(), dimension);
+                            destinationLevel = LevelHelper.getServerWorld(level, resourceKey);
                         }
-                        BlockPos destination = getHopCoords(stack);
 
                         Vec3 loc = hitResult.getLocation();
                         if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
@@ -253,7 +234,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     } else {
                                         PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                                         destinationLevel.getChunkSource().updateChunkForced(new ChunkPos(destination), true);
-                                        PortalEntity exPortal = new PortalEntity(destinationLevel, destination.above().getCenter(), hitDir, playerDir, size);
+                                        PortalEntity exPortal = new PortalEntity(destinationLevel, exitPortalPos, hitDir, playerDir, size);
 
                                         boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
                                         doForBoth(entity -> {
@@ -285,7 +266,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                         if (!player.isCreative()) lowerFuel(stack, 1);
                                     }
                                 } else {
-                                    //Target or Origin is end & dragon is alive
+                                    //Target or Origin is End & dragon is alive
                                     PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.dragon");
                                     return InteractionResultHolder.fail(stack);
                                 }
@@ -318,6 +299,9 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             player.awardStat(Stats.ITEM_USED.get(this));
                             player.getCooldowns().addCooldown(this, 20 * 3);
                             return InteractionResultHolder.success(stack);
+                        } else {
+                            PGHelper.sendFailMsg(player, "error.ricksportalgun.destination_not_found");
+                            return InteractionResultHolder.fail(stack);
                         }
                     }
                 }
@@ -326,7 +310,8 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 PGHelper.sendFailMsg(player, "error.ricksportalgun.security");
                 return InteractionResultHolder.fail(stack);
             }
-        } return InteractionResultHolder.pass(stack);
+        }
+        return InteractionResultHolder.pass(stack);
     }
 
     private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {
@@ -349,7 +334,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         List<Waypoint> list = IWaypointStorage.getWaypoints(stack);
         if (!Screen.hasShiftDown()) {
         tooltips.add(Component.translatable("ricksportalgun.destination",
-                getHopCoords(stack).getX(), getHopCoords(stack).getY(), getHopCoords(stack).getZ()).withStyle(ChatFormatting.GRAY));
+                getHopCoords(stack, null).getX(), getHopCoords(stack, null).getY(), getHopCoords(stack, null).getZ()).withStyle(ChatFormatting.GRAY));
         tooltips.add(Component.translatable("ricksportalgun.dimension", getHopDimension(stack))
                 .withStyle(ChatFormatting.GRAY));
         tooltips.add(Component.translatable("tooltip.ricksportalgun.fuel", getFuel(stack), getMaxFuel(stack)).withStyle(ChatFormatting.GRAY));
@@ -379,27 +364,9 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
     public static int getColor(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.TAG_COLOR) ? tag.getInt(PGNbtKeys.TAG_COLOR) : getDefaultColor(stack);
-    }
-
-    public static void setDefaultColor(ItemStack stack, int color) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.TAG_DEFAULT_COLOR, color);
-    }
-
-    public static int getDefaultColor(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(PGNbtKeys.TAG_DEFAULT_COLOR) ? tag.getInt(PGNbtKeys.TAG_DEFAULT_COLOR) : Color.GREEN.getRGB();
-    }
-
-    public static void setStyle(ItemStack stack, PortalGunStyle style) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.put(PGNbtKeys.TAG_GUN_STYLE, style.toNBT());
-    }
-
-    public static void setColor(ItemStack stack, int color) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(PGNbtKeys.TAG_COLOR, color);
+        if (!tag.contains(PGNbtKeys.TAG_COLOR)) {
+            return tag.contains(PGNbtKeys.TAG_DEFAULT_COLOR) ? tag.getInt(PGNbtKeys.TAG_DEFAULT_COLOR) : Color.GREEN.getRGB();
+        } else return tag.getInt(PGNbtKeys.TAG_COLOR);
     }
 
     public static void setHopLocation(ItemStack stack, String dimension, BlockPos pos) {
@@ -413,16 +380,16 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return tag.contains(PGNbtKeys.TAG_DIMENSION) ? tag.getString(PGNbtKeys.TAG_DIMENSION) : Level.OVERWORLD.location().toString();
     }
 
-    public static BlockPos getHopCoords(ItemStack stack) {
+    public static BlockPos getHopCoords(ItemStack stack, @Nullable BlockPos fallback) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.TAG_BPOS)) {
             CompoundTag bpTag = tag.getCompound(PGNbtKeys.TAG_BPOS);
             return NbtUtils.readBlockPos(bpTag);
-        } else return BlockPos.ZERO;
+        } else return fallback == null ? BlockPos.ZERO : fallback;
     }
 
-    public static List<String> getUpgrades(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
+    public static List<String> getUpgrades(ItemStack stack) {
+        return stack.getOrCreateTag().getList(TAG_UPGRADES, Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
     }
 
     public static void addUpgrade(ItemStack stack, UpgradeType type) {
