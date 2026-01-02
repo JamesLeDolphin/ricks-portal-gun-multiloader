@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.item;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
@@ -37,9 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_UPGRADES;
 
@@ -72,12 +71,13 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         tag.putInt(PGNbtKeys.TAG_FUEL, Math.max(0, i - amount));
     }
 
-    public static PortalType.PortalShape getPortalShape(ItemStack stack) {
+    public static PortalShape getPortalShape(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.PORTAL_SHAPE)) {
             String s = tag.getString(PGNbtKeys.PORTAL_SHAPE);
-            return PortalType.PortalShape.getFromName(s);
-        } else return PortalType.PortalShape.SQUARE;
+            ResourceLocation rl = new ResourceLocation(s);
+            return PGPortalShapes.SHAPES.get(rl);
+        } else return PGPortalShapes.SQUARE;
     }
 
     public static PortalType getPortalType(ItemStack stack) {
@@ -237,7 +237,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                         PortalEntity exPortal = new PortalEntity(destinationLevel, exitPortalPos, hitDir, playerDir, size);
 
                                         boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
-                                        doForBoth(entity -> {
+                                        PGHelper.doForEach(entity -> {
                                             entity.setLifetime(PGHelper.seconds(age));
                                             entity.setColor(getColor(stack));
                                             entity.setBootleg(bootleg);
@@ -248,13 +248,13 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                         if (stack.hasCustomHoverName()) {
                                             Component component = stack.getHoverName();
                                             String s = component.getString();
-                                            doForBoth(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
+                                            PGHelper.doForEach(entity -> entity.setCustomName(Component.literal(s)), portal, exPortal);
                                         }
                                         portal.setHopLocation(dim, destination);
                                         exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
                                         if (!portal.isFlat()) {
-                                            doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                                            PGHelper.doForEach(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
                                         }
 
                                         ServerLevel finalDestinationLevel = destinationLevel;
@@ -314,11 +314,6 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         return InteractionResultHolder.pass(stack);
     }
 
-    private void doForBoth(Consumer<PortalEntity> consumer, PortalEntity a, PortalEntity b) {
-        consumer.accept(a);
-        consumer.accept(b);
-    }
-
     public static boolean canBypassDragon(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return getUpgrades(stack).contains(PGUpgradeTypes.DIM_2.getUpgradeTag());
@@ -365,7 +360,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
     public static int getColor(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (!tag.contains(PGNbtKeys.TAG_COLOR)) {
-            return tag.contains(PGNbtKeys.TAG_DEFAULT_COLOR) ? tag.getInt(PGNbtKeys.TAG_DEFAULT_COLOR) : Color.GREEN.getRGB();
+            return getPortalType(stack).getDefaultColor();
         } else return tag.getInt(PGNbtKeys.TAG_COLOR);
     }
 

@@ -7,6 +7,8 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
@@ -22,10 +24,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class PortalTypeScreen extends AbstractBaseScreen {
     private PGCycleButton<PortalType> typeButton;
-    private PGCycleButton<PortalType.PortalShape> shapeButton;
+    private PGCycleButton<PortalShape> shapeButton;
     private PGTextButton select, cancel;
-    private PortalType currentType;
-    private PortalType.PortalShape shape;
     private PGImageButton backButton;
 
     public PortalTypeScreen() {
@@ -38,13 +38,13 @@ public class PortalTypeScreen extends AbstractBaseScreen {
 
         ItemStack stack = getItemStack();
         PortalType defaultType = PortalGunItem.getPortalType(stack);
-        PortalType.PortalShape defShape = PortalGunItem.getPortalShape(stack);
+        PortalShape defShape = PortalGunItem.getPortalShape(stack);
         this.typeButton = this.addWidget(PGCycleButton.builder(PortalType::getName).withInitialValue(defaultType)
                 .withValues(PGPortalTypes.TYPES.values()).create(this.width / 2 - 64, this.height / 2 - 64, 128, 20, Component.translatable("ricksportalgun.button.portal_type"),
                         (button, type) -> {}));
 
-        this.shapeButton = this.addWidget(PGCycleButton.builder(PortalType.PortalShape::getTranslated).withInitialValue(defShape)
-                .withValues(PortalType.PortalShape.values()).create(this.width / 2 - 64, this.height / 2 - 34, 128, 20, Component.translatable("ricksportalgun.button.portal_type"),
+        this.shapeButton = this.addWidget(PGCycleButton.builder(PortalShape::getTranslationName).withInitialValue(defShape)
+                .withValues(PGPortalShapes.SHAPES.values()).create(this.width / 2 - 64, this.height / 2 - 34, 128, 20, Component.translatable("ricksportalgun.button.portal_type"),
                         (button, type) -> {}));
 
         this.backButton = this.addRenderableWidget(new PGImageButton(this.width / 2 - 140, this.height / 2 - 96, 20, 20, Component.translatable("ricksportalgun.button.back"),

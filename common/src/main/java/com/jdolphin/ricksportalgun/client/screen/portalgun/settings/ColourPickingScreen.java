@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
-import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.AbstractPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
@@ -143,7 +143,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         ItemStack stack = getItemStack();
         PortalType type = PortalGunItem.getPortalType(stack);
-        PortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
+        AbstractPortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
 
         renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, stack, graphics, pMouseX, pMouseY, pPartialTick,
                 FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));

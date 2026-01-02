@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.render.portal;
 
+import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
@@ -17,14 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-public class DefaultPortalTypeRenderer extends PortalTypeRenderer {
+public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
     public DefaultPortalTypeRenderer(PortalType type) {
         super(type);
     }
 
     @Override
-    public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
+    public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         Direction direction = entity.getPortalDirection();
         if (direction != null) {
 

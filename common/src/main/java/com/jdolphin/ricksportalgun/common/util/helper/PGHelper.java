@@ -26,8 +26,11 @@ import net.minecraft.world.item.ItemStack;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class PGHelper {
+public final class PGHelper {
+    private PGHelper() {}
+
     public static MutableComponent COORDS_SET = Component.translatable("notice.ricksportalgun.destination.set");
 
     public static ResourceLocation id(String string) {
@@ -40,6 +43,13 @@ public class PGHelper {
 
     public static boolean checkTagBoolean(CompoundTag tag, String key) {
         return tag.contains(key) && tag.getBoolean(key);
+    }
+
+    @SafeVarargs
+    public static <P> void doForEach(Consumer<P> consumer, P... arg) {
+        for (P p : arg) {
+            consumer.accept(p);
+        }
     }
 
     public static boolean hasInfiniteDimensions() {

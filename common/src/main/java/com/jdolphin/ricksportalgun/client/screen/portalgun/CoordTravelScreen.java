@@ -155,17 +155,19 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         PortalGunStyle style = getStyle();
 
         this.dimInput.getSuggestionList().setBorderColor(style.highlightColor());
-        setupEditBox(dimInput, style);
-        setupEditBox(xInput, style);
-        setupEditBox(yInput, style);
-        setupEditBox(zInput, style);
 
-        setupImgButtons(settings, style);
-        setupImgButtons(waypoints, style);
-        setupImgButtons(locator, style);
-        setupImgButtons(randomiseCoord, style);
-        setupImgButtons(randomiseDim, style);
-        setupImgButtons(selfDestruct, style);
+        PGHelper.doForEach(box -> {
+                    box.setResponder(this::onEdited);
+                    box.setMaxLength(256);
+                    box.setTextColor(style.textColor());
+                },
+                dimInput, xInput, yInput, zInput);
+
+        PGHelper.doForEach(btn -> {
+                    btn.setColor(style.highlightColor());
+                    btn.setRenderBackground(false);
+                },
+                settings, waypoints, locator, randomiseCoord, randomiseDim, selfDestruct);
 
         ResourceLocation location = LevelHelper.getPlayerDimensionLocation(player);
         this.dS = location.getNamespace().equals("minecraft") ?
@@ -181,17 +183,6 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         this.yInput.setSuggestion(yS);
         this.zInput.setSuggestion(zS);
         GuiHelper.setTooltip(randomiseCoord, Component.translatable("ricksportalgun.button.randomise.coord"));
-    }
-
-    private void setupImgButtons(PGImageButton button, PortalGunStyle style) {
-        button.setColor(style.highlightColor());
-        button.setRenderBackground(false);
-    }
-
-    private void setupEditBox(EditBox box, PortalGunStyle style) {
-        box.setResponder(this::onEdited);
-        box.setMaxLength(256);
-        box.setTextColor(style.textColor());
     }
 
     @Override
@@ -230,9 +221,8 @@ public class CoordTravelScreen extends AbstractBaseScreen {
         GuiHelper.renderWidgets(graphics, pMouseX, pMouseY, delta, xInput, yInput, zInput);
 
 
-        GuiHelper.renderOutline(graphics, xInput, style.highlightColor());
-        GuiHelper.renderOutline(graphics, yInput, style.highlightColor());
-        GuiHelper.renderOutline(graphics, zInput, style.highlightColor());
+        PGHelper.doForEach(widget -> GuiHelper.renderOutline(graphics, widget, style.highlightColor()),
+                xInput, yInput, zInput, randomiseCoord, select, cancel);
 
 
         GuiHelper.renderOutline(graphics, randomiseCoord, style.highlightColor());

@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.render.portal;
 
+import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.comp.sodium.SodiumCompat;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
@@ -16,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
-public class WaterPortalTypeRenderer extends PortalTypeRenderer {
+public class WaterPortalTypeRenderer extends AbstractPortalTypeRenderer {
     private TextureAtlasSprite sprite;
 
     public WaterPortalTypeRenderer(PortalType type) {
@@ -51,7 +52,7 @@ public class WaterPortalTypeRenderer extends PortalTypeRenderer {
     }
 
     @Override
-    public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
+    public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         if (sprite == null) {
             sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(getTextureLocation(entity));
         } else {
@@ -64,8 +65,8 @@ public class WaterPortalTypeRenderer extends PortalTypeRenderer {
             float width = (entity.getSize() / 3) * 1.5f;
             float height = entity.getSize() > 2 ? width : 1;
 
-            drawShapedVertex(stack, -width, -height, width, height, 0, 0, red, green, blue, 1,
-                    sprite.getU(0), sprite.getV(0), sprite.getU(16), sprite.getV(16), consumer1, entity.getShape());
+            shapeRenderer.renderInLevel(stack, -width, -height, width, height, 0, 0, red, green, blue, 1,
+                    sprite.getU(0), sprite.getV(0), sprite.getU(16), sprite.getV(16), consumer1);
 
             stack.popPose();
         }

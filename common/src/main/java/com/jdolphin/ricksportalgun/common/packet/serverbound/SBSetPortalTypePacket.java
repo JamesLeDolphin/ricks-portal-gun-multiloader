@@ -1,7 +1,9 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
@@ -12,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetPortalTypePacket(PortalType type, PortalType.PortalShape shape) implements PGServerPayload {
+public record SBSetPortalTypePacket(PortalType type, PortalShape shape) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
@@ -25,19 +27,20 @@ public record SBSetPortalTypePacket(PortalType type, PortalType.PortalShape shap
             }
             if (shape != null) {
                 CompoundTag tag = stack.getOrCreateTag();
-                tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getName());
+                tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getId().toString());
             }
         });
     }
 
     public static SBSetPortalTypePacket decode(FriendlyByteBuf buf) {
-        return new SBSetPortalTypePacket(PGPortalTypes.TYPES.get(buf.readResourceLocation()), PortalType.PortalShape.getFromName(buf.readUtf()));
+
+        return new SBSetPortalTypePacket(PGPortalTypes.TYPES.get(buf.readResourceLocation()), PGPortalShapes.SHAPES.get(buf.readResourceLocation()));
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeResourceLocation(type.getId());
-        buf.writeUtf(shape.getName());
+        buf.writeResourceLocation(shape.getId());
     }
 
     public static ResourceLocation getID() {

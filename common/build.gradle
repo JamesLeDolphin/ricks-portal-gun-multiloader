@@ -41,6 +41,14 @@ repositories {
         }
     }
 
+    //Computercraft
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
+
     maven { url 'https://jitpack.io' }
 
     // the repository for Cloth Config
@@ -58,6 +66,8 @@ dependencies {
     //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${immersive_portals_version}")
     //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${immersive_portals_version}")
     //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:${immersive_portals_version}")
+
+    compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-common-api:${cct_version}")
 
     compileOnly "curse.maven:irisshaders-455508:6258195"
     compileOnly "curse.maven:sodium-394468:6260639"

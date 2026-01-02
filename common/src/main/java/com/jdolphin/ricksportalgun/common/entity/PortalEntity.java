@@ -2,8 +2,10 @@ package com.jdolphin.ricksportalgun.common.entity;
 
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
+import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
@@ -159,12 +161,14 @@ public class PortalEntity extends Entity {
         return entity1.getBoundingBox().intersects(entity2.getBoundingBox());
     }
 
-    public PortalType.PortalShape getShape() {
-        return PortalType.PortalShape.valueOf(entityData.get(SHAPE));
+    public PortalShape getShape() {
+        String s = entityData.get(SHAPE);
+        ResourceLocation rl = new ResourceLocation(s);
+        return PGPortalShapes.SHAPES.get(rl);
     }
 
-    public void setShape(PortalType.PortalShape shape) {
-        this.entityData.set(SHAPE, shape.name());
+    public void setShape(PortalShape shape) {
+        this.entityData.set(SHAPE, shape.getId().toString());
     }
 
     @Override
@@ -214,7 +218,8 @@ public class PortalEntity extends Entity {
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
         this.entityData.set(TYPE, tag.getString("PortalType"));
-        setShape(PortalType.PortalShape.valueOf(tag.getString("Shape")));
+        String shapeStr = tag.getString("Shape");
+        setShape(PGPortalShapes.SHAPES.get(new ResourceLocation(shapeStr)));
     }
 
     @Override
@@ -230,7 +235,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
         tag.putString("PortalType", getPortalType().getId().toString());
-        tag.putString("Shape", getShape().toString());
+        tag.putString("Shape", getShape().getId().toString());
     }
 
     @Override
@@ -294,7 +299,7 @@ public class PortalEntity extends Entity {
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
         this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
         this.entityData.define(TYPE, PGPortalTypes.DEFAULT.getId().toString());
-        this.entityData.define(SHAPE, PortalType.PortalShape.SQUARE.toString());
+        this.entityData.define(SHAPE, PGPortalShapes.SQUARE.getId().toString());
     }
 
     @Override

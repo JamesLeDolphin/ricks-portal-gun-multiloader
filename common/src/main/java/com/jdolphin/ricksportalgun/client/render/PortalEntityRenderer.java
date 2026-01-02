@@ -1,7 +1,9 @@
 package com.jdolphin.ricksportalgun.client.render;
 
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
-import com.jdolphin.ricksportalgun.client.render.portal.PortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.AbstractPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -20,7 +22,7 @@ import java.util.List;
 
 public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     public static final ResourceLocation PORTAL_TEXTURE = PGHelper.id("textures/entity/portal.png");
-    private final List<String> names = List.of(new String[]{"_jeb", "rainbow", "rgb", "colourful", "colorful"});
+    private final List<String> names = List.of(new String[]{"jeb_", "rainbow", "rgb", "colourful", "colorful"});
 
     public PortalEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -35,10 +37,11 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     @Override
     public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
         PortalType type = entity.getPortalType();
-        PortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
-        if (renderer != null) {
-            renderer.openAnimation(entity, stack, partialTick, packedLight);
-            renderer.closeAnimation(entity, stack, partialTick, packedLight);
+        AbstractPortalTypeRenderer typeRenderer = PGPortalTypeRenderers.getRenderer(type);
+        AbstractPortalShapeRenderer shapeRenderer = PGPortalShapeRenderers.RENDERER_MAP.get(entity.getShape());
+        if (typeRenderer != null && shapeRenderer != null) {
+            typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
+            typeRenderer.closeAnimation(entity, stack, partialTick, packedLight);
 
             int color = entity.getColor();
             float r = FastColor.ARGB32.red(color) / 255f;
@@ -57,7 +60,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
                 g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
                 b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
             }
-            renderer.renderPortal(entity, yaw, partialTick, stack, source, packedLight, r, g, b);
+            typeRenderer.renderPortal(entity, shapeRenderer, yaw, partialTick, stack, source, packedLight, r, g, b);
 
             super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
         }

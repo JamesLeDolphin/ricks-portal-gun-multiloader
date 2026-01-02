@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.render.portal;
 
+import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
@@ -24,7 +25,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
-public class VortexTypeRenderer extends PortalTypeRenderer {
+public class VortexTypeRenderer extends AbstractPortalTypeRenderer {
 
     public VortexTypeRenderer(PortalType type) {
         super(type);
@@ -89,7 +90,7 @@ public class VortexTypeRenderer extends PortalTypeRenderer {
     }
 
     @Override
-    public void renderPortal(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
+    public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         stack.pushPose();
 
         stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
