@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.client.render.portal.type;
 
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.comp.sodium.SodiumCompat;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;

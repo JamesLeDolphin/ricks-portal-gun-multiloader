@@ -120,7 +120,7 @@ public class PGCycleButton<T> extends AbstractButton {
 
         return true;
     }
-    private void updateValue(T value) {
+    public void updateValue(T value) {
         Component component = this.createLabelForValue(value);
         this.setMessage(component);
         this.value = value;

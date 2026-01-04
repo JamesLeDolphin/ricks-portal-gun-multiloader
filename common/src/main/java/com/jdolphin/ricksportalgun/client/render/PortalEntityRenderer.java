@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeRenderer;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;

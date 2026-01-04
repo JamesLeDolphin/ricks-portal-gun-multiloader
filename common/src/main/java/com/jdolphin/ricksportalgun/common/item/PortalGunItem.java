@@ -2,8 +2,8 @@ package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;

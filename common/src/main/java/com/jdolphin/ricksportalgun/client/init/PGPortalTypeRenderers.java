@@ -4,7 +4,7 @@ import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeR
 import com.jdolphin.ricksportalgun.client.render.portal.type.DefaultPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.render.portal.type.EndPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.render.portal.type.WaterPortalTypeRenderer;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 
 import java.util.HashMap;

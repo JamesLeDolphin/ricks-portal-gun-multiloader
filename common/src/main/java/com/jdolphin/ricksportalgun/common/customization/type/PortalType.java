@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.customization;
+package com.jdolphin.ricksportalgun.common.customization.type;
 
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
 import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
@@ -39,5 +39,9 @@ public class PortalType {
 
     public int getDefaultColor() {
         return Color.GREEN.getRGB();
+    }
+
+    public boolean supportsShape() {
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;

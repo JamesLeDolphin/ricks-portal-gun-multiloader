@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
 import com.jdolphin.ricksportalgun.common.comp.infinity.InfinityHandler;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;

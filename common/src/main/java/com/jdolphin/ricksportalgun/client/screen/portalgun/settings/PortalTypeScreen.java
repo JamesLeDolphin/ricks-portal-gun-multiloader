@@ -7,8 +7,8 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
-import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
@@ -71,6 +71,17 @@ public class PortalTypeScreen extends AbstractBaseScreen {
         GuiHelper.setTooltip(backButton, Component.translatable("ricksportalgun.button.back"));
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (typeButton != null && typeButton.getValue() != null) {
+            PortalType type = typeButton.getValue();
+            boolean bl = type.supportsShape();
+            shapeButton.active = bl;
+            if (!bl) shapeButton.updateValue(type.defaultShape());
+        }
+    }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
