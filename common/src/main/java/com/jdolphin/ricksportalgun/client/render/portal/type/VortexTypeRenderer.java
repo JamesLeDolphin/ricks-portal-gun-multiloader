@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.render.portal;
+package com.jdolphin.ricksportalgun.client.render.portal.type;
 
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;

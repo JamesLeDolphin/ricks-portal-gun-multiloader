@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,12 +17,14 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
     private final Container dispenser;
     private final ContainerData data;
     private final ContainerLevelAccess access;
+    private BlockPos destPos;
+    private String destDim;
 
-    public PortalDispenserMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new SimpleContainer(1), new SimpleContainerData(2), ContainerLevelAccess.NULL);
+    public PortalDispenserMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
+        this(containerId, playerInventory, new SimpleContainer(1), new SimpleContainerData(2), ContainerLevelAccess.NULL, buf.readBlockPos(), buf.readUtf());
     }
 
-    public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container, ContainerData data, ContainerLevelAccess access) {
+    public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container, ContainerData data, ContainerLevelAccess access, BlockPos destPos, String destDim) {
         super(PGMenuTypes.PORTAL_DISPENSER, containerId);
         checkContainerSize(container, 1);
         checkContainerDataCount(data, 2);
@@ -29,12 +32,14 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
         this.access = access;
         this.dispenser = container;
 
+        this.destPos = destPos;
+        this.destDim = destDim;
+
         addInventoryExtendedSlots(playerInventory, 8, 84);
         addInventoryHotbarSlots(playerInventory, 8, 142);
 
         container.startOpen(playerInventory.player);
         this.addSlot(new Slot(container, 0, 26, 52) {
-
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.is(PGItems.PORTAL_FLUID);
@@ -74,6 +79,14 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
                 disp.setDestination(dim, pos);
             }
         });
+    }
+
+    public BlockPos getDestPos() {
+        return destPos;
+    }
+
+    public String getDestDim() {
+        return destDim;
     }
 
     public boolean stillValid(Player player) {

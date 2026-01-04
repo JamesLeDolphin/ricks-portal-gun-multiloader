@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.render.portal;
+package com.jdolphin.ricksportalgun.client.render.portal.type;
 
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
@@ -19,13 +19,18 @@ public abstract class AbstractPortalTypeRenderer {
     }
 
     public void openAnimation(PortalEntity entity, PoseStack stack, float delta, int packedLight) {
-        if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20) {
-            float f = Mth.lerp((entity.getMaxLifetime() - entity.getLifetime()) / 20f, 0.0f, 1.0f);
-            f = Mth.clamp(f, 0.0f, 1.0f);
-            f *= f;
-            f *= f;
-            stack.scale(f, f, f);
-        }
+        float f = Mth.lerp((entity.getMaxLifetime() - entity.getLifetime()) / 20f, 0.0f, 1.0f);
+        f = Mth.clamp(f, 0.0f, 1.0f);
+        f *= f;
+        f *= f;
+        stack.scale(f, f, f);
+    }
+
+    public void closeAnimation(PortalEntity entity, PoseStack stack, float delta, int packedLight) {
+        float f = (float) entity.getLifetime() / 20.0f;
+        f = Mth.clamp(f, 0.0f, 1.0f);
+        f = f * f * f * f;
+        stack.scale(f, f, f);
     }
 
     public float getWidth(PortalEntity entity) {
@@ -36,14 +41,7 @@ public abstract class AbstractPortalTypeRenderer {
         return Math.max(2, entity.getSize());
     }
 
-    public void closeAnimation(PortalEntity entity, PoseStack stack, float delta, int packedLight) {
-        if (entity.getLifetime() < 20) {
-            float f = (float) entity.getLifetime() / 20.0f;
-            f = Mth.clamp(f, 0.0f, 1.0f);
-            f = f * f * f * f;
-            stack.scale(f, f, f);
-        }
-    }
+
 
     public abstract ResourceLocation getTextureLocation(PortalEntity portal);
 

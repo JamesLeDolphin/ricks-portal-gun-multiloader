@@ -16,7 +16,7 @@ public class PGDamageTypes {
     private static DamageSource blender;
     private static DamageSource self_destruct;
 
-    public  PGDamageTypes(RegistryAccess registryAccess) {
+    public static void init(RegistryAccess registryAccess) {
         damageTypes = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);
         bootleg = source("bootleg");
         teleport = source("teleport");

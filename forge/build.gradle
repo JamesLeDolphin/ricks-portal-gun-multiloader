@@ -69,25 +69,43 @@ repositories {
 
     // the repository for Cloth Config
     maven { url 'https://maven.shedaniel.me' }
+
+    //CC Tweaked
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
 }
 
 dependencies {
     compileOnly project(":common")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
+    //JEI
     modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     //modRuntimeOnly  "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 
+    //EMI
     modCompileOnlyApi "dev.emi:emi-forge:${emi_version}:api"
     modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
 
+    //Infinite Dimensions
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
     modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
 
     modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+forge")
     modRuntimeOnly("maven.modrinth:forgified-fabric-api:0.92.6+1.11.14+1.20.1")
 
+    //Immersive portals
     modImplementation("curse.maven:immersive-portals-for-forge-355440:6368524")
+
+    //CC Tweaked
+    modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cct_version}")
+    modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cct_version}")
+    modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cct_version}")
 }
 
 jar {

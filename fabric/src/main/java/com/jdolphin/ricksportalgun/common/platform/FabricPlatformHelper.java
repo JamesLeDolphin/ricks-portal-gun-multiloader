@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
@@ -11,13 +12,17 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +30,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.commons.lang3.function.TriFunction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -76,6 +83,35 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor) {
         return new MenuType<>(constructor::apply, FeatureFlags.DEFAULT_FLAGS);
     }
+
+    @Override
+    public <M extends AbstractContainerMenu> MenuType<M> createExtendedMenuType(TriFunction<Integer, Inventory, FriendlyByteBuf, M> constructor) {
+        return new ExtendedScreenHandlerType<>(constructor::apply);
+    }
+
+    @Override
+    public void openDispenserMenu(ServerPlayer player, PortalDispenserBlockEntity be) {
+        var factory = new ExtendedScreenHandlerFactory() {
+
+            @Override
+            public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                return be.createMenu(i, inventory, player);
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return be.getDisplayName();
+            }
+
+            @Override
+            public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
+                buf.writeBlockPos(be.getDestinationPos());
+                buf.writeUtf(be.getDestinationDim());
+            }
+        };
+        player.openMenu(factory);
+    }
+
 
     @Override
     public List<? extends String> getDisabledDimensions() {

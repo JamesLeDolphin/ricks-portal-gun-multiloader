@@ -2,6 +2,8 @@ package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
+import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
@@ -60,9 +62,11 @@ public class ForgeClientMain {
         public static void clientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() ->
                     PGMenuScreens.ALL.forEach((type, func) -> {
-                MenuScreens.ScreenConstructor constructor = func::apply;
-                MenuScreens.register(type, constructor);
-            }));
+                        MenuScreens.ScreenConstructor constructor = func::apply;
+                        MenuScreens.register(type, constructor);
+                        PGPortalTypeRenderers.init();
+                        PGPortalShapeRenderers.init();
+                    }));
         }
 
         @SubscribeEvent

@@ -179,7 +179,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
             if (!tag.contains(PGNbtKeys.TAG_OWNER)) {
                 tag.putUUID(PGNbtKeys.TAG_OWNER, player.getUUID());
             }
-            if (PGHelper.canPlayerAccessGun(player, stack)) {
+            if (PGHelper.canPlayerAccessGun(player, hand)) {
                 ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
                 BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
 

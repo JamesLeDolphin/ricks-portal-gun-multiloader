@@ -5,6 +5,7 @@
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
   "item.ricksportalgun.circuitboard": "Circuit Board",
   "item.ricksportalgun.disc_template": "Disc Template",
+  "item.ricksportalgun.admin_key": "Admin Key",
 
   "item.ricksportalgun.alt_portal_gun": "Alternative Portal Gun",
   "item.ricksportalgun.flintlock_portal_gun": "Flintlock Portal Gun",
@@ -177,6 +178,7 @@
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
   "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for info",
   "tooltip.ricksportalgun.upgrade.tutorial": "Applied in portal gun settings menu",
+  "tooltip.ricksportalgun.admin_key": "Bypasses portal gun lock if held in hand with the portal gun",
 
   "tooltip.ricksportalgun.upgrade.settings": "Unlocks Security & Customization settings.",
   "tooltip.ricksportalgun.upgrade.waypoints": "Unlocks the ability to store & travel to waypoints.",

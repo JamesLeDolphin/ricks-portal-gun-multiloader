@@ -1,11 +1,14 @@
 package com.jdolphin.ricksportalgun.common.blockentity;
 
 import com.jdolphin.ricksportalgun.common.block.PortalDispenserBlock;
+import com.jdolphin.ricksportalgun.common.comp.cctweaked.PortalDispenserPeripheral;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -22,28 +25,37 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
-    public static final String TAG_FUEL = "Fuel";
-    public static final String TAG_MAX_FUEL = "MaxFuel";
-    public static final String TAG_COLOR = "Color";
     public static final String TAG_DEST_DIM = "DestinationDim";
     public static final String TAG_DEST_BPOS = "DestinationPos";
     public static final String TAG_DIRECTION = "Direction";
+
+    private Object peripheral;
     private Direction dir;
     private int fuel = 16;
     private int maxFuel = 16;
+    private int color = Color.GREEN.getRGB();
     private String desDim = "minecraft:overworld";
     private BlockPos desPos = BlockPos.ZERO;
     protected final ContainerData dataAccess;
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
+    public @Nullable Object getPeripheral() {
+        return peripheral;
+    }
+
     public PortalDispenserBlockEntity(BlockPos pos, BlockState blockState) {
         super(PGBlockEntities.PORTAL_DISPENSER, pos, blockState);
+        if (PGHelper.hasCCTweaked()) {
+            peripheral = new PortalDispenserPeripheral(this);
+        }
 
         this.dataAccess = new ContainerData() {
             public int get(int i) {
@@ -71,6 +83,22 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
                 return 2;
             }
         };
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setDimension(String dimension) {
+        this.desDim = dimension;
+    }
+
+    public void setDestPos(BlockPos pos) {
+        this.desPos = pos;
     }
 
     public void setDestination(String dimension, BlockPos pos) {
@@ -110,7 +138,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
-        return new PortalDispenserMenu(i, inventory, this, dataAccess, ContainerLevelAccess.create(this.level, this.worldPosition));
+        return new PortalDispenserMenu(i, inventory, this, dataAccess, ContainerLevelAccess.create(this.level, this.worldPosition), this.desPos, this.desDim);
     }
 
     public int getFuel() {
@@ -133,14 +161,15 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.fuel = Math.max(0, this.fuel - amount);
     }
 
-    public void onActivation(Level level, BlockPos pos) {
+    public void onActivation() {
+        assert level != null;
         if (!level.isClientSide) {
-            BlockState state = level.getBlockState(pos);
+            BlockState state = level.getBlockState(getBlockPos());
             Direction direction = state.getValue(PortalDispenserBlock.FACING);
-            BlockPos portalPos = pos;
+            BlockPos portalPos = getBlockPos();
             if (hasFuel()) {
                 for (int j = 0; j < 4; j++) {
-                    portalPos = pos.relative(direction, j);
+                    portalPos = getBlockPos().relative(direction, j);
                     if (!level.getBlockState(portalPos.relative(direction, 1)).isAir()) {
                         break;
                     }
@@ -149,14 +178,16 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
                     ResourceLocation dim = new ResourceLocation(getDestinationDim());
                     ServerLevel destLevel = LevelHelper.getServerWorld(level, LevelHelper.getWorldKey(dim));
                     if (LevelHelper.canPortalTo(destLevel, getDestinationPos(), null)) {
-                        Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
+                        Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, 0.5 + direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
                         PortalEntity portal = new PortalEntity(level, vec, direction, this.dir, 3.0f);
-                        PortalEntity exitPortal = new PortalEntity(destLevel, Vec3.atCenterOf(getDestinationPos()), direction, this.dir, 3.0f);
+                        PortalEntity exitPortal = new PortalEntity(destLevel, Vec3.atCenterOf(getDestinationPos()).add(0, 0.5, 0), direction, this.dir, 3.0f);
+                        PGHelper.doForEach(entity -> entity.setColor(this.color), portal, exitPortal);
+
                         if (!portal.isFlat()) {
-                            portal.setYRot(this.dir.toYRot());
-                            exitPortal.setYRot(this.dir.toYRot());
+                            PGHelper.doForEach(entity -> entity.setYRot(this.dir.toYRot()),
+                                    portal, exitPortal);
                         }
-                        portal.setHopLocation(dim, getDestinationPos());
+                        portal.setHopLocation(level.dimension().location(), getDestinationPos());
                         exitPortal.setHopLocation(dim, portal.blockPosition());
 
                         if (destLevel.addFreshEntity(exitPortal)) {
@@ -175,13 +206,14 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.fuel = tag.getInt(TAG_FUEL);
-        this.maxFuel = tag.getInt(TAG_MAX_FUEL);
+        this.fuel = tag.getInt(PGNbtKeys.TAG_FUEL);
+        this.maxFuel = tag.getInt(PGNbtKeys.TAG_MAX_FUEL);
         CompoundTag bpTag = tag.getCompound(TAG_DEST_BPOS);
         this.desPos = NbtUtils.readBlockPos(bpTag);
         this.desDim = tag.getString(TAG_DEST_DIM);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         this.dir = Direction.fromYRot(tag.getDouble(TAG_DIRECTION));
+        this.color = tag.getInt(PGNbtKeys.TAG_COLOR);
         ContainerHelper.loadAllItems(tag, this.items);
 
     }
@@ -189,11 +221,12 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         ContainerHelper.saveAllItems(tag, this.items);
-        tag.putInt(TAG_FUEL, this.fuel);
-        tag.putInt(TAG_MAX_FUEL, this.maxFuel);
+        tag.putInt(PGNbtKeys.TAG_FUEL, this.fuel);
+        tag.putInt(PGNbtKeys.TAG_MAX_FUEL, this.maxFuel);
         tag.putString(TAG_DEST_DIM, this.desDim);
         tag.put(TAG_DEST_BPOS, NbtUtils.writeBlockPos(this.desPos));
         tag.putDouble(TAG_DIRECTION, this.dir.toYRot());
+        tag.putInt(PGNbtKeys.TAG_COLOR, color);
     }
 
     @Override

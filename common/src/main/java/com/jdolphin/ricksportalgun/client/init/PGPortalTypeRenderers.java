@@ -1,9 +1,9 @@
 package com.jdolphin.ricksportalgun.client.init;
 
-import com.jdolphin.ricksportalgun.client.render.portal.AbstractPortalTypeRenderer;
-import com.jdolphin.ricksportalgun.client.render.portal.DefaultPortalTypeRenderer;
-import com.jdolphin.ricksportalgun.client.render.portal.EndPortalTypeRenderer;
-import com.jdolphin.ricksportalgun.client.render.portal.WaterPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.DefaultPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.EndPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.WaterPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
 

@@ -68,6 +68,7 @@ dependencies {
     //modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:${immersive_portals_version}")
 
     compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-common-api:${cct_version}")
+    compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-common:${cct_version}")
 
     compileOnly "curse.maven:irisshaders-455508:6258195"
     compileOnly "curse.maven:sodium-394468:6260639"

@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
@@ -10,6 +11,7 @@ import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper
 import com.mojang.datafixers.types.Type;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.Entity;
@@ -22,9 +24,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.network.NetworkHooks;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Set;
@@ -71,6 +76,19 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public <M extends AbstractContainerMenu> MenuType<M> createMenuType(BiFunction<Integer, Inventory, M> constructor) {
         return new MenuType<>(constructor::apply, FeatureFlags.DEFAULT_FLAGS);
+    }
+
+    @Override
+    public <M extends AbstractContainerMenu> MenuType<M> createExtendedMenuType(TriFunction<Integer, Inventory, FriendlyByteBuf, M> constructor) {
+        return IForgeMenuType.create(constructor::apply);
+    }
+
+    @Override
+    public void openDispenserMenu(ServerPlayer player, PortalDispenserBlockEntity be) {
+        NetworkHooks.openScreen(player, be, buf -> {
+            buf.writeBlockPos(be.getDestinationPos());
+            buf.writeUtf(be.getDestinationDim());
+        });
     }
 
     @Override

@@ -39,7 +39,11 @@ dependencies {
     modRuntimeOnly ("me.shedaniel.cloth:cloth-config-forge:11.1.136") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+    //CC: Tweaked
+    modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-fabric-api:${cct_version}")
+    modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-fabric:${cct_version}")
 
+    //Iris & Sodium
     modCompileOnly "curse.maven:irisshaders-455508:6258195"
     modImplementation "curse.maven:sodium-394468:6260639"
 }
@@ -76,6 +80,14 @@ repositories {
     }
 
     maven { url 'https://jitpack.io' }
+
+    //CC: Tweaked
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
 
     // the repository for Cloth Config
     maven { url 'https://maven.shedaniel.me' }

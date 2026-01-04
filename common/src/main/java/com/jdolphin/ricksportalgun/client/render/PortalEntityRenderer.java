@@ -2,8 +2,8 @@ package com.jdolphin.ricksportalgun.client.render;
 
 import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
-import com.jdolphin.ricksportalgun.client.render.portal.AbstractPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -40,8 +40,8 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
         AbstractPortalTypeRenderer typeRenderer = PGPortalTypeRenderers.getRenderer(type);
         AbstractPortalShapeRenderer shapeRenderer = PGPortalShapeRenderers.RENDERER_MAP.get(entity.getShape());
         if (typeRenderer != null && shapeRenderer != null) {
-            typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
-            typeRenderer.closeAnimation(entity, stack, partialTick, packedLight);
+            if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20) typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
+            if (entity.getLifetime() < 20) typeRenderer.closeAnimation(entity, stack, partialTick, packedLight);
 
             int color = entity.getColor();
             float r = FastColor.ARGB32.red(color) / 255f;

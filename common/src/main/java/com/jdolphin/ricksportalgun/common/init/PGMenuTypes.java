@@ -6,10 +6,12 @@ import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ import java.util.function.BiFunction;
 public class PGMenuTypes {
     private static final Map<ResourceLocation, MenuType<?>> ALL = new HashMap<>();
 
-    public static MenuType<PortalDispenserMenu> PORTAL_DISPENSER = register("portal_dispenser",
+    public static MenuType<PortalDispenserMenu> PORTAL_DISPENSER = registerExtended("portal_dispenser",
             PortalDispenserMenu::new);
 
     public static MenuType<WorkbenchCraftingMenu> WORKBENCH_CRAFTING = register("workbench_crafting",
@@ -31,6 +33,12 @@ public class PGMenuTypes {
 
     private static <M extends AbstractContainerMenu> MenuType<M> register(String name, BiFunction<Integer, Inventory, M> constructor) {
         MenuType<M> menu = PGServices.PLATFORM.createMenuType(constructor);
+        ALL.put(PGHelper.id(name), menu);
+        return menu;
+    }
+
+    private static <M extends AbstractContainerMenu> MenuType<M> registerExtended(String name, TriFunction<Integer, Inventory, FriendlyByteBuf, M> constructor) {
+        MenuType<M> menu = PGServices.PLATFORM.createExtendedMenuType(constructor);
         ALL.put(PGHelper.id(name), menu);
         return menu;
     }

@@ -1,5 +1,7 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
+import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -45,6 +47,14 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         }
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         initEvents();
+
+        if (PGHelper.hasCCTweaked()) {
+            dan200.computercraft.api.peripheral.PeripheralLookup.get().registerFallback((level, blockPos, blockState, blockEntity, direction) -> {
+                if (blockEntity instanceof PortalDispenserBlockEntity be) return (dan200.computercraft.api.peripheral.IPeripheral) be.getPeripheral();
+                if (blockEntity instanceof SubetherBarrierBlockEntity be) return (dan200.computercraft.api.peripheral.IPeripheral) be.getPeripheral();
+                return null;
+            });
+        }
     }
 
     private static <T> BiConsumer<T, ResourceLocation> bind(Registry<? super T> registry) {
@@ -54,7 +64,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
     private void initEvents() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            new PGDamageTypes(server.registryAccess());
+            PGDamageTypes.init(server.registryAccess());
             List<String> strings = LevelHelper.getDimensionsAsString(server.getAllLevels());
             if (!strings.contains(PGHelper.id("blender").toString())) strings.add(PGHelper.id("blender").toString());
             LevelHelper.addDimensions(strings);

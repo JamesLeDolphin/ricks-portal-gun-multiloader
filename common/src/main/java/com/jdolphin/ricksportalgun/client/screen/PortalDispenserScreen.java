@@ -81,21 +81,25 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         this.imageWidth = 176;
         this.imageHeight = 166;
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-
+        BlockPos destPos = menu.getDestPos();
         this.xInput = this.addWidget(new EditBox(this.font,
                 this.width / 2 - 32,this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
+        xInput.setValue(String.valueOf(destPos.getX()));
         this.yInput = this.addWidget(new EditBox(this.font,
                 this.width / 2 + 8, this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
+        yInput.setValue(String.valueOf(destPos.getY()));
         this.zInput = this.addWidget(new EditBox(this.font,
                 this.width / 2 + 48, this.height / 2 - 64, 32, 12,
                 Component.translatable("chat.editBox")));
+        zInput.setValue(String.valueOf(destPos.getZ()));
 
         this.dimInput = new SuggestionTextFieldWidget(this.width / 2 - 32,this.height / 2 - 48, 112, 12, Component.translatable("chat.editBox"), dimSuggestions);
         dimInput.update();
         setupSuggestionBox(dimInput);
         this.addWidget(dimInput.getSuggestionList());
+        dimInput.setValue(menu.getDestDim());
 
         this.selectButton = this.addWidget(Button.builder(Component.translatable("ricksportalgun.button.select"), (button) -> {
             try {

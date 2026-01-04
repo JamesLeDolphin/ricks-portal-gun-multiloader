@@ -2,9 +2,11 @@ package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -58,7 +60,7 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof PortalDispenserBlockEntity blockEntity) {
-            blockEntity.onActivation(level, pos);
+            blockEntity.onActivation();
         }
     }
 
@@ -92,11 +94,13 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-       BlockEntity entity = level.getBlockEntity(pos);
-       if (entity instanceof PortalDispenserBlockEntity block) {
-            player.openMenu(block);
-            return InteractionResult.SUCCESS;
-       }
+        if (player instanceof ServerPlayer serverPlayer) {
+            BlockEntity entity = level.getBlockEntity(pos);
+            if (entity instanceof PortalDispenserBlockEntity block) {
+                PGServices.PLATFORM.openDispenserMenu(serverPlayer, block);
+                return InteractionResult.SUCCESS;
+            }
+        }
        return InteractionResult.PASS;
     }
 

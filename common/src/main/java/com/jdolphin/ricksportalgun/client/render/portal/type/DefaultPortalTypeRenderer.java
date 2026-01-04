@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.client.render.portal;
+package com.jdolphin.ricksportalgun.client.render.portal.type;
 
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
@@ -72,7 +72,6 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
             VertexConsumer consumer = source.getBuffer(RenderType.entitySmoothCutout(getTextureLocation(entity)));
 
          //   drawShapedVertex(stack, -width, -height, width, height, red, green, blue, 1, 0, 0, 0, 0, consumer, entity.getShape());
-
             GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, -height, height, 0.01f, 0.01f,
                     red, green, blue, 1,
                     0, 0, 0.5f, 1,

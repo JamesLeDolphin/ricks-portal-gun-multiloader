@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.util.helper;
 
 import com.google.common.collect.Lists;
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
@@ -64,6 +65,10 @@ public final class PGHelper {
         return PGServices.PLATFORM.isModLoaded("sodium");
     }
 
+    public static boolean hasCCTweaked() {
+        return PGServices.PLATFORM.isModLoaded("computercraft");
+    }
+
     public static boolean hasImmersivePortals() {
         return PGServices.PLATFORM.isModLoaded("immersive_portals");
     }
@@ -89,13 +94,17 @@ public final class PGHelper {
         return new Color(r, g, b).getRGB();
     }
 
-    public static boolean canPlayerAccessGun(Player player, ItemStack stack) {
+    public static boolean canPlayerAccessGun(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
         boolean locked = tag.contains(PGNbtKeys.TAG_LOCK) && tag.getBoolean(PGNbtKeys.TAG_LOCK);
         String uuid = tag.contains(PGNbtKeys.TAG_OWNER) ? tag.getUUID(PGNbtKeys.TAG_OWNER).toString() : "";
 
         if (locked) {
-            return uuid.isEmpty() || player.getStringUUID().equals(uuid);
+            InteractionHand opposite = PGHelper.getOppositeHand(hand);
+            ItemStack oppositeStack = player.getItemInHand(opposite);
+            if (oppositeStack.is(PGItems.ADMIN_KEY)) return true;
+            else return uuid.isEmpty() || player.getStringUUID().equals(uuid);
         }
         return true;
     }

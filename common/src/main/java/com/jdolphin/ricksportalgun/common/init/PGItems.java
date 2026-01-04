@@ -1,9 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.item.DataCardItem;
-import com.jdolphin.ricksportalgun.common.item.PortalFluidItem;
-import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
-import com.jdolphin.ricksportalgun.common.item.TooltipBlockItem;
+import com.jdolphin.ricksportalgun.common.item.*;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
@@ -47,6 +44,7 @@ public class PGItems {
 
     public static final Item DATA_CARD = register("data_card", DataCardItem::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
     public static final Item DISC_TEMPLATE = register("disc_template", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
+    public static final Item ADMIN_KEY = register("admin_key", properties -> new TooltipItem(properties, Component.translatable("tooltip.ricksportalgun.admin_key")), new Item.Properties(), PGCreativeModeTabs.OP_BLOCKS);
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);

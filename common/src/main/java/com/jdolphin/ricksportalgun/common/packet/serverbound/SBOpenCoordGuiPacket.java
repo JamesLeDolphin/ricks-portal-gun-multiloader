@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public record SBOpenCoordGuiPacket() implements PGServerPayload {
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
-            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-            PortalGunItem.migrateOldUpgrades(stack);
-            if (PGHelper.canPlayerAccessGun(player, stack)) {
+            InteractionHand hand = PGHelper.getPortalGunHand(player);
+            PortalGunItem.migrateOldUpgrades(player.getItemInHand(hand));
+            if (PGHelper.canPlayerAccessGun(player, hand)) {
                 List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
                 if (!dims.contains(PGHelper.id("blender").toString()))
                     dims.add(PGHelper.id("blender").toString());

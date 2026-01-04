@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
-import com.jdolphin.ricksportalgun.client.render.portal.AbstractPortalTypeRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;

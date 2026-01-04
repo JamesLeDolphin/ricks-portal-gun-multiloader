@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.comp.computercraft.PGPeripheralProviderForge;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
@@ -53,10 +54,14 @@ public class RicksPortalGunForgeMain {
 
         context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
+
+        if (PGHelper.hasCCTweaked()) {
+            dan200.computercraft.api.ForgeComputerCraftAPI.registerPeripheralProvider(new PGPeripheralProviderForge());
+        }
     }
 
     private void onServerStart(ServerStartedEvent event) {
-        new PGDamageTypes(event.getServer().registryAccess());
+        PGDamageTypes.init(event.getServer().registryAccess());
     }
 
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -1,8 +1,9 @@
-package com.jdolphin.ricksportalgun.client.render.portal;
+package com.jdolphin.ricksportalgun.client.render.portal.type;
 
 import com.jdolphin.ricksportalgun.client.render.portal.shape.AbstractPortalShapeRenderer;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -16,15 +17,15 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 
-public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
+public class EndPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
-    public StarsPortalTypeRenderer(PortalType type) {
+    public EndPortalTypeRenderer(PortalType type) {
         super(type);
     }
 
     @Override
     public ResourceLocation getTextureLocation(PortalEntity portal) {
-        return TheEndPortalRenderer.END_PORTAL_LOCATION;
+        return null;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
         int x2 = x + width / 2;
         int y2 = y + height;
-        graphics.fill(RenderType.entitySolid(getTextureLocation(null)), x, y, x2, y2, FastColor.ARGB32.color(255, red, green, blue));
+        graphics.fill(RenderType.endPortal(), x, y, x2, y2, FastColor.ARGB32.color(255, red, green, blue));
 
         RenderSystem.enableBlend();
 
@@ -59,10 +60,18 @@ public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
         float width = getWidth(entity);
         float height = entity.getSize() > 2 ? getHeight(entity) / 2 : 1;
 
-        RenderType renderType = RenderType.entitySolid(getTextureLocation(entity));
+        RenderType renderType = RenderType.endPortal();
+        float progress = entity.tickCount * 0.001F % 1.0F; //Scrolls the image if shaders are enabled, otherwise does visually nothing
+        if (PGHelper.hasIris() && net.irisshaders.iris.Iris.getCurrentPack().isPresent()) {
+            renderType = RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION);
+        } else {
+            //Color overlay - We only render when shaders are disabled, otherwise the portal would just glow that colour
+            VertexConsumer consumer1 = source.getBuffer(RenderType.translucent());
+            shapeRenderer.renderInLevel(stack, -width, -height, width, height, 0.005f, 0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
+            shapeRenderer.renderInLevel(stack, width, -height, -width, height, -0.005f, -0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
+        }
 
-        float progress = entity.tickCount * 0.001F % 1.0F;
-
+        //End portal
         VertexConsumer consumer = source.getBuffer(renderType);
         float f = entity.tickCount + partialTick;
         float f1 = (float) Math.abs((Math.cos(f / 10) + 1) / 2);
