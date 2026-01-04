@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGCycleButton;
@@ -84,10 +85,15 @@ public class PortalTypeScreen extends AbstractBaseScreen {
         GuiHelper.renderOutline(graphics, select, style.highlightColor());
         GuiHelper.renderOutline(graphics, cancel, style.highlightColor());
 
+        RenderSystem.enableBlend();
+        graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
+        RenderSystem.disableBlend();
+
         ItemStack  stack = getItemStack();
         if (typeButton.getValue() != null) {
             int color = PortalGunItem.getColor(stack);
-            PGPortalTypeRenderers.getRenderer(typeButton.getValue()).renderInGui(this.width / 2, this.height / 2, 64, 82,
+            PortalShape shape = shapeButton.getValue();
+            PGPortalTypeRenderers.getRenderer(typeButton.getValue()).renderInGui(this.width / 2, this.height / 2, 64, 82, PGPortalShapeRenderers.RENDERER_MAP.get(shape),
                     stack, graphics, mouseX, mouseY, partialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
         }
 
@@ -95,9 +101,7 @@ public class PortalTypeScreen extends AbstractBaseScreen {
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, mouseX, mouseY, partialTick);
         }
-        RenderSystem.enableBlend();
-        graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
-        RenderSystem.disableBlend();
+
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 }

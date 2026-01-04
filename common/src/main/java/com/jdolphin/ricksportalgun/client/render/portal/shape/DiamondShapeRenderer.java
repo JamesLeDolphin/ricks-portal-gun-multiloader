@@ -1,19 +1,41 @@
 package com.jdolphin.ricksportalgun.client.render.portal.shape;
 
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-public class DiamondShapeRenderer extends AbstractPortalShapeRenderer {
-    @Override
-    public void renderInGui(int x, int y, int width, int height, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+import java.util.function.Consumer;
 
+public class DiamondShapeRenderer extends AbstractPortalShapeRenderer {
+
+    @Override
+    public void renderInGui(int x, int y, int z, int width, int height, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue, int alpha, float u1, float v1, float u2, float v2, RenderType type, Consumer<BufferBuilder> consumer) {
+        int x2 = x + width;
+        int y2 = y + height;
+
+        float midX = x + (float) width / 2;
+        float midY = y + (float) height / 2;
+
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        Matrix4f matrix4f = graphics.pose().last().pose();
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+
+        bufferbuilder.vertex(matrix4f, x, midY, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, midX, y2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, x2, midY, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, midX, y, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
+
+        consumer.accept(bufferbuilder);
+        RenderSystem.disableBlend();
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.jdolphin.ricksportalgun.common.comp.sodium.SodiumCompat;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -30,25 +32,18 @@ public class WaterPortalTypeRenderer extends AbstractPortalTypeRenderer {
     }
 
     @Override
-    public void renderInGui(int x, int y, int width, int height, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
+    public void renderInGui(int x, int y, int width, int height, AbstractPortalShapeRenderer shape, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
         if (sprite == null) {
             sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(getTextureLocation(null));
+        } else {
+            if (PGHelper.hasSodium()) {
+                SodiumCompat.markSpriteActive(sprite);
+            }
+            RenderSystem.setShaderTexture(0, sprite.atlasLocation());
+            shape.renderInGui(x, y, 0, width, height, graphics, pMouseX, pMouseY, pPartialTick, red, green, blue, 255,
+                    sprite.getU0(), sprite.getV0(), sprite.getU1() , sprite.getV1(), RenderType.entityCutoutNoCull(sprite.atlasLocation()),
+                    bufferBuilder -> BufferUploader.drawWithShader(bufferBuilder.end()));
         }
-        int x2 = x + width;
-        int y2 = y + height;
-        graphics.blit(x, y, 0, width, height, sprite, red / 255f, green / 255f, blue / 255f, 1);
-
-        //RenderSystem.enableBlend();
-        //RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        //Matrix4f matrix4f = graphics.pose().last().pose();
-        //BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        //bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        //bufferbuilder.vertex(matrix4f, x, y, 0.001f).color(red, green, blue, 128).endVertex();
-        //bufferbuilder.vertex(matrix4f, x, y2, 0.001f).color(red, green, blue, 128).endVertex();
-        //bufferbuilder.vertex(matrix4f, x2, y2, 0.001f).color(red, green, blue, 128).endVertex();
-        //bufferbuilder.vertex(matrix4f, x2, y, 0.001f).color(red, green, blue, 128).endVertex();
-        //BufferUploader.drawWithShader(bufferbuilder.end());
-        //RenderSystem.disableBlend();
     }
 
     @Override

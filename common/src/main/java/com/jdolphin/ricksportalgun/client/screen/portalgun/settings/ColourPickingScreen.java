@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.render.portal.type.AbstractPortalTypeRenderer;
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
@@ -9,6 +10,7 @@ import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.common.customization.PortalGunStyle;
 import com.jdolphin.ricksportalgun.common.customization.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
@@ -144,9 +146,10 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         ItemStack stack = getItemStack();
         PortalType type = PortalGunItem.getPortalType(stack);
         AbstractPortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
+        PortalShape shape = PortalGunItem.getPortalShape(stack);
 
-        renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, stack, graphics, pMouseX, pMouseY, pPartialTick,
-                FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
+        renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, PGPortalShapeRenderers.RENDERER_MAP.get(shape), stack, graphics, pMouseX, pMouseY,
+                pPartialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {

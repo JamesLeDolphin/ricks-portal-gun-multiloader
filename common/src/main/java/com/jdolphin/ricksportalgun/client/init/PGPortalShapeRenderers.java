@@ -15,7 +15,6 @@ public class PGPortalShapeRenderers {
         registerRenderer(PGPortalShapes.DIAMOND, new DiamondShapeRenderer());
         registerRenderer(PGPortalShapes.TRIANGLE, new TriangleShapeRenderer());
         registerRenderer(PGPortalShapes.OCTAGON, new OctagonShapeRenderer());
-        registerRenderer(PGPortalShapes.VORTEX, new VortexShapeRenderer());
     }
 
     private static void registerRenderer(PortalShape shape, AbstractPortalShapeRenderer renderer) {

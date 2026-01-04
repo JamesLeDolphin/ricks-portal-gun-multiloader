@@ -28,7 +28,7 @@ public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
     }
 
     @Override
-    public void renderInGui(int x, int y, int width, int height, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
+    public void renderInGui(int x, int y, int width, int height, AbstractPortalShapeRenderer shape, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
 
         int x2 = x + width / 2;
         int y2 = y + height;

@@ -16,7 +16,6 @@ public class PGPortalShapes {
     public static final PortalShape DIAMOND = register("diamond", SimpleShape::new);
     public static final PortalShape TRIANGLE = register("triangle", SimpleShape::new);
     public static final PortalShape OCTAGON = register("octagon", SimpleShape::new);
-    public static final PortalShape VORTEX = register("vortex", SimpleShape::new);
 
     private static PortalShape register(String name, Function<ResourceLocation, PortalShape> function) {
         ResourceLocation rl = PGHelper.id(name);

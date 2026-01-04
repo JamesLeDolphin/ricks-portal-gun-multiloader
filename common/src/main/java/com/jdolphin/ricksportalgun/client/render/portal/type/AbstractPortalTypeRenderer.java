@@ -41,11 +41,9 @@ public abstract class AbstractPortalTypeRenderer {
         return Math.max(2, entity.getSize());
     }
 
-
-
     public abstract ResourceLocation getTextureLocation(PortalEntity portal);
 
-    public abstract void renderInGui(int x, int y, int width, int height, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue);
+    public abstract void renderInGui(int x, int y, int width, int height, AbstractPortalShapeRenderer shape, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue);
 
     public abstract void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue);
 }

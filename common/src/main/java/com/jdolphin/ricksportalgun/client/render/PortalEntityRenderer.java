@@ -8,10 +8,12 @@ import com.jdolphin.ricksportalgun.common.customization.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.animal.Sheep;
@@ -40,7 +42,8 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
         AbstractPortalTypeRenderer typeRenderer = PGPortalTypeRenderers.getRenderer(type);
         AbstractPortalShapeRenderer shapeRenderer = PGPortalShapeRenderers.RENDERER_MAP.get(entity.getShape());
         if (typeRenderer != null && shapeRenderer != null) {
-            if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20) typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
+            if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20)
+                typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
             if (entity.getLifetime() < 20) typeRenderer.closeAnimation(entity, stack, partialTick, packedLight);
 
             int color = entity.getColor();
@@ -60,8 +63,47 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
                 g = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
                 b = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
             }
-            typeRenderer.renderPortal(entity, shapeRenderer, yaw, partialTick, stack, source, packedLight, r, g, b);
 
+            Direction direction = entity.getPortalDirection();
+            Direction facing = entity.getPortalFacing();
+            Direction.Axis axis = facing.getAxis();
+
+            stack.pushPose();
+            stack.translate(0, -1, 0);
+
+            float xRot = 0;
+            float yRot = 0;
+            float zRot = 0;
+
+            float width = (entity.getSize() / 3) * 1.5f;
+            float height = entity.getSize() > 2 ? width : 1;
+
+
+            if (direction.getAxis().isVertical()) {
+                if (axis.equals(Direction.Axis.Z)) {
+                    stack.scale(entity.getSize(), 1, height);
+                    xRot = 90;
+                    yRot = 180;
+                    zRot = 180;
+                    stack.translate(0, 1.1, 0);
+                }
+                if (axis.equals(Direction.Axis.X)) {
+                    stack.scale(height, 1, entity.getSize());
+                    xRot = 0;
+                    yRot = 270;
+                    zRot = 90;
+                    stack.translate(0, 1.1, 0);
+                }
+            } else {
+                stack.scale(entity.getSize(), height, entity.getSize());
+                stack.translate(0, 1, 0);
+            }
+            stack.mulPose(Axis.XN.rotationDegrees(xRot));
+            stack.mulPose(Axis.ZN.rotationDegrees(zRot));
+            stack.mulPose(Axis.YN.rotationDegrees(direction.getAxis().isVertical() ? yRot : entity.getYRot()));
+
+            typeRenderer.renderPortal(entity, shapeRenderer, yaw, partialTick, stack, source, packedLight, r, g, b);
+            stack.popPose();
             super.render(entity, yaw, partialTick, stack, source, LightTexture.FULL_BRIGHT);
         }
     }
