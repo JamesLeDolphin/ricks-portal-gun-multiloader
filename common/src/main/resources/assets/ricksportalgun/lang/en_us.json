@@ -72,6 +72,7 @@
   "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
   "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
   "menu.ricksportalgun.settings.upgrades.add": "Add Upgrade",
+  "menu.ricksportalgun.settings.customization.type": "Edit Portal Type",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
@@ -94,7 +95,7 @@
   "ricksportalgun.button.locator.structure": "Structure Locator",
   "ricksportalgun.button.settings.security": "Security Settings",
   "ricksportalgun.button.settings.customization": "Customization Settings",
-  "ricksportalgun.button.settings.customization.color": "Change Portal Color",
+  "ricksportalgun.button.settings.customization.portal": "Customize Portal",
   "ricksportalgun.button.settings.customization.theme": "Edit Portal Gun Menu Theme",
   "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
   "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
@@ -108,7 +109,6 @@
   "ricksportalgun.button.self_destruct": "Enable self destruct:",
   "ricksportalgun.button.self_destruct.activate": "Activate Self Destruct. Warning: This action will destroy the portal gun!",
   "ricksportalgun.button.upgrade_new": "Install new upgrade",
-  "ricksportalgun.button.portal_type": "Portal Type",
 
   "ricksportalgun.button.next": "Next",
   "ricksportalgun.button.previous": "Previous",

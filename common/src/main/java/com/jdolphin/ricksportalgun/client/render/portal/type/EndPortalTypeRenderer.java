@@ -39,7 +39,7 @@ public class EndPortalTypeRenderer extends AbstractPortalTypeRenderer {
     public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
 
         float width = getWidth(entity);
-        float height = entity.getSize() > 2 ? getWidth(entity) : 1;
+        float height = entity.getSize() > 2 ? width : 1;
 
         RenderType renderType = RenderType.endPortal();
         float progress = entity.tickCount * 0.001F % 1.0F; //Scrolls the image if shaders are enabled, otherwise does visually nothing

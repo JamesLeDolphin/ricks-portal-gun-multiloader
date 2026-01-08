@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -55,8 +54,7 @@ public class WaterPortalTypeRenderer extends AbstractPortalTypeRenderer {
                 SodiumCompat.markSpriteActive(sprite);
             }
             stack.pushPose();
-            stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
-            VertexConsumer consumer1 = source.getBuffer(RenderType.entityTranslucent(sprite.atlasLocation()));
+            VertexConsumer consumer1 = source.getBuffer(RenderType.entityTranslucentEmissive(sprite.atlasLocation()));
             float width = (entity.getSize() / 3) * 1.5f;
             float height = entity.getSize() > 2 ? width : 1;
 

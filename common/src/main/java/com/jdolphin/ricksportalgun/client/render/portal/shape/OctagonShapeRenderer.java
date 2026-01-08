@@ -45,9 +45,9 @@ public class OctagonShapeRenderer extends AbstractPortalShapeRenderer {
             BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
             bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-            bufferbuilder.vertex(matrix4f, cx, cy, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
+            bufferbuilder.vertex(matrix4f, cx, cy, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
             bufferbuilder.vertex(matrix4f, vx1, vy1, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
-            bufferbuilder.vertex(matrix4f, vx2, vy2, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
+            bufferbuilder.vertex(matrix4f, vx2, vy2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
             bufferbuilder.vertex(matrix4f, vx1, vy1, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
 
             consumer.accept(bufferbuilder);

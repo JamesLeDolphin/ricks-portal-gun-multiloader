@@ -14,33 +14,33 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record SBSetPortalTypePacket(PortalType type, PortalShape shape) implements PGServerPayload {
+public record SBSetPortalTypePacket(PortalType type, PortalShape shape, int color) implements PGServerPayload {
 
     @Override
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putInt(PGNbtKeys.TAG_COLOR, color);
             if (type != null) {
-                CompoundTag tag = stack.getOrCreateTag();
                 tag.putString(PGNbtKeys.PORTAL_TYPE, type.getId().toString());
             }
             if (shape != null) {
-                CompoundTag tag = stack.getOrCreateTag();
                 tag.putString(PGNbtKeys.PORTAL_SHAPE, shape.getId().toString());
             }
         });
     }
 
     public static SBSetPortalTypePacket decode(FriendlyByteBuf buf) {
-
-        return new SBSetPortalTypePacket(PGPortalTypes.TYPES.get(buf.readResourceLocation()), PGPortalShapes.SHAPES.get(buf.readResourceLocation()));
+        return new SBSetPortalTypePacket(PGPortalTypes.get(buf.readResourceLocation()), PGPortalShapes.get(buf.readResourceLocation()), buf.readVarInt());
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeResourceLocation(type.getId());
         buf.writeResourceLocation(shape.getId());
+        buf.writeVarInt(color);
     }
 
     public static ResourceLocation getID() {

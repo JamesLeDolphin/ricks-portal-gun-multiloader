@@ -16,7 +16,8 @@ import java.util.function.Consumer;
 public class SquareShapeRenderer extends AbstractPortalShapeRenderer {
 
     @Override
-    public void renderInGui(int x, int y, int z, int width, int height, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue, int alpha, float u1, float v1, float u2, float v2, RenderType type, Consumer<BufferBuilder> consumer) {
+    public void renderInGui(int x, int y, int z, int width, int height, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue, int alpha,
+                            float u1, float v1, float u2, float v2, RenderType type, Consumer<BufferBuilder> consumer) {
 
         int x2 = x + width;
         int y2 = y + height;
@@ -27,10 +28,10 @@ public class SquareShapeRenderer extends AbstractPortalShapeRenderer {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-        bufferbuilder.vertex(matrix4f, x, y, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
-        bufferbuilder.vertex(matrix4f, x, y2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
-        bufferbuilder.vertex(matrix4f, x2, y2, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
-        bufferbuilder.vertex(matrix4f, x2, y, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, x, y, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, x, y2, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, x2, y2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, x2, y, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
 
         consumer.accept(bufferbuilder);
         RenderSystem.disableBlend();

@@ -171,7 +171,7 @@ public class PGCycleButton<T> extends AbstractButton {
 
 
     public static class Builder<T> {
-        private int initialIndex;
+        private int initialIndex = 0;
         private T initialValue;
         private final Function<T, Component> valueStringifier;
         private OptionInstance.TooltipSupplier<T> tooltipSupplier = (p_168964_) -> null;

@@ -123,6 +123,9 @@ public class ColourPickingScreen extends AbstractBaseScreen {
 
         graphics.fill(this.width / 2 - 154, this.height / 2 - 110, this.width / 2 + 165, this.height / 2 + 100, style.bgColor());
 
+        graphics.fill(this.width / 2 + 8, this.height / 2 - 56, this.width / 2 + 84, this.height / 2 + 30, Color.BLACK.getRGB());
+        graphics.renderOutline(this.width / 2 + 8, this.height / 2 - 56, 76, 86, style.highlightColor());
+
         graphics.drawCenteredString(this.font, Component.translatable("menu.ricksportalgun.colour_select"), this.width / 2, this.height / 2 - 92, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.red", ""), this.width / 2 - 110, this.r.getY() + 4, style.textColor());
         graphics.drawString(this.font, Component.translatable("ricksportalgun.green", ""), this.width / 2 - 110, this.g.getY() + 4, getStyle().textColor());
@@ -140,7 +143,8 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         RenderSystem.disableBlend();
 
 
-        int x = 72, y = 82, multiplier = size.getValueInt();
+        int x = 41, y = 82, multiplier = size.getValueInt();
+
         int color = getColor();
 
         ItemStack stack = getItemStack();
@@ -148,7 +152,7 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         AbstractPortalTypeRenderer renderer = PGPortalTypeRenderers.getRenderer(type);
         PortalShape shape = PortalGunItem.getPortalShape(stack);
 
-        renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, PGPortalShapeRenderers.RENDERER_MAP.get(shape), stack, graphics, pMouseX, pMouseY,
+        renderer.renderInGui(this.width / 2 + 10, this.height / 2 - 54, x * multiplier, y, PGPortalShapeRenderers.getRenderer(shape), stack, graphics, pMouseX, pMouseY,
                 pPartialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
 
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);

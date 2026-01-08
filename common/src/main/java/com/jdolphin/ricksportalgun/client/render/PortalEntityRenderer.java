@@ -40,7 +40,7 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
     public void render(PortalEntity entity, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight) {
         PortalType type = entity.getPortalType();
         AbstractPortalTypeRenderer typeRenderer = PGPortalTypeRenderers.getRenderer(type);
-        AbstractPortalShapeRenderer shapeRenderer = PGPortalShapeRenderers.RENDERER_MAP.get(entity.getShape());
+        AbstractPortalShapeRenderer shapeRenderer = PGPortalShapeRenderers.getRenderer(entity.getShape());
         if (typeRenderer != null && shapeRenderer != null) {
             if (!entity.exists() && entity.getLifetime() > entity.getMaxLifetime() - 20)
                 typeRenderer.openAnimation(entity, stack, partialTick, packedLight);
@@ -95,7 +95,6 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
                     stack.translate(0, 1.1, 0);
                 }
             } else {
-                stack.scale(entity.getSize(), height, entity.getSize());
                 stack.translate(0, 1, 0);
             }
             stack.mulPose(Axis.XN.rotationDegrees(xRot));

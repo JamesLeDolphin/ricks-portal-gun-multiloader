@@ -16,6 +16,10 @@ public class PGPortalTypes {
     public static final PortalType END_PORTAL = register("end_portal", PortalType::new);
     public static final PortalType WATER = register("water", PortalType::new);
 
+    public static PortalType get(ResourceLocation rl) {
+        return TYPES.get(rl);
+    }
+
     private static PortalType register(String name, Function<ResourceLocation, PortalType> typeFunction) {
         PortalType type = typeFunction.apply(PGHelper.id(name));
         TYPES.put(PGHelper.id(name), type);

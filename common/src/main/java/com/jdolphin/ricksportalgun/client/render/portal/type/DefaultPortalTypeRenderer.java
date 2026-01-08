@@ -7,12 +7,14 @@ import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -49,6 +51,10 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
     public ResourceLocation getTextureLocation(PortalEntity entity) {
         int frame = (entity.tickCount / 4) % 8;
+        return getTextureLocation(frame);
+    }
+
+    public ResourceLocation getTextureLocation(int frame) {
         return PGHelper.id("textures/entity/portal_" + frame + ".png");
     }
 
@@ -57,8 +63,11 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
         float r = red / 255f;
         float g = green / 255f;
         float b = blue / 255f;
+
+        Player player = Minecraft.getInstance().player;
+
         graphics.setColor(r, g, b, 1);
-        graphics.blit(PGHelper.id("textures/entity/portal.png"), x, y, 0, 0, width, height, width, height);
+        graphics.blit(getTextureLocation((player.tickCount / 4) % 8), x, y, 0, 0, width * 2, height, width * 2, height);
         graphics.setColor(1, 1, 1, 1);
     }
 }

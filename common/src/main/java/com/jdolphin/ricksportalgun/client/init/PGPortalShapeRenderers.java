@@ -17,6 +17,10 @@ public class PGPortalShapeRenderers {
         registerRenderer(PGPortalShapes.OCTAGON, new OctagonShapeRenderer());
     }
 
+    public static AbstractPortalShapeRenderer getRenderer(PortalShape shape) {
+        return RENDERER_MAP.get(shape);
+    }
+
     private static void registerRenderer(PortalShape shape, AbstractPortalShapeRenderer renderer) {
         RENDERER_MAP.put(shape, renderer);
     }

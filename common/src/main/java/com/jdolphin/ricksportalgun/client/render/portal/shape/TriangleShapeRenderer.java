@@ -30,10 +30,10 @@ public class TriangleShapeRenderer extends AbstractPortalShapeRenderer {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-        bufferbuilder.vertex(matrix4f, x, y2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, x, y2, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
         bufferbuilder.vertex(matrix4f, midX, y2, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
-        bufferbuilder.vertex(matrix4f, x2, y2, z).color(red, green, blue, alpha).uv(u1, v2).endVertex();
-        bufferbuilder.vertex(matrix4f, midX, y, z).color(red, green, blue, alpha).uv(u1, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, x2, y2, z).color(red, green, blue, alpha).uv(u2, v2).endVertex();
+        bufferbuilder.vertex(matrix4f, midX, y, z).color(red, green, blue, alpha).uv(u2, v1).endVertex();
 
         consumer.accept(bufferbuilder);
         RenderSystem.disableBlend();
@@ -45,8 +45,8 @@ public class TriangleShapeRenderer extends AbstractPortalShapeRenderer {
         Matrix3f matrix3f = stack.last().normal();
         float midX = (x2 + x1) * 0.5f;
         GuiHelper.renderVertex(consumer, matrix4f, matrix3f, x1, y1, z2, red, green, blue, alpha, u2, v2, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
-        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, x2, y1, z1, red, green, blue, alpha, u2, v1, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
-        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, midX, y2, z2, red, green, blue, alpha, u1, v2, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
-        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, x1, y1, z1, red, green, blue, alpha, u1, v1, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
+        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, x2, y1, z1, red, green, blue, alpha, u1, v2, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
+        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, midX, y2, z2, red, green, blue, alpha, u1, v1, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
+        GuiHelper.renderVertex(consumer, matrix4f, matrix3f, x1, y1, z1, red, green, blue, alpha, u2, v1, OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,0, -1, 0);
     }
 }

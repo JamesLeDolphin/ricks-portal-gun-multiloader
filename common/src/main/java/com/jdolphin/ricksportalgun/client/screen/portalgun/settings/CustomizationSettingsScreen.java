@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 public class CustomizationSettingsScreen extends AbstractBaseScreen {
     public static ResourceLocation RESET_LOCATION = PGHelper.id("textures/gui/sprites/icon/reset.png");
     private PGSlider portalSize, portalAge;
-    private PGTextButton portalColor, menuTheme, select, cancel, portalType;
+    private PGTextButton portalColor, menuTheme, select, cancel;
     private PGImageButton resetSize, resetAge, backButton;
 
     public CustomizationSettingsScreen() {
@@ -52,13 +52,10 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 Component.translatable("ricksportalgun.button.portal_age.reset"), button -> this.portalAge.setValue(10), 16, 16, RESET_LOCATION));
 
         this.portalColor = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 - 16, 256, 18,
-                Component.translatable("ricksportalgun.button.settings.customization.color"), button -> this.minecraft.setScreen(new ColourPickingScreen()), this.font));
+                Component.translatable("ricksportalgun.button.settings.customization.portal"), button -> this.minecraft.setScreen(new PortalEditScreen()), this.font));
 
         this.menuTheme = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 8, 256, 18,
                 Component.translatable("ricksportalgun.button.settings.customization.theme"), button -> minecraft.setScreen(new ThemeEditScreen()), this.font));
-
-        this.portalType = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 32, 256, 18,
-                Component.literal("Placeholder"), button -> minecraft.setScreen(new PortalTypeScreen()), this.font));
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64,128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
@@ -84,7 +81,6 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
         this.cancel.setTextColour(style.textColor());
         this.portalColor.setTextColour(style.textColor());
         this.menuTheme.setTextColour(style.textColor());
-        this.portalType.setTextColour(style.textColor());
         this.portalSize.setRenderBG(false);
         this.portalAge.setRenderBG(false);
         this.portalSize.setStyle(style);
@@ -106,7 +102,6 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
 
         GuiHelper.renderOutline(graphics, this.portalColor, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.menuTheme, style.highlightColor());
-        GuiHelper.renderOutline(graphics, this.portalType, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.resetSize, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.resetAge, style.highlightColor());
         GuiHelper.renderOutline(graphics, this.select, style.highlightColor());
