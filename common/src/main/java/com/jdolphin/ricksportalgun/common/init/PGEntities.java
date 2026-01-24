@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.SeeThroughPortalEntity;
 import com.jdolphin.ricksportalgun.common.entity.ExplosiveItemEntity;
+import com.jdolphin.ricksportalgun.common.entity.MeeseeksEntity;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,8 @@ public class PGEntities {
     private static final Map<ResourceLocation, EntityType<?>> ALL = new HashMap<>();
 
     public static final EntityType<PortalEntity> PORTAL = register("portal", EntityType.Builder.<PortalEntity>of((PortalEntity::new), MobCategory.MISC).sized(1.0f, 2.0f));
+    public static final EntityType<MeeseeksEntity> MEESEEKS = register("meeseeks",
+            EntityType.Builder.<MeeseeksEntity>of((MeeseeksEntity::new), MobCategory.CREATURE).sized(1.0f, 2.0f));
 
     public static EntityType<SeeThroughPortalEntity> SEETHROUGH_PORTAL = null;
 

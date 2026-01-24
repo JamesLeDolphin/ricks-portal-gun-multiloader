@@ -42,6 +42,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGRecipeSerializers.init(bind(BuiltInRegistries.RECIPE_SERIALIZER));
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
+        PGMeeseeksCommands.init();
         if (PGHelper.hasImmersivePortals()) {
             Registry.register(BuiltInRegistries.ENTITY_TYPE, PGHelper.id("seethrough_portal"), PortalHolder.TYPE);
         }
