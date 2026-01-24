@@ -10,7 +10,7 @@
       "item": "minecraft:copper_block"
     },
     "B": {
-      "item": "minecraft:redstone"
+      "tag": "c:redstone_dusts"
     },
     "T": {
       "item": "minecraft:crafting_table"

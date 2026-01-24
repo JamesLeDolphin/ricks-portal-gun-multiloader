@@ -2,13 +2,15 @@ package com.jdolphin.ricksportalgun.common.comp.emi;
 
 import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
+import com.jdolphin.ricksportalgun.common.util.PGIngredient;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +23,16 @@ public class PGEmiRecipe implements EmiRecipe {
     public PGEmiRecipe(PortalGunWorkbenchRecipe recipe) {
         this.id = recipe.getId();
         List<EmiIngredient> stacks = new ArrayList<>();
-        for (ItemStack stack : recipe.getInputs()) {
-            stacks.add(EmiStack.of(stack));
+        List<PGIngredient> ingredients = recipe.getInputs();
+        for (int i = 0; i < 4; i++) {
+            if (i >= ingredients.size()) {
+                stacks.add(EmiStack.EMPTY);
+            } else {
+                PGIngredient ingredient = ingredients.get(i);
+                if (ingredient.tag() != null && ingredient.tag().contains("Potion")) {
+                    stacks.add(EmiStack.of(PotionUtils.setPotion(ingredient.ingredient().getItems()[0], Potion.byName(ingredient.tag().getString("Potion")))));
+                } else stacks.add(EmiIngredient.of(ingredient.ingredient(), ingredient.count()));
+            }
         }
         this.input = stacks;
         this.output = List.of(EmiStack.of(recipe.getResult()));

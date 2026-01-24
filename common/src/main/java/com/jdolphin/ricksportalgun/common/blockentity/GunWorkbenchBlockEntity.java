@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.menu.workbench.SkinSelectorMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WaypointTransferMenu;
 import com.jdolphin.ricksportalgun.common.menu.workbench.WorkbenchCraftingMenu;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
+import com.jdolphin.ricksportalgun.common.util.PGIngredient;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -121,15 +122,15 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
 
             ItemStack output = recipe.getResult();
             ItemStack result = output.copy();
-            ItemStack inOutputSlot = this.getItem(OUTPUT_SLOT);
+            ItemStack outputSlotItem = this.getItem(OUTPUT_SLOT);
 
-            if (inOutputSlot.isEmpty()) {
+            if (outputSlotItem.isEmpty()) {
                 lowerInputs(recipe);
                 this.setItem(OUTPUT_SLOT, result);
                 return true;
             } else {
-                if (ItemStack.isSameItemSameTags(inOutputSlot, result)) {
-                    int i = inOutputSlot.getCount();
+                if (ItemStack.isSameItemSameTags(outputSlotItem, result)) {
+                    int i = outputSlotItem.getCount();
                     int j = result.getCount();
                     result.setCount(i + j);
                     lowerInputs(recipe);
@@ -147,11 +148,11 @@ public class GunWorkbenchBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private void lowerInputs(PortalGunWorkbenchRecipe recipe) {
-        List<ItemStack> stacks = recipe.getInputs();
-        for (ItemStack stack : stacks) {
+        List<PGIngredient> ingredients = recipe.getInputs();
+        for (PGIngredient ingredient : ingredients) {
             for (ItemStack invStack : this.ingredients()) {
-                if (ItemStack.isSameItemSameTags(stack, invStack)) {
-                    int i = stack.getCount();
+                if (ingredient.test(invStack)) {
+                    int i = ingredient.count();
                     int j = invStack.getCount();
                     int result = Math.max(j - i, 0);
                     invStack.setCount(result);

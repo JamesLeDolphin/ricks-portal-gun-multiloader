@@ -26,7 +26,6 @@ public class PGEmiPlugin implements EmiPlugin {
 
         RecipeManager manager = registry.getRecipeManager();
 
-        // Use vanilla's concept of your recipes and pass them to your EmiRecipe representation
         for (PortalGunWorkbenchRecipe recipe : manager.getAllRecipesFor(PGRecipeTypes.WORKBENCH_TYPE)) {
             registry.addRecipe(new PGEmiRecipe(recipe));
         }

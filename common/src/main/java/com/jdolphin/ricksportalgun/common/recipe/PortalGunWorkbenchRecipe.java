@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.jdolphin.ricksportalgun.common.blockentity.GunWorkbenchBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGRecipeSerializers;
 import com.jdolphin.ricksportalgun.common.init.PGRecipeTypes;
+import com.jdolphin.ricksportalgun.common.util.PGIngredient;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -26,11 +26,11 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class PortalGunWorkbenchRecipe implements Recipe<Container> {
-    private final List<ItemStack> items;
+    private final List<PGIngredient> items;
     final ItemStack result;
     private final ResourceLocation id;
 
-    public PortalGunWorkbenchRecipe(List<ItemStack> itemStacks, ItemStack result, ResourceLocation id) {
+    public PortalGunWorkbenchRecipe(List<PGIngredient> itemStacks, ItemStack result, ResourceLocation id) {
         this.items = itemStacks;
         this.result = result;
         this.id = id;
@@ -40,7 +40,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
         return result;
     }
 
-    public List<ItemStack> getInputs() {
+    public List<PGIngredient> getInputs() {
         return this.items;
     }
 
@@ -52,13 +52,8 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
             if (count == this.items.size()) {
                 for (int i = 0; i < this.items.size(); i++) {
                     ItemStack stack = ingredients.get(i);
-                    ItemStack ingredient = this.items.get(i);
-                    if (stack.getCount() < ingredient.getCount()) {
-                        return false;
-                    }
-                    if (stack.getItem() == ingredient.getItem()) {
-                        if (PotionUtils.getPotion(ingredient) != Potions.EMPTY && PotionUtils.getPotion(stack) == Potions.EMPTY) return false;
-                    } else {
+                    PGIngredient ingredient = this.items.get(i);
+                    if (!ingredient.test(stack)) {
                         return false;
                     }
                 }
@@ -105,10 +100,10 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
         @Override
         public PortalGunWorkbenchRecipe fromJson(ResourceLocation resourceLocation, JsonObject json) {
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-            NonNullList<ItemStack> inputs = NonNullList.withSize(ingredients.size(), ItemStack.EMPTY);
+            NonNullList<PGIngredient> inputs = NonNullList.withSize(ingredients.size(), PGIngredient.EMPTY);
 
             for (int i = 0; i < ingredients.size(); i++) {
-                inputs.set(i, itemStackFromJson(ingredients.get(i).getAsJsonObject()));
+                inputs.set(i, PGIngredient.fromJson(ingredients.get(i).getAsJsonObject()));
             }
 
             ItemStack output = itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
@@ -137,9 +132,9 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
 
         @Override
         public PortalGunWorkbenchRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
-            NonNullList<ItemStack> inputs = NonNullList.withSize(buf.readVarInt(), ItemStack.EMPTY);
+            NonNullList<PGIngredient> inputs = NonNullList.withSize(buf.readVarInt(), PGIngredient.EMPTY);
 
-            inputs.replaceAll(ignored -> buf.readItem());
+            inputs.replaceAll(ignored -> PGIngredient.fromNetwork(buf));
 
             ItemStack output = buf.readItem();
             return new PortalGunWorkbenchRecipe(inputs, output, resourceLocation);
@@ -149,7 +144,7 @@ public class PortalGunWorkbenchRecipe implements Recipe<Container> {
         public void toNetwork(FriendlyByteBuf buf, PortalGunWorkbenchRecipe recipe) {
             buf.writeVarInt(recipe.items.size());
 
-            recipe.getInputs().forEach(buf::writeItem);
+            recipe.getInputs().forEach(ingredient -> ingredient.toNetwork(buf));
             buf.writeItem(recipe.getResult());
         }
     }
