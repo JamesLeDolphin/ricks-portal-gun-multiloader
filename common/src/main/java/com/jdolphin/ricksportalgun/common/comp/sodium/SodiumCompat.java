@@ -25,7 +25,6 @@ package com.jdolphin.ricksportalgun.common.comp.sodium;
 
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.caffeinemc.mods.sodium.api.texture.SpriteUtil;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import javax.annotation.Nullable;
@@ -57,7 +56,7 @@ public class SodiumCompat {
     public static void markSpriteActive(TextureAtlasSprite sprite) {
         if (sprite != null && METHOD_HANDLE != null) {
             try {
-                METHOD_HANDLE.invokeExact(SpriteUtil.INSTANCE, sprite);
+                METHOD_HANDLE.invokeExact(net.caffeinemc.mods.sodium.api.texture.SpriteUtil.INSTANCE, sprite);
             } catch (Throwable e) {
                 throw new RuntimeException("Failed to invoke SpriteUtil#markSpriteActive", e);
             }

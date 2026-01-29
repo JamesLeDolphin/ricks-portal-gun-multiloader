@@ -5,8 +5,10 @@ import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -19,9 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
+public class SpellPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
-    public DefaultPortalTypeRenderer(PortalType type) {
+    public SpellPortalTypeRenderer(PortalType type) {
         super(type);
     }
 
@@ -29,20 +31,19 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
     public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         stack.pushPose();
         float width = getWidth(entity);
-        float height = entity.getSize() > 2 ? getWidth(entity) : 1;
 
         Matrix4f matrix4f = stack.last().pose();
         Matrix3f matrix3f = stack.last().normal();
-        VertexConsumer consumer = source.getBuffer(RenderType.entitySmoothCutout(getTextureLocation(entity)));
-
-        GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, -height, height, 0.01f, 0.01f,
+        VertexConsumer consumer = source.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+        stack.mulPose(Axis.ZN.rotationDegrees((entity.tickCount % 360)));
+        GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, -width, width, 0.01f, 0.01f,
                 red, green, blue, 1,
-                0, 0, 0.5f, 1,
+                0, 0, 1, 1,
                 OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
                 0, 1, 0);
-        GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, height, -height, -0.01f, -0.01f,
+        GuiHelper.renderVertexes(matrix4f, matrix3f, consumer, -width, width, width, -width, -0.01f, -0.01f,
                 red, green, blue, 1,
-                0, 0, 0.5f, 1,
+                0, 0, 1, 1,
                 OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
                 0, -1, 0);
 
@@ -50,12 +51,7 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
     }
 
     public ResourceLocation getTextureLocation(PortalEntity entity) {
-        int frame = (entity.tickCount / 4) % 8;
-        return getTextureLocation(frame);
-    }
-
-    public ResourceLocation getTextureLocation(int frame) {
-        return PGHelper.id("textures/entity/default_portal/portal_" + frame + ".png");
+        return PGHelper.id("textures/entity/spell.png");
     }
 
     @Override
@@ -67,7 +63,9 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
         Player player = Minecraft.getInstance().player;
 
         graphics.setColor(r, g, b, 1);
-        graphics.blit(getTextureLocation((player.tickCount / 4) % 8), x, y, 0, 0, width * 2, height, width * 2, height);
+        RenderSystem.enableBlend();
+        graphics.blit(getTextureLocation(null), x, y, 0, 0, width * 2, height, width * 2, height);
+        RenderSystem.disableBlend();
         graphics.setColor(1, 1, 1, 1);
     }
 }

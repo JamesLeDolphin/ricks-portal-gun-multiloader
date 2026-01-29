@@ -6,13 +6,13 @@ import static com.jdolphin.ricksportalgun.common.meeseeks.util.CommandDispatcher
 
 public class HelpCommand {
 
-    public static void register(CommandNode node) {
-        node.addLiteral(literal("how")
+    public static CommandNode register() {
+        return literal("how")
                 .addLiteral(literal("to")
                         .addLiteral(literal("refuel")
                                 .setArgumentChild(literal("portal gun?")
                                         .setExecutor((meeseeks, arguments) -> {
                                             System.out.println(arguments);
-                                        })))));
+                                        }))));
     }
 }
