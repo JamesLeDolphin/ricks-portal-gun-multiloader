@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -129,9 +130,13 @@ public class ColourPickingScreen extends AbstractBaseScreen {
         graphics.blit(BG_LOCATION, this.width / 2 - 158, this.height / 2 - 115, 0, 0, 330, 224, 330, 224);
         RenderSystem.disableBlend();
         int x = 64, y = 82, multiplier = size.getValueInt();
+        float r = FastColor.ARGB32.red(getColor()) / 255f;
+        float g = FastColor.ARGB32.green(getColor()) / 255f;
+        float b = FastColor.ARGB32.blue(getColor()) / 255f;
+        RenderSystem.setShaderColor(r, g, b, 1);
         graphics.blit(PortalEntityRenderer.PORTAL_TEXTURE, this.width / 2 + 10,
-                this.height / 2 - 64, 0, 0, x * multiplier, y, x * multiplier, y, this.getColor());
-
+                this.height / 2 - 64, 0, 0, 0, x * multiplier, y, x * multiplier, y);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         Style guiStyle = GuiHelper.getStyle(pMouseX, pMouseY);
         if (guiStyle != null && guiStyle.getHoverEvent() != null) {
             this.renderWithTooltip(graphics, pMouseX, pMouseY, pPartialTick);
