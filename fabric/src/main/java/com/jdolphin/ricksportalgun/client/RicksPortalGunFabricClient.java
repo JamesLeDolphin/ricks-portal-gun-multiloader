@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.render.MeeseeksEntityRenderer;
 import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
@@ -47,6 +48,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
 
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
+        EntityRendererRegistry.register(PGEntities.MEESEEKS, MeeseeksEntityRenderer::new);
         if (PGHelper.hasImmersivePortals()) {
             EntityRendererRegistry.register(PortalHolder.TYPE, qouteall.imm_ptl.core.render.PortalEntityRenderer::new);
         }
@@ -74,6 +76,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
                 ClientPacketHandler.openLocatorScreen(packet.playerList(), packet.biomeList(), packet.structureList()));
 
         registerGlobalReceiver(CBOpenSecurityGuiPacket.getID(), CBOpenSecurityGuiPacket::decode, packet -> ClientPacketHandler.openSecurityScreen(packet.strings()));
+        registerGlobalReceiver(CBOpenMeeseeksGuiPacket.getID(), CBOpenMeeseeksGuiPacket::decode, packet -> ClientPacketHandler.openMeeseeksScreen(packet.mobId()));
     }
 
     private void initEvents() {

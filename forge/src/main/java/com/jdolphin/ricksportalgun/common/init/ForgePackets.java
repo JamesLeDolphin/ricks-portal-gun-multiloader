@@ -150,6 +150,12 @@ public class ForgePackets {
                 .consumerMainThread((packet, context) -> {
                     if (isClientSide(context)) ClientPacketHandler.openSecurityScreen(packet.strings());
                 }).add();
+        INSTANCE.messageBuilder(CBOpenMeeseeksGuiPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CBOpenMeeseeksGuiPacket::encode)
+                .decoder(CBOpenMeeseeksGuiPacket::decode)
+                .consumerMainThread((packet, context) -> {
+                    if (isClientSide(context)) ClientPacketHandler.openMeeseeksScreen(packet.mobId());
+                }).add();
     }
 
     private static boolean isClientSide(Supplier<NetworkEvent.Context> supplier) {

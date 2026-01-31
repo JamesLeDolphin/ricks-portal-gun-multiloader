@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
+import com.jdolphin.ricksportalgun.client.render.MeeseeksEntityRenderer;
 import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
@@ -83,6 +84,7 @@ public class ForgeClientMain {
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(PGEntities.PORTAL, PortalEntityRenderer::new);
             event.registerEntityRenderer(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
+            event.registerEntityRenderer(PGEntities.MEESEEKS, MeeseeksEntityRenderer::new);
         }
     }
 }

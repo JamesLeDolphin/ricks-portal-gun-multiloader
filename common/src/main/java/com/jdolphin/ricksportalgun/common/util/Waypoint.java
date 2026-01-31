@@ -131,7 +131,7 @@ public class Waypoint implements Comparable<Waypoint> {
 
     static {
         CODEC = RecordCodecBuilder.create((instance) ->
-                instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(Waypoint::getBlockPos),
+                instance.group(BlockPos.CODEC.fieldOf("mobId").forGetter(Waypoint::getBlockPos),
                                 Codec.STRING.fieldOf("dimension").forGetter(Waypoint::getDimension),
                                 Codec.STRING.fieldOf("name").forGetter(Waypoint::getName))
                         .apply(instance, Waypoint::new));

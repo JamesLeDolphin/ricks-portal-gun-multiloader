@@ -2,19 +2,20 @@ package com.jdolphin.ricksportalgun.common.packet.clientbound;
 
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public record CBOpenBarrierGuiPacket(BlockPos pos) implements PGPayload {
+import java.util.UUID;
 
-    public static CBOpenBarrierGuiPacket decode(FriendlyByteBuf buf) {
-        return new CBOpenBarrierGuiPacket(buf.readBlockPos());
+public record CBOpenMeeseeksGuiPacket(UUID mobId) implements PGPayload {
+
+    public static CBOpenMeeseeksGuiPacket decode(FriendlyByteBuf buf) {
+        return new CBOpenMeeseeksGuiPacket(buf.readUUID());
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeBlockPos(pos);
+        buf.writeUUID(mobId);
     }
 
     @Override
@@ -23,6 +24,6 @@ public record CBOpenBarrierGuiPacket(BlockPos pos) implements PGPayload {
     }
 
     public static ResourceLocation getID() {
-        return PGHelper.id("open_barrier");
+        return PGHelper.id("open_meeseeks_gui");
     }
 }

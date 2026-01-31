@@ -21,6 +21,11 @@ public class PGTextButton extends Button {
         this.underlinedMessage = ComponentUtils.mergeStyles(message.copy(), Style.EMPTY.withUnderlined(true));
     }
 
+    @Override
+    public void onPress() {
+        super.onPress();
+    }
+
     public void setTextColour(int textColour) {
         this.textColour = textColour;
     }

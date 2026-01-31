@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.entity.MeeseeksEntity;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
@@ -14,6 +15,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,6 +45,9 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
         FabricPackets.registerC2SPackets();
         PGMeeseeksCommands.init();
+
+        FabricDefaultAttributeRegistry.register(PGEntities.MEESEEKS, MeeseeksEntity.createMobAttributes());
+
         if (PGHelper.hasImmersivePortals()) {
             Registry.register(BuiltInRegistries.ENTITY_TYPE, PGHelper.id("seethrough_portal"), PortalHolder.TYPE);
         }
