@@ -75,20 +75,15 @@ public class PortalEntityRenderer extends EntityRenderer<PortalEntity> {
             float yRot = 0;
             float zRot = 0;
 
-            float width = (entity.getSize() / 3) * 1.5f;
-            float height = entity.getSize() > 2 ? width : 1;
-
-
             if (direction.getAxis().isVertical()) {
+
                 if (axis.equals(Direction.Axis.Z)) {
-                    stack.scale(entity.getSize(), 1, height);
                     xRot = 90;
                     yRot = 180;
                     zRot = 180;
                     stack.translate(0, 1.1, 0);
                 }
                 if (axis.equals(Direction.Axis.X)) {
-                    stack.scale(height, 1, entity.getSize());
                     xRot = 0;
                     yRot = 270;
                     zRot = 90;

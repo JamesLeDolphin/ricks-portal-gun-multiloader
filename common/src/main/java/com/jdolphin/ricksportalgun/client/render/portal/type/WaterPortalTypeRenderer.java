@@ -54,7 +54,7 @@ public class WaterPortalTypeRenderer extends AbstractPortalTypeRenderer {
                 SodiumCompat.markSpriteActive(sprite);
             }
             stack.pushPose();
-            VertexConsumer consumer1 = source.getBuffer(RenderType.entityTranslucentEmissive(sprite.atlasLocation()));
+            VertexConsumer consumer1 = source.getBuffer(RenderType.entityTranslucent(sprite.atlasLocation()));
             float width = (entity.getSize() / 3) * 1.5f;
             float height = entity.getSize() > 2 ? width : 1;
 

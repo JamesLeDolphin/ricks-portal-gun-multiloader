@@ -17,6 +17,7 @@ public class PGPortalTypeRenderers {
         registerPortalTypeRenderer(PGPortalTypes.WATER, WaterPortalTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.STARS, StarsPortalTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.SPELL, SpellPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.PENTAGRAM, PentagramPortalTypeRenderer::new);
     }
 
     private static void registerPortalTypeRenderer(PortalType type, Function<PortalType, AbstractPortalTypeRenderer> rendererFunction) {

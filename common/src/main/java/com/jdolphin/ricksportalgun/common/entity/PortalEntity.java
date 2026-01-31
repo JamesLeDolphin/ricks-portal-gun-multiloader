@@ -218,8 +218,10 @@ public class PortalEntity extends Entity {
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
         this.entityData.set(TYPE, tag.getString("PortalType"));
-        String shapeStr = tag.getString("Shape");
-        setShape(PGPortalShapes.SHAPES.get(new ResourceLocation(shapeStr)));
+        if (tag.contains("Shape")) {
+            String shapeStr = tag.getString("Shape");
+            setShape(PGPortalShapes.SHAPES.get(new ResourceLocation(shapeStr)));
+        }
     }
 
     @Override

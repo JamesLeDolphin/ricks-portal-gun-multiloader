@@ -17,6 +17,7 @@ public class PGPortalTypes {
     public static final PortalType WATER = register("water", PortalType::new);
     public static final PortalType STARS = register("stars", PortalType::new);
     public static final PortalType SPELL = register("spell", TypeWithoutShape::new);
+    public static final PortalType PENTAGRAM = register("pentagram", TypeWithoutShape::new);
 
     public static PortalType get(ResourceLocation rl) {
         return TYPES.get(rl);
