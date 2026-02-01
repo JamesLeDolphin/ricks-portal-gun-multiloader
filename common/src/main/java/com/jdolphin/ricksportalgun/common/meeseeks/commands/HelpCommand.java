@@ -22,6 +22,9 @@ public class HelpCommand extends LiteralCommand {
 
         IntArgumentCommand argument = new IntArgumentCommand("<int>");
         BoolArgumentCommand bool = new BoolArgumentCommand("<bool>");
+
+        bool.setResult(new MeeseeksCommandResult((meeseeks, player) ->
+                meeseeks.sayToPlayer(player, String.format("%s and %s", argument.getValue(), bool.getValue()))));
         argument.addArgument(bool);
         this.addArgument(argument);
 

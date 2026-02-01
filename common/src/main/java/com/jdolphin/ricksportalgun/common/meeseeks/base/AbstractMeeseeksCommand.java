@@ -41,7 +41,7 @@ public abstract class AbstractMeeseeksCommand {
     }
 
     public boolean completesCommand() {
-        return children.isEmpty() || result.isPresent();
+        return children.isEmpty() && result.isPresent();
     }
 
     public String getName() {

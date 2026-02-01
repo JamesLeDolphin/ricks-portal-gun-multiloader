@@ -122,6 +122,17 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
             tickables.add(() -> {
                 if (isLastSelectedAnArgument()) {
                     btn.active = !this.input.getValue().isEmpty();
+
+                    if (input.active && !input.getValue().isEmpty()) {
+                        AbstractArgumentCommand<?> argument = (AbstractArgumentCommand<?>) getLastSelected();
+                        String txt = input.getValue();
+                        var fromString = argument.fromString(txt);
+                        btn.active = fromString != null;
+                        doneButton.active = fromString != null;
+                        if (fromString == null) {
+                            input.setTextColor(Color.RED.getRGB());
+                        } else input.setTextColor(Color.WHITE.getRGB());
+                    }
                 }
             });
 

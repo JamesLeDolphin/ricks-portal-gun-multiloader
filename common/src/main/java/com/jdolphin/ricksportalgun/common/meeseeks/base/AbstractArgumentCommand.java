@@ -9,7 +9,13 @@ public abstract class AbstractArgumentCommand<T> extends AbstractMeeseeksCommand
         this.argumentClass = argumentClass;
     }
 
+    public Class<T> getArgumentClass() {
+        return argumentClass;
+    }
+
     public abstract T fromString(String string);
+
+    public abstract boolean isValid(String s);
 
     public void setValue(String value) {
         this.value = value;

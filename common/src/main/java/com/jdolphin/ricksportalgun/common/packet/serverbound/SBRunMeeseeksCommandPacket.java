@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.entity.MeeseeksEntity;
 import com.jdolphin.ricksportalgun.common.init.PGMeeseeksCommands;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractArgumentCommand;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksCommand;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
@@ -11,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,40 +37,60 @@ public record SBRunMeeseeksCommandPacket(UUID uuid, String cmd) implements PGSer
                         AbstractMeeseeksCommand command = optional.get();
                         List<String> args = chopped.subList(1, chopped.size());
 
-                        int depth = command.getChildDepth();
-                        System.out.printf("%s, %s, %s%n", command.getName(), depth, args.size());
+
 
                         for (AbstractMeeseeksCommand child : command.getChildren()) {
+                            int depth = child.getChildDepth();
+                            int argSize = args.size() - 1;
 
-                            if (depth == args.size()) {
-                                for (int i = 0; i < depth; i++) {
+                            //if (depth != argSize) continue;
+                            visit(child, args, 0, meeseeks, player);
 
-                                }
-                                if (child.getName().equals(chopped.get(1))) {
-                                    if (child.completesCommand()) {
-                                        child.getResult().ifPresent(result -> result.runCommand(meeseeks, player));
-                                    }
-                                }
-                            }
                         }
                     }
 
-            } else {
-                System.out.println("Smth went wrong");
             }
         });
     }
 
-    private int visit(AbstractMeeseeksCommand command, int i) {
+    private boolean visit(AbstractMeeseeksCommand command, List<String> args, int index, MeeseeksEntity meeseeks, Player player) {
+        if (index == args.size() - 1) {
+            if (command.completesCommand()) {
+                command.getResult()
+                        .ifPresentOrElse(
+                                r -> r.runCommand(meeseeks, player),
+                                () -> meeseeks.sayToPlayer(player, "A")
+                        );
+                return true;
+            }
+            return false;
+        }
 
-            for (AbstractMeeseeksCommand cmd : command.getChildren()) {
-                if (!command.getChildren().isEmpty()) {
-                System.out.println(cmd.getName() + " " + i);
-                visit(cmd, i++);
+        String nextArg = args.get(index + 1);
+
+        for (AbstractMeeseeksCommand child : command.getChildren()) {
+
+            if (child instanceof AbstractArgumentCommand<?> argumentCommand) {
+                Object parsed = argumentCommand.fromString(nextArg);
+                if (parsed != null &&
+                        argumentCommand.getArgumentClass().isInstance(parsed)) {
+
+                    if (visit(child, args, index + 1, meeseeks, player)) {
+                        return true;
+                    }
+                }
+            } else if (child.getName().equals(nextArg)) {
+                if (visit(child, args, index + 1, meeseeks, player)) {
+                    return true;
+                }
             }
         }
-        return i;
+
+        return false;
     }
+
+
+
 
     public static SBRunMeeseeksCommandPacket decode(FriendlyByteBuf buf) {
         return new SBRunMeeseeksCommandPacket(buf.readUUID(), buf.readUtf());

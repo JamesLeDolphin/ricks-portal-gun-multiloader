@@ -8,6 +8,17 @@ public class IntArgumentCommand extends AbstractArgumentCommand<Integer> {
 
     @Override
     public Integer fromString(String string) {
-        return Integer.parseInt(string);
+        if (isValid(string)) return Math.round(Float.parseFloat(string));
+        return null;
+    }
+
+    @Override
+    public boolean isValid(String s) {
+        try {
+            Float.parseFloat(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

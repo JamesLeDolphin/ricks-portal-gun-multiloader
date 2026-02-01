@@ -1,5 +1,7 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.base;
 
+import java.util.Locale;
+
 public class BoolArgumentCommand extends AbstractArgumentCommand<Boolean> {
 
     public BoolArgumentCommand(String name) {
@@ -8,6 +10,12 @@ public class BoolArgumentCommand extends AbstractArgumentCommand<Boolean> {
 
     @Override
     public Boolean fromString(String string) {
-        return Boolean.parseBoolean(string);
+        if (isValid(string)) return Boolean.parseBoolean(string);
+        return null;
+    }
+
+    @Override
+    public boolean isValid(String string) {
+        return string.toLowerCase(Locale.ROOT).equals("true") || string.toLowerCase(Locale.ROOT).equals("false");
     }
 }

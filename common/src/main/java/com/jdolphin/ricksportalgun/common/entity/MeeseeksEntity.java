@@ -4,6 +4,8 @@ import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenMeeseeksGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,7 +38,10 @@ public class MeeseeksEntity extends PathfinderMob {
     }
 
     public void sayToPlayer(Player player, String msg) {
-        player.displayClientMessage(Component.literal("<Meeseeks> " + msg), false);
+        MutableComponent meeseeks = Component.literal("<").append(this.getDisplayName()).append(">");
+
+
+        player.displayClientMessage(meeseeks.copy().append(" ").withStyle(Style.EMPTY).append(Component.literal(msg)), false);
     }
 
     public void setTaskCompleted() {
