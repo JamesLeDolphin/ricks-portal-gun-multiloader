@@ -1,10 +1,11 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.base;
 
+import java.util.List;
 import java.util.Locale;
 
-public class BoolArgumentCommand extends AbstractArgumentCommand<Boolean> {
+public class BoolArgument extends AbstractMeeseeksArgument<Boolean> {
 
-    public BoolArgumentCommand(String name) {
+    public BoolArgument(String name) {
         super(name, Boolean.class);
     }
 
@@ -17,5 +18,10 @@ public class BoolArgumentCommand extends AbstractArgumentCommand<Boolean> {
     @Override
     public boolean isValid(String string) {
         return string.toLowerCase(Locale.ROOT).equals("true") || string.toLowerCase(Locale.ROOT).equals("false");
+    }
+
+    @Override
+    public List<String> values() {
+        return List.of("true", "false");
     }
 }

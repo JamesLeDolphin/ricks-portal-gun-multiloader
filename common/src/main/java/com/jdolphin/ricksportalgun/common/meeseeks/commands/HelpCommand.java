@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.commands;
 
-import com.jdolphin.ricksportalgun.common.meeseeks.base.BoolArgumentCommand;
-import com.jdolphin.ricksportalgun.common.meeseeks.base.IntArgumentCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.BoolArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.IntArgument;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.LiteralCommand;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.MeeseeksCommandResult;
 
@@ -20,8 +20,14 @@ public class HelpCommand extends LiteralCommand {
         }));
         this.addArgument(cmd);
 
-        IntArgumentCommand argument = new IntArgumentCommand("<int>");
-        BoolArgumentCommand bool = new BoolArgumentCommand("<bool>");
+        this.addArgument(literal("apply upgrades?")
+                .setResult(new MeeseeksCommandResult((meeseeks, player) -> {
+                    meeseeks.sayToPlayer(player, "Your portal device can be upgraded when you open your gun's menu, go to upgrade settings and click the plus sign on the top right corner. Make sure to have the upgrades in your inventory!");
+                    meeseeks.setTaskCompleted();
+        })));
+
+        IntArgument argument = new IntArgument("<int>");
+        BoolArgument bool = new BoolArgument("<bool>");
 
         bool.setResult(new MeeseeksCommandResult((meeseeks, player) ->
                 meeseeks.sayToPlayer(player, String.format("%s and %s", argument.getValue(), bool.getValue()))));

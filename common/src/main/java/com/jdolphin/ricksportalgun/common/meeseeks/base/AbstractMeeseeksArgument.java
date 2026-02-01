@@ -1,10 +1,12 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.base;
 
-public abstract class AbstractArgumentCommand<T> extends AbstractMeeseeksCommand {
+import java.util.List;
+
+public abstract class AbstractMeeseeksArgument<T> extends AbstractMeeseeksCommand {
     protected Class<T> argumentClass;
     protected String value;
 
-    public AbstractArgumentCommand(String name, Class<T> argumentClass) {
+    public AbstractMeeseeksArgument(String name, Class<T> argumentClass) {
         super(name);
         this.argumentClass = argumentClass;
     }
@@ -16,6 +18,8 @@ public abstract class AbstractArgumentCommand<T> extends AbstractMeeseeksCommand
     public abstract T fromString(String string);
 
     public abstract boolean isValid(String s);
+
+    public abstract List<String> values();
 
     public void setValue(String value) {
         this.value = value;

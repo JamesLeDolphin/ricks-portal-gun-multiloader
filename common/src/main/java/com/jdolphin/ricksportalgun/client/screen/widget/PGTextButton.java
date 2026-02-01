@@ -26,6 +26,10 @@ public class PGTextButton extends Button {
         super.onPress();
     }
 
+    public int getTextColour() {
+        return textColour;
+    }
+
     public void setTextColour(int textColour) {
         this.textColour = textColour;
     }

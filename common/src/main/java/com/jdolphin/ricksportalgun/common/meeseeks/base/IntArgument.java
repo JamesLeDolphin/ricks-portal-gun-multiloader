@@ -1,8 +1,10 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.base;
 
-public class IntArgumentCommand extends AbstractArgumentCommand<Integer> {
+import java.util.List;
 
-    public IntArgumentCommand(String name) {
+public class IntArgument extends AbstractMeeseeksArgument<Integer> {
+
+    public IntArgument(String name) {
         super(name, Integer.class);
     }
 
@@ -20,5 +22,10 @@ public class IntArgumentCommand extends AbstractArgumentCommand<Integer> {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    @Override
+    public List<String> values() {
+        return List.of();
     }
 }

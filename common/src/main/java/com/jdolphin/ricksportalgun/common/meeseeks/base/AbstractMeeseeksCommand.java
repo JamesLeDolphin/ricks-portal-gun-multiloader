@@ -18,8 +18,9 @@ public abstract class AbstractMeeseeksCommand {
         return result;
     }
 
-    public void setResult(MeeseeksCommandResult result) {
+    public AbstractMeeseeksCommand setResult(MeeseeksCommandResult result) {
         this.result = Optional.of(result);
+        return this;
     }
 
     public List<AbstractMeeseeksCommand> getChildren() {

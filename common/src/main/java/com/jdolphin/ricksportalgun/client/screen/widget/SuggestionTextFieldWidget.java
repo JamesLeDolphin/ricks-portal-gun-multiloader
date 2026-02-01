@@ -25,7 +25,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     public SuggestionTextFieldWidget(int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
         super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
-        int i = Math.min(suggestions.size(), 3);
+        int i = suggestions.size() > 3 ? 3 : Math.max(2, suggestions.size());
         this.suggestionListWidget = new SuggestionList(Minecraft.getInstance(),
                 width, height * i, x, y + height, 14, this);
     }
@@ -47,8 +47,10 @@ public class SuggestionTextFieldWidget extends EditBox {
         if (!this.isFocused()) {
             this.suggestionListWidget.visible = false;
         } else {
-            this.suggestionListWidget.visible = true;
-            this.suggestionListWidget.render(graphics, mouseX, mouseY, delta);
+            if (!this.suggestions.isEmpty()) {
+                this.suggestionListWidget.visible = true;
+                this.suggestionListWidget.render(graphics, mouseX, mouseY, delta);
+            }
         }
         super.renderWidget(graphics, mouseX, mouseY, delta);
     }
@@ -144,6 +146,7 @@ public class SuggestionTextFieldWidget extends EditBox {
                 int y1 = this.getTop();
                 int x2 = this.getRight();
                 int y2 = this.getBottom();
+
                 graphics.enableScissor(x1, y1, x2, y2);
                 graphics.fill(x1, y1, x2, y2, -805306368);
                 graphics.disableScissor();
