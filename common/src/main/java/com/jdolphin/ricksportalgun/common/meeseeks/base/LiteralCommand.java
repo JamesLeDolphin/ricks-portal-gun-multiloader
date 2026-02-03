@@ -6,7 +6,7 @@ public class LiteralCommand extends AbstractMeeseeksCommand {
         super(name);
     }
 
-    public LiteralCommand literal(String string) {
+    public static LiteralCommand literal(String string) {
         return new LiteralCommand(string);
     }
 }

@@ -36,9 +36,11 @@ public abstract class AbstractMeeseeksCommand {
     }
 
     public AbstractMeeseeksCommand addArgument(AbstractMeeseeksCommand argument) {
-        argument.setParent(this);
-        this.children.add(argument);
-        return argument;
+        if (argument != this) {
+            argument.setParent(this);
+            this.children.add(argument);
+            return argument;
+        } else return null;
     }
 
     public boolean completesCommand() {

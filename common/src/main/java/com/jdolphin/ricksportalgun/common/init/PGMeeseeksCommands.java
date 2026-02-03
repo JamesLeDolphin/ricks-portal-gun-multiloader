@@ -2,7 +2,7 @@ package com.jdolphin.ricksportalgun.common.init;
 
 
 import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksCommand;
-import com.jdolphin.ricksportalgun.common.meeseeks.commands.HelpCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.commands.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +10,16 @@ import java.util.List;
 public class PGMeeseeksCommands {
     public static final List<AbstractMeeseeksCommand> COMMANDS = new ArrayList<>();
 
-    public static AbstractMeeseeksCommand HELP;
+    //TODO Make meeseeks box have in game config for what they're allowed to pick up
 
-    public static void init() {
-        HELP = register(new HelpCommand());
-    }
+    //TODO: Check all command args have results
+    public static AbstractMeeseeksCommand HELP = register(new HelpCommand());
+    public static AbstractMeeseeksCommand MINE = register(new MineCommand());
+    public static AbstractMeeseeksCommand FIND = register(new FindCommand());
+    public static AbstractMeeseeksCommand BUILD = register(new BuildCommand());
+    public static AbstractMeeseeksCommand KILL = register(new KillCommand());
+
+    public static void init() {}
 
     private static AbstractMeeseeksCommand register(AbstractMeeseeksCommand cmd) {
         COMMANDS.add(cmd);
