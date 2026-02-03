@@ -21,11 +21,9 @@ public record PGIngredient(Ingredient ingredient, int count, CompoundTag tag) {
 
             for (String key : tag.getAllKeys()) {
                 if (!stackTag.contains(key)) {
-                    System.out.println(key);
                     return false;
                 }
                 if (!stackTag.get(key).equals(tag.get(key))) {
-                    System.out.println(2);
                     return false;
                 }
             }
@@ -45,7 +43,6 @@ public record PGIngredient(Ingredient ingredient, int count, CompoundTag tag) {
             return new PGIngredient(ingredient, count, nbt);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(json);
         }
         return PGIngredient.EMPTY;
     }

@@ -106,7 +106,6 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
                 BlockPos pos = new BlockPos(x, y, z);
                 SBSetDispenserDestinationPacket packet = new SBSetDispenserDestinationPacket(pos, dim);
                 PGHelper.sendPacketToServer(packet);
-                this.onClose();
             } catch (Exception e) {
                 dimInput.setSuggestion(" §c" + e.getLocalizedMessage());
             }
@@ -132,6 +131,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
     }
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, delta);
         this.renderTooltip(graphics, mouseX, mouseY);
         this.dimInput.render(graphics, mouseX, mouseY, delta);
