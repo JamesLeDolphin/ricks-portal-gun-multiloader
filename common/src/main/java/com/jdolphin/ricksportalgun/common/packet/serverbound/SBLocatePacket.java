@@ -1,5 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.item.ForcefieldItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -57,11 +60,16 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
 
                 ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
                 if (targetPlayer != null) {
-                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer).toString(), targetPlayer.blockPosition().above());
-                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-
-                } else
+                    List<ItemStack> inv = targetPlayer.getInventory().items;
+                    if (!containsForcefield(inv)) {
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer).toString(), targetPlayer.blockPosition().above());
+                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                    } else {
+                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.unreachable", name));
+                    }
+                } else {
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
+                }
             }
             if (value == 2) {
                 if (PGConfigHelper.disableStructureLocating()) {
@@ -87,6 +95,15 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.unknown", name));
             }
         });
+    }
+
+    private boolean containsForcefield(List<ItemStack> stacks) {
+        for (ItemStack stack : stacks) {
+            if (stack.is(PGItems.FORCEFIELD)) {
+                return ForcefieldItem.isEnabled(stack);
+            }
+        }
+        return false;
     }
 
     @Override

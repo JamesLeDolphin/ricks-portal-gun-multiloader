@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.event.PGClientEventHandler;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.client.init.*;
+import com.jdolphin.ricksportalgun.client.render.PlayerForcefieldLayer;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
@@ -18,10 +19,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.function.Consumer;
@@ -55,6 +59,12 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         initClientPackets();
         ClientTickEvents.END_CLIENT_TICK.register(PGClientEventHandler::onClientTick);
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            if (entityType.equals(EntityType.PLAYER)) {
+                registrationHelper.register(new PlayerForcefieldLayer(((PlayerRenderer) entityRenderer)));
+            }
+        });
+
     }
 
     private void initClientPackets() {

@@ -25,6 +25,7 @@
   "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "item.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
   "item.ricksportalgun.data_card": "Data Card",
+  "item.ricksportalgun.pocket_forcefield": "Pocket Forcefield Generator",
 
   "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
   "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
@@ -168,6 +169,8 @@
   "ricksportalgun.g": "G:",
   "ricksportalgun.b": "B:",
   "ricksportalgun.gun_type": "Portal Gun Type: %s",
+  "ricksportalgun.enabled": "Enabled",
+  "ricksportalgun.disabled": "Disabled",
 
   "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
