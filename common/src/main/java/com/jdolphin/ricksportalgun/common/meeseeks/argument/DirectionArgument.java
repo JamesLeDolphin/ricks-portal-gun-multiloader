@@ -1,5 +1,6 @@
-package com.jdolphin.ricksportalgun.common.meeseeks.base;
+package com.jdolphin.ricksportalgun.common.meeseeks.argument;
 
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksArgument;
 import net.minecraft.core.Direction;
 
 import java.util.Arrays;

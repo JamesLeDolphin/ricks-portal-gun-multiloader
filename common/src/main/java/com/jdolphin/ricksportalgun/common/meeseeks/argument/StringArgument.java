@@ -1,4 +1,6 @@
-package com.jdolphin.ricksportalgun.common.meeseeks.base;
+package com.jdolphin.ricksportalgun.common.meeseeks.argument;
+
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksArgument;
 
 import java.util.List;
 

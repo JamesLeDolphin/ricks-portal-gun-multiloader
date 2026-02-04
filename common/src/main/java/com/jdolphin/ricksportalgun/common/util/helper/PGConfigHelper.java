@@ -22,8 +22,8 @@ public class PGConfigHelper {
         return PGServices.PLATFORM.disableStructureLocating();
     }
 
-    public static List<? extends String> getDisabledDimensions() {
-        return PGServices.PLATFORM.getDisabledDimensions();
+    public static List<String> getDisabledDimensions() {
+        return PGServices.PLATFORM.getDisabledDimensions().stream().map(String::valueOf).toList();
     }
 
     public static List<? extends String> getDisabledEntities() {

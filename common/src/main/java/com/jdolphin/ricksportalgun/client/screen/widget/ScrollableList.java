@@ -154,13 +154,13 @@ public abstract class ScrollableList<E extends ScrollableList.Entry<E>> extends 
         return (E)(mouseX >= (double)k && mouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? (Entry)this.children().get(j1) : null);
     }
 
-    public void updateSize(int pWidth, int pHeight, int pY0, int pY1) {
+    public void updateSize(int pWidth, int pHeight, int x1, int pY0, int pY1) {
         this.width = pWidth;
         this.height = pHeight;
         this.y0 = pY0;
         this.y1 = pY1;
-        this.x0 = 0;
-        this.x1 = pWidth;
+        this.x0 = x1;
+        this.x1 = x0 + pWidth;
     }
 
     public void setLeftPos(int pX0) {

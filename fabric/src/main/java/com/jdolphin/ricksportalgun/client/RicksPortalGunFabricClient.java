@@ -1,23 +1,13 @@
 package com.jdolphin.ricksportalgun.client;
 
 import com.jdolphin.ricksportalgun.PGConstants;
+import com.jdolphin.ricksportalgun.client.event.PGClientEventHandler;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
-import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
-import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
-import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
-import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
-import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
-import com.jdolphin.ricksportalgun.client.render.MeeseeksEntityRenderer;
-import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
-import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
+import com.jdolphin.ricksportalgun.client.init.*;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
-import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
-import com.jdolphin.ricksportalgun.common.init.PGTags;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
-import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
-import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -30,11 +20,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.function.Consumer;
@@ -47,24 +34,27 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
 
-        EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
-        EntityRendererRegistry.register(PGEntities.MEESEEKS, MeeseeksEntityRenderer::new);
-        if (PGHelper.hasImmersivePortals()) {
-            EntityRendererRegistry.register(PortalHolder.TYPE, qouteall.imm_ptl.core.render.PortalEntityRenderer::new);
-        }
-        EntityRendererRegistry.register(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
+        PGEntityRenderRegistry.initRenderers();
+        PGEntityRenderRegistry.RENDERERS.forEach(EntityRendererRegistry::register);
+
+        PGEntityRenderRegistry.initLayers();
+        PGEntityRenderRegistry.BODY_LAYERS.forEach((location, supplier) ->
+                EntityModelLayerRegistry.registerModelLayer(location, supplier::get));
+
         PGPortalTypeRenderers.init();
         PGPortalShapeRenderers.init();
+
         PGMenuScreens.ALL.forEach((type, func) -> {
             MenuScreens.ScreenConstructor constructor = func::apply;
             MenuScreens.register(type, constructor);
         });
+
         ColorProviderRegistry.ITEM.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
         KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
+
         initClientPackets();
-        initEvents();
+        ClientTickEvents.END_CLIENT_TICK.register(PGClientEventHandler::onClientTick);
     }
 
     private void initClientPackets() {
@@ -77,19 +67,6 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         registerGlobalReceiver(CBOpenSecurityGuiPacket.getID(), CBOpenSecurityGuiPacket::decode, packet -> ClientPacketHandler.openSecurityScreen(packet.strings()));
         registerGlobalReceiver(CBOpenMeeseeksGuiPacket.getID(), CBOpenMeeseeksGuiPacket::decode, packet -> ClientPacketHandler.openMeeseeksScreen(packet.mobId()));
-    }
-
-    private void initEvents() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            Player player = client.player;
-            if (player != null) {
-                ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-                if (PGKeyBinds.KEY_PORTAL_MENU.isDown() && client.player != null && stack.is(PGTags.Items.PORTAL_GUNS)) {
-                    SBOpenCoordGuiPacket packet = new SBOpenCoordGuiPacket();
-                    PGHelper.sendPacketToServer(packet);
-                }
-            }
-        });
     }
 
     private static  <P extends PGPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func, Consumer<P> consumer) {

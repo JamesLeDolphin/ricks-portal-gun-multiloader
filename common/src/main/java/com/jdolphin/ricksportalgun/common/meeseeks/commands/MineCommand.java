@@ -1,6 +1,11 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.commands;
 
-import com.jdolphin.ricksportalgun.common.meeseeks.base.*;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.BlockArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.DirectionArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.IntArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.LiteralCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.MeeseeksCommandResult;
 
 public class MineCommand extends AbstractMeeseeksCommand {
 

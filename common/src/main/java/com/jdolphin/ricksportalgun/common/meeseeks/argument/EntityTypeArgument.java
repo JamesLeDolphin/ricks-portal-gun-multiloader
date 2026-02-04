@@ -1,5 +1,6 @@
-package com.jdolphin.ricksportalgun.common.meeseeks.base;
+package com.jdolphin.ricksportalgun.common.meeseeks.argument;
 
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -42,7 +43,8 @@ public class EntityTypeArgument extends AbstractMeeseeksArgument<EntityType> {
 
     @Override
     public List<String> values() {
-        return BuiltInRegistries.ENTITY_TYPE.stream().filter(type -> !excluded.contains(type))
+        return BuiltInRegistries.ENTITY_TYPE.stream().filter(type ->
+                        !excluded.contains(type))
                 .map(type -> type.getDescription().getString()).toList();
     }
 }

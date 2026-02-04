@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.client.screen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGTextButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.init.PGMeeseeksCommands;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.PlayerArgument;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksArgument;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksCommand;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBRunMeeseeksCommandPacket;
@@ -54,6 +55,9 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
                 if (command instanceof AbstractMeeseeksArgument<?> arg) {
                     input.setValue(arg.getValue());
                     input.setSuggestions(arg.values());
+                    if (arg instanceof PlayerArgument) {
+                        input.setSuggestions(minecraft.getConnection().getListedOnlinePlayers().stream().map(playerInfo -> playerInfo.getTabListDisplayName().getString()).toList());
+                    }
                 } else input.setSuggestions(List.of());
             }
 
@@ -155,16 +159,22 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
 
             if (input.visible) {
                 AbstractMeeseeksArgument<?> arg = (AbstractMeeseeksArgument<?>) cmd;
-                if (arg.values().isEmpty()) {
-                    input.getSuggestionList().visible = false;
-                }
+                if (!(arg instanceof PlayerArgument)) {
+                    if (arg.values().isEmpty()) {
+                        input.getSuggestionList().visible = false;
+                    }
                 boolean sameList = !(new HashSet<>(input.getSuggestions()).containsAll(arg.values()));
                 if (!arg.values().isEmpty() && sameList) {
                     input.setSuggestions(arg.values());
                     input.getSuggestionList().visible = true;
                 }
-            }
-
+            } else {
+                    if (arg.values().isEmpty()) {
+                        List<String> players = minecraft.getConnection().getListedOnlinePlayers().stream().map(playerInfo -> playerInfo.getProfile().getName()).toList();
+                        input.setSuggestions(players);
+                    }
+                }
+        }
             boolean isFinalArg = cmd.completesCommand();
             this.doneButton.visible = isFinalArg;
             this.doneButton.active = isFinalArg;
@@ -201,9 +211,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
         Optional<GuiEventListener> optional = this.getChildAt(mouseX, mouseY);
         if (optional.isEmpty()) {
             input.setFocused(false);
-        } else if (optional.get().equals(input)) {
-            input.setFocused(true);
-            System.out.println("A");
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

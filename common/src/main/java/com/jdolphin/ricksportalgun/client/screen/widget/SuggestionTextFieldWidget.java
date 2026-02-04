@@ -10,6 +10,7 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 
 import java.awt.*;
@@ -25,7 +26,7 @@ public class SuggestionTextFieldWidget extends EditBox {
     public SuggestionTextFieldWidget(int x, int y, int width, int height, MutableComponent text, List<String> suggestions) {
         super(Minecraft.getInstance().font, x, y, width, height, text);
         this.suggestions = suggestions;
-        int i = suggestions.size() > 3 ? 3 : Math.max(2, suggestions.size());
+        int i = Mth.clamp(suggestions.size(), 1, 3);
         this.suggestionListWidget = new SuggestionList(Minecraft.getInstance(),
                 width, height * i, x, y + height, 14, this);
     }
@@ -58,8 +59,9 @@ public class SuggestionTextFieldWidget extends EditBox {
     public void update() {
         List<String> suggestions = this.sortSuggestions(this.suggestions);
         this.suggestionListWidget.setSuggestions(suggestions);
-        //this.suggestionListWidget.setScrollAmount(0);
-        this.suggestionListWidget.height = this.height * Math.min(3, suggestions.size());
+        int i = Mth.clamp(suggestions.size(), 1, 3);
+        int y = this.getY() + this.getHeight();
+        this.suggestionListWidget.updateSize(this.width, this.height * i, this.getX(), y, y + height * i);
     }
 
     private List<String> sortSuggestions(List<String> suggestions) {
@@ -91,8 +93,10 @@ public class SuggestionTextFieldWidget extends EditBox {
         } else {
             int i = 0;
 
-            for (Matcher matcher = Pattern.compile("(\\s+)").matcher(input); matcher.find(); i = matcher.end()) {}
-
+            Matcher matcher = Pattern.compile("(\\s+)").matcher(input);
+            while (matcher.find()) {
+                i = matcher.end();
+            }
             return i;
         }
     }
@@ -191,7 +195,7 @@ public class SuggestionTextFieldWidget extends EditBox {
             @Override
             public void render(GuiGraphics context, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 SuggestionList wpList = this.list;
-                if (top > wpList.headerHeight ) {
+                if (top > wpList.headerHeight) {
                     this.button.setX(wpList.getLeft() + 2);
                     this.button.setY(top);
                     this.button.setMessage(Component.literal(this.string));

@@ -54,17 +54,18 @@ public class LevelHelper {
         return PGHelper.id("blender").toString().equals(s);
     }
 
-    public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels, List<String> list) {
+    public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels, List<String> blackList) {
+        List<String> dims = new ArrayList<>();
         levels.forEach(world -> {
             ResourceLocation worldKey = world.dimension().location();
             String s = worldKey.toString();
-            if (!s.isEmpty() && !list.contains(s)) list.add(s);
+            if (!s.isEmpty() && !dims.contains(s) && !blackList.contains(s)) dims.add(s);
         });
-        return list;
+        return dims;
     }
 
     public static List<String> getDimensionsAsString(Iterable<ServerLevel> levels) {
-        return getDimensionsAsString(levels, new ArrayList<>());
+        return getDimensionsAsString(levels, List.of());
     }
 
     public static List<BlockEntity> getBlockEntitiesInChunks(ServerLevel level, ChunkPos pos, int radius) {

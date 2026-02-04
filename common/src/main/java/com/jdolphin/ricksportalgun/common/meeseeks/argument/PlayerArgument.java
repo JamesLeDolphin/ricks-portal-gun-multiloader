@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.meeseeks.base;
+package com.jdolphin.ricksportalgun.common.meeseeks.argument;
 
 public class PlayerArgument extends StringArgument {
 

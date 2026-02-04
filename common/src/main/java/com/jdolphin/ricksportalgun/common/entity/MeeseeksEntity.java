@@ -40,7 +40,6 @@ public class MeeseeksEntity extends PathfinderMob {
     public void sayToPlayer(Player player, String msg) {
         MutableComponent meeseeks = Component.literal("<").append(this.getDisplayName()).append(">");
 
-
         player.displayClientMessage(meeseeks.copy().append(" ").withStyle(Style.EMPTY).append(Component.literal(msg)), false);
     }
 

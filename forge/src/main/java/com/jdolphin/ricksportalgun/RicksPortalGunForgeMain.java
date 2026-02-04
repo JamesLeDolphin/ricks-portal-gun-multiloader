@@ -3,18 +3,13 @@ package com.jdolphin.ricksportalgun;
 import com.jdolphin.ricksportalgun.common.comp.computercraft.PGPeripheralProviderForge;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.event.PGCommonEventHandler;
 import com.jdolphin.ricksportalgun.common.init.*;
-import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
-import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,8 +23,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -61,20 +54,11 @@ public class RicksPortalGunForgeMain {
     }
 
     private void onServerStart(ServerStartedEvent event) {
-        PGDamageTypes.init(event.getServer().registryAccess());
+        PGCommonEventHandler.serverStartEvent(event.getServer());
     }
 
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
-        if (player instanceof ServerPlayer serverPlayer) {
-            MinecraftServer server = serverPlayer.getServer();
-            if (server != null) {
-                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
-                if (!dims.contains(PGHelper.id("blender").toString()) && !PGConfigHelper.getDisabledDimensions().contains(PGHelper.id("blender").toString())) dims.add(PGHelper.id("blender").toString());
-                CBSyncDimensionListPacket dimSync = new CBSyncDimensionListPacket(dims);
-                ForgePackets.sendToPlayer(serverPlayer, dimSync);
-            }
-        }
+        PGCommonEventHandler.playerJoinEvent(event.getEntity());
     }
 
     private static <T> void bind(IEventBus bus, ResourceKey<Registry<T>> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

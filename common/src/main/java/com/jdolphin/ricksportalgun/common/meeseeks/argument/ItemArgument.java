@@ -1,5 +1,6 @@
-package com.jdolphin.ricksportalgun.common.meeseeks.base;
+package com.jdolphin.ricksportalgun.common.meeseeks.argument;
 
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

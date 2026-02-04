@@ -1,7 +1,7 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.commands;
 
-import com.jdolphin.ricksportalgun.common.meeseeks.base.BoolArgument;
-import com.jdolphin.ricksportalgun.common.meeseeks.base.IntArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.BoolArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.IntArgument;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.LiteralCommand;
 import com.jdolphin.ricksportalgun.common.meeseeks.base.MeeseeksCommandResult;
 

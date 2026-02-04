@@ -1,6 +1,12 @@
 package com.jdolphin.ricksportalgun.common.meeseeks.commands;
 
-import com.jdolphin.ricksportalgun.common.meeseeks.base.*;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.EntityTypeArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.IntArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.PlayerArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.argument.StringArgument;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.AbstractMeeseeksCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.LiteralCommand;
+import com.jdolphin.ricksportalgun.common.meeseeks.base.MeeseeksCommandResult;
 import net.minecraft.world.entity.EntityType;
 
 public class KillCommand extends AbstractMeeseeksCommand {
@@ -18,13 +24,16 @@ public class KillCommand extends AbstractMeeseeksCommand {
         entity.addArgument(intArgument);
         this.addArgument(entity);
 
-        StringArgument player = new PlayerArgument("<player>");
-        this.addArgument(player);
+        StringArgument playerArg = new PlayerArgument("<player>");
+        this.addArgument(playerArg);
 
         AbstractMeeseeksCommand everyone = new LiteralCommand("everyone.");
         this.addArgument(everyone);
 
         AbstractMeeseeksCommand suicide = new LiteralCommand("yourself.");
+        suicide.setResult(new MeeseeksCommandResult((meeseeks, player) -> {
+            meeseeks.kill();
+        }));
         this.addArgument(suicide);
     }
 }
