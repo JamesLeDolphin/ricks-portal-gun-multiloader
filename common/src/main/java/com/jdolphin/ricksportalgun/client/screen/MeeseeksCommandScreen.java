@@ -10,7 +10,6 @@ import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -24,7 +23,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
     private final List<PGTextButton> buttons = new ArrayList<>();
     private final List<AbstractMeeseeksCommand> selected = new ArrayList<>();
     private Button backspace, doneButton;
-    private FittingMultiLineTextWidget sentenceWidget;
     private SuggestionTextFieldWidget input;
     private final List<Runnable> tickables = new ArrayList<>();
     private final UUID uuid;
@@ -37,7 +35,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
     public void init() {
         super.init();
 
-        reloadSentenceWidget();
         reloadCommandButtons();
 
         this.input = this.addWidget(new SuggestionTextFieldWidget(this.width / 2 - 64, this.height / 2 - 48, 128, 20, Component.empty(), List.of()));
@@ -63,7 +60,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
             selected.remove(index);
 
             reloadCommandButtons();
-            reloadSentenceWidget();
 
         }).bounds(this.width / 2 + 132, this.height / 2 - 64, 40,20).build());
 
@@ -87,13 +83,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
             doneButton.active = doneButton.visible = false;
             input.active = input.visible = false;
         }
-    }
-
-    private void reloadSentenceWidget() {
-        this.removeWidget(sentenceWidget);
-
-        String sentence = getSentenceAsString().replaceAll("\\|", " ");
-        sentenceWidget = this.addRenderableWidget(new FittingMultiLineTextWidget(this.width / 2 - 128, this.height / 2 - 110, 256, 44, Component.literal(sentence), this.font));
     }
 
     private void reloadCommandButtons() {
@@ -126,7 +115,6 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
 
                 input.setValue("");
                 reloadCommandButtons();
-                reloadSentenceWidget();
             }, this.font));
 
             tickables.add(() -> {
@@ -193,6 +181,8 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
             textButton.render(graphics, mouseX, mouseY, partialTick);
             GuiHelper.renderOutline(graphics, textButton, textButton.getTextColour());
         });
+        String sentence = getSentenceAsString().replaceAll("\\|", " ");
+        GuiHelper.drawWordWrap(graphics, this.font, Component.literal(sentence), this.width / 2, this.height / 2 - 96, 256, Color.WHITE.getRGB());
 
         if (input.visible) {
             input.renderWidget(graphics, mouseX, mouseY, partialTick);
@@ -213,6 +203,7 @@ public class MeeseeksCommandScreen extends AbstractBaseScreen {
             input.setFocused(false);
         } else if (optional.get().equals(input)) {
             input.setFocused(true);
+            System.out.println("A");
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
