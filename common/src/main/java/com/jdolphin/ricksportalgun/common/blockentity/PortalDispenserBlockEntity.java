@@ -104,6 +104,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     public void setDestination(String dimension, BlockPos pos) {
         this.desDim = dimension;
         this.desPos = pos;
+        this.setChanged();
     }
 
     public BlockPos getDestinationPos() {

@@ -5,11 +5,11 @@
       "item": "ricksportalgun:circuitboard"
     },
     {
-      "item": "minecraft:redstone",
+      "tag": "c:redstone_dusts",
       "count": 2
     },
     {
-      "item": "minecraft:copper_ingot"
+      "tag": "c:copper_ingots"
     }
   ],
   "result": {

@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.screen.workbench.WorkbenchCraftingScreen;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
 import com.jdolphin.ricksportalgun.common.recipe.PortalGunWorkbenchRecipe;
+import com.jdolphin.ricksportalgun.common.util.PGIngredient;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -63,19 +64,44 @@ public class WorkbenchRecipeCategory implements IRecipeCategory<PortalGunWorkben
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PortalGunWorkbenchRecipe recipe, IFocusGroup focuses) {
-        List<ItemStack> ingredients = recipe.getInputs();
+        List<PGIngredient> ingredients = recipe.getInputs();
         int size = ingredients.size();
+        List<ItemStack> emptyStack = List.of(ItemStack.EMPTY);
         if (!ingredients.isEmpty()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 11, 14).addItemStack(ingredients.get(0).isEmpty() ? ItemStack.EMPTY : ingredients.get(0));
+            PGIngredient ingredient0 = ingredients.get(0);
+            List<ItemStack> stacks0 = List.of(ingredient0.ingredient().getItems());
+            stacks0.forEach(stack -> {
+                stack.setCount(ingredient0.count());
+                stack.setTag(ingredient0.tag());
+            });
+            builder.addSlot(RecipeIngredientRole.INPUT, 11, 14).addItemStacks(ingredients.get(0).ingredient().isEmpty() ? emptyStack : stacks0);
 
             if (size > 1) {
-                builder.addSlot(RecipeIngredientRole.INPUT, 63, 14).addItemStack(ingredients.get(1).isEmpty() ? ItemStack.EMPTY : ingredients.get(1));
+                PGIngredient ingredient = ingredients.get(1);
+                List<ItemStack> stacks1 = List.of(ingredient.ingredient().getItems());
+                stacks1.forEach(stack -> {
+                    stack.setCount(ingredient.count());
+                    stack.setTag(ingredient.tag());
+                });
+                builder.addSlot(RecipeIngredientRole.INPUT, 63, 14).addItemStacks(ingredients.get(1).ingredient().isEmpty() ? emptyStack : stacks1);
             }
             if (size > 2) {
-                builder.addSlot(RecipeIngredientRole.INPUT, 11, 37).addItemStack(ingredients.get(2).isEmpty() ? ItemStack.EMPTY : ingredients.get(2));
+                PGIngredient ingredient = ingredients.get(2);
+                List<ItemStack> stacks2 = List.of(ingredient.ingredient().getItems());
+                stacks2.forEach(stack -> {
+                    stack.setCount(ingredient.count());
+                    stack.setTag(ingredient.tag());
+                });
+                builder.addSlot(RecipeIngredientRole.INPUT, 11, 37).addItemStacks(ingredient.ingredient().isEmpty() ? emptyStack : stacks2);
             }
             if (size > 3) {
-                builder.addSlot(RecipeIngredientRole.INPUT, 63, 37).addItemStack(ingredients.get(3).isEmpty() ? ItemStack.EMPTY : ingredients.get(3));
+                PGIngredient ingredient = ingredients.get(3);
+                List<ItemStack> stacks3 = List.of(ingredient.ingredient().getItems());
+                stacks3.forEach(stack -> {
+                    stack.setCount(ingredient.count());
+                    stack.setTag(ingredient.tag());
+                });
+                builder.addSlot(RecipeIngredientRole.INPUT, 63, 37).addItemStacks(ingredients.get(3).ingredient().isEmpty() ? emptyStack : stacks3);
             }
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 67).addItemStack(recipe.getResult());

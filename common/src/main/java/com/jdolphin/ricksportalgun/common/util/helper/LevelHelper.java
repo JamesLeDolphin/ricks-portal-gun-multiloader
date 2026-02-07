@@ -114,13 +114,12 @@ public class LevelHelper {
         return getLevelDimensionLocation(player.level());
     }
 
-    public static BlockPos getRandomCoord(ServerLevel level, int radius) {
+    public static BlockPos getRandomCoord(BlockPos pos, ServerLevel level, int radius) {
         WorldBorder border = level.getWorldBorder();
         RandomSource rand = level.getRandom();
-        int min = radius < 1000 ? 10 : 100;
-        int xCoord = rand.nextInt(min, radius);
+        int xCoord = Mth.nextInt(rand, pos.getX() - radius, pos.getX() + radius);
         int yCoord = Mth.nextInt(rand,level.getMinBuildHeight() + 1, level.getMaxBuildHeight());
-        int zCoord =  rand.nextInt(min, radius);
+        int zCoord = Mth.nextInt(rand, pos.getZ() - radius, pos.getZ() + radius);
         return border.clampToBounds(xCoord, yCoord, zCoord);
     }
 
@@ -136,7 +135,7 @@ public class LevelHelper {
     public static void randomTP(ServerPlayer player, int radius, boolean interdimensional) {
         ServerLevel level = player.serverLevel();
         ServerLevel dest = getRandomServerLevel(player.server);
-        teleportEntity(player, interdimensional ? dest : level, getSafePos(getRandomCoord(dest, radius), level));
+        teleportEntity(player, interdimensional ? dest : level, getSafePos(getRandomCoord(player.blockPosition(), dest, radius), level));
     }
 
     public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
@@ -146,7 +145,7 @@ public class LevelHelper {
     private static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
         iteration++;
         ChunkAccess chunk = level.getChunk(bPos);
-        level.setChunkForced(chunk.getPos().x, chunk.getPos().z, true);
+        level.getChunkSource().updateChunkForced(chunk.getPos(), true);
 
         int y = bPos.getY();
         int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, bPos.getX(), bPos.getZ());
@@ -168,7 +167,7 @@ public class LevelHelper {
 
         if (!isRandomizerSafe(level, bPos)
                 || y <= level.getMinBuildHeight() + 2 || y >= level.getMaxBuildHeight()) {
-            return iteration <= 100 ? getSafePos(getRandomCoord(level, 25), level, iteration) : bPos;
+            return iteration <= 100 ? getSafePos(getRandomCoord(bPos, level, 25), level, iteration) : bPos;
         }
         level.setChunkForced(chunk.getPos().x, chunk.getPos().z, false);
         return bPos;
@@ -212,6 +211,6 @@ public class LevelHelper {
     }
 
     public static void playSound(Level world, BlockPos pos, SoundEvent sound, SoundSource category) {
-        world.playSound(null, pos, sound, category, 100, 1);
+        world.playSound(null, pos, sound, category, 1, 1);
     }
 }

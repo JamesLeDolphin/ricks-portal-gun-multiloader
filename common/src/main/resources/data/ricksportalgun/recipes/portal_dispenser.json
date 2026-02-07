@@ -6,7 +6,7 @@
       "item": "minecraft:cobblestone"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "tag": "c:redstone_dusts"
     },
     "X": {
       "tag": "ricksportalgun:portal_guns"

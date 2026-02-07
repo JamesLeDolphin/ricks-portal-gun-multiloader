@@ -5,7 +5,7 @@
       "item": "minecraft:iron_block"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "tag": "c:redstone_dusts"
     },
     "C": {
       "item": "ricksportalgun:circuitboard"

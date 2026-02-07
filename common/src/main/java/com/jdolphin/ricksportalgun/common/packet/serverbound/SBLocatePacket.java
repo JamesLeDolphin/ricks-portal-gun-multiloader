@@ -20,6 +20,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +50,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                         BlockPos safePos = LevelHelper.getSafePos(pos, level);
                         PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player).toString(), safePos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-                    } else
-                        PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
+                    } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
                 }
             }
             if (value == 1) {
@@ -62,7 +63,10 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                 if (targetPlayer != null) {
                     List<ItemStack> inv = targetPlayer.getInventory().items;
                     if (!containsForcefield(inv)) {
-                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer).toString(), targetPlayer.blockPosition().above());
+                        Vec3 targetVec = Vec3.directionFromRotation(new Vec2(45.0F, targetPlayer.getYRot() + 180.0F));
+                        BlockPos pos = targetPlayer.blockPosition().above();
+                        BlockPos betterPos = BlockPos.containing(pos.getX() + targetVec.x * 2, pos.getY(), pos.getZ() + targetVec.z * 2);
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer).toString(), betterPos);
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else {
                         PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.unreachable", name));

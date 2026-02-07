@@ -34,10 +34,13 @@ public record SBSetDispenserDestinationPacket(BlockPos pos, String dim) implemen
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             if (player.containerMenu instanceof PortalDispenserMenu menu) {
-                if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
-                    menu.setCoords(pos, dim);
-                } else
+                String dimension = dim;
+                if (PGConfigHelper.getDisabledDimensions().contains(dim)) {
+                    dimension = player.level().dimension().location().toString();
                     PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
+                }
+                menu.setCoords(pos, dimension);
+                player.closeContainer(); //Close the container here, fixes a very rare bug of coords not applying
             }
         });
     }

@@ -76,6 +76,8 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         } else return PGPortalShapes.SQUARE;
     }
 
+
+
     public static PortalType getPortalType(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.PORTAL_TYPE)) {
@@ -417,49 +419,49 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         ListTag listTag = tag.getList(TAG_UPGRADES, 8);
         if (tag.contains(PGNbtKeys.UPGRADE_PLAYER_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.PLAYER_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_PLAYER_LOC);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_WAYPOINT)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.WAYPOINTS.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_WAYPOINT);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_BIOME_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.BIOME_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_BIOME_LOC);
         }
         if (tag.contains(PGNbtKeys.UPGRADE_STRUCTURE_LOC)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.STRUCTURE_LOC.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.UPGRADE_STRUCTURE_LOC);
         }
         if (tag.contains(PGNbtKeys.EXTRA_DIM)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_1.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.EXTRA_DIM);
         }
         if (tag.contains(PGNbtKeys.EXTRA_DIM_2)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.DIM_2.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.EXTRA_DIM_2);
         }
         if (tag.contains(PGNbtKeys.SETTINGS)) {
             StringTag st = StringTag.valueOf(PGUpgradeTypes.SETTINGS.getUpgradeTag());
-            if (listTag.contains(st)) {
+            if (!listTag.contains(st)) {
                 listTag.add(st);
             }
             tag.remove(PGNbtKeys.SETTINGS);
