@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -33,7 +32,6 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -349,9 +347,7 @@ public class PortalEntity extends Entity {
                     for (Entity nearby : entityList) {
                         if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                             if (!shouldHurt) {
-                                Set<RelativeMovement> relativeSet = new HashSet<>();
-                                relativeSet.add(RelativeMovement.Y_ROT);
-                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, relativeSet, nearby.getYRot(), nearby.getXRot());
+                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, Set.of(), nearby.getYRot() - 180, nearby.getXRot());
 
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();

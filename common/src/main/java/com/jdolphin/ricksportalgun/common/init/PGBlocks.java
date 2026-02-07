@@ -1,16 +1,16 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.block.GunWorkbenchBlock;
+import com.jdolphin.ricksportalgun.common.block.PGLiquidBlock;
 import com.jdolphin.ricksportalgun.common.block.PortalDispenserBlock;
 import com.jdolphin.ricksportalgun.common.block.SubetherBarrierBlock;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +29,10 @@ public class PGBlocks {
     public static final Block SUBETHER_BARRIER = register("subether_barrier", SubetherBarrierBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).strength(1.5F, 6.0F));
 
+    public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGFluids.PORTAL_FLUID.getA(),
+            properties),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().lightLevel(value -> 8).liquid().sound(SoundType.EMPTY));
+
     private static Block register(String id, Function<BlockBehaviour.Properties, Block> func, BlockBehaviour.Properties properties) {
         Block block = func.apply(properties);
         ALL.put(PGHelper.id(id), block);
@@ -39,9 +43,5 @@ public class PGBlocks {
         for (var e : ALL.entrySet()) {
             r.accept(e.getValue(), e.getKey());
         }
-    }
-
-    private static ResourceKey<Block> keyOf(String id) {
-        return ResourceKey.create(Registries.BLOCK, PGHelper.id(id));
     }
 }

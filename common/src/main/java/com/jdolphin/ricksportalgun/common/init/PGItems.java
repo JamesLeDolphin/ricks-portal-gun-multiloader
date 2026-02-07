@@ -41,16 +41,19 @@ public class PGItems {
     public static final Item PORTAL_FLUID = registerFluid("portal_fluid");
     public static final Item BOOTLEG_PORTAL_FLUID = registerFluid("bootleg_portal_fluid");
     public static final Item QUANTUM_LEAP_ELIXIR = registerFluid("quantum_leap_elixir");
+    public static final Item PORTAL_FLUID_BUCKET = register("portal_fluid_bucket", PortalFluidBucketItem::new, new Item.Properties(), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
 
     public static final Item DATA_CARD = register("data_card", DataCardItem::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
     public static final Item DISC_TEMPLATE = register("disc_template", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
-    public static final Item ADMIN_KEY = register("admin_key", properties -> new TooltipItem(properties, Component.translatable("tooltip.ricksportalgun.admin_key")), new Item.Properties(), PGCreativeModeTabs.OP_BLOCKS);
+    public static final Item ADMIN_KEY = register("admin_key", properties ->
+            new TooltipItem(properties, Component.translatable("tooltip.ricksportalgun.admin_key")), new Item.Properties(), PGCreativeModeTabs.OP_BLOCKS);
     public static final Item FORCEFIELD = register("pocket_forcefield", ForcefieldItem::new, new Item.Properties().stacksTo(1), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
             new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
-    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) -> new TooltipBlockItem(PGBlocks.SUBETHER_BARRIER, properties,
-                    Component.translatable("tooltip.ricksportalgun.barrier")), new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
+    public static final Item SUBETHER_BARRIER = register("subether_barrier", (properties) ->
+            new TooltipBlockItem(PGBlocks.SUBETHER_BARRIER, properties, Component.translatable("tooltip.ricksportalgun.barrier")),
+            new Item.Properties(), PGCreativeModeTabs.REDSTONE_BLOCKS);
 
     public static final Item PORTAL_GUN_WORKBENCH = register("portal_gun_workbench", (properties) -> new BlockItem(PGBlocks.GUN_WORKBENCH, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
@@ -104,7 +107,7 @@ public class PGItems {
     }
 
     private static Item registerFluid(String name) {
-        return register(name, PortalFluidItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID),
+        return register(name, PortalFluidBottleItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID),
                 PGCreativeModeTabs.FOOD_AND_DRINKS);
     }
 

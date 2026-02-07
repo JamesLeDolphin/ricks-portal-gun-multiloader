@@ -15,6 +15,6 @@ public class PlayerForcefieldLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-        System.out.println("rendererer");
+
     }
 }

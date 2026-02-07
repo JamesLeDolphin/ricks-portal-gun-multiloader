@@ -1,26 +1,23 @@
 package com.jdolphin.ricksportalgun.common.item;
 
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
-import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
-import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-public class PortalFluidItem extends Item {
+import javax.annotation.Nullable;
+import java.awt.*;
 
-    public PortalFluidItem(Properties pProperties) {
+public class PortalFluidBottleItem extends Item implements IPortalFluidItem {
+
+    public PortalFluidBottleItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -39,14 +36,9 @@ public class PortalFluidItem extends Item {
         return stack;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        ItemStack oppositeStack = player.getItemInHand(PGHelper.getOppositeHand(hand));
-
-        if (oppositeStack.is(PGTags.Items.PORTAL_GUNS)) {
-            //Setup for fluid changes
-        }
-        return super.use(level, player, hand);
+    @Override
+    public boolean isBootleg() {
+        return this.equals(PGItems.BOOTLEG_PORTAL_FLUID);
     }
 
     public int getUseDuration(ItemStack pStack) {
@@ -55,5 +47,33 @@ public class PortalFluidItem extends Item {
 
     public UseAnim getUseAnimation(ItemStack pStack) {
         return UseAnim.DRINK;
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return Color.GREEN.getRGB();
+    }
+
+    public boolean isBarVisible(ItemStack stack) {
+        return this.getFluid(stack) < this.getMaxFluid(stack);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+        return Math.round(getFluid(stack) * 13.0F / getMaxFluid(stack));
+    }
+
+    @Override
+    public int getMaxFluid(ItemStack stack) {
+        return 16;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level pLevel, java.util.List<net.minecraft.network.chat.Component> tooltips, TooltipFlag isAdvanced) {
+        tooltips.add(net.minecraft.network.chat.Component.translatable("tooltip.ricksportalgun.fluid", getFluid(stack), getMaxFluid(stack)).withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public @Nullable ItemStack getRemainingStack() {
+        return Items.GLASS_BOTTLE.getDefaultInstance();
     }
 }

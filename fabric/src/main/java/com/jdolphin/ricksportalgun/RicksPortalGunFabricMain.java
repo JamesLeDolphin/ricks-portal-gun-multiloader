@@ -42,6 +42,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGMenuTypes.init(bind(BuiltInRegistries.MENU));
         PGRecipeSerializers.init(bind(BuiltInRegistries.RECIPE_SERIALIZER));
         PGRecipeTypes.init(bind(BuiltInRegistries.RECIPE_TYPE));
+        PGFluids.init(bind(BuiltInRegistries.FLUID));
         FabricPackets.registerC2SPackets();
         PGMeeseeksCommands.init();
 
@@ -70,9 +71,8 @@ public class RicksPortalGunFabricMain implements ModInitializer {
     private void initEvents() {
         ServerLifecycleEvents.SERVER_STARTED.register(PGCommonEventHandler::serverStartEvent);
 
-        ServerPlayConnectionEvents.JOIN.register((listener, sender, server) -> {
-            PGCommonEventHandler.playerJoinEvent(listener.player);
-        });
+        ServerPlayConnectionEvents.JOIN.register((listener, sender, server) ->
+                PGCommonEventHandler.playerJoinEvent(listener.player));
 
         for (Map.Entry<Item, ResourceKey<CreativeModeTab>> entry : PGItems.TABS.entrySet()) {
             ResourceKey<CreativeModeTab> tabKey = entry.getValue();

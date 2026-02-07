@@ -6,7 +6,6 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -36,8 +35,6 @@ public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
     @Override
     public void renderPortal(PortalEntity entity, AbstractPortalShapeRenderer shapeRenderer, float yaw, float partialTick, PoseStack stack, MultiBufferSource source, int packedLight, float red, float green, float blue) {
         stack.pushPose();
-
-        stack.mulPose(Axis.YN.rotationDegrees(entity.getYRot()));
 
         float width = getWidth(entity);
         float height = entity.getSize() > 2 ? getHeight(entity) / 2 : 1;

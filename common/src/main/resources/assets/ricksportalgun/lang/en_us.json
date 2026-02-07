@@ -26,6 +26,7 @@
   "item.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
   "item.ricksportalgun.data_card": "Data Card",
   "item.ricksportalgun.pocket_forcefield": "Pocket Forcefield Generator",
+  "item.ricksportalgun.portal_fluid_bucket": "Portal Fluid Bucket",
 
   "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
   "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
@@ -176,7 +177,7 @@
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
   "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s",
   "tooltip.ricksportalgun.upgrade": "Upgrade: ",
-  "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
+  "tooltip.ricksportalgun.fluid": "Fluid: %s/%s",
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
