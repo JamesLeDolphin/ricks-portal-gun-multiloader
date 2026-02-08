@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.init.PGTags;
+import com.jdolphin.ricksportalgun.common.item.ForcefieldItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
@@ -51,6 +52,15 @@ public final class PGHelper {
         for (P p : arg) {
             consumer.accept(p);
         }
+    }
+
+    public static boolean playerHasActiveForcefield(Player player) {
+        for (ItemStack stack : player.getInventory().items) {
+            if (stack.is(PGItems.FORCEFIELD)) {
+                return ForcefieldItem.isEnabled(stack);
+            }
+        }
+        return false;
     }
 
     public static boolean hasInfiniteDimensions() {

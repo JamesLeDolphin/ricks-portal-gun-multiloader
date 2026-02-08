@@ -1,7 +1,5 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
-import com.jdolphin.ricksportalgun.common.init.PGItems;
-import com.jdolphin.ricksportalgun.common.item.ForcefieldItem;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
@@ -23,7 +21,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -61,8 +58,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
 
                 ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
                 if (targetPlayer != null) {
-                    List<ItemStack> inv = targetPlayer.getInventory().items;
-                    if (!containsForcefield(inv)) {
+                    if (!PGHelper.playerHasActiveForcefield(targetPlayer)) {
                         Vec3 targetVec = Vec3.directionFromRotation(new Vec2(45.0F, targetPlayer.getYRot() + 180.0F));
                         BlockPos pos = targetPlayer.blockPosition().above();
                         BlockPos betterPos = BlockPos.containing(pos.getX() + targetVec.x * 2, pos.getY(), pos.getZ() + targetVec.z * 2);
@@ -101,14 +97,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
         });
     }
 
-    private boolean containsForcefield(List<ItemStack> stacks) {
-        for (ItemStack stack : stacks) {
-            if (stack.is(PGItems.FORCEFIELD)) {
-                return ForcefieldItem.isEnabled(stack);
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public ResourceLocation getId() {

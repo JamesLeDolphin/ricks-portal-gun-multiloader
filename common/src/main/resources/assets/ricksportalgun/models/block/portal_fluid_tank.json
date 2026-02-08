@@ -1,0 +1,8 @@
+{
+  "parent": "ricksportalgun:block/cube_bottom_top_inner_faces",
+  "textures": {
+    "bottom": "ricksportalgun:block/portal_fluid_tank_top",
+    "top": "ricksportalgun:block/portal_fluid_tank_top",
+    "side": "ricksportalgun:block/portal_fluid_tank_side"
+  }
+}

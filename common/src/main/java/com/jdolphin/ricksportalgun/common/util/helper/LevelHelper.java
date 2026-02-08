@@ -30,13 +30,11 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.levelgen.Heightmap;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class LevelHelper {
     public static List<String> DIMENSIONS = new ArrayList<>();
+    public static Map<String, Integer> DIM_TO_INT = new HashMap<>();
     public static List<String> CLIENT_DIMENSIONS = new ArrayList<>();
 
     /**Adds a dimension to the list, does not register a new one**/

@@ -11,7 +11,9 @@ import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -20,6 +22,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -70,6 +74,17 @@ public class RicksPortalGunFabricMain implements ModInitializer {
 
     private void initEvents() {
         ServerLifecycleEvents.SERVER_STARTED.register(PGCommonEventHandler::serverStartEvent);
+        ServerTickEvents.END_SERVER_TICK.register(PGCommonEventHandler::serverTickEvent);
+        ServerLifecycleEvents.SERVER_STOPPING.register(PGCommonEventHandler::mapDimensions);
+
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
+            if (entity instanceof ServerPlayer player) {
+                if (source.is(DamageTypeTags.IS_PROJECTILE)) {
+                    return !PGHelper.playerHasActiveForcefield(player);
+                }
+            }
+            return true;
+        });
 
         ServerPlayConnectionEvents.JOIN.register((listener, sender, server) ->
                 PGCommonEventHandler.playerJoinEvent(listener.player));

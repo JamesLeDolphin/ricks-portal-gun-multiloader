@@ -154,6 +154,7 @@
   "error.ricksportalgun.upgrade.already_applied": "Error 400: Upgrade already installed!",
   "error.ricksportalgun.locating.biome.disabled": "Error 503: Biome locating is disabled on this server!",
   "error.ricksportalgun.locating.structure.disabled": "Error 503: Structure Locating is disabled on this server!",
+  "error.ricksportalgun.locating.player.unreachable": "Error 401: Player %s is unreachable!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",

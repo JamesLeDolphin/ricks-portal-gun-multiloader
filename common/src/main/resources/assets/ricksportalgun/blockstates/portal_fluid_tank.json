@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ricksportalgun:block/portal_fluid_tank"
+    }
+  }
+}

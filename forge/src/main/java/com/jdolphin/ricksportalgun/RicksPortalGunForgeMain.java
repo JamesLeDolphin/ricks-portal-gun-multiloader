@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalFluidStorageBlockEntity;
 import com.jdolphin.ricksportalgun.common.comp.computercraft.PGPeripheralProviderForge;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
@@ -12,11 +13,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -67,6 +71,14 @@ public class RicksPortalGunForgeMain {
                 source.accept((t, rl) -> event.register(registry, rl, () -> t));
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void attachCapabilitiesEvent(AttachCapabilitiesEvent<BlockEntity> event) {
+        BlockEntity be = event.getObject();
+        if (be instanceof PortalFluidStorageBlockEntity storage) {
+            //ForgeCapabilities.FLUID_HANDLER.addListener(cap -> );
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
