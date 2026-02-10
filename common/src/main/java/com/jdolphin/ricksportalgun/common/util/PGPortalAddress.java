@@ -12,6 +12,12 @@ public class PGPortalAddress {
         return encode(packed);
     }
 
+    public static String getAddressHyphened(BlockPos pos, ResourceLocation dim) {
+        long packed = pack(pos.getX(), pos.getZ(), dim);
+        String s = encode(packed);
+        return s.substring(0, 3) + "-" + s.substring(3, 6) + "-" + s.substring(6);
+    }
+
     public static DecodedAddress getLocation(String address) {
         long packed = decode(address);
         return unpack(packed);

@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.block.*;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -28,6 +29,14 @@ public class PGBlocks {
 
     public static final Block PORTAL_FLUID_TANK = register("portal_fluid_tank", PortalFluidStorageBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+
+    public static final Block PORTAL_FRAME = register("portal_frame", PortalFrameBlock::new, BlockBehaviour.Properties.of()
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+
+    public static final Block PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlock::new, BlockBehaviour.Properties.of()
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+
+    public static final Block PORTAL = register("portal", PortalBlock::new, BlockBehaviour.Properties.copy(Blocks.NETHER_PORTAL).strength(1));
 
     public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGFluids.PORTAL_FLUID.getA(), properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().lightLevel(value -> 8).liquid().sound(SoundType.EMPTY));

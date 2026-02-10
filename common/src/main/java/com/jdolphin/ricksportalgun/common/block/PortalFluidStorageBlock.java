@@ -5,7 +5,6 @@ import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import com.jdolphin.ricksportalgun.common.item.IPortalFluidItem;
-import com.jdolphin.ricksportalgun.common.util.PGPortalAddress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -43,10 +42,6 @@ public class PortalFluidStorageBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide) {
-            String address = PGPortalAddress.getAddress(pos, level.dimension().location());
-            System.out.println(address);
-            PGPortalAddress.DecodedAddress address1 = PGPortalAddress.getLocation(address);
-            System.out.printf("%s %s | %s%n", address1.chunkX(), address1.chunkZ(), address1.dimension());
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof PortalFluidStorageBlockEntity storage) {
                 ItemStack stack = player.getItemInHand(hand);

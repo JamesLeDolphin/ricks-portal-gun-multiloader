@@ -60,6 +60,11 @@ public class PGItems {
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
     public static final Item PORTAL_FLUID_TANK = register("portal_fluid_tank", PortalFluidStorageBlockItem::new, new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
 
+    public static final Item PORTAL_FRAME = register("portal_frame", properties -> new BlockItem(PGBlocks.PORTAL_FRAME, properties),
+            new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
+    public static final Item PORTAL_CONTROLLER = register("portal_controller", properties -> new BlockItem(PGBlocks.PORTAL_CONTROLLER, properties),
+            new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
+
 
 
     //Upgrades

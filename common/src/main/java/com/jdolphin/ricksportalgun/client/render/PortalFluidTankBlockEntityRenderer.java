@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.client.render;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalFluidStorageBlockEntity;
+import com.jdolphin.ricksportalgun.common.comp.sodium.SodiumCompat;
 import com.jdolphin.ricksportalgun.common.util.helper.GuiHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,15 +28,20 @@ public class PortalFluidTankBlockEntityRenderer implements BlockEntityRenderer<P
     public void render(PortalFluidStorageBlockEntity blockEntity, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         if (sideSprite == null) {
             sideSprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(PGHelper.id("block/portal_fluid_flow"));
+        } else if (PGHelper.hasSodium()) {
+            SodiumCompat.markSpriteActive(sideSprite);
         }
         if (topSprite == null) {
             topSprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(PGHelper.id("block/portal_fluid_still"));
+        } else if (PGHelper.hasSodium()) {
+            SodiumCompat.markSpriteActive(topSprite);
         }
 
         stack.pushPose();
         int fluid = blockEntity.getAmount();
         int max = blockEntity.getMaxAmount();
         float amount = Mth.clamp((float) fluid / max, 0.1f, 0.9f);
+        float vHeight = ((float) fluid / max) * 16f;
 
         if (fluid > 0) {
             Matrix4f matrix4f = stack.last().pose();
@@ -56,19 +62,19 @@ public class PortalFluidTankBlockEntityRenderer implements BlockEntityRenderer<P
             //Sides
             renderVertexes(matrix4f, matrix3f, buffer.getBuffer(RenderType.entitySolid(sideSprite.atlasLocation())), 0.9f, 0.1f, 0.01f, amount, 0.1f, 0.1f,
                     1, 1, 1, 1,
-                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(16), packedOverlay, packedLight, 0, 1, 0);
+                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(vHeight), packedOverlay, packedLight, 0, 1, 0);
 
             renderVertexes(matrix4f, matrix3f, buffer.getBuffer(RenderType.entitySolid(sideSprite.atlasLocation())), 0.1f, 0.9f, 0.01f, amount, 0.9f, 0.9f,
                     1, 1, 1, 1,
-                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(16), packedOverlay, packedLight, 0, 1, 0);
+                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(vHeight), packedOverlay, packedLight, 0, 1, 0);
 
             renderVertexes(matrix4f, matrix3f, buffer.getBuffer(RenderType.entitySolid(sideSprite.atlasLocation())), 0.1f, 0.1f, 0.01f, amount, 0.1f, 0.9f,
                     1, 1, 1, 1,
-                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(16), packedOverlay, packedLight, 0, 1, 0);
+                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(vHeight), packedOverlay, packedLight, 0, 1, 0);
 
             renderVertexes(matrix4f, matrix3f, buffer.getBuffer(RenderType.entitySolid(sideSprite.atlasLocation())), 0.9f, 0.9f, 0.01f, amount, 0.9f, 0.1f,
                     1, 1, 1, 1,
-                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(16), packedOverlay, packedLight, 0, 1, 0);
+                    sideSprite.getU(0), sideSprite.getV(0), sideSprite.getU(16), sideSprite.getV(vHeight), packedOverlay, packedLight, 0, 1, 0);
         }
         stack.popPose();
     }

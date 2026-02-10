@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ricksportalgun:block/portal_ns"
+    },
+    "axis=z": {
+      "model": "ricksportalgun:block/portal_ew"
+    }
+  }
+}
