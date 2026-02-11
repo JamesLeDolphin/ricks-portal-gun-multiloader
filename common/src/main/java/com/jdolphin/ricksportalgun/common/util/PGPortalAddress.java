@@ -19,6 +19,7 @@ public class PGPortalAddress {
     }
 
     public static DecodedAddress getLocation(String address) {
+        address = address.replaceAll("-", "");
         long packed = decode(address);
         return unpack(packed);
     }
@@ -72,6 +73,5 @@ public class PGPortalAddress {
         return new DecodedAddress(chunkX, chunkZ, dim);
     }
 
-    public record DecodedAddress(int chunkX, int chunkZ, ResourceLocation dimension) {
-    }
+    public record DecodedAddress(int chunkX, int chunkZ, ResourceLocation dimension) {}
 }

@@ -25,6 +25,8 @@ public class PGBlockEntities {
     public static BlockEntityType<PortalControllerBlockEntity> PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlockEntity::new, PGBlocks.PORTAL_CONTROLLER);
     public static BlockEntityType<PortalFrameBlockEntity> PORTAL_FRAME = register("portal_frame", PortalFrameBlockEntity::new, PGBlocks.PORTAL_FRAME);
 
+    public static BlockEntityType<PortalBlockEntity> PORTAL = register("portal", PortalBlockEntity::new, PGBlocks.PORTAL);
+
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
         var bet = PGServices.PLATFORM.createBlockEntityType(func, blocks);
         ALL.put(PGHelper.id(id), bet);

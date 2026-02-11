@@ -7,9 +7,6 @@ import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -32,19 +29,21 @@ public class PortalFrameBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (!level.isClientSide) {
-            List<BlockEntity> blockEntities = LevelHelper.getBlockEntitiesInChunks((ServerLevel) level, new ChunkPos(pos), 1);
-            blockEntities.stream().filter(blockEntity -> blockEntity instanceof PortalControllerBlockEntity)
-                    .forEach(be -> {
-                        PortalControllerBlockEntity controller = ((PortalControllerBlockEntity) be);
-                if (!controller.isAttached()) {
-                    PortalControllerBlock controllerBlock = (PortalControllerBlock) controller.getBlockState().getBlock();
-                    controllerBlock.checkValid(level, controller.getBlockState(), controller.getBlockPos());
+            if (!state.getBlock().equals(oldState.getBlock())) {
+                System.out.println("A");
+                List<BlockEntity> blockEntities = LevelHelper.getBlockEntitiesInChunks((ServerLevel) level, new ChunkPos(pos), 1);
+                for (BlockEntity be : blockEntities) {
+                    if (be instanceof PortalControllerBlockEntity controller) {
+                        if (!controller.getBlockState().getValue(PortalControllerBlock.ATTACHED)) {
+                            controller.validate(level, controller.getBlockState(), controller.getBlockPos(), true, true);
+                        }
+                    }
                 }
-            });
+            }
         }
-        super.setPlacedBy(level, pos, state, placer, stack);
+        super.onPlace(state, level, pos, oldState, movedByPiston);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -52,21 +51,20 @@ public class PortalFrameBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PortalFrameBlockEntity frame) {
-            BlockPos masterPos = frame.getMasterPos();
-            if (masterPos != null) {
-                BlockState masterState = level.getBlockState(masterPos);
-                level.setBlock(masterPos, masterState.setValue(ATTACHED, false), 2);
-
-                BlockEntity be1 = level.getBlockEntity(masterPos);
-                if (be1 instanceof PortalControllerBlockEntity controller) {
-                    controller.setAttached(false);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.getBlock().equals(newState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PortalFrameBlockEntity frame) {
+                BlockPos masterPos = frame.getMasterPos();
+                if (masterPos != null) {
+                    BlockEntity be1 = level.getBlockEntity(masterPos);
+                    if (be1 instanceof PortalControllerBlockEntity controller) {
+                        controller.validate(level, level.getBlockState(masterPos), masterPos, true, true);
+                    }
                 }
             }
         }
-        super.destroy(level, pos, state);
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

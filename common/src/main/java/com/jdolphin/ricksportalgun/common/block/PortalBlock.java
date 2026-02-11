@@ -1,5 +1,7 @@
 package com.jdolphin.ricksportalgun.common.block;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalBlockEntity;
+import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -19,10 +21,9 @@ public class PortalBlock extends NetherPortalBlock implements EntityBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (entity.canChangeDimensions()) {
-
-
-
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof PortalBlockEntity portal) {
+            portal.onEntityInside(entity);
         }
     }
 
@@ -33,6 +34,6 @@ public class PortalBlock extends NetherPortalBlock implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return PGBlockEntities.PORTAL.create(pos, state);
     }
 }
