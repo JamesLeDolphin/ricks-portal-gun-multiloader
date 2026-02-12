@@ -10,6 +10,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -35,6 +36,10 @@ public class PortalBlockEntity extends BlockEntity {
             CompoundTag posTag = tag.getCompound("DestPos");
             destinationControllerPos = NbtUtils.readBlockPos(posTag);
         }
+        if (tag.contains("OwnerPos")) {
+            CompoundTag posTag = tag.getCompound("OwnerPos");
+            ownerControllerPos = NbtUtils.readBlockPos(posTag);
+        }
     }
 
     @Override
@@ -45,9 +50,13 @@ public class PortalBlockEntity extends BlockEntity {
             CompoundTag posTag = NbtUtils.writeBlockPos(destinationControllerPos);
             tag.put("DestPos", posTag);
         }
+        if (ownerControllerPos != null) {
+            CompoundTag posTag = NbtUtils.writeBlockPos(ownerControllerPos);
+            tag.put("OwnerPos", posTag);
+        }
     }
 
-    public void onEntityInside(Entity entity) {
+    public void teleportEntity(Entity entity) {
         if (level instanceof ServerLevel serverLevel) {
             if (destinationControllerPos != null && destinationDimension != null) {
                 if (!entity.isOnPortalCooldown() && entity.canChangeDimensions()) {
@@ -57,16 +66,32 @@ public class PortalBlockEntity extends BlockEntity {
                         ChunkPos chunkPos = new ChunkPos(destinationControllerPos);
                         destinationLevel.setChunkForced(chunkPos.x, chunkPos.z, true);
 
-                        BlockState state = destinationLevel.getBlockState(destinationControllerPos);
-                        if (state.is(PGBlocks.PORTAL_CONTROLLER)) {
-                            BlockPos safePos = destinationControllerPos.above().relative(state.getValue(PortalControllerBlock.FACING));
-                            entity.teleportTo(destinationLevel, safePos.getX(), safePos.getY(), safePos.getZ(), Set.of(), entity.getYRot(), entity.getXRot());
+                        BlockState destinationControllerState = destinationLevel.getBlockState(destinationControllerPos);
+                        if (destinationControllerState.is(PGBlocks.PORTAL_CONTROLLER)) {
+                            BlockPos safePos = destinationControllerPos.relative(destinationControllerState.getValue(PortalControllerBlock.FACING), 2).above();
+                            BlockState state = level.getBlockState(ownerControllerPos);
+
+                            float entranceRot = Mth.wrapDegrees(state.getValue(PortalControllerBlock.FACING).getOpposite().toYRot());
+                            float exitRot = Mth.wrapDegrees(destinationControllerState.getValue(PortalControllerBlock.FACING).toYRot());
+                            float diff = entity.getYRot() - entranceRot;
+
+                            entity.teleportTo(destinationLevel, safePos.getX(), safePos.getY(), safePos.getZ(), Set.of(),  Mth.wrapDegrees(exitRot - diff), entity.getXRot());
                         }
                     }
                 }
             }
         }
     }
+
+    public void onEntityInside(Entity entity) {
+        if (level instanceof ServerLevel serverLevel) {
+            BlockPos pos = getOwnerControllerPos();
+            BlockEntity be = serverLevel.getBlockEntity(pos);
+            if (be instanceof PortalControllerBlockEntity controller) {
+                controller.queueForTeleport(entity);
+            }
+        }
+     }
 
     public BlockPos getOwnerControllerPos() {
         return ownerControllerPos;

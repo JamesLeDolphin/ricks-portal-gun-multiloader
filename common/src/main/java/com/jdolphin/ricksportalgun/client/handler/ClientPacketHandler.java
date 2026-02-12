@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.client.handler;
 
 import com.jdolphin.ricksportalgun.client.screen.MeeseeksCommandScreen;
+import com.jdolphin.ricksportalgun.client.screen.PortalDialerScreen;
 import com.jdolphin.ricksportalgun.client.screen.SubetherBarrierScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.CoordTravelScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.LocatorScreen;
@@ -36,5 +37,9 @@ public class ClientPacketHandler {
 
     public static void openMeeseeksScreen(UUID uuid) {
         Minecraft.getInstance().setScreen(new MeeseeksCommandScreen(uuid));
+    }
+
+    public static void openPortalDialerScreen(BlockPos pos) {
+        Minecraft.getInstance().setScreen(new PortalDialerScreen(pos));
     }
 }

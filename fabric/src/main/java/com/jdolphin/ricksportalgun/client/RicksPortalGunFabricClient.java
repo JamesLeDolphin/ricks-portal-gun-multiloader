@@ -92,6 +92,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         registerGlobalReceiver(CBOpenSecurityGuiPacket.getID(), CBOpenSecurityGuiPacket::decode, packet -> ClientPacketHandler.openSecurityScreen(packet.strings()));
         registerGlobalReceiver(CBOpenMeeseeksGuiPacket.getID(), CBOpenMeeseeksGuiPacket::decode, packet -> ClientPacketHandler.openMeeseeksScreen(packet.mobId()));
+        registerGlobalReceiver(CBOpenDialerGuiPacket.getID(), CBOpenDialerGuiPacket::decode,packet -> ClientPacketHandler.openPortalDialerScreen(packet.pos()));
     }
 
     private static  <P extends PGPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func, Consumer<P> consumer) {

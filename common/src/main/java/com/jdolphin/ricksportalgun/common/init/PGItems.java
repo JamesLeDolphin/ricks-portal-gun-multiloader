@@ -1,6 +1,9 @@
 package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.item.*;
+import com.jdolphin.ricksportalgun.common.item.block.PortalDialerBlockItem;
+import com.jdolphin.ricksportalgun.common.item.block.PortalFluidStorageBlockItem;
+import com.jdolphin.ricksportalgun.common.item.block.TooltipBlockItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.UpgradeItem;
 import com.jdolphin.ricksportalgun.common.item.upgrade.types.UpgradeType;
 import com.jdolphin.ricksportalgun.common.util.PGCreativeModeTabs;
@@ -63,6 +66,8 @@ public class PGItems {
     public static final Item PORTAL_FRAME = register("portal_frame", properties -> new BlockItem(PGBlocks.PORTAL_FRAME, properties),
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
     public static final Item PORTAL_CONTROLLER = register("portal_controller", properties -> new BlockItem(PGBlocks.PORTAL_CONTROLLER, properties),
+            new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
+    public static final Item PORTAL_DIALER = register("portal_dialer", PortalDialerBlockItem::new,
             new Item.Properties(), PGCreativeModeTabs.FUNCTIONAL_BLOCKS);
 
 

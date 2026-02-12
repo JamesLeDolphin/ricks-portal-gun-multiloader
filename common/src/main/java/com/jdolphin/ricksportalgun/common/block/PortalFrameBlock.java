@@ -32,7 +32,6 @@ public class PortalFrameBlock extends DirectionalBlock implements EntityBlock {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (!level.isClientSide) {
             if (!state.getBlock().equals(oldState.getBlock())) {
-                System.out.println("A");
                 List<BlockEntity> blockEntities = LevelHelper.getBlockEntitiesInChunks((ServerLevel) level, new ChunkPos(pos), 1);
                 for (BlockEntity be : blockEntities) {
                     if (be instanceof PortalControllerBlockEntity controller) {

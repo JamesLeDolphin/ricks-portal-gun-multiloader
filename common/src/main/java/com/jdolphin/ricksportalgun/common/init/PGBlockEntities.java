@@ -24,6 +24,7 @@ public class PGBlockEntities {
 
     public static BlockEntityType<PortalControllerBlockEntity> PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlockEntity::new, PGBlocks.PORTAL_CONTROLLER);
     public static BlockEntityType<PortalFrameBlockEntity> PORTAL_FRAME = register("portal_frame", PortalFrameBlockEntity::new, PGBlocks.PORTAL_FRAME);
+    public static BlockEntityType<PortalDialerBlockEntity> PORTAL_DIALER = register("portal_dialer", PortalDialerBlockEntity::new, PGBlocks.PORTAL_DIALER);
 
     public static BlockEntityType<PortalBlockEntity> PORTAL = register("portal", PortalBlockEntity::new, PGBlocks.PORTAL);
 

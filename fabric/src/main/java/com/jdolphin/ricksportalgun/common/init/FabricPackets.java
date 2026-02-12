@@ -31,6 +31,7 @@ public class FabricPackets {
         registerGlobalReceiver(SBAddUpgradePacket.getID(), SBAddUpgradePacket::decode);
         registerGlobalReceiver(SBSetPortalTypePacket.getID(), SBSetPortalTypePacket::decode);
         registerGlobalReceiver(SBRunMeeseeksCommandPacket.getID(), SBRunMeeseeksCommandPacket::decode);
+        registerGlobalReceiver(SBPortalDialActionPacket.getID(), SBPortalDialActionPacket::decode);
     }
 
     private static  <P extends PGServerPayload> void registerGlobalReceiver(ResourceLocation rl, Function<FriendlyByteBuf, P> func) {

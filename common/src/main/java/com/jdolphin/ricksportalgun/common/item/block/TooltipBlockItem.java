@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.item;
+package com.jdolphin.ricksportalgun.common.item.block;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

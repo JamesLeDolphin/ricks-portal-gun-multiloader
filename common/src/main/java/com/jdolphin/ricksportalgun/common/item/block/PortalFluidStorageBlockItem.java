@@ -1,4 +1,4 @@
-package com.jdolphin.ricksportalgun.common.item;
+package com.jdolphin.ricksportalgun.common.item.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalFluidStorageBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;

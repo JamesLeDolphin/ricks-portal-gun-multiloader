@@ -2,8 +2,10 @@ package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalControllerBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
+import com.jdolphin.ricksportalgun.common.util.PGPortalAddress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +13,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -20,24 +24,26 @@ import org.jetbrains.annotations.Nullable;
 
 public class PortalControllerBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return !level.isClientSide ? PortalControllerBlockEntity::tick : null;
+    }
 
     public PortalControllerBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(ATTACHED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(ATTACHED, false).setValue(ACTIVE, false));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, ATTACHED);
+        builder.add(FACING, ATTACHED, ACTIVE);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        BlockEntity be = level.getBlockEntity(pos);
-
-        if (be instanceof PortalControllerBlockEntity controller) {
-            controller.validate(level, state, pos, true, false);
-            controller.activate();
+        if (!level.isClientSide && hand.equals(InteractionHand.MAIN_HAND)) {
+            String address = PGPortalAddress.getAddressHyphened(pos, level.dimension().location());
+            player.displayClientMessage(Component.literal(address), false);
         }
         return super.use(state, level, pos, player, hand, hit);
     }
@@ -56,11 +62,10 @@ public class PortalControllerBlock extends DirectionalBlock implements EntityBlo
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof PortalControllerBlockEntity controller) {
-                controller.setFramesAttached(false);
-            }
-
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof PortalControllerBlockEntity controller) {
+            controller.setFramesAttached(false);
+        }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 

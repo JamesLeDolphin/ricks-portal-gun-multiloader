@@ -36,6 +36,9 @@ public class PGBlocks {
     public static final Block PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
 
+    public static final Block PORTAL_DIALER = register("portal_dialer", PortalDialerBlock::new, BlockBehaviour.Properties.of()
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+
     public static final Block PORTAL = register("portal", PortalBlock::new, BlockBehaviour.Properties.copy(Blocks.NETHER_PORTAL));
 
     public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGFluids.PORTAL_FLUID.getA(), properties),
