@@ -306,11 +306,19 @@ public class PortalControllerBlockEntity extends BlockEntity {
             BlockState state = getBlockState();
             BlockPos pos = getBlockPos();
             BlockEntity be = level.getBlockEntity(pos.above());
-            if (state.getValue(PortalControllerBlock.ACTIVE) && be instanceof PortalBlockEntity portal) {
+            boolean isActive = state.getValue(PortalControllerBlock.ACTIVE);
+            if (isActive && be instanceof PortalBlockEntity portal) {
                 Entity entity = tpQueue.poll();
                 if (entity != null) {
                     portal.teleportEntity(entity);
                 }
+            }
+            if (!isActive && !tpQueue.isEmpty()) {
+                tpQueue.clear();
+            }
+
+            if (isActive != isActive()) {
+                level.setBlock(pos, state.setValue(PortalControllerBlock.ACTIVE, isActive()), 2);
             }
         }
     }

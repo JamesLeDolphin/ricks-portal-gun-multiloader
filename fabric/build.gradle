@@ -41,11 +41,16 @@ dependencies {
     }
     //CC: Tweaked
     modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-fabric-api:${cct_version}")
-    modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-fabric:${cct_version}")
+  //  modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-fabric:${cct_version}")
 
     //Iris & Sodium
     modCompileOnly "curse.maven:irisshaders-455508:6258195"
     modImplementation "curse.maven:sodium-394468:6260639"
+
+
+    //Create
+    modCompileOnly("com.simibubi.create:create-fabric-$minecraft_version:$create_fabric_version")
+    modRuntimeOnly("maven.modrinth:indium:1.0.36+mc1.20.1")
 }
 
 repositories {
@@ -91,6 +96,17 @@ repositories {
 
     // the repository for Cloth Config
     maven { url 'https://maven.shedaniel.me' }
+
+    maven { url = "https://mvn.devos.one/releases" } // Porting Lib releases
+    maven { url = "https://mvn.devos.one/snapshots" } // Create and several dependencies
+    maven { url = "https://maven.createmod.net/" } // Flywheel
+
+    maven { url = "https://maven.jamieswhiteshirt.com/libs-release" } // Reach Entity Attributes
+
+    maven { // Fabric ASM for Porting Lib
+        url = "https://jitpack.io/"
+        content { includeGroupAndSubgroups("com.github") }
+    }
 }
 
 loom {

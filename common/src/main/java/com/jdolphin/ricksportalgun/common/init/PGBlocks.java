@@ -42,7 +42,8 @@ public class PGBlocks {
     public static final Block PORTAL = register("portal", PortalBlock::new, BlockBehaviour.Properties.copy(Blocks.NETHER_PORTAL));
 
     public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGFluids.PORTAL_FLUID.getA(), properties),
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().lightLevel(value -> 8).liquid().sound(SoundType.EMPTY));
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY)
+                    .noLootTable().lightLevel(value -> 8).liquid().sound(SoundType.EMPTY));
 
     private static Block register(String id, Function<BlockBehaviour.Properties, Block> func, BlockBehaviour.Properties properties) {
         Block block = func.apply(properties);

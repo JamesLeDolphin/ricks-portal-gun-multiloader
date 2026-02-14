@@ -1,0 +1,17 @@
+{
+  "type": "ricksportalgun:microverse",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "ricksportalgun:microverse",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "height": 320,
+          "block": "minecraft:air"
+        }
+      ]
+    }
+  }
+}

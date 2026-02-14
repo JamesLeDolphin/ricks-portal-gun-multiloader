@@ -17,6 +17,7 @@ import java.util.function.BiFunction;
 
 public class PGBlockEntities {
     private static final Map<ResourceLocation, BlockEntityType<?>> ALL = new HashMap<>();
+
     public static BlockEntityType<GunWorkbenchBlockEntity> GUN_WORKBENCH = register("portal_gun_workbench", GunWorkbenchBlockEntity::new, PGBlocks.GUN_WORKBENCH);
     public static BlockEntityType<PortalDispenserBlockEntity> PORTAL_DISPENSER = register("portal_dispenser", PortalDispenserBlockEntity::new, PGBlocks.PORTAL_DISPENSER);
     public static BlockEntityType<SubetherBarrierBlockEntity> SUBETHER_BARRIER = register("subether_barrier", SubetherBarrierBlockEntity::new, PGBlocks.SUBETHER_BARRIER);
@@ -25,8 +26,8 @@ public class PGBlockEntities {
     public static BlockEntityType<PortalControllerBlockEntity> PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlockEntity::new, PGBlocks.PORTAL_CONTROLLER);
     public static BlockEntityType<PortalFrameBlockEntity> PORTAL_FRAME = register("portal_frame", PortalFrameBlockEntity::new, PGBlocks.PORTAL_FRAME);
     public static BlockEntityType<PortalDialerBlockEntity> PORTAL_DIALER = register("portal_dialer", PortalDialerBlockEntity::new, PGBlocks.PORTAL_DIALER);
-
     public static BlockEntityType<PortalBlockEntity> PORTAL = register("portal", PortalBlockEntity::new, PGBlocks.PORTAL);
+
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BiFunction<BlockPos, BlockState, T> func, Block... blocks) {
         var bet = PGServices.PLATFORM.createBlockEntityType(func, blocks);

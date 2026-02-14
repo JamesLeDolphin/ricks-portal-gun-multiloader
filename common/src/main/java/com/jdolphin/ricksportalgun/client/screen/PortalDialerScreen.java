@@ -43,6 +43,8 @@ public class PortalDialerScreen extends AbstractBaseScreen {
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         }).bounds(this.width / 2 - 64, this.height / 2 + 30, 128, 20).build());
+
+        input.setMaxLength(11);
     }
 
     @Override

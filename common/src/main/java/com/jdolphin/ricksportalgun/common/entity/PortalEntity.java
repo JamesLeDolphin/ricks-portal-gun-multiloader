@@ -22,19 +22,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Set;
-
 
 public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_COLOR_ID = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
@@ -65,7 +64,6 @@ public class PortalEntity extends Entity {
     private Vec3 targetVec;
     private String targetDim;
     private ServerLevel destinationLevel;
-    private PortalType type;
 
     public boolean exists() {
         return exists;
@@ -303,6 +301,12 @@ public class PortalEntity extends Entity {
     }
 
     @Override
+    public void kill() {
+        super.kill();
+        level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (!this.level().isClientSide()) {
@@ -312,10 +316,10 @@ public class PortalEntity extends Entity {
             }
             if (getLifetime() > 0) {
                 lowerLifetime();
+                level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), true);
             }
             if (!firstTick && getLifetime() == 0) {
                 LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getCloseSound(), SoundSource.PLAYERS);
-                level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
                 this.kill();
                 return;
             }
@@ -323,20 +327,20 @@ public class PortalEntity extends Entity {
                 if (!isBootleg() && !LevelHelper.isBlenderDestination(getHopDim())) {
                     ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(getHopDim()));
                     destinationLevel = LevelHelper.getServerWorld(this.level(), key);
+
                     if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
                         key = InfinityHandler.getOrCreateResourceKey(level().getServer(), getHopDim());
                         destinationLevel = LevelHelper.getServerWorld(this.level(), key);
                     }
                 } else {
                     destinationLevel = (ServerLevel) this.level();
-
                 }
                 if (targetPos == null) {
                     targetPos = getHopLoc();
                 }
             }
             if (targetVec == null) {
-                targetVec = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
+                targetVec = Vec3.directionFromRotation(this.getRotationVector());
             }
 
             boolean shouldHurt = isBootleg() || LevelHelper.isBlenderDestination(getHopDim());
@@ -347,7 +351,11 @@ public class PortalEntity extends Entity {
                     for (Entity nearby : entityList) {
                         if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger()) {
                             if (!shouldHurt) {
-                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, Set.of(), nearby.getYRot() - 180, nearby.getXRot());
+                                float entranceRot = Mth.wrapDegrees(this.getYRot());
+                                float diff = nearby.getYRot() - entranceRot;
+
+                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2,
+                                        Set.of(), Mth.wrapDegrees(nearby.getYRot() - diff), nearby.getXRot());
 
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();

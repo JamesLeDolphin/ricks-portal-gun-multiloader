@@ -25,13 +25,16 @@ public class PortalDialerBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof PortalDialerBlockEntity dialer) {
-                PGHelper.sendPacketToClient(serverPlayer, new CBOpenDialerGuiPacket(dialer.getControllerPos()));
+        InteractionResult result = super.use(state, level, pos, player, hand, hit);
+        if (result == InteractionResult.PASS) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                BlockEntity be = level.getBlockEntity(pos);
+                if (be instanceof PortalDialerBlockEntity dialer) {
+                    PGHelper.sendPacketToClient(serverPlayer, new CBOpenDialerGuiPacket(dialer.getControllerPos()));
+                }
             }
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return result;
     }
 
     @Override

@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "amount": 333,
+      "fluid": "create:potion",
+      "nbt": {
+        "Potion": "minecraft:poison"
+      }
+    }
+  ],
+  "results": [
+    {
+      "amount": 333,
+      "fluid": "ricksportalgun:bootleg_portal_fluid"
+    }
+  ]
+}
