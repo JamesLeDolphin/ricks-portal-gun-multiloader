@@ -2,6 +2,8 @@ package com.jdolphin.ricksportalgun.common.blockentity;
 
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
+import com.jdolphin.ricksportalgun.common.util.platform.services.IFluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class PortalFluidStorageBlockEntity extends BlockEntity {
     private int amount = 0;
+
+    public final IFluidStorage fluidStorage = PGServices.FLUID_STORAGE.create();
 
     public PortalFluidStorageBlockEntity(BlockPos pos, BlockState blockState) {
         super(PGBlockEntities.PORTAL_FLUID_TANK, pos, blockState);
