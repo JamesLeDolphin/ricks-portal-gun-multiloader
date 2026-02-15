@@ -40,6 +40,7 @@ public class PortalBlockEntity extends BlockEntity {
             CompoundTag posTag = tag.getCompound("OwnerPos");
             ownerControllerPos = NbtUtils.readBlockPos(posTag);
         }
+        destinationDimension = tag.getString("DestDim");
     }
 
     @Override
@@ -54,12 +55,13 @@ public class PortalBlockEntity extends BlockEntity {
             CompoundTag posTag = NbtUtils.writeBlockPos(ownerControllerPos);
             tag.put("OwnerPos", posTag);
         }
+        tag.putString("DestDim", destinationDimension);
     }
 
     public void teleportEntity(Entity entity) {
         if (level instanceof ServerLevel serverLevel) {
-            if (destinationControllerPos != null && destinationDimension != null) {
-                if (!entity.isOnPortalCooldown() && entity.canChangeDimensions()) {
+            if (destinationControllerPos != null && destinationDimension != null && !destinationDimension.isEmpty()) {
+                if (entity.canChangeDimensions()) {
                     ResourceKey<Level> resourceKey = LevelHelper.getWorldKey(new ResourceLocation(destinationDimension));
                     ServerLevel destinationLevel = LevelHelper.getServerWorld(serverLevel, resourceKey);
                     if (destinationLevel != null) {

@@ -32,9 +32,9 @@ dependencies {
     //modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+fabric")
 
     //Immersive Portals
-    modCompileOnly ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v3.3.7-mc1.20.1")
-    modCompileOnly ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v3.3.7-mc1.20.1")
-    modCompileOnly ("com.github.iPortalTeam.ImmersivePortalsMod:build:v3.3.7-mc1.20.1")
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v3.3.7-mc1.20.1")
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v3.3.7-mc1.20.1")
+    modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:v3.3.7-mc1.20.1")
 
     modRuntimeOnly ("me.shedaniel.cloth:cloth-config-forge:11.1.136") {
         exclude(group: "net.fabricmc.fabric-api")
@@ -45,12 +45,12 @@ dependencies {
 
     //Iris & Sodium
     modCompileOnly "curse.maven:irisshaders-455508:6258195"
-    modImplementation "curse.maven:sodium-394468:6260639"
+    modCompileOnly "curse.maven:sodium-394468:6260639"
 
 
     //Create
     modCompileOnly("com.simibubi.create:create-fabric-$minecraft_version:$create_fabric_version")
-    modRuntimeOnly("maven.modrinth:indium:1.0.36+mc1.20.1")
+    //modRuntimeOnly("maven.modrinth:indium:1.0.36+mc1.20.1")
 }
 
 repositories {

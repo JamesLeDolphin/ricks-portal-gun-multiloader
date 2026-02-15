@@ -2,7 +2,6 @@ package com.jdolphin.ricksportalgun;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
-import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.entity.MeeseeksEntity;
 import com.jdolphin.ricksportalgun.common.event.PGCommonEventHandler;
@@ -51,11 +50,6 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         PGMeeseeksCommands.init();
 
         FabricDefaultAttributeRegistry.register(PGEntities.MEESEEKS, MeeseeksEntity.createMobAttributes());
-
-        if (PGHelper.hasImmersivePortals()) {
-            Registry.register(BuiltInRegistries.ENTITY_TYPE, PGHelper.id("seethrough_portal"), PortalHolder.TYPE);
-        }
-
         initEvents();
 
         if (PGHelper.hasCCTweaked()) {

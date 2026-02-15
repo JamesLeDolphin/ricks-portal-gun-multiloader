@@ -3,7 +3,6 @@ package com.jdolphin.ricksportalgun.common.comp.immersive_portals;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
-import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -25,11 +24,14 @@ import qouteall.q_misc_util.my_util.DQuaternion;
 import java.awt.*;
 import java.util.stream.Collectors;
 
+import static com.jdolphin.ricksportalgun.common.entity.PortalEntity.TAG_OPEN_MAX;
+
 public class SeeThroughPortalEntity extends Portal {
     private static final EntityDataAccessor<Integer> DATA_COLOR_ID = SynchedEntityData.defineId(SeeThroughPortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Direction> DATA_DIR = SynchedEntityData.defineId(SeeThroughPortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(SeeThroughPortalEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(SeeThroughPortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> MAX_LIFETIME = SynchedEntityData.defineId(SeeThroughPortalEntity.class, EntityDataSerializers.INT);
 
     public static final String TAG_OPEN = "Open";
     public static final String TAG_NEW = "isSpawned";
@@ -46,7 +48,7 @@ public class SeeThroughPortalEntity extends Portal {
     }
 
     public SeeThroughPortalEntity(Level level, Vec3 pos, Direction direction, Direction facing, float size) {
-        super(PGServices.PLATFORM.getPortalEntityType(), level);
+        super(ImmersivePortalsHandler.ENTITY_TYPE, level);
         this.setPos(pos);
         setPortalDirection(direction);
         setPortalFacing(facing);
@@ -61,11 +63,20 @@ public class SeeThroughPortalEntity extends Portal {
         return direction.equals(Direction.UP) || direction.equals(Direction.DOWN);
     }
 
+    public void setMaxLifetime(int lifetime) {
+        this.entityData.set(MAX_LIFETIME, lifetime);
+    }
+
+    public int getMaxLifetime() {
+        return this.entityData.get(MAX_LIFETIME);
+    }
+
     protected void defineSynchedData() {
         this.entityData.define(DATA_COLOR_ID, Color.GREEN.getRGB());
         this.entityData.define(DATA_DIR, Direction.SOUTH);
         this.entityData.define(DATA_FACING, Direction.SOUTH);
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
+        this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
     }
 
     public void setPortalDirection(Direction direction) {
@@ -87,6 +98,12 @@ public class SeeThroughPortalEntity extends Portal {
 
     public void setLifetime(int lifetime) {
         this.entityData.set(LIFETIME, lifetime);
+        setMaxLifetime(lifetime);
+    }
+
+    private void lowerLifetime() {
+        int i = getLifetime();
+        this.entityData.set(LIFETIME, i - 1);
     }
 
     public int getLifetime() {
@@ -193,6 +210,7 @@ public class SeeThroughPortalEntity extends Portal {
         this.updateCache();
     }
 
+
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         this.m_7378_(tag);
@@ -202,6 +220,19 @@ public class SeeThroughPortalEntity extends Portal {
         this.exists = tag.getBoolean(TAG_NEW);
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
+        this.setMaxLifetime(tag.getInt(TAG_OPEN_MAX));
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        this.m_7380_(tag);
+        tag.putBoolean(TAG_ACIDIC, this.bootleg);
+        tag.putBoolean(TAG_NEW, this.exists);
+        tag.putInt(TAG_COLOR, this.getColor());
+        tag.putInt(TAG_OPEN, this.getLifetime());
+        tag.putString(TAG_DIR, getPortalDirection().getName());
+        tag.putString(TAG_FACING, getPortalFacing().getName());
+        tag.putInt(TAG_OPEN_MAX, this.getMaxLifetime());
     }
 
     protected void m_7380_(CompoundTag compoundTag) {
@@ -258,17 +289,6 @@ public class SeeThroughPortalEntity extends Portal {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        this.m_7380_(tag);
-        tag.putBoolean(TAG_ACIDIC, this.bootleg);
-        tag.putBoolean(TAG_NEW, this.exists);
-        tag.putInt(TAG_COLOR, this.getColor());
-        tag.putInt(TAG_OPEN, this.getLifetime());
-        tag.putString(TAG_DIR, getPortalDirection().getName());
-        tag.putString(TAG_FACING, getPortalFacing().getName());
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
@@ -276,7 +296,7 @@ public class SeeThroughPortalEntity extends Portal {
                 LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
                 this.exists = true;
             } else if (getLifetime() > 0) {
-                setLifetime(getLifetime() - 1);
+                lowerLifetime();
             }
             if (getLifetime() <= 0) this.kill();
         }

@@ -69,6 +69,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.GUN_WORKBENCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.PORTAL_FLUID_TANK, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(PGBlocks.PORTAL, RenderType.translucent());
 
         KeyBindingHelper.registerKeyBinding(PGKeyBinds.KEY_PORTAL_MENU);
 

@@ -6,8 +6,6 @@ import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -59,6 +57,4 @@ public interface IPlatformHelper {
     boolean disablePortalGunColorTint();
 
     List<? extends String> getDisabledEntities();
-
-    EntityType<? extends Entity> getPortalEntityType();
 }

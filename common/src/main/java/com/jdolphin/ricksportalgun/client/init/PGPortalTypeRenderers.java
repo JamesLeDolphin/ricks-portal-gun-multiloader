@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.client.init;
 import com.jdolphin.ricksportalgun.client.render.portal.type.*;
 import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,9 @@ public class PGPortalTypeRenderers {
         registerPortalTypeRenderer(PGPortalTypes.STARS, StarsPortalTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.SPELL, SpellPortalTypeRenderer::new);
         registerPortalTypeRenderer(PGPortalTypes.PENTAGRAM, PentagramPortalTypeRenderer::new);
+        if (PGHelper.hasImmersivePortals() && PGPortalTypes.DINO_PORTAL != null) {
+            registerPortalTypeRenderer(PGPortalTypes.DINO_PORTAL, DefaultPortalTypeRenderer::new);
+        }
     }
 
     private static void registerPortalTypeRenderer(PortalType type, Function<PortalType, AbstractPortalTypeRenderer> rendererFunction) {

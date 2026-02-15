@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "ricksportalgun:block/portal_frame",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north": {
+      "model": "ricksportalgun:block/portal_frame",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ricksportalgun:block/portal_frame",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east": {
+      "model": "ricksportalgun:block/portal_frame",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

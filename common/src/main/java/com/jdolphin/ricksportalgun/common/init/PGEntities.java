@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.comp.immersive_portals.SeeThroughPortalEntity;
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.entity.ExplosiveItemEntity;
 import com.jdolphin.ricksportalgun.common.entity.MeeseeksEntity;
 import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
@@ -21,11 +21,15 @@ public class PGEntities {
     public static final EntityType<MeeseeksEntity> MEESEEKS = register("meeseeks",
             EntityType.Builder.<MeeseeksEntity>of((MeeseeksEntity::new), MobCategory.CREATURE).sized(1.0f, 2.0f));
 
-    public static EntityType<SeeThroughPortalEntity> SEETHROUGH_PORTAL = null;
-
     public static final EntityType<ExplosiveItemEntity> EXPLOSIVE_ITEM = register("explosive_item",
             EntityType.Builder.<ExplosiveItemEntity>of((ExplosiveItemEntity::new), MobCategory.MISC).sized(0.25f, 0.25f)
                     .clientTrackingRange(6).updateInterval(20));
+
+    static {
+        if (PGHelper.hasImmersivePortals()) {
+            ImmersivePortalsHandler.registerPortal(ALL);
+        }
+    }
 
     private static <E extends Entity> EntityType<E> register(String name, EntityType.Builder<E> builder) {
         EntityType<E> type = builder.build(name);

@@ -2,7 +2,9 @@ package com.jdolphin.ricksportalgun.client.init;
 
 import com.jdolphin.ricksportalgun.client.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.render.MeeseeksEntityRenderer;
-import com.jdolphin.ricksportalgun.client.render.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.DinoPortalRenderer;
+import com.jdolphin.ricksportalgun.client.render.portal.PortalEntityRenderer;
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -31,7 +33,8 @@ public class PGEntityRenderRegistry {
         registerRenderers(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
 
         if (PGHelper.hasImmersivePortals()) {
-            registerRenderers(PGEntities.SEETHROUGH_PORTAL, qouteall.imm_ptl.core.render.PortalEntityRenderer::new);
+            registerRenderers(ImmersivePortalsHandler.ENTITY_TYPE, DinoPortalRenderer::new);
+
         }
     }
 

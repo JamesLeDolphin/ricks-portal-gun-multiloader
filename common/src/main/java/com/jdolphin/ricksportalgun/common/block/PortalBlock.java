@@ -3,7 +3,7 @@ package com.jdolphin.ricksportalgun.common.block;
 import com.jdolphin.ricksportalgun.common.blockentity.PortalBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public class PortalBlock extends NetherPortalBlock implements EntityBlock {
 
@@ -33,14 +34,20 @@ public class PortalBlock extends NetherPortalBlock implements EntityBlock {
             double d0 = (double)pos.getX() + random.nextDouble();
             double d1 = (double)pos.getY() + random.nextDouble();
             double d2 = (double)pos.getZ() + random.nextDouble();
+            double d3 = ((double)random.nextFloat() - 0.5D) * 0.5D;
+            double d4 = ((double)random.nextFloat() - 0.5D) * 0.5D;
+            double d5 = ((double)random.nextFloat() - 0.5D) * 0.5D;
+
             int j = random.nextInt(2) * 2 - 1;
             if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
                 d0 = (double)pos.getX() + 0.5D + 0.25D * (double)j;
+                d3 = random.nextFloat() * 2.0F * (float)j;
             } else {
                 d2 = (double)pos.getZ() + 0.5D + 0.25D * (double)j;
+                d5 = random.nextFloat() * 2.0F * (float)j;
             }
 
-            level.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, d0, d1, d2, 0, 0.8, 1);
+            level.addParticle(new DustParticleOptions(new Vector3f(0, 0.8f, 1), 1), d0, d1, d2, d3, d4, d5);
         }
     }
 

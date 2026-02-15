@@ -153,9 +153,12 @@ public class PortalEditScreen extends AbstractBaseScreen {
             int color = getColor();
             PortalShape shape = shapeButton.getValue();
             AbstractPortalTypeRenderer typeRenderer = PGPortalTypeRenderers.getRenderer(typeButton.getValue());
-
-            typeRenderer.renderInGui(this.width / 2 + 36, this.height / 2 - 72, 64, 128, PGPortalShapeRenderers.getRenderer(shape),
-                    stack, graphics, mouseX, mouseY, partialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
+            if (typeRenderer != null) {
+                typeRenderer.renderInGui(this.width / 2 + 36, this.height / 2 - 72, 64, 128, PGPortalShapeRenderers.getRenderer(shape),
+                        stack, graphics, mouseX, mouseY, partialTick, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
+            } else {
+                graphics.drawString(this.font, Component.literal("No portal type renderer registered!"), this.width / 2 + 36, this.height / 2 - 72, style.textColor());
+            }
         }
 
         Style guiStyle = GuiHelper.getStyle(mouseX, mouseY);

@@ -19,6 +19,8 @@ public class PGPortalTypes {
     public static final PortalType SPELL = register("spell", TypeWithoutShape::new);
     public static final PortalType PENTAGRAM = register("pentagram", TypeWithoutShape::new);
 
+    public static PortalType DINO_PORTAL = PGHelper.hasImmersivePortals() ? register("dino", TypeWithoutShape::new) : null;
+
     public static PortalType get(ResourceLocation rl) {
         return TYPES.get(rl);
     }

@@ -219,7 +219,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
                                 if (canBypassDragon(stack) || !(LevelHelper.endHasDragons((ServerLevel) level) || LevelHelper.endHasDragons(destinationLevel))) {
                                     //No errors: actually make the portal
 
-                                    if (PGHelper.hasImmersivePortals() /*Check for portal type later*/) {
+                                    if (PGHelper.hasImmersivePortals() && getPortalType(stack).equals(PGPortalTypes.DINO_PORTAL)) {
                                         return ImmersivePortalsHandler.spawnPortal(stack, level, loc, key, destination.getCenter(), size, playerDir, hitDir);
                                     } else {
                                         PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
@@ -244,6 +244,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
                                                 portal.remove(reason);
                                             }
                                         });
+
                                         portal.setLevelCallback(new EntityInLevelCallback() {
                                             @Override
                                             public void onMove() {}

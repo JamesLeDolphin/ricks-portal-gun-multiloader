@@ -67,28 +67,26 @@ public class PortalControllerBlockEntity extends BlockEntity {
         if (level instanceof ServerLevel serverLevel) {
             BlockState state = getBlockState();
             BlockPos pos = getBlockPos();
-            if (state.getValue(PortalControllerBlock.ACTIVE)) {
-                if (!destinationDim.isEmpty() && destinationPos != null) {
-                    ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(destinationDim));
-                    ServerLevel destinationLevel = LevelHelper.getServerWorld(serverLevel, key);
-                    if (destinationLevel != null) {
-                        ChunkPos destChunkPos = new ChunkPos(destinationPos);
-                        serverLevel.setChunkForced(destChunkPos.x, destChunkPos.z, true);
-                        BlockEntity be = destinationLevel.getBlockEntity(destinationPos);
-                        if (be instanceof PortalControllerBlockEntity destController) {
-                            destController.executeAtPortalSpace(pos1 -> destinationLevel.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2));
-                            BlockState destState = destinationLevel.getBlockState(destinationPos);
-                            destinationLevel.setBlock(destinationPos, destState.setValue(PortalControllerBlock.ACTIVE, false), 2);
-                            destController.validate(destinationLevel, destinationLevel.getBlockState(destinationPos), destinationPos, true, false);
-                            serverLevel.setChunkForced(destChunkPos.x, destChunkPos.z, false);
-                        }
+            if (!destinationDim.isEmpty() && destinationPos != null) {
+                ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(destinationDim));
+                ServerLevel destinationLevel = LevelHelper.getServerWorld(serverLevel, key);
+                if (destinationLevel != null) {
+                    ChunkPos destChunkPos = new ChunkPos(destinationPos);
+                    serverLevel.setChunkForced(destChunkPos.x, destChunkPos.z, true);
+                    BlockEntity be = destinationLevel.getBlockEntity(destinationPos);
+                    if (be instanceof PortalControllerBlockEntity destController) {
+                        destController.executeAtPortalSpace(pos1 -> destinationLevel.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2));
+                        BlockState destState = destinationLevel.getBlockState(destinationPos);
+                        destinationLevel.setBlock(destinationPos, destState.setValue(PortalControllerBlock.ACTIVE, false), 2);
+                        destController.validate(destinationLevel, destinationLevel.getBlockState(destinationPos), destinationPos, true, false);
+                        serverLevel.setChunkForced(destChunkPos.x, destChunkPos.z, false);
                     }
-                    BlockEntity be = serverLevel.getBlockEntity(pos);
-                    if (be instanceof PortalControllerBlockEntity controller) {
-                        executeAtPortalSpace(pos1 -> this.level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2));
-                        serverLevel.setBlock(pos, state.setValue(PortalControllerBlock.ACTIVE, false), 2);
-                        controller.validate(serverLevel, getBlockState(), pos, true, false);
-                    }
+                }
+                BlockEntity be = serverLevel.getBlockEntity(pos);
+                if (be instanceof PortalControllerBlockEntity controller) {
+                    executeAtPortalSpace(pos1 -> this.level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2));
+                    serverLevel.setBlock(pos, state.setValue(PortalControllerBlock.ACTIVE, false), 2);
+                    controller.validate(serverLevel, getBlockState(), pos, true, false);
                 }
             }
         }
@@ -319,6 +317,9 @@ public class PortalControllerBlockEntity extends BlockEntity {
 
             if (isActive != isActive()) {
                 level.setBlock(pos, state.setValue(PortalControllerBlock.ACTIVE, isActive()), 2);
+                if (!isActive()) {
+                    this.disconnect();
+                }
             }
         }
     }
