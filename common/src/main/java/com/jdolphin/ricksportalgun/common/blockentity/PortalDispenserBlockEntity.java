@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -47,7 +46,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     protected final ContainerData dataAccess;
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
-    public @Nullable Object getPeripheral() {
+    public Object getPeripheral() {
         return peripheral;
     }
 

@@ -61,7 +61,11 @@ public class ForgeClientMain {
         @SubscribeEvent
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             PGEntityRenderRegistry.initRenderers();
-            PGEntityRenderRegistry.RENDERERS.forEach(event::registerEntityRenderer);
+            PGEntityRenderRegistry.RENDERERS.forEach((entityType, entityRendererProvider) -> {
+                if (entityType != null && entityRendererProvider != null) {
+                    event.registerEntityRenderer(entityType, entityRendererProvider);
+                }
+            });
         }
     }
 }

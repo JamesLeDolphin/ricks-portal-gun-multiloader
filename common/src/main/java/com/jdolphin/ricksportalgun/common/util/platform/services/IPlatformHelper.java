@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
@@ -61,4 +62,9 @@ public interface IPlatformHelper {
     List<? extends String> getDisabledEntities();
 
     EntityType<? extends Entity> getPortalEntityType();
+
+    //TODO Find a better implementation of this
+    FlowingFluid getStillFluid(String type);
+
+    FlowingFluid getFlowingFluid(String type);
 }

@@ -1,12 +1,14 @@
 package com.jdolphin.ricksportalgun;
 
+import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.blockentity.PortalFluidStorageBlockEntity;
-import com.jdolphin.ricksportalgun.common.comp.computercraft.PGPeripheralProviderForge;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
 import com.jdolphin.ricksportalgun.common.event.PGCommonEventHandler;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -15,6 +17,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -39,9 +44,11 @@ public class RicksPortalGunForgeMain {
         RicksPortalGunCommonMain.init();
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
+        MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, RicksPortalGunForgeMain::attachCapabilitiesEvent);
         bus.addListener(this::commonSetup);
         bus.addListener(this::buildContents);
         bind(bus, Registries.BLOCK, PGBlocks::init);
+        //bind(bus, Registries.FLUID, PGFluids::init);
         bind(bus, Registries.ITEM, PGItems::init);
         bind(bus, Registries.BLOCK_ENTITY_TYPE, PGBlockEntities::init);
         bind(bus, Registries.ENTITY_TYPE, PGEntities::init);
@@ -49,11 +56,21 @@ public class RicksPortalGunForgeMain {
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
 
+        PGFluidTypes.FLUID_TYPES.register(bus);
+        ForgeFluids.FLUIDS.register(bus);
+
         context.registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
         context.registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
 
         if (PGHelper.hasCCTweaked()) {
-            dan200.computercraft.api.ForgeComputerCraftAPI.registerPeripheralProvider(new PGPeripheralProviderForge());
+            dan200.computercraft.api.ForgeComputerCraftAPI.registerPeripheralProvider((level, blockPos, direction) -> {
+                BlockEntity blockEntity = level.getBlockEntity(blockPos);
+                if (blockEntity instanceof PortalDispenserBlockEntity be) {
+                    return LazyOptional.of(() -> (IPeripheral) be.getPeripheral());
+                } else {
+                    return LazyOptional.empty();
+                }
+            });
         }
     }
 
@@ -74,10 +91,19 @@ public class RicksPortalGunForgeMain {
     }
 
     @SubscribeEvent
-    public static void attachCapabilitiesEvent(AttachCapabilitiesEvent<BlockEntity> event) {
+    public static void attachCapabilitiesEvent(AttachCapabilitiesEvent<? extends BlockEntity> event) {
         BlockEntity be = event.getObject();
+        System.out.println("Cap reg 1");
         if (be instanceof PortalFluidStorageBlockEntity storage) {
-            //ForgeCapabilities.FLUID_HANDLER.addListener(cap -> );
+            System.out.println("Cap reg 2");
+            ICapabilityProvider provider = new ICapabilityProvider() {
+                @Override
+                public <T> LazyOptional<T> getCapability(Capability<T> capability,  Direction direction) {
+                    return storage.fluidStorage != null ? (LazyOptional<T>) LazyOptional.of(() -> storage.fluidStorage.getCapability(capability).get()) : null;
+                }
+            };
+
+            event.addCapability(PGHelper.id("fluid_compat"), provider);
         }
     }
 

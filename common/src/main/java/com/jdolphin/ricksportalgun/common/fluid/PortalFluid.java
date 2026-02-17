@@ -1,8 +1,8 @@
 package com.jdolphin.ricksportalgun.common.fluid;
 
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
-import com.jdolphin.ricksportalgun.common.init.PGFluids;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
@@ -23,12 +23,12 @@ public abstract class PortalFluid extends FlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return PGFluids.PORTAL_FLUID.getB();
+        return PGServices.PLATFORM.getFlowingFluid("portal_fluid");
     }
 
     @Override
     public Fluid getSource() {
-        return PGFluids.PORTAL_FLUID.getA();
+        return PGServices.PLATFORM.getStillFluid("portal_fluid");
     }
 
     @Override
@@ -47,6 +47,7 @@ public abstract class PortalFluid extends FlowingFluid {
         Block.dropResources(state, level, pos, blockEntity);
     }
 
+
     @Override
     protected int getSlopeFindDistance(LevelReader level) {
         return 4;
@@ -59,11 +60,11 @@ public abstract class PortalFluid extends FlowingFluid {
 
     @Override
     protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.isSame(PGFluids.PORTAL_FLUID.getA());
+        return direction == Direction.DOWN && !fluid.isSame(getSource());
     }
 
     public boolean isSame(Fluid fluid) {
-        return fluid == PGFluids.PORTAL_FLUID.getA() || fluid == PGFluids.PORTAL_FLUID.getB();
+        return fluid == getFlowing() || fluid == getSource();
     }
 
     @Override

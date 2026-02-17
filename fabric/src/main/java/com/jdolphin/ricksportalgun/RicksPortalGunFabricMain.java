@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -57,7 +58,7 @@ public class RicksPortalGunFabricMain implements ModInitializer {
         }
 
         initEvents();
-
+        FluidStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> (net.fabricmc.fabric.api.transfer.v1.storage.Storage<net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant>) blockEntity.getFluidStorage(direction), PGBlockEntities.PORTAL_FLUID_TANK);
         if (PGHelper.hasCCTweaked()) {
             dan200.computercraft.api.peripheral.PeripheralLookup.get().registerFallback((level, blockPos, blockState, blockEntity, direction) -> {
                 if (blockEntity instanceof PortalDispenserBlockEntity be) return (dan200.computercraft.api.peripheral.IPeripheral) be.getPeripheral();

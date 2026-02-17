@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
 
 public class PortalBlock extends NetherPortalBlock implements EntityBlock {
 
@@ -50,7 +50,7 @@ public class PortalBlock extends NetherPortalBlock implements EntityBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return PGBlockEntities.PORTAL.create(pos, state);
     }
 }

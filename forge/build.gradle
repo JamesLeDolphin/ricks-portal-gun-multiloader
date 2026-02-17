@@ -108,18 +108,19 @@ dependencies {
 
     //Infinite Dimensions
     modCompileOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
-    modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
+    //modRuntimeOnly("maven.modrinth:infinite-dimensions:2.4.11+1.20.1-forge")
 
     modRuntimeOnly("maven.modrinth:architectury-api:9.2.14+forge")
     modRuntimeOnly("maven.modrinth:forgified-fabric-api:0.92.6+1.11.14+1.20.1")
 
     //Immersive portals
     modImplementation("curse.maven:immersive-portals-for-forge-355440:6368524")
+    modRuntimeOnly("curse.maven:cloth-config-348521:5729105")
 
     //CC Tweaked
     modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cct_version}")
     modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cct_version}")
-    modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cct_version}")
+    //modRuntimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cct_version}")
 
     //Create Stuff
     modImplementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
@@ -129,6 +130,9 @@ dependencies {
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
+
+    modCompileOnly("maven.modrinth:embeddium:0.3.31+mc1.20.1")
+    modCompileOnly("maven.modrinth:oculus:1.20.1-1.8.0")
 }
 
 jar {

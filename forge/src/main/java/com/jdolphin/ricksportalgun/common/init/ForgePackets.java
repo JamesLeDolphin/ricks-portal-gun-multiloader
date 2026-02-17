@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.init;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.*;
+import com.jdolphin.ricksportalgun.common.packets.CBFluidSyncPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -156,6 +157,10 @@ public class ForgePackets {
                 .consumerMainThread((packet, context) -> {
                     if (isClientSide(context)) ClientPacketHandler.openMeeseeksScreen(packet.mobId());
                 }).add();
+        INSTANCE.messageBuilder(CBFluidSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CBFluidSyncPacket::toBytes)
+                .decoder(CBFluidSyncPacket::new)
+                .consumerMainThread(CBFluidSyncPacket::handle).add();
     }
 
     private static boolean isClientSide(Supplier<NetworkEvent.Context> supplier) {
@@ -164,6 +169,10 @@ public class ForgePackets {
 
     private static  <P extends PGServerPayload> void handle(P packet, Supplier<NetworkEvent.Context> consumer) {
         packet.handle(consumer.get().getSender());
+    }
+
+    public static void sendToClients(Object message) {
+        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 
     public static void sendToServer(Object msg) {

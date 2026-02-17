@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.fluid.QuantumLeapElixirFluid;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import oshi.util.tuples.Pair;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class PGFluids {
     public static Pair<FlowingFluid, FlowingFluid> BOOTLEG_PORTAL_FLUID = registerBoth("bootleg_portal_fluid", new BootlegPortalFluid.Source(), new BootlegPortalFluid.Flowing());
     public static Pair<FlowingFluid, FlowingFluid> QUANTUM_LEAP_ELIXIR= registerBoth("quantum_leap_elixir", new QuantumLeapElixirFluid.Source(), new QuantumLeapElixirFluid.Flowing());
 
-    public static void init(BiConsumer<FlowingFluid, ResourceLocation> r) {
+    public static void init(BiConsumer<Fluid, ResourceLocation> r) {
         for (var e : ALL.entrySet()) {
             r.accept(e.getValue(), e.getKey());
         }

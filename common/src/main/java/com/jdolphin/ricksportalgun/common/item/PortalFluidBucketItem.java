@@ -1,6 +1,6 @@
 package com.jdolphin.ricksportalgun.common.item;
 
-import com.jdolphin.ricksportalgun.common.init.PGFluids;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,7 +17,7 @@ import java.awt.*;
 public class PortalFluidBucketItem extends BucketItem implements IPortalFluidItem {
 
     public PortalFluidBucketItem(Properties properties) {
-        super(PGFluids.PORTAL_FLUID.getA(), properties);
+        super(PGServices.PLATFORM.getStillFluid("portal_fluid"), properties);
     }
 
     @Override

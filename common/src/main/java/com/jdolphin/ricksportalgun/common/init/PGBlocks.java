@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.init;
 
 import com.jdolphin.ricksportalgun.common.block.*;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,7 +42,7 @@ public class PGBlocks {
 
     public static final Block PORTAL = register("portal", PortalBlock::new, BlockBehaviour.Properties.copy(Blocks.NETHER_PORTAL));
 
-    public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGFluids.PORTAL_FLUID.getA(), properties),
+    public static final Block PORTAL_FLUID = register("portal_fluid", properties -> new PGLiquidBlock(PGServices.PLATFORM.getStillFluid("portal_fluid"), properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY)
                     .noLootTable().lightLevel(value -> 8).liquid().sound(SoundType.EMPTY));
 
