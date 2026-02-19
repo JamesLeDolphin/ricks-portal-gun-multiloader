@@ -1,11 +1,8 @@
 package com.jdolphin.ricksportalgun.common.fluid;
 
-import com.jdolphin.ricksportalgun.common.init.PGFluids;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -16,26 +13,17 @@ public abstract class BootlegPortalFluid extends PortalFluid {
 
     @Override
     public Fluid getFlowing() {
-        return PGFluids.BOOTLEG_PORTAL_FLUID.getB();
+        return PGServices.PLATFORM.getFlowingFluid("bootleg");
     }
 
     @Override
     public Fluid getSource() {
-        return PGFluids.BOOTLEG_PORTAL_FLUID.getA();
+        return PGServices.PLATFORM.getStillFluid("bootleg");
     }
 
     @Override
     public Item getBucket() {
         return Items.AIR;
-    }
-
-    @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.isSame(PGFluids.BOOTLEG_PORTAL_FLUID.getA());
-    }
-
-    public boolean isSame(Fluid fluid) {
-        return fluid == PGFluids.BOOTLEG_PORTAL_FLUID.getA() || fluid == PGFluids.BOOTLEG_PORTAL_FLUID.getB();
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
 
 public class SubetherBarrierBlockEntity extends BlockEntity {
     private String code = "";
@@ -23,7 +23,7 @@ public class SubetherBarrierBlockEntity extends BlockEntity {
         }
     }
 
-    public @Nullable Object getPeripheral() {
+    public Object getPeripheral() {
         return peripheral;
     }
 

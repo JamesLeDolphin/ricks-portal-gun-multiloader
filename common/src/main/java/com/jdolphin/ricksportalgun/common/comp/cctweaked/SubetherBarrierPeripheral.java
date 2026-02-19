@@ -6,7 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
 
 public class SubetherBarrierPeripheral implements IPeripheral {
     private final SubetherBarrierBlockEntity be;
@@ -38,7 +38,7 @@ public class SubetherBarrierPeripheral implements IPeripheral {
     }
 
     @Override
-    public boolean equals(@Nullable IPeripheral other) {
+    public boolean equals(IPeripheral other) {
         return other == this;
     }
 }

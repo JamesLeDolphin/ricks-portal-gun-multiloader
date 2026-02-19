@@ -1,11 +1,8 @@
 package com.jdolphin.ricksportalgun.common.fluid;
 
-import com.jdolphin.ricksportalgun.common.init.PGFluids;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import com.jdolphin.ricksportalgun.common.util.platform.PGServices;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -16,26 +13,17 @@ public abstract class QuantumLeapElixirFluid extends PortalFluid {
 
     @Override
     public Fluid getFlowing() {
-        return PGFluids.QUANTUM_LEAP_ELIXIR.getB();
+        return PGServices.PLATFORM.getFlowingFluid("quantum");
     }
 
     @Override
     public Fluid getSource() {
-        return PGFluids.QUANTUM_LEAP_ELIXIR.getA();
+        return PGServices.PLATFORM.getStillFluid("quantum");
     }
 
     @Override
     public Item getBucket() {
         return Items.AIR;
-    }
-
-    @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.isSame(PGFluids.QUANTUM_LEAP_ELIXIR.getA());
-    }
-
-    public boolean isSame(Fluid fluid) {
-        return fluid == PGFluids.QUANTUM_LEAP_ELIXIR.getA() || fluid == PGFluids.QUANTUM_LEAP_ELIXIR.getB();
     }
 
     @Override

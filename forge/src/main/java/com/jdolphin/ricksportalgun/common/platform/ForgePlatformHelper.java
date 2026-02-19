@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity
 import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.init.ForgeFluids;
 import com.jdolphin.ricksportalgun.common.init.ForgePackets;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLConfig;
@@ -129,5 +131,25 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public EntityType<? extends Entity> getPortalEntityType() {
         return PortalHolder.TYPE;
+    }
+
+    @Override
+    public FlowingFluid getStillFluid(String type) {
+        return switch (type) {
+            case "portal_fluid" -> ForgeFluids.PORTAL_FLUID.get();
+            case "bootleg" -> ForgeFluids.BOOTLEG_PORTAL_FLUID.get();
+            case "quantum" -> ForgeFluids.QUANTUM_LEAP_ELIXIR.get();
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
+    }
+
+    @Override
+    public FlowingFluid getFlowingFluid(String type) {
+        return switch (type) {
+            case "portal_fluid" -> ForgeFluids.PORTAL_FLUID_FLOWING.get();
+            case "bootleg" -> ForgeFluids.BOOTLEG_PORTAL_FLUID_FLOWING.get();
+            case "quantum" -> ForgeFluids.QUANTUM_LEAP_ELIXIR_FLOWING.get();
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
     }
 }

@@ -3,9 +3,12 @@ package com.jdolphin.ricksportalgun.client;
 import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.event.PGClientEventHandler;
 import com.jdolphin.ricksportalgun.client.init.*;
+import com.jdolphin.ricksportalgun.common.init.PGBlocks;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -34,9 +37,10 @@ public class ForgeClientMain {
             event.register(PGTintHandler::tint, PGTintHandler.TINTABLES);
         }
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
+        @SuppressWarnings({"rawtypes", "unchecked", "removal"})
         @SubscribeEvent
         public static void clientSetup(FMLClientSetupEvent event) {
+            ItemBlockRenderTypes.setRenderLayer(PGBlocks.PORTAL_FLUID_TANK, RenderType.translucent());
             event.enqueueWork(() -> {
                 PGMenuScreens.ALL.forEach((type, func) -> {
                     MenuScreens.ScreenConstructor constructor = func::apply;
@@ -61,7 +65,11 @@ public class ForgeClientMain {
         @SubscribeEvent
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             PGEntityRenderRegistry.initRenderers();
-            PGEntityRenderRegistry.RENDERERS.forEach(event::registerEntityRenderer);
+            PGEntityRenderRegistry.RENDERERS.forEach((entityType, entityRendererProvider) -> {
+                if (entityType != null && entityRendererProvider != null) {
+                    event.registerEntityRenderer(entityType, entityRendererProvider);
+                }
+            });
         }
     }
 }

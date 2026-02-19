@@ -6,6 +6,8 @@ import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
@@ -57,4 +60,11 @@ public interface IPlatformHelper {
     boolean disablePortalGunColorTint();
 
     List<? extends String> getDisabledEntities();
+
+    EntityType<? extends Entity> getPortalEntityType();
+
+    //TODO Find a better implementation of this
+    FlowingFluid getStillFluid(String type);
+
+    FlowingFluid getFlowingFluid(String type);
 }

@@ -38,7 +38,6 @@ import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
     }
 
     @Override
-    public @Nullable ItemStack getRemainingStack() {
+    public ItemStack getRemainingStack() {
         return null;
     }
 
@@ -383,7 +382,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         return tag.contains(PGNbtKeys.TAG_DIMENSION) ? tag.getString(PGNbtKeys.TAG_DIMENSION) : Level.OVERWORLD.location().toString();
     }
 
-    public static BlockPos getHopCoords(ItemStack stack, @Nullable BlockPos fallback) {
+    public static BlockPos getHopCoords(ItemStack stack, BlockPos fallback) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains(PGNbtKeys.TAG_BPOS)) {
             CompoundTag bpTag = tag.getCompound(PGNbtKeys.TAG_BPOS);

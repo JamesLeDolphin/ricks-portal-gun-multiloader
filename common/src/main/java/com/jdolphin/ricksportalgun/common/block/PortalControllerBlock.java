@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+
 
 public class PortalControllerBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
@@ -97,7 +97,7 @@ public class PortalControllerBlock extends DirectionalBlock implements EntityBlo
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return PGBlockEntities.PORTAL_CONTROLLER.create(pos, state);
     }
 }

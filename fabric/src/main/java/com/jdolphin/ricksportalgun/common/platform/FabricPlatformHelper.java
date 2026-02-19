@@ -1,8 +1,10 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
@@ -17,6 +19,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
@@ -26,8 +30,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import org.apache.commons.lang3.function.TriFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -90,7 +94,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
         var factory = new ExtendedScreenHandlerFactory() {
 
             @Override
-            public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+            public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
                 return be.createMenu(i, inventory, player);
             }
 
@@ -142,5 +146,30 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public List<? extends String> getDisabledEntities() {
         return PGCommonConfig.COMMON_CONFIG.getBlacklistedEntities();
+    }
+
+    @Override
+    public EntityType<? extends Entity> getPortalEntityType() {
+        return PGHelper.hasImmersivePortals() ? PortalHolder.TYPE : null;
+    }
+
+    @Override
+    public FlowingFluid getStillFluid(String type) {
+        return switch (type) {
+            case "portal_fluid" -> PGFluids.PORTAL_FLUID.getA();
+            case "bootleg" -> PGFluids.BOOTLEG_PORTAL_FLUID.getA();
+            case "quantum" -> PGFluids.QUANTUM_LEAP_ELIXIR.getA();
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
+    }
+
+    @Override
+    public FlowingFluid getFlowingFluid(String type) {
+        return switch (type) {
+            case "portal_fluid" -> PGFluids.PORTAL_FLUID.getB();
+            case "bootleg" -> PGFluids.BOOTLEG_PORTAL_FLUID.getB();
+            case "quantum" -> PGFluids.QUANTUM_LEAP_ELIXIR.getB();
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
     }
 }
