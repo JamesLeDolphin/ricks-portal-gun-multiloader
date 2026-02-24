@@ -1,9 +1,10 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
-import com.jdolphin.ricksportalgun.common.comp.immersive_portals.PortalHolder;
+import com.jdolphin.ricksportalgun.common.comp.immersive_portals.ImmersivePortalsHandler;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.init.PGFluids;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
@@ -150,7 +151,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public EntityType<? extends Entity> getPortalEntityType() {
-        return PGHelper.hasImmersivePortals() ? PortalHolder.TYPE : null;
+        return PGHelper.hasImmersivePortals() ? ImmersivePortalsHandler.ENTITY_TYPE : null;
     }
 
     @Override

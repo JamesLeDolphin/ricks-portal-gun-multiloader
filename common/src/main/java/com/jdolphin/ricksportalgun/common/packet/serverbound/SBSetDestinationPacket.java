@@ -17,7 +17,7 @@ public record SBSetDestinationPacket(BlockPos pos, String dim, boolean manualTar
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        String dimension = dim().toLowerCase().replace(" ", "_");
+        String dimension = dim().toLowerCase().replaceAll(" ", "_");
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
             CompoundTag tag = stack.getOrCreateTag();

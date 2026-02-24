@@ -329,8 +329,11 @@ public class PortalEntity extends Entity {
                     destinationLevel = LevelHelper.getServerWorld(this.level(), key);
 
                     if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
-                        key = InfinityHandler.getOrCreateResourceKey(level().getServer(), getHopDim());
-                        destinationLevel = LevelHelper.getServerWorld(this.level(), key);
+                        ResourceLocation rl = InfinityHandler.getDimensionId(level().getServer(), getHopDim());
+                        if (rl != null) {
+                            ResourceKey<Level> key1 = LevelHelper.getWorldKey(rl);
+                            destinationLevel = LevelHelper.getServerWorld(this.level(), key1);
+                        }
                     }
                 } else {
                     destinationLevel = (ServerLevel) this.level();

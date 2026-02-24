@@ -19,6 +19,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -39,12 +40,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_UPGRADES;
 
 @SuppressWarnings("unused")
 public class PortalGunItem extends Item implements IWaypointStorage, IPortalFluidItem {
+    private final List<TickAction> tickActions = new ArrayList<>();
+
     private final int tints;
 
     public PortalGunItem(Properties properties, int tints) {
@@ -82,8 +86,11 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         if (tag.contains(PGNbtKeys.PORTAL_TYPE)) {
             String s = tag.getString(PGNbtKeys.PORTAL_TYPE);
             ResourceLocation rl = new ResourceLocation(s);
-            return PGPortalTypes.TYPES.get(rl);
-        } else return PGPortalTypes.DEFAULT;
+            PortalType type = PGPortalTypes.TYPES.get(rl);
+            if (type != null) {
+                return type;
+            }
+        } return PGPortalTypes.DEFAULT;
     }
 
     public void migrateDamage(ItemStack stack) {
@@ -196,8 +203,19 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
                             exitPortalPos = getLocation(level, destination, destinationRay.getDirection(), destinationRay.getLocation()).add(0, 1, 0);
 
                         } else if (destinationLevel == null && PGHelper.hasInfiniteDimensions()) {
-                            ResourceKey<Level> resourceKey = InfinityHandler.getOrCreateResourceKey(((ServerLevel) level).getServer(), dimension);
-                            destinationLevel = LevelHelper.getServerWorld(level, resourceKey);
+                            ResourceLocation rl = InfinityHandler.getDimensionId(level.getServer(), dimension);
+                            if (rl != null) {
+                                MinecraftServer server = ((ServerPlayer) player).server;
+                                key = LevelHelper.getWorldKey(rl);
+                                ServerLevel dest = server.getLevel(key);
+                                if (dest == null) { //TODO Translation
+                                    player.sendSystemMessage(Component.literal("Finding dimension...").withStyle(ChatFormatting.YELLOW));
+                                    tickActions.add((level1, stack1) -> LevelHelper.getWorldKey(rl));
+                                    return InteractionResultHolder.pass(stack);
+                                } else {
+                                    destinationLevel = dest;
+                                }
+                            }
                         }
 
                         Vec3 loc = hitResult.getLocation();
@@ -321,6 +339,25 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
             }
         }
         return InteractionResultHolder.pass(stack);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (!level.isClientSide && entity instanceof Player player) {
+            TickAction toBeRemoved = null;
+
+            for (TickAction tickAction : tickActions) {
+                ResourceKey<Level> key = tickAction.tickDimensionAdd(level, stack);
+                ServerLevel serverLevel = level.getServer().getLevel(key);
+                if (serverLevel != null) {
+                    toBeRemoved = tickAction;
+                    InteractionHand hand = slotId == 99 ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+                    use(level, player, hand);
+                }
+            }
+            if (toBeRemoved != null) tickActions.remove(toBeRemoved);
+        }
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     public static boolean canBypassDragon(ItemStack stack) {
@@ -467,5 +504,10 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
             tag.remove(PGNbtKeys.SETTINGS);
         }
         tag.put(TAG_UPGRADES, listTag);
+    }
+
+    private interface TickAction {
+
+        ResourceKey<Level> tickDimensionAdd(Level level, ItemStack stack);
     }
 }
