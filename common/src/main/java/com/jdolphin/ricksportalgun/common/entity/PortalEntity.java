@@ -84,7 +84,8 @@ public class PortalEntity extends Entity {
 
     public PortalType getPortalType() {
         String s = entityData.get(TYPE);
-        return PGPortalTypes.TYPES.get(new ResourceLocation(s));
+        ResourceLocation rl = new ResourceLocation(s);
+        return PGPortalTypes.TYPES.getOrDefault(rl, PGPortalTypes.DEFAULT);
     }
 
     public void setPortalType(PortalType type) {
@@ -160,7 +161,7 @@ public class PortalEntity extends Entity {
     public PortalShape getShape() {
         String s = entityData.get(SHAPE);
         ResourceLocation rl = new ResourceLocation(s);
-        return PGPortalShapes.SHAPES.get(rl);
+        return PGPortalShapes.SHAPES.getOrDefault(rl, PGPortalShapes.SQUARE);
     }
 
     public void setShape(PortalShape shape) {
@@ -309,6 +310,12 @@ public class PortalEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+
+        PortalType type = getPortalType();
+        if (type != null) {
+            type.tick(this);
+        }
+
         if (!this.level().isClientSide()) {
             if (!exists) {
                 LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getOpenSound(), SoundSource.PLAYERS);

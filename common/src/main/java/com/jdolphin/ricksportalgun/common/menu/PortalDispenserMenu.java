@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.menu;
 import com.jdolphin.ricksportalgun.common.blockentity.PortalDispenserBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGMenuTypes;
+import com.jdolphin.ricksportalgun.common.item.IWaypointStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -21,12 +22,12 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
     private String destDim;
 
     public PortalDispenserMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(containerId, playerInventory, new SimpleContainer(1), new SimpleContainerData(2), ContainerLevelAccess.NULL, buf.readBlockPos(), buf.readUtf());
+        this(containerId, playerInventory, new SimpleContainer(2), new SimpleContainerData(2), ContainerLevelAccess.NULL, buf.readBlockPos(), buf.readUtf());
     }
 
     public PortalDispenserMenu(int containerId, Inventory playerInventory, Container container, ContainerData data, ContainerLevelAccess access, BlockPos destPos, String destDim) {
         super(PGMenuTypes.PORTAL_DISPENSER, containerId);
-        checkContainerSize(container, 1);
+        checkContainerSize(container, 2);
         checkContainerDataCount(data, 2);
         this.data = data;
         this.access = access;
@@ -39,10 +40,18 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
         addInventoryHotbarSlots(playerInventory, 8, 142);
 
         container.startOpen(playerInventory.player);
+
         this.addSlot(new Slot(container, 0, 26, 52) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.is(PGItems.PORTAL_FLUID);
+            }
+        });
+
+        this.addSlot(new Slot(container, 1, 26, 68) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.getItem() instanceof IWaypointStorage;
             }
         });
         this.addDataSlots(data);
@@ -101,10 +110,10 @@ public class PortalDispenserMenu extends AbstractContainerMenu {
             ItemStack original = slot.getItem();
             itemstack = original.copy();
             if (index == 0) {
-                if (!this.moveItemStackTo(original, 1, 36, true)) {
+                if (!this.moveItemStackTo(original, 2, 36, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(original, 0, 1, false)) {
+            } else if (!this.moveItemStackTo(original, 0, 2, false)) {
                 return ItemStack.EMPTY;
             }
             if (original.isEmpty()) {

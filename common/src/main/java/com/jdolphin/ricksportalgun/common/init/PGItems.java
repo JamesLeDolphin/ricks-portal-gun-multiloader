@@ -119,7 +119,7 @@ public class PGItems {
     }
 
     private static Item registerFluid(String name) {
-        return register(name, PortalFluidBottleItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(PGFoods.PORTAL_FLUID),
+        return register(name, PortalFluidBottleItem::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).stacksTo(1).food(PGFoods.PORTAL_FLUID),
                 PGCreativeModeTabs.FOOD_AND_DRINKS);
     }
 

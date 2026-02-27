@@ -63,7 +63,7 @@
   "menu.ricksportalgun.settings": "Settings",
   "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "menu.ricksportalgun.waypoints.info": "Waypoint Info",
-  "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s/%s",
+  "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s%%",
   "menu.ricksportalgun.workbench": "Portal Gun Workbench",
   "menu.ricksportalgun.settings.security": "Security Settings",
   "menu.ricksportalgun.settings.customization": "Customization Settings",

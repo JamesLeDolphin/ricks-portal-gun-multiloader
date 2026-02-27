@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.item.IPortalFluidItem;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -44,7 +45,7 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     private String desDim = "minecraft:overworld";
     private BlockPos desPos = BlockPos.ZERO;
     protected final ContainerData dataAccess;
-    private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
+    private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
     public Object getPeripheral() {
         return peripheral;
@@ -119,8 +120,22 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         if (!hasFuel()) {
             ItemStack stack = this.items.get(0);
             if (stack.is(PGItems.PORTAL_FLUID)) {
-                stack.shrink(1);
-                this.fuel = maxFuel;
+                IPortalFluidItem fluidItem = (IPortalFluidItem) stack.getItem();
+
+                int itemFuel = fluidItem.getFluid(stack);
+                int toGun = maxFuel - fuel;
+                int transferred = Math.min(toGun, itemFuel);
+
+                this.fuel = fuel + transferred;
+                int remainder = itemFuel - transferred;
+                if (remainder > 0) {
+                    fluidItem.setAmount(stack, remainder);
+                } else {
+                    stack.shrink(1);
+                    if (fluidItem.getRemainingStack() != null) {
+                        items.set(0, fluidItem.getRemainingStack());
+                    }
+                }
             }
         }
         super.setChanged();
@@ -246,12 +261,14 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public ItemStack removeItem(int i, int i1) {
-        return null;
+        return ContainerHelper.removeItem(items, i, i1);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int i) {
-        return null;
+        ItemStack stack = items.get(i);
+        items.remove(stack);
+        return stack;
     }
 
     @Override

@@ -23,9 +23,10 @@ public interface IPortalFluidItem {
     default void empty(ItemStack stack, Player player, InteractionHand hand) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt(PGNbtKeys.TAG_FUEL, 0);
-        if (getRemainingStack() != null) {
-            ItemStack stack1 = player.getItemInHand(hand);
-            stack1.shrink(1);
+
+        ItemStack stack1 = player.getItemInHand(hand);
+        stack1.shrink(1);
+        if (getRemainingStack() != null && !getRemainingStack().equals(ItemStack.EMPTY)) {
             player.addItem(getRemainingStack());
         }
     }

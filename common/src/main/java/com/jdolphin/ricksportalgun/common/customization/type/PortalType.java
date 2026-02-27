@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.customization.type;
 
 import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.entity.PortalEntity;
 import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import net.minecraft.network.chat.Component;
@@ -39,6 +40,10 @@ public class PortalType {
 
     public int getDefaultColor() {
         return Color.GREEN.getRGB();
+    }
+
+    public void tick(PortalEntity portal) {
+
     }
 
     public boolean supportsShape() {

@@ -152,7 +152,7 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
         int maxX = x + 23;
         graphics.fill(minX, minY, maxX, minY - percentage, Color.GREEN.getRGB());
         if ((mouseX >= minX && mouseX <= maxX) && (mouseY >= minY - 4 * maxFuel + 12 && mouseY <= minY)) {
-            graphics.renderTooltip(this.font, Component.translatable("menu.ricksportalgun.portal_dispenser.fuel", menu.getFuel(), maxFuel), mouseX, mouseY);
+            graphics.renderTooltip(this.font, Component.translatable("menu.ricksportalgun.portal_dispenser.fuel", ((menu.getFuel() / maxFuel) * 100)), mouseX, mouseY);
         }
     }
 

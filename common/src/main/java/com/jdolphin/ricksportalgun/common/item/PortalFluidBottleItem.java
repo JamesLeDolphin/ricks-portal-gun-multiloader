@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,8 +25,14 @@ public class PortalFluidBottleItem extends Item implements IPortalFluidItem {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
             if (!player.isCreative()) {
-                ItemUtils.startUsingInstantly(level, player, player.getUsedItemHand());
-                player.addItem(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
+                InteractionHand hand = player.getUsedItemHand();
+                ItemUtils.startUsingInstantly(level, player, hand);
+                int amount = this.getFluid(stack);
+
+                if (amount == 1) {
+                    this.empty(stack, player, hand);
+                } else this.lowerFuel(stack, 1);
+
                 player.awardStat(Stats.ITEM_USED.get(this));
             }
             player.addEffect(new MobEffectInstance(MobEffects.POISON));

@@ -44,7 +44,7 @@ public class DefaultPortalTypeRenderer extends AbstractPortalTypeRenderer {
                 red, green, blue, 1,
                 0, 0, 0.5f, 1,
                 OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT,
-                0, -1, 0);
+                0, 1, 0);
 
         stack.popPose();
     }
