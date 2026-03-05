@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -73,11 +75,22 @@ public class PortalBlockEntity extends BlockEntity {
                             BlockPos safePos = destinationControllerPos.relative(destinationControllerState.getValue(PortalControllerBlock.FACING), 2).above();
                             BlockState state = level.getBlockState(ownerControllerPos);
 
-                            float entranceRot = Mth.wrapDegrees(state.getValue(PortalControllerBlock.FACING).getOpposite().toYRot());
-                            float exitRot = Mth.wrapDegrees(destinationControllerState.getValue(PortalControllerBlock.FACING).toYRot());
-                            float diff = entity.getYRot() - entranceRot;
+                            Direction entranceDir = state.getValue(PortalControllerBlock.FACING).getOpposite();
+                            Direction exitDir = destinationControllerState.getValue(PortalControllerBlock.FACING);
 
-                            entity.teleportTo(destinationLevel, safePos.getX(), safePos.getY(), safePos.getZ(), Set.of(),  Mth.wrapDegrees(exitRot - diff), entity.getXRot());
+                            float entranceRot = Mth.wrapDegrees(entranceDir.toYRot());
+                            float exitRot = Mth.wrapDegrees(exitDir.toYRot());
+                            float diff = entity.getYRot() - entranceRot;
+                            float destRot = Mth.wrapDegrees(exitRot - diff);
+
+                            Vec3 vel = entity.getDeltaMovement();
+
+                            Vec3 updatedVel = vel.yRot(Mth.wrapDegrees(180 + exitRot - entranceRot));
+                            entity.setDeltaMovement(Vec3.ZERO);
+                            entity.setDeltaMovement(updatedVel);
+
+                            entity.teleportTo(destinationLevel, safePos.getX(), safePos.getY(), safePos.getZ(), Set.of(),
+                                    destRot, entity.getXRot());
                         }
                     }
                 }

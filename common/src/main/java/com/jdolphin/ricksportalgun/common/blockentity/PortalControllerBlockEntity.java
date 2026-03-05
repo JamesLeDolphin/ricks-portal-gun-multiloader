@@ -95,7 +95,9 @@ public class PortalControllerBlockEntity extends BlockEntity {
     public void tryActivate(String address) {
         if (address != null && !address.isEmpty()) {
             PGPortalAddress.DecodedAddress decoded = PGPortalAddress.getLocation(address);
-            tryActivate(new ChunkPos(decoded.chunkX(), decoded.chunkZ()), decoded.dimension().toString());
+            if (decoded != null) {
+                tryActivate(new ChunkPos(decoded.chunkX(), decoded.chunkZ()), decoded.dimension().toString());
+            }
         }
     }
 
@@ -111,10 +113,10 @@ public class PortalControllerBlockEntity extends BlockEntity {
         if (level instanceof ServerLevel serverLevel) {
             if (destinationPos != null && dimension != null) {
                 BlockState state = getBlockState();
-                if (matchesShape(level, getBlockState(), getBlockPos(), true, false) && !state.getValue(PortalControllerBlock.ACTIVE)) {
+                if (matchesShape(level, getBlockPos(), true, false) && !state.getValue(PortalControllerBlock.ACTIVE)) {
                     BlockEntity be = serverLevel.getBlockEntity(getBlockPos());
                     if (be instanceof PortalControllerBlockEntity controller) {
-                        if (controller.matchesShape(serverLevel, state, getBlockPos(), true, false)) {
+                        if (controller.matchesShape(serverLevel, getBlockPos(), true, false)) {
 
                             ResourceKey<Level> key = LevelHelper.getWorldKey(new ResourceLocation(dimension));
                             ServerLevel destinationLevel = LevelHelper.getServerWorld(serverLevel, key);
@@ -125,7 +127,7 @@ public class PortalControllerBlockEntity extends BlockEntity {
                                 //Find destination portal
                                 for (Map.Entry<BlockPos, BlockEntity> entry : chunk.getBlockEntities().entrySet()) {
                                     if (entry.getValue() instanceof PortalControllerBlockEntity destinationController && !destinationController.getBlockPos().equals(this.getBlockPos())) {
-                                        boolean matchesShape = destinationController.matchesShape(destinationLevel, destinationController.getBlockState(), destinationController.getBlockPos(), true, false);
+                                        boolean matchesShape = destinationController.matchesShape(destinationLevel, destinationController.getBlockPos(), true, false);
                                         if (matchesShape && !destinationController.isActive()) {
                                             this.setDestination(destinationController.getBlockPos(), dimension);
                                             destinationController.setDestination(this.getBlockPos(), serverLevel.dimension().location().toString());
@@ -189,7 +191,7 @@ public class PortalControllerBlockEntity extends BlockEntity {
     public void validate(Level level, BlockState state, BlockPos pos, boolean checkAttached, boolean failOnAttached) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof PortalControllerBlockEntity controller) {
-            if (matchesShape(level, state, pos, checkAttached, failOnAttached)) {
+            if (matchesShape(level, pos, checkAttached, failOnAttached)) {
                 Direction direction = state.getValue(PortalControllerBlock.FACING).getClockWise();
                 BlockPos corner = getLowerLeft(state, pos);
                 for (int i = 0; i < portalShape.length; i++) {
@@ -216,33 +218,36 @@ public class PortalControllerBlockEntity extends BlockEntity {
         }
     }
 
-    public boolean matchesShape(Level level, BlockState state, BlockPos pos, boolean checkAttached, boolean failOnAttached) {
+    public boolean matchesShape(Level level, BlockPos pos, boolean checkAttached, boolean failOnAttached) {
         boolean matches = true;
-        Direction direction = state.getValue(PortalControllerBlock.FACING).getClockWise();
-        BlockPos leftCorner = getLowerLeft(state, pos);
-        for (int y = 0; y <portalShape.length; y++) {
-            for (int x = 0; x < portalShape[y].length; x++) {
-                BlockPos relative = leftCorner.relative(direction.getOpposite(), x).above(y);
-                BlockState portalState = level.getBlockState(relative);
-                boolean correctDir = (portalState.hasProperty(PortalFrameBlock.FACING) &&
-                        portalState.getValue(PortalFrameBlock.FACING).equals(state.getValue(PortalFrameBlock.FACING))) || !portalState.hasProperty(PortalFrameBlock.FACING);
+        BlockState state = level.getBlockState(pos);
+        if (state.is(PGBlocks.PORTAL_CONTROLLER)) {
+            Direction direction = state.getValue(PortalControllerBlock.FACING).getClockWise();
+            BlockPos leftCorner = getLowerLeft(state, pos);
+            for (int y = 0; y < portalShape.length; y++) {
+                for (int x = 0; x < portalShape[y].length; x++) {
+                    BlockPos relative = leftCorner.relative(direction.getOpposite(), x).above(y);
+                    BlockState portalState = level.getBlockState(relative);
+                    boolean correctDir = (portalState.hasProperty(PortalFrameBlock.FACING) &&
+                            portalState.getValue(PortalFrameBlock.FACING).equals(state.getValue(PortalFrameBlock.FACING))) || !portalState.hasProperty(PortalFrameBlock.FACING);
 
-                if (checkAttached) {
-                    if (portalState.hasProperty(PortalFrameBlock.ATTACHED) && portalState.getValue(PortalFrameBlock.ATTACHED)) {
-                        matches = !failOnAttached;
-                        if (!matches) {
-                            break;
+                    if (checkAttached) {
+                        if (portalState.hasProperty(PortalFrameBlock.ATTACHED) && portalState.getValue(PortalFrameBlock.ATTACHED)) {
+                            matches = !failOnAttached;
+                            if (!matches) {
+                                break;
+                            }
                         }
                     }
-                }
-                if (!isCorrectBlock(portalShape[y][x], portalState) || !correctDir) {
-                    matches = false;
-                    break;
+                    if (!isCorrectBlock(portalShape[y][x], portalState) || !correctDir) {
+                        matches = false;
+                        break;
+                    }
                 }
             }
+            return matches;
         }
-
-        return matches;
+        return false;
     }
 
     public BlockPos getLowerLeft(BlockState state, BlockPos pos) {

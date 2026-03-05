@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.blockentity;
 
+import com.jdolphin.ricksportalgun.common.block.PortalDialerBlock;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,8 @@ public class PortalDialerBlockEntity extends BlockEntity {
     public void setControllerPos(BlockPos controllerPos) {
         this.controllerPos = controllerPos;
         this.setChanged();
+
+        level.setBlock(getBlockPos(), getBlockState().setValue(PortalDialerBlock.CONNECTED, controllerPos != null), 3);
     }
 
     public BlockPos getControllerPos() {

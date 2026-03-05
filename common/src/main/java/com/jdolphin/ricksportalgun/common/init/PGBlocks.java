@@ -32,10 +32,10 @@ public class PGBlocks {
             .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
 
     public static final Block PORTAL_FRAME = register("portal_frame", PortalFrameBlock::new, BlockBehaviour.Properties.of()
-            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(12, 1200.0F));
 
     public static final Block PORTAL_CONTROLLER = register("portal_controller", PortalControllerBlock::new, BlockBehaviour.Properties.of()
-            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(12, 1200.0F));
 
     public static final Block PORTAL_DIALER = register("portal_dialer", PortalDialerBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundType.STONE).noOcclusion().strength(1.5F, 6.0F));

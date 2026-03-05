@@ -2,6 +2,7 @@ package com.jdolphin.ricksportalgun.common.block;
 
 import com.jdolphin.ricksportalgun.common.blockentity.PortalControllerBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
+import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.util.PGPortalAddress;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -10,6 +11,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -45,22 +47,26 @@ public class PortalControllerBlock extends DirectionalBlock implements EntityBlo
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult result = super.use(state, level, pos, player, hand, hit);
         if (!level.isClientSide && hand.equals(InteractionHand.MAIN_HAND)) {
-            if (result == InteractionResult.PASS) {
-                String address = PGPortalAddress.getAddressHyphened(pos, level.dimension().location());
-                MutableComponent component = Component.literal("[" +address + "]")
-                        .withStyle(style -> style
-                                .withColor(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, address))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.copy"))));
-                String s = String.format("This portals (%s, %s, %s) address is: ", pos.getX(), pos.getY(), pos.getZ());
-                player.displayClientMessage(Component.literal(s).append(component), false);
+            if (!player.getItemInHand(hand).is(PGItems.PORTAL_DIALER)) {
+                player.displayClientMessage(getComponent(pos, level.dimension().location()), false);
 
                 return InteractionResult.SUCCESS;
             }
         }
-        return result;
+        return super.use(state, level, pos, player, hand, hit);
+    }
+
+    private MutableComponent getComponent(BlockPos pos, ResourceLocation dimension) {
+        String address = PGPortalAddress.getAddressHyphened(pos, dimension);
+        MutableComponent component = Component.literal("[" + address + "]")
+                .withStyle(style -> style
+                        .withColor(ChatFormatting.GREEN)
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, address))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.copy"))));
+        String s = String.format("This portals (%s, %s, %s) address is: ", pos.getX(), pos.getY(), pos.getZ());
+
+        return Component.literal(s).append(component);
     }
 
     @Override

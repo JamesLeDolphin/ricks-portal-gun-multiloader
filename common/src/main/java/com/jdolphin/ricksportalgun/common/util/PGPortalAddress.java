@@ -68,9 +68,12 @@ public class PGPortalAddress {
 
         int chunkX = (int)x - 1_875_000;
         int chunkZ = (int)z - 1_875_000;
-        ResourceLocation dim = new ResourceLocation(PGHelper.getKeyFromValue(LevelHelper.DIM_TO_INT, ((int) d)));
-
-        return new DecodedAddress(chunkX, chunkZ, dim);
+        String dimString = PGHelper.getKeyFromValue(LevelHelper.DIM_TO_INT, ((int) d));
+        if (dimString != null && !dimString.isEmpty()) {
+            ResourceLocation dim = new ResourceLocation(dimString);
+            return new DecodedAddress(chunkX, chunkZ, dim);
+        }
+        return null;
     }
 
     public record DecodedAddress(int chunkX, int chunkZ, ResourceLocation dimension) {}
