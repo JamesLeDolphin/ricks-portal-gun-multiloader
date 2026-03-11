@@ -31,6 +31,8 @@ public interface IPortalFluidItem {
         }
     }
 
+    boolean canRefuelPortalGun();
+
     default void lowerFuel(ItemStack stack, int amount) {
         int i = getFluid(stack);
         CompoundTag tag = stack.getOrCreateTag();

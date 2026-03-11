@@ -65,6 +65,11 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         return null;
     }
 
+    @Override
+    public boolean canRefuelPortalGun() {
+        return true;
+    }
+
     public int getMaxFluid(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return getUpgrades(stack).contains(PGUpgradeTypes.MAX_FUEL.getUpgradeTag()) ? 128 : 64;

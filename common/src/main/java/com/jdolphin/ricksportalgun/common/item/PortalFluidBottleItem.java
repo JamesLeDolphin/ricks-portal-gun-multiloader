@@ -83,4 +83,9 @@ public class PortalFluidBottleItem extends Item implements IPortalFluidItem {
     public @Nullable ItemStack getRemainingStack() {
         return Items.GLASS_BOTTLE.getDefaultInstance();
     }
+
+    @Override
+    public boolean canRefuelPortalGun() {
+        return !PGItems.QUANTUM_LEAP_ELIXIR.equals(this);
+    }
 }

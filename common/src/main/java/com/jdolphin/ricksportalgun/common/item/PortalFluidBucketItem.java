@@ -56,4 +56,9 @@ public class PortalFluidBucketItem extends BucketItem implements IPortalFluidIte
     public @Nullable ItemStack getRemainingStack() {
         return Items.BUCKET.getDefaultInstance();
     }
+
+    @Override
+    public boolean canRefuelPortalGun() {
+        return true;
+    }
 }
