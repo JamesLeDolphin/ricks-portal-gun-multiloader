@@ -4,6 +4,7 @@ import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.PGPayload;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record SBOpenCoordGuiPacket() implements PGPayload {
@@ -20,14 +22,16 @@ public record SBOpenCoordGuiPacket() implements PGPayload {
 
     public void handle(ServerPlayer player) {
         MinecraftServer server = player.server;
-        ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
-        PortalGunItem.migrateOldData(stack);
-        if (PGHelper.canPlayerAccessGun(player, stack)) {
-            List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
-            if (!dims.contains(PGHelper.id("blender").toString()))
-                dims.add(PGHelper.id("blender").toString());
-            PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
-        }
+        server.executeIfPossible(() -> {
+            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+            PortalGunItem.migrateOldData(stack);
+            if (PGHelper.canPlayerAccessGun(player, stack)) {
+                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
+                if (!dims.contains(PGHelper.id("blender").toString()))
+                    dims.add(PGHelper.id("blender").toString());
+                PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
+            }
+        });
     }
 
     @Override
