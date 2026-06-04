@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -18,7 +19,10 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
         server.executeIfPossible(() -> {
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
             if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
-                PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+                boolean hasDim1 = PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.DIM_1.getUpgradeTag());
+                if (player.level().dimension().location().toString().equals(dim) || hasDim1)
+                    PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+                else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
             } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
         });
     }
