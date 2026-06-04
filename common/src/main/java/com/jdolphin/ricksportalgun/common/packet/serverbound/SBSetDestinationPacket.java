@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.common.packet.serverbound;
 
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
+import com.jdolphin.ricksportalgun.common.init.PGUpgradeTypes;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -23,7 +24,10 @@ public record SBSetDestinationPacket(BlockPos pos, String dim, boolean manualTar
             CompoundTag tag = stack.getOrCreateTag();
             tag.putBoolean(PGNbtKeys.PROJECTILE_MODE, manualTarget);
             if (!PGConfigHelper.getDisabledDimensions().contains(dimension)) {
-                PortalGunItem.setHopLocation(stack, dimension, pos);
+                boolean hasDim1 = PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.DIM_1.getUpgradeTag());
+                if (player.level().dimension().location().toString().equals(dim) || hasDim1)
+                    PortalGunItem.setHopLocation(stack, dimension, pos);
+                else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
             } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
         });
     }

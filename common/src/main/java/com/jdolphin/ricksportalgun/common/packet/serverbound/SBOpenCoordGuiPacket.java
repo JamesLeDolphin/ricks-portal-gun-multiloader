@@ -3,6 +3,7 @@ package com.jdolphin.ricksportalgun.common.packet.serverbound;
 import com.jdolphin.ricksportalgun.common.item.PortalGunItem;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record SBOpenCoordGuiPacket() implements PGServerPayload {
@@ -19,9 +22,10 @@ public record SBOpenCoordGuiPacket() implements PGServerPayload {
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             InteractionHand hand = PGHelper.getPortalGunHand(player);
-            PortalGunItem.migrateOldUpgrades(player.getItemInHand(hand));
+            ItemStack stack = player.getItemInHand(hand);
+            PortalGunItem.migrateOldUpgrades(stack);
             if (PGHelper.canPlayerAccessGun(player, hand)) {
-                List<String> dims = LevelHelper.getDimensionsAsString(server.getAllLevels());
+                List<String> dims = new ArrayList<>(LevelHelper.getDimensionsAsString(server.getAllLevels()).stream().filter(s -> !PGConfigHelper.getDisabledDimensions().contains(s)).toList());
                 if (!dims.contains(PGHelper.id("blender").toString()))
                     dims.add(PGHelper.id("blender").toString());
                 PGHelper.sendPacketToClient(player, new CBOpenCoordGuiPacket(dims));
