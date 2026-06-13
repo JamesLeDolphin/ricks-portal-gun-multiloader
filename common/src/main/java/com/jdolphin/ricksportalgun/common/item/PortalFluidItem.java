@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
+import java.util.Optional;
+
 public class PortalFluidItem extends Item {
 
     public PortalFluidItem(Properties pProperties) {
@@ -28,7 +30,8 @@ public class PortalFluidItem extends Item {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
             if (!player.isCreative()) {
                 ItemUtils.startUsingInstantly(level, player, player.getUsedItemHand());
-                player.addItem(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
+                Optional<Item> remainder = Optional.ofNullable(stack.getItem().getCraftingRemainingItem());
+                remainder.ifPresent(item -> player.addItem(item.getDefaultInstance()));
                 player.awardStat(Stats.ITEM_USED.get(this));
             }
             player.addEffect(new MobEffectInstance(MobEffects.POISON));
