@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -39,7 +40,9 @@ import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,9 +152,11 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
             loc = bPos.relative(dir).getCenter().add(new Vec3(dir.step().mul(-0.4f)).add(0, height, 0));
 
         } else {
-            float x = dir.getAxis().equals(Direction.Axis.X) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
-            float z = dir.getAxis().equals(Direction.Axis.Z) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            float offset = dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f;
+            float x = dir.getAxis().equals(Direction.Axis.X) ? offset : 0;
+            float z = dir.getAxis().equals(Direction.Axis.Z) ? offset : 0;
             loc = new Vec3(loc.x() + x, bPos.getY(), loc.z() + z);
+
         }
 
         return loc;
@@ -168,7 +173,7 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
         float f6 = f3 * f4;
         float f7 = f2 * f4;
         Vec3 vec31 = vec3.add(f6 * distance, f5 * distance, f7 * distance);
-        return level.clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, fluidMode, player));
+        return level.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, fluidMode, player));
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -291,6 +296,18 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
 
                                         ServerLevel finalDestinationLevel = destinationLevel;
                                         destinationLevel.getServer().executeIfPossible(() -> finalDestinationLevel.addFreshEntity(exPortal));
+
+                                        Color color = new Color(getColor(stack));
+                                        Vector3f colorVec = new Vector3f(color.getRed(), color.getGreen(), color.getBlue());
+
+                                        Vec3 playerPos = player.position().add(0.0F, 1.4F, 0.0F);
+                                        Vec3 relative = loc.subtract(playerPos);
+                                        Vec3 normalized = relative.normalize();
+                                        for (int i = 1; i < Mth.floor(relative.length()) + 4; ++i) {
+                                            Vec3 added = playerPos.add(normalized.scale(i));
+                                            ((ServerLevel) level).sendParticles(new DustParticleOptions(colorVec, 0.6f), added.x, added.y, added.z, 1, 0.0F, 0.0F, 0.0F, 0.0F);
+                                        }
+
                                         level.addFreshEntity(portal);
 
                                         player.awardStat(Stats.ITEM_USED.get(this));
