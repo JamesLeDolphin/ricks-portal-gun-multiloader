@@ -19,7 +19,7 @@ public class PGUpgradeTypes {
 
     public static final UpgradeType SETTINGS = registerSimple("settings", Component.translatable("tooltip.ricksportalgun.upgrade.settings"));
     public static final UpgradeType WAYPOINTS = registerSimple("waypoints", Component.translatable("tooltip.ricksportalgun.upgrade.waypoints"));
-    public static final UpgradeType MAX_FUEL = registerSimple("max_fuel", Component.translatable("tooltip.ricksportalgun.upgrade.max_fuel"));
+    public static final UpgradeType MAX_FUEL = registerComponent("max_fuel", Component.translatable("tooltip.ricksportalgun.upgrade.max_fuel"), PGDataComponents.MAX_FUEL, 128);
     public static final UpgradeType CREATIVE = registerCreative("creative", Component.translatable("tooltip.ricksportalgun.upgrade.creative"));
     public static final UpgradeType DURABILITY = registerComponent("durability", Component.translatable("tooltip.ricksportalgun.upgrade.durability"), DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
 
