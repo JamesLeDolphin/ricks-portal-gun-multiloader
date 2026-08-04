@@ -48,4 +48,3 @@ rootProject.name = 'ricks-portal-gun-multiloader'
 include('common')
 include('fabric')
 include('neoforge')
-include('forge')
