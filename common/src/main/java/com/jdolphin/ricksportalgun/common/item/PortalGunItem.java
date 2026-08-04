@@ -30,6 +30,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +39,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -212,6 +214,26 @@ public class PortalGunItem extends Item implements IWaypointItem {
                                         entity.setColor(getColor(stack));
                                         entity.setBootleg(bootleg);
                                     }, portal, exPortal);
+
+                                    portal.setLevelCallback(new EntityInLevelCallback() {
+                                        @Override
+                                        public void onMove() {}
+
+                                        @Override
+                                        public void onRemove(Entity.RemovalReason removalReason) {
+                                            if (!exPortal.isRemoved()) exPortal.remove(removalReason);
+                                        }
+                                    });
+
+                                    exPortal.setLevelCallback(new EntityInLevelCallback() {
+                                        @Override
+                                        public void onMove() {}
+
+                                        @Override
+                                        public void onRemove(Entity.RemovalReason removalReason) {
+                                            if (!portal.isRemoved()) portal.remove(removalReason);
+                                        }
+                                    });
 
                                     if (stack.has(DataComponents.CUSTOM_NAME)) {
                                         Component component = stack.getHoverName();
