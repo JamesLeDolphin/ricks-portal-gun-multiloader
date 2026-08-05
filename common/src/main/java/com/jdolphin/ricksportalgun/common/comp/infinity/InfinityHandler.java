@@ -6,7 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 
 public class InfinityHandler {
-
+    /**
+    * @see net.lerariemann.infinity.util.teleport.WarpLogic
+     */
     public static ResourceLocation getDimensionId(MinecraftServer server, String dim) {
         ResourceLocation id = InfinityMethods.dimTextToId(dim);
         PortalCreator.recordIdTranslation(server, id, dim);
