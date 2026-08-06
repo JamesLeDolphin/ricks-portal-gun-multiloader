@@ -38,7 +38,7 @@ public class PortalFluidBottleItem extends Item implements IPortalFluidItem {
             player.addEffect(new MobEffectInstance(MobEffects.POISON));
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 2, 2));
             player.hurt(PGDamageTypes.teleport(), 3);
-            LevelHelper.randomTP(player, 500, true);
+            LevelHelper.randomTP(player, 100, 1000, true);
         }
         return stack;
     }

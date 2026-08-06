@@ -268,7 +268,8 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
 
                                             @Override
                                             public void onRemove(Entity.RemovalReason reason) {
-                                                portal.remove(reason);
+                                                if (portal != null && !portal.isRemoved())
+                                                    portal.remove(reason);
                                             }
                                         });
 
@@ -278,7 +279,8 @@ public class PortalGunItem extends Item implements IWaypointStorage, IPortalFlui
 
                                             @Override
                                             public void onRemove(Entity.RemovalReason reason) {
-                                                exPortal.remove(reason);
+                                                if (exPortal != null && !portal.isRemoved())
+                                                    exPortal.remove(reason);
                                             }
                                         });
 
