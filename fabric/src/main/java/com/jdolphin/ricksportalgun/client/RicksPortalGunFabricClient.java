@@ -5,7 +5,7 @@ import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
-import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
+import com.jdolphin.ricksportalgun.common.config.PGConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBOpenCoordGuiPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -30,7 +30,7 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void onInitializeClient() {
-        ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
+        ForgeConfigRegistry.INSTANCE.register(PGConstants.MODID, ModConfig.Type.CLIENT, PGConfig.clientSpec, "ricksportalgun-client.toml");
 
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
         EntityRendererRegistry.register(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);

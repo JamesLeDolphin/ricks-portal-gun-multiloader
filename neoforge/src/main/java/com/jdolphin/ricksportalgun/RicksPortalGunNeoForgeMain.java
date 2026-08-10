@@ -1,8 +1,7 @@
 package com.jdolphin.ricksportalgun;
 
 
-import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.config.PGConfig;
 import com.jdolphin.ricksportalgun.common.init.*;
 import com.jdolphin.ricksportalgun.common.packet.clientbound.CBSyncDimensionListPacket;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
@@ -54,8 +53,8 @@ public class RicksPortalGunNeoForgeMain {
         bind(bus, Registries.RECIPE_TYPE, PGRecipeTypes::init);
         bind(bus, Registries.RECIPE_SERIALIZER, PGRecipeSerializers::init);
 
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, PGCommonConfig.SPEC, "ricksportalgun-common.toml");
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, PGClientConfig.SPEC, "ricksportalgun-client.toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, PGConfig.commonSpec, "ricksportalgun-common.toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, PGConfig.clientSpec, "ricksportalgun-client.toml");
     }
 
     public void registerPackets(final RegisterPayloadHandlersEvent event) {

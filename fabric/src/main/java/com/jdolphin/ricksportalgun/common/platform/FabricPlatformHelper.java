@@ -1,7 +1,6 @@
 package com.jdolphin.ricksportalgun.common.platform;
 
-import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
-import com.jdolphin.ricksportalgun.common.config.PGCommonConfig;
+import com.jdolphin.ricksportalgun.common.config.PGConfig;
 import com.jdolphin.ricksportalgun.common.util.platform.services.IPlatformHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -68,36 +67,36 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public List<? extends String> getDisabledDimensions() {
-        return PGCommonConfig.getBlacklistedDims();
+        return PGConfig.COMMON.disabled_dimensions.get();
     }
 
     @Override
     public boolean disableStructureLocating() {
-        return PGCommonConfig.disableStructureLocating();
+        return PGConfig.COMMON.disable_structure_locating.get();
     }
 
     @Override
     public boolean disableBiomeLocating() {
-        return PGCommonConfig.disableBiomeLocating();
+        return PGConfig.COMMON.disable_biome_locating.get();
     }
 
     @Override
     public boolean disablePlayerLocating() {
-        return PGCommonConfig.disablePlayerLocating();
+        return PGConfig.COMMON.disable_player_locating.get();
     }
 
     @Override
     public int getRandomizerMax() {
-        return PGCommonConfig.getMaxRandomizerDistance();
+        return PGConfig.COMMON.randomizer_max.get();
     }
 
     @Override
     public boolean disablePortalGunColorTint() {
-        return PGClientConfig.disablePortalGunColorTint();
+        return PGConfig.CLIENT.disable_portal_gun_color_tint.get();
     }
 
     @Override
     public List<? extends String> getDisabledEntities() {
-        return PGCommonConfig.getBlacklistedEntities();
+        return PGConfig.COMMON.disabled_entities.get();
     }
 }
