@@ -69,7 +69,7 @@ public class PortalEntity extends Entity {
         return exists;
     }
 
-    public PortalEntity(EntityType<PortalEntity> type, Level level) {
+    public PortalEntity(EntityType<? extends PortalEntity> type, Level level) {
         super(type, level);
     }
 
