@@ -1,32 +1,41 @@
-# MultiLoader Template
+# Rick's Portal Gun
 
-This project provides a Gradle project template that can compile Minecraft mods for multiple modloaders using a common project for the sources. This project does not require any third party libraries or dependencies. If you have any questions or want to discuss the project, please join our [Discord](https://discord.myceliummod.network).
+[![Discord](https://img.shields.io/discord/981900104871055430?style=flat-square&logo=discord&label=Discord)](https://discord.gg/mPFZqXpcFF)
+[![CF Downloads](https://img.shields.io/curseforge/dt/908191?style=flat-square&logo=curseforge&label=Downloads&color=orange)](https://www.curseforge.com/minecraft/mc-mods/ricks-portal-gun)
+[![MR Download Count](https://img.shields.io/modrinth/dt/ricks-portal-gun?style=flat-square&logo=modrinth&label=Downloads&color=green)](https://modrinth.com/mod/ricks-portal-gun)
 
-## Getting Started
+This project adds the portal gun from the sci-fi show Rick and Morty into Minecraft. The mod makes
+use of [Jared's Multiloader Template](https://github.com/jaredlll08/MultiLoader-Template) for easier development accross mod loaders.
 
-### IntelliJ IDEA
-This guide will show how to import the MultiLoader Template into IntelliJ IDEA. The setup process is roughly equivalent to setting up the modloaders independently and should be very familiar to anyone who has worked with their MDKs.
+## Versions & support
 
-1. Clone or download this repository to your computer.
-2. Configure the project by setting the properties in the `gradle.properties` file. You will also need to change the `rootProject.name`  property in `settings.gradle`, this should match the folder name of your project, or else IDEA may complain.
-3. Open the template's root folder as a new project in IDEA. This is the folder that contains this README.md file and the gradlew executable.
-4. If your default JVM/JDK is not Java 21 you will encounter an error when opening the project. This error is fixed by going to `File > Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM` and changing the value to a valid Java 21 JVM. You will also need to set the Project SDK to Java 21. This can be done by going to `File > Project Structure > Project SDK`. Once both have been set open the Gradle tab in IDEA and click the refresh button to reload the project.
-5. Open your Run/Debug Configurations. Under the `Application` category there should now be options to run Fabric and NeoForge projects. Select one of the client options and try to run it.
-6. Assuming you were able to run the game in step 5 your workspace should now be set up.
+Below is a table of which Minecraft versions the mod is on, and which versions still supported/developed.
 
-### Eclipse
-While it is possible to use this template in Eclipse it is not recommended. During the development of this template multiple critical bugs and quirks related to Eclipse were found at nearly every level of the required build tools. While we continue to work with these tools to report and resolve issues support for projects like these are not there yet. For now Eclipse is considered unsupported by this project. The development cycle for build tools is notoriously slow so there are no ETAs available.
+| MC Version |    Mod Loader     |     Development     |
+|:----------:|:-----------------:|:-------------------:|
+|    26.x    | NeoForge & Fabric |       Planned       |
+|   1.21.4   | NeoForge & Fabric | No longer supported |
+|   1.21.1   | NeoForge & Fabric |       Active        |
+|   1.20.1   |  Forge & Fabric   |       Active        |
+|   1.19.2   |  Forge & Fabric   | No longer supported |
+|   1.18.2   |       Forge       | No longer supported |
+|   1.16.5   |       Forge       | No longer supported |
 
-## Development Guide
-When using this template the majority of your mod should be developed in the `common` project. The `common` project is compiled against the vanilla game and is used to hold code that is shared between the different loader-specific versions of your mod. The `common` project has no knowledge or access to ModLoader specific code, apis, or concepts. Code that requires something from a specific loader must be done through the project that is specific to that loader, such as the `fabric` or `neoforge` projects.
+* Versions marked as `No longer supported` will not get any content updates, but may still get bug fixes.
 
-Loader specific projects such as the `fabric` and `neoforge` project are used to load the `common` project into the game. These projects also define code that is specific to that loader. Loader specific projects can access all the code in the `common` project. It is important to remember that the `common` project can not access code from loader specific projects.
+If you've found a bug or have a question, either open an issue, or contact us on Discord.
+## Addons
 
-## Removing Platforms and Loaders
-While this template has support for many modloaders, new loaders may appear in the future, and existing loaders may become less relevant.
+Addon mods are encouraged. If you need something changed in the mod for better addon functionality, either open a pull request or
+ask JamesLeDolphin for the change. You are allowed to upload the addon mod as long as it has a link to this mods CurseForge or Modrinth page.
 
-Removing loader specific projects is as easy as deleting the folder, and removing the `include("projectname")` line from the `settings.gradle` file.
-For example if you wanted to remove support for `forge` you would follow the following steps:
+## Links
+[Discord](https://discord.gg/mPFZqXpcFF)
 
-1. Delete the subproject folder. For example, delete `MultiLoader-Template/forge`.
-2. Remove the project from `settings.gradle`. For example, remove `include("forge")`. 
+(Neo)Forge downloads:
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ricks-portal-gun)
+- [Modrinth](https://modrinth.com/mod/ricks-portal-gun)
+
+Fabric downloads:
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ricks-portal-gun-fabric)
+- [Modrinth](https://modrinth.com/mod/ricks-portal-gun-fabric)
