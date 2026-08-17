@@ -93,9 +93,7 @@ public class RicksPortalGunForgeMain {
     @SubscribeEvent
     public static void attachCapabilitiesEvent(AttachCapabilitiesEvent<? extends BlockEntity> event) {
         BlockEntity be = event.getObject();
-        System.out.println("Cap reg 1");
         if (be instanceof PortalFluidStorageBlockEntity storage) {
-            System.out.println("Cap reg 2");
             ICapabilityProvider provider = new ICapabilityProvider() {
                 @Override
                 public <T> LazyOptional<T> getCapability(Capability<T> capability,  Direction direction) {

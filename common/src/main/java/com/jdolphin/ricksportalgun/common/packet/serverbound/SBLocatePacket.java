@@ -58,7 +58,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
 
                 ServerPlayer targetPlayer = server.getPlayerList().getPlayerByName(name);
                 if (targetPlayer != null) {
-                    if (!PGHelper.playerHasActiveForcefield(targetPlayer)) {
+                    if (!PGHelper.canPlayerBeLocated(targetPlayer)) {
                         Vec3 targetVec = Vec3.directionFromRotation(new Vec2(45.0F, targetPlayer.getYRot() + 180.0F));
                         BlockPos pos = targetPlayer.blockPosition().above();
                         BlockPos betterPos = BlockPos.containing(pos.getX() + targetVec.x * 2, pos.getY(), pos.getZ() + targetVec.z * 2);

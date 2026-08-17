@@ -50,7 +50,7 @@ public class PGItems {
     public static final Item DISC_TEMPLATE = register("disc_template", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
     public static final Item ADMIN_KEY = register("admin_key", properties ->
             new TooltipItem(properties, Component.translatable("tooltip.ricksportalgun.admin_key")), new Item.Properties(), PGCreativeModeTabs.OP_BLOCKS);
-    public static final Item FORCEFIELD = register("pocket_forcefield", ForcefieldItem::new, new Item.Properties().stacksTo(1), PGCreativeModeTabs.TOOLS_AND_UTILITIES);
+
     public static final Item CIRCUIT_BOARD = register("circuitboard", Item::new, new Item.Properties(), PGCreativeModeTabs.INGREDIENTS);
 
     public static final Item PORTAL_DISPENSER = register("portal_dispenser", (properties) -> new BlockItem(PGBlocks.PORTAL_DISPENSER, properties),
