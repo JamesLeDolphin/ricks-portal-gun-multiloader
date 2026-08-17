@@ -27,7 +27,10 @@ If you've found a bug or have a question, either open an issue, or contact us on
 ## Addons
 
 Addon mods are encouraged. If you need something changed in the mod for better addon functionality, either open a pull request or
-ask JamesLeDolphin for the change. You are allowed to upload the addon mod as long as it has a link to this mods CurseForge or Modrinth page.
+ask JamesLeDolphin for the change. You are allowed to upload the addon mod under the following terms:
+- Addon mod must depend on the original mod and does not include it inside the addon mod's file.
+- Addon mod must not be vibe coded.
+- Addon mod must link back to this mod's CurseForge or Modrinth page.
 
 ## Links
 [Discord](https://discord.gg/mPFZqXpcFF)
