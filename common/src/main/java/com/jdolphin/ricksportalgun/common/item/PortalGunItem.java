@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -22,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.awt.*;
 import java.util.List;
@@ -262,6 +265,18 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
                                     if (!portal.isFlat()) doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+
+                                    Color color = new Color(getColor(stack));
+                                    Vector3f colorVec = new Vector3f(color.getRed(), color.getGreen(), color.getBlue());
+
+                                    Vec3 playerPos = player.position().add(0.0F, 1.4F, 0.0F);
+                                    Vec3 relative = loc.subtract(playerPos);
+                                    Vec3 normalized = relative.normalize();
+                                    for (int i = 1; i < Mth.floor(relative.length()) + 4; ++i) {
+                                        Vec3 added = playerPos.add(normalized.scale(i));
+                                        ((ServerLevel) level).sendParticles(new DustParticleOptions(colorVec, 0.6f), added.x, added.y, added.z,
+                                                1, 0.0F, 0.0F, 0.0F, 0.0F);
+                                    }
 
                                     serverlevel.getServer().executeIfPossible(() -> serverlevel.addFreshEntity(exPortal));
                                     level.addFreshEntity(portal);
