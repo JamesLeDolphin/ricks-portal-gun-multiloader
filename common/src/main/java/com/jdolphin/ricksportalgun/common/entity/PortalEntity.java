@@ -10,6 +10,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -337,8 +338,12 @@ public class PortalEntity extends Entity {
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();
                             } else {
-                                if (nearby instanceof ServerPlayer player) player.hurt(LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.blender() : PGDamageTypes.bootleg(), Float.MAX_VALUE);
-                                else nearby.kill();
+                                ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(nearby.getType());
+                                if (!rl.toString().equals("corpse:corpse")) {
+                                    if (nearby instanceof ServerPlayer player)
+                                        player.hurt(LevelHelper.isBlenderDestination(getHopDim()) ? PGDamageTypes.blender() : PGDamageTypes.bootleg(), Float.MAX_VALUE);
+                                    else nearby.kill();
+                                }
                             }
                         }
                     }
