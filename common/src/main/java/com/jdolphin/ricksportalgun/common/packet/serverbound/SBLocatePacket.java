@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +31,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
         MinecraftServer server = player.server;
         server.executeIfPossible(() -> {
             ServerLevel level = player.serverLevel();
-
+            WorldBorder border = level.getWorldBorder();
             ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
             if (value == 0) {
                 if (PGConfigHelper.disableBiomeLocating()) {
@@ -44,9 +45,12 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                             player.blockPosition(), 6400, 32, 64);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                        if (border.isWithinBounds(pos)) {
+                            BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                            PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+
+                        } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                     } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.biome.not_in_area", name));
                 }
             }
@@ -61,9 +65,10 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                     Vec3 targetVec = Vec3.directionFromRotation(new Vec2(45.0F, targetPlayer.getYRot() + 180.0F));
                     BlockPos pos = targetPlayer.blockPosition().above();
                     BlockPos betterPos = BlockPos.containing(pos.getX() + targetVec.x * 2, pos.getY(), pos.getZ() + targetVec.z * 2);
-                    PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), betterPos);
-                    PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
-
+                    if (border.isWithinBounds(pos)) {
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), betterPos);
+                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                    } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                 } else
                     PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.player.not_found", name));
             }
@@ -77,13 +82,14 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                 Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, location));
                 if (structure != null) {
                     HolderSet<Structure> set = HolderSet.direct(Holder.direct(structure));
-                    Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator()
-                            .findNearestMapStructure(level, set, player.blockPosition(), 256, false);
+                    Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator().findNearestMapStructure(level, set, player.blockPosition(), 256, false);
                     if (pair != null) {
                         BlockPos pos = pair.getFirst();
-                        BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                        PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                        if (border.isWithinBounds(pos)) {
+                            BlockPos safePos = LevelHelper.getSafePos(pos, level);
+                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                            PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                        } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                     } else {
                         PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
                     }

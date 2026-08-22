@@ -7,6 +7,7 @@ import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import com.jdolphin.ricksportalgun.common.util.network.PGServerPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +22,8 @@ public record SBSetDestinationPacket(BlockPos pos, String dim) implements PGServ
             if (!PGConfigHelper.getDisabledDimensions().contains(dim)) {
                 boolean hasDim1 = PortalGunItem.getUpgrades(stack).contains(PGUpgradeTypes.DIM_1.getUpgradeTag());
                 if (player.level().dimension().location().toString().equals(dim) || hasDim1)
-                    PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+                    if (player.level().getWorldBorder().isWithinBounds(pos)) PortalGunItem.setHopLocation(stack, new ResourceLocation(dim), pos);
+                    else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                 else PGHelper.sendFailMsg(player, "error.ricksportalgun.destination.unreachable");
             } else PGHelper.sendFailMsg(player, "error.ricksportalgun.dimension.disabled");
         });

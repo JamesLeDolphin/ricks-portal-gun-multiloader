@@ -25,17 +25,19 @@ public record SBCoordCheckerPacket(BlockPos pos, String dim) implements PGServer
         server.executeIfPossible(() -> {
             player.displayClientMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.start").withStyle(ChatFormatting.YELLOW), false);
             player.serverLevel().getChunkSource().updateChunkForced(new ChunkPos(pos), true);
-            BlockPos bPos = LevelHelper.getSafePos(LevelHelper.getRandomCoord(pos, player.serverLevel(), PGConfigHelper.getRandomizerMax()), player.serverLevel());
+            BlockPos bPos = LevelHelper.getSafeRandomCoords(pos, player.serverLevel(), 100, PGConfigHelper.getRandomizerMax());
 
-            ResourceLocation dim = new ResourceLocation(this.dim);
-            ServerLevel level;
-            level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
-            if (level == null) level = player.serverLevel();
+            if (bPos != null) {
+                ResourceLocation dim = new ResourceLocation(this.dim);
+                ServerLevel level;
+                level = server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
+                if (level == null) level = player.serverLevel();
 
-            ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
+                ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-            PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
-            player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
+                PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
+                player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
+            }
         });
     }
 

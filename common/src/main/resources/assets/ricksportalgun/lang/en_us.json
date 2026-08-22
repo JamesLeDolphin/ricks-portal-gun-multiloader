@@ -149,6 +149,7 @@
   "error.ricksportalgun.upgrade.already_applied": "Error 400: Upgrade already installed!",
   "error.ricksportalgun.locating.biome.disabled": "Error 503: Biome locating is disabled on this server!",
   "error.ricksportalgun.locating.structure.disabled": "Error 503: Structure Locating is disabled on this server!",
+  "error.ricksportalgun.locating.outside_border": "Error 404: Target not found inside border!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",

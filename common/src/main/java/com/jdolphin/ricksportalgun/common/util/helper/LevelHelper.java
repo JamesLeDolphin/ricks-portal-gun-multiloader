@@ -5,6 +5,7 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.common.blockentity.SubetherBarrierBlockEntity;
 import com.jdolphin.ricksportalgun.common.init.PGNbtKeys;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.levelgen.Heightmap;
 
@@ -125,6 +125,48 @@ public class LevelHelper {
         return border.clampToBounds(xCoord, yCoord, zCoord);
     }
 
+    public static BlockPos getSafeRandomCoords(BlockPos pos, ServerLevel level, int minDistance, int maxDistance) {
+        WorldBorder border = level.getWorldBorder();
+        RandomSource rand = level.getRandom();
+
+        for (int attempts = 0; attempts < 5; attempts++) {
+            double dist = minDistance + rand.nextDouble() * (maxDistance - minDistance);
+            double angle = rand.nextDouble() * Math.PI * 2D;
+
+            int x = Mth.floor(Math.cos(angle) * dist);
+            int y = 256;
+            int z = Mth.floor(Math.sin(angle) * dist);
+
+            BlockPos randomPos = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
+            if (border.isWithinBounds(randomPos)) {
+                level.getChunkAt(randomPos);
+                BlockPos hmPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+                if (hmPos.getY() > 0) {
+                    BlockPos goodPos = null;
+                    if (hmPos.getY() < level.getLogicalHeight()) {
+                        goodPos = hmPos;
+                    } else {
+                        // broken heightmap (nether, other mod dimensions)
+                        for (BlockPos newPos : BlockPos.spiralAround(new BlockPos(hmPos.getX(), level.getSeaLevel(), hmPos.getZ()), 16, Direction.EAST, Direction.SOUTH)) {
+                            BlockState bs = level.getBlockState(newPos);
+                            if (bs.blocksMotion() && level.isEmptyBlock(newPos.above(1)) && level.isEmptyBlock(newPos.above(2)) &&
+                                    level.isEmptyBlock(newPos.above(3))) {
+                                goodPos = newPos.immutable();
+                                break;
+                            }
+                        }
+                    }
+                    if (goodPos != null) {
+                        return goodPos.above();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static ServerLevel getRandomServerLevel(MinecraftServer server) {
         Iterable<ServerLevel> worlds = server.getAllLevels();
         List<ServerLevel> worldList = new ArrayList<>();
@@ -134,45 +176,37 @@ public class LevelHelper {
         return worldList.get(PGConstants.RANDOM.nextInt(worldList.size()));
     }
 
-    public static void randomTP(ServerPlayer player, int radius, boolean interdimensional) {
+    public static void randomTP(ServerPlayer player, int minDist, int maxDist, boolean interdimensional) {
         ServerLevel level = player.serverLevel();
         ServerLevel dest = getRandomServerLevel(player.server);
-        teleportEntity(player, interdimensional ? dest : level, getSafePos(getRandomCoord(player.blockPosition(), dest, radius), level));
+        BlockPos safePos = getSafeRandomCoords(player.blockPosition(), dest, minDist, maxDist);
+        if (safePos != null) teleportEntity(player, interdimensional ? dest : level, safePos);
     }
 
-    public static BlockPos getSafePos(BlockPos bPos, ServerLevel level) {
-        return getSafePos(bPos, level, 0);
-    }
+    public static BlockPos getSafePos(BlockPos pos, ServerLevel level) {
+        level.getChunkAt(pos);
+        BlockPos hmPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos);
 
-    private static BlockPos getSafePos(BlockPos bPos, ServerLevel level, int iteration) {
-        iteration++;
-        ChunkAccess chunk = level.getChunk(bPos);
-        level.getChunkSource().updateChunkForced(chunk.getPos(), true);
-
-        int y = bPos.getY();
-        int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, bPos.getX(), bPos.getZ());
-        int worldCenter = ((level.getMinBuildHeight() + 2) + height) / 2;
-
-        int direction = y > worldCenter ? -1 : 1;
-
-        while (y >= level.getMinBuildHeight() + 2 && y <= level.getMaxBuildHeight()) {
-            BlockPos pos1 = new BlockPos(bPos.getX(), y, bPos.getZ());
-
-            if (!isRandomizerSafe(level, pos1)) {
-
-                y += direction;
-
-            } else break;
+        if (hmPos.getY() > 0) {
+            BlockPos goodPos = null;
+            if (hmPos.getY() < level.getLogicalHeight()) {
+                goodPos = hmPos;
+            } else {
+                // broken heightmap (nether, other mod dimensions)
+                for (BlockPos newPos : BlockPos.spiralAround(new BlockPos(hmPos.getX(), level.getSeaLevel(), hmPos.getZ()), 16, Direction.EAST, Direction.SOUTH)) {
+                    BlockState bs = level.getBlockState(newPos);
+                    if (bs.blocksMotion() && level.isEmptyBlock(newPos.above(1)) && level.isEmptyBlock(newPos.above(2)) &&
+                            level.isEmptyBlock(newPos.above(3))) {
+                        goodPos = newPos.immutable();
+                        break;
+                    }
+                }
+            }
+            if (goodPos != null) {
+                return goodPos.above();
+            }
         }
-
-        bPos = new BlockPos(bPos.getX(), y, bPos.getZ());
-
-        if (!isRandomizerSafe(level, bPos)
-                || y <= level.getMinBuildHeight() + 2 || y >= level.getMaxBuildHeight()) {
-            return iteration <= 100 ? getSafePos(getRandomCoord(bPos, level, 25), level, iteration) : bPos;
-        }
-        level.setChunkForced(chunk.getPos().x, chunk.getPos().z, false);
-        return bPos;
+        return null;
     }
 
 

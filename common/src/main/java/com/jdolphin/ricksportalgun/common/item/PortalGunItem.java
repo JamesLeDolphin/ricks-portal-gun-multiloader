@@ -25,6 +25,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -229,6 +231,28 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                         entity.setBootleg(bootleg);
                                     }, portal, exPortal);
 
+                                    exPortal.setLevelCallback(new EntityInLevelCallback() {
+                                        @Override
+                                        public void onMove() {}
+
+                                        @Override
+                                        public void onRemove(Entity.RemovalReason reason) {
+                                            if (portal != null && !portal.isRemoved())
+                                                portal.remove(reason);
+                                        }
+                                    });
+
+                                    portal.setLevelCallback(new EntityInLevelCallback() {
+                                        @Override
+                                        public void onMove() {}
+
+                                        @Override
+                                        public void onRemove(Entity.RemovalReason reason) {
+                                            if (exPortal != null && !portal.isRemoved())
+                                                exPortal.remove(reason);
+                                        }
+                                    });
+
                                     if (stack.hasCustomHoverName()) {
                                         Component component = stack.getHoverName();
                                         String s = component.getString();
@@ -259,6 +283,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                             PortalEntity portal = new PortalEntity(level, loc, hitDir, playerDir, size);
                             portal.setLifetime(PGHelper.seconds(age));
 
+
                             if (stack.hasCustomHoverName()) {
                                 Component component = stack.getHoverName();
                                 String s = component.getString();
@@ -269,6 +294,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
 
                             boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
                             portal.setBootleg(bootleg);
+
 
                             if (!portal.isFlat()) portal.setYRot(player.getYRot());
                             if (!player.isCreative()) lowerFuel(stack, 1);
