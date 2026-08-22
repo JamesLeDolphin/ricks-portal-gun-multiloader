@@ -53,6 +53,16 @@ public class SkinSelectingScreen extends AbstractWorkbenchScreen<SkinSelectorMen
         this.titleLabelY = this.imageHeight - 188;
     }
 
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+
+        boolean showButtons = !getStack(36).isEmpty() && getStack(36).is(PGTags.Items.PORTAL_GUNS);
+        if (select != null) select.active = showButtons;
+        if (next != null) next.active = showButtons;
+        if (previous != null) previous.active = showButtons;
+    }
+
     public void init() {
         super.init();
 

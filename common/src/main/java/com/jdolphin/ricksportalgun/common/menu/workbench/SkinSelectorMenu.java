@@ -46,40 +46,43 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
 
     public void setPortalGunType(Player player, ResourceLocation type, int tints) {
         this.access.execute((level, pos) -> {
-
             ItemStack gun = this.getSlot(36).getItem();
-            ItemStack dye1 = this.getSlot(37).getItem();
-            ItemStack dye2 = this.getSlot(38).getItem();
-            CompoundTag tag = gun.getOrCreateTag();
-            int primary = 0;
-            int secondary = 0;
+            if (gun.is(PGTags.Items.PORTAL_GUNS)) {
+                ItemStack dye1 = this.getSlot(37).getItem();
+                ItemStack dye2 = this.getSlot(38).getItem();
+                CompoundTag tag = gun.getOrCreateTag();
+                int primary = 0;
+                int secondary = 0;
 
-            if (!(tints < 2) && !dye1.isEmpty()) {
-                if (!dye1.is(Items.WATER_BUCKET)) {
-                    DyeItem dyeItem = (DyeItem) dye1.getItem();
-                    primary = PGHelper.getTextureDiffuseColor(dyeItem);
-                    if (!player.isCreative()) dye1.shrink(1);
-                } else {
-                    tag.remove(PGNbtKeys.PRIMARY_COLOR);
-                    if (!player.isCreative()) getSlot(37).set(dye1.getItem().getCraftingRemainingItem().getDefaultInstance());
+                if (!(tints < 2) && !dye1.isEmpty()) {
+                    if (!dye1.is(Items.WATER_BUCKET)) {
+                        DyeItem dyeItem = (DyeItem) dye1.getItem();
+                        primary = PGHelper.getTextureDiffuseColor(dyeItem);
+                        if (!player.isCreative()) dye1.shrink(1);
+                    } else {
+                        tag.remove(PGNbtKeys.PRIMARY_COLOR);
+                        if (!player.isCreative())
+                            getSlot(37).set(dye1.getItem().getCraftingRemainingItem().getDefaultInstance());
+                    }
                 }
-            }
-            if (!(tints < 3) && !dye2.isEmpty()) {
-                if (!dye2.is(Items.WATER_BUCKET)) {
-                    DyeItem dyeItem = (DyeItem) dye2.getItem();
-                    secondary = PGHelper.getTextureDiffuseColor(dyeItem);
-                    if (!player.isCreative()) dye2.shrink(1);
-                } else {
-                    tag.remove(PGNbtKeys.SECONDARY_COLOR);
-                    if (!player.isCreative()) getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
+                if (!(tints < 3) && !dye2.isEmpty()) {
+                    if (!dye2.is(Items.WATER_BUCKET)) {
+                        DyeItem dyeItem = (DyeItem) dye2.getItem();
+                        secondary = PGHelper.getTextureDiffuseColor(dyeItem);
+                        if (!player.isCreative()) dye2.shrink(1);
+                    } else {
+                        tag.remove(PGNbtKeys.SECONDARY_COLOR);
+                        if (!player.isCreative())
+                            getSlot(38).set(dye2.getItem().getCraftingRemainingItem().getDefaultInstance());
+                    }
                 }
+                Item newType = BuiltInRegistries.ITEM.get(type);
+                ItemStack newStack = newType.getDefaultInstance();
+                newStack.setTag(tag);
+                this.getSlot(36).set(newStack);
+                if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
+                if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);
             }
-            Item newType = BuiltInRegistries.ITEM.get(type);
-            ItemStack newStack = newType.getDefaultInstance();
-            newStack.setTag(tag);
-            this.getSlot(36).set(newStack);
-            if (primary != 0) PortalGunItem.setPrimaryDye(newStack, primary);
-            if (secondary != 0) PortalGunItem.setSecondaryDye(newStack, secondary);
         });
     }
 
