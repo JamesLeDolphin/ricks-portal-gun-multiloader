@@ -9,9 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -28,15 +26,6 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     public PortalDispenserBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(TRIGGERED, false));
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PortalDispenserBlockEntity dispenser && placer != null) {
-            dispenser.setDirection(placer.getDirection());
-        }
-        super.setPlacedBy(level, pos, state, placer, stack);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -56,9 +45,9 @@ public class PortalDispenserBlock extends DirectionalBlock implements EntityBloc
     }
 
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof PortalDispenserBlockEntity blockEntity) {
-            blockEntity.onActivation(level, pos);
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof PortalDispenserBlockEntity dispenser) {
+            dispenser.onActivation();
         }
     }
 

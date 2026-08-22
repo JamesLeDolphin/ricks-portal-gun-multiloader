@@ -81,20 +81,25 @@ public class LevelHelper {
     }
 
     public static boolean canPortalTo(ServerLevel level, BlockPos pos, ItemStack stack) {
-        if (level != null) {
-            String code = "";
-            if (stack != null) {
-                CompoundTag tag = stack.getOrCreateTag();
-                code = tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "";
-            }
-            List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
+        if (stack != null) {
+            CompoundTag tag = stack.getOrCreateTag();
+            return canPortalTo(level, pos, tag.contains(PGNbtKeys.BARRIER_CODE) ? tag.getString(PGNbtKeys.BARRIER_CODE) : "");
+        }
+        return false;
+    }
 
-            for (BlockEntity be : blockEntities) {
-                if (be instanceof SubetherBarrierBlockEntity barrier) {
-                    return !barrier.canBlockPortal(level, barrier.getBlockPos(), code);
+    public static boolean canPortalTo(ServerLevel level, BlockPos pos, String code) {
+        if (level != null && code != null) {
+            if (!PGConfigHelper.getDisabledDimensions().contains(level.dimension().location().toString())) {
+                List<BlockEntity> blockEntities = getBlockEntitiesInChunks(level, new ChunkPos(pos), 3);
+
+                for (BlockEntity be : blockEntities) {
+                    if (be instanceof SubetherBarrierBlockEntity barrier) {
+                        return !barrier.canBlockPortal(level, barrier.getBlockPos(), code);
+                    }
                 }
+                return true;
             }
-            return true;
         }
         return false;
     }

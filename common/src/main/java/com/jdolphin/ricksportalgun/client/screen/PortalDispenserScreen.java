@@ -4,22 +4,27 @@ import com.jdolphin.ricksportalgun.client.screen.widget.ScrollableList;
 import com.jdolphin.ricksportalgun.client.screen.widget.SuggestionTextFieldWidget;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.packet.serverbound.SBSetDispenserDestinationPacket;
-import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispenserMenu> {
     public static final ResourceLocation CONTAINER_LOCATION = PGHelper.id("textures/gui/dispenser/portal_dispenser.png");
@@ -30,7 +35,18 @@ public class PortalDispenserScreen extends AbstractContainerScreen<PortalDispens
 
     public PortalDispenserScreen(PortalDispenserMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.dimSuggestions = LevelHelper.CLIENT_DIMENSIONS;
+        this.dimSuggestions = getDimSuggestions();
+    }
+
+    private List<String> getDimSuggestions() {
+        ClientPacketListener listener = Minecraft.getInstance().getConnection();
+        if (listener != null) {
+            Set<ResourceKey<Level>> levelKeys = listener.levels();
+            List<String> levels = new ArrayList<>(levelKeys.stream().map(key -> key.location().toString()).toList());
+            if (!levels.contains(PGHelper.id("blender").toString())) levels.add(PGHelper.id("blender").toString());
+            return levels;
+        }
+        return List.of();
     }
 
     @Override

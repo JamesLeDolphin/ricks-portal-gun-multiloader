@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PGHelper {
     public static MutableComponent COORDS_SET = Component.translatable("notice.ricksportalgun.destination.set");
@@ -60,6 +61,13 @@ public class PGHelper {
         float g = rgb[1];
         float b = rgb[2];
         return new Color(r, g, b).getRGB();
+    }
+
+    @SafeVarargs
+    public static <P> void doForEach(Consumer<P> consumer, P... arg) {
+        for (P p : arg) {
+            consumer.accept(p);
+        }
     }
 
     public static boolean canPlayerAccessGun(Player player, ItemStack stack) {

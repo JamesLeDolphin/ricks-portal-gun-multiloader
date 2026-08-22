@@ -6,6 +6,7 @@ import com.jdolphin.ricksportalgun.common.init.PGBlockEntities;
 import com.jdolphin.ricksportalgun.common.init.PGItems;
 import com.jdolphin.ricksportalgun.common.menu.PortalDispenserMenu;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
+import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -22,19 +23,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.awt.*;
+
 public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
     public static final String TAG_FUEL = "Fuel";
     public static final String TAG_MAX_FUEL = "MaxFuel";
-    public static final String TAG_COLOR = "Color";
     public static final String TAG_DEST_DIM = "DestinationDim";
     public static final String TAG_DEST_BPOS = "DestinationPos";
-    public static final String TAG_DIRECTION = "Direction";
-    private Direction dir;
+    private String portalCode = "";
+    private int color = Color.GREEN.getRGB();
     private int fuel = 16;
     private int maxFuel = 16;
     private String desDim = "minecraft:overworld";
@@ -134,14 +135,15 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.fuel = Math.max(0, this.fuel - amount);
     }
 
-    public void onActivation(Level level, BlockPos pos) {
+    public void onActivation() {
+        assert level != null;
         if (!level.isClientSide) {
-            BlockState state = level.getBlockState(pos);
+            BlockState state = level.getBlockState(getBlockPos());
             Direction direction = state.getValue(PortalDispenserBlock.FACING);
-            BlockPos portalPos = pos;
+            BlockPos portalPos = getBlockPos();
             if (hasFuel()) {
                 for (int j = 0; j < 4; j++) {
-                    portalPos = pos.relative(direction, j);
+                    portalPos = getBlockPos().relative(direction, j);
                     if (!level.getBlockState(portalPos.relative(direction, 1)).isAir()) {
                         break;
                     }
@@ -149,15 +151,16 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
                 if (!getDestinationDim().isEmpty() && getDestinationPos() != null) {
                     ResourceLocation dim = new ResourceLocation(getDestinationDim());
                     ServerLevel destLevel = LevelHelper.getServerWorld(level, LevelHelper.getWorldKey(dim));
-                    if (LevelHelper.canPortalTo(destLevel, getDestinationPos(), null)) {
-                        Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
-                        PortalEntity portal = new PortalEntity(level, vec, direction, this.dir, 3.0f);
-                        PortalEntity exitPortal = new PortalEntity(destLevel, Vec3.atCenterOf(getDestinationPos()), direction, this.dir, 3.0f);
+                    if (LevelHelper.canPortalTo(destLevel, getDestinationPos(), portalCode)) {
+                        Vec3 vec = Vec3.atCenterOf(portalPos).add(direction.getStepX() * 0.4, 0.5 + direction.getStepY() * 0.4, direction.getStepZ() * 0.4);
+                        PortalEntity portal = new PortalEntity(level, vec, direction, direction.getAxis() == Direction.Axis.Y ? Direction.SOUTH : direction, 3.0f);
+                        PortalEntity exitPortal = new PortalEntity(destLevel, Vec3.atCenterOf(getDestinationPos()).add(0, 0.5, 0), direction, direction, 3.0f);
+                        PGHelper.doForEach(entity -> entity.setColor(this.color), portal, exitPortal);
+
                         if (!portal.isFlat()) {
-                            portal.setYRot(this.dir.toYRot());
-                            exitPortal.setYRot(this.dir.toYRot());
+                            PGHelper.doForEach(entity -> entity.setYRot(direction.toYRot()), portal, exitPortal);
                         }
-                        portal.setHopLocation(dim, getDestinationPos());
+                        portal.setHopLocation(level.dimension().location(), getDestinationPos());
                         exitPortal.setHopLocation(dim, portal.blockPosition());
 
                         if (destLevel.addFreshEntity(exitPortal)) {
@@ -170,10 +173,6 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    public void setDirection(Direction direction) {
-        this.dir = direction;
-    }
-
     public void load(CompoundTag tag) {
         super.load(tag);
         this.fuel = tag.getInt(TAG_FUEL);
@@ -182,7 +181,6 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         this.desPos = NbtUtils.readBlockPos(bpTag);
         this.desDim = tag.getString(TAG_DEST_DIM);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        this.dir = Direction.fromYRot(tag.getDouble(TAG_DIRECTION));
         ContainerHelper.loadAllItems(tag, this.items);
 
     }
@@ -194,7 +192,6 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
         tag.putInt(TAG_MAX_FUEL, this.maxFuel);
         tag.putString(TAG_DEST_DIM, this.desDim);
         tag.put(TAG_DEST_BPOS, NbtUtils.writeBlockPos(this.desPos));
-        tag.putDouble(TAG_DIRECTION, this.dir.toYRot());
     }
 
     @Override
@@ -214,12 +211,14 @@ public class PortalDispenserBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public ItemStack removeItem(int i, int i1) {
-        return null;
+        return ContainerHelper.removeItem(items, i, i1);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int i) {
-        return null;
+        ItemStack stack = items.get(i);
+        items.remove(stack);
+        return stack;
     }
 
     @Override
