@@ -87,8 +87,10 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                         BlockPos pos = pair.getFirst();
                         if (border.isWithinBounds(pos)) {
                             BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
-                            PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                            if (safePos != null) {
+                                PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                                PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
+                            } else PGHelper.sendFailMsg(player, Component.translatable("notice.ricksportalgun.randomizer_find_y.fail"));
                         } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                     } else {
                         PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.structure.not_in_area", name));
