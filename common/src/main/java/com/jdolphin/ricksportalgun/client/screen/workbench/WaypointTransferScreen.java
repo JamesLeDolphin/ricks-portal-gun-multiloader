@@ -154,6 +154,13 @@ public class WaypointTransferScreen extends AbstractWorkbenchScreen<WaypointTran
 
         ItemStack leftStack = getTopSlotItem();
         ItemStack rightStack = getBottomSlotItem();
+
+        if (copy != null && moveTo != null) {
+            boolean empty = leftStack.isEmpty() || leftStack.isEmpty();
+            copy.active = !empty;
+            moveTo.active = !empty;
+        }
+
         if (leftWaypointList != null) leftWaypointList.refreshEntries(leftStack);
         if (rightWaypointList != null) rightWaypointList.refreshEntries(rightStack);
 
