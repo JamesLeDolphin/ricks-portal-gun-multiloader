@@ -75,7 +75,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
     public static class WaypointEntry extends Entry<WaypointEntry> {
 
         private final Button button;
-        private final PGImageButton infoButton;
+        private PGImageButton infoButton;
         protected WaypointListWidget list;
         private final boolean showInfo;
         private final int color;
@@ -104,12 +104,13 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
             } else {
                 this.button = new PGTextButton(16, 0, list.buttonWidth, list.buttonHeight, Component.literal(waypoint.getName()), press, Minecraft.getInstance().font);
             }
-                this.infoButton = new PGImageButton(0, 0, 20, 20, Component.translatable("ricksportalgun.button.waypoint.info"),
-                        (button) ->
-                                Minecraft.getInstance().setScreen(new WaypointInfoScreen(waypoint)), 20, 20, WAYPOINT_INFO_TEXTURES);
-            this.infoButton.setRenderBackground(renderButtonBG);
-            this.infoButton.setColor(this.list.style.textColor());
-            this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
+            if (showInfoButton) {
+                this.infoButton = new PGImageButton(0, 0, 20, 20, Component.translatable("ricksportalgun.button.waypoint.info"), (button) ->
+                        Minecraft.getInstance().setScreen(new WaypointInfoScreen(waypoint)), 20, 20, WAYPOINT_INFO_TEXTURES);
+                this.infoButton.setRenderBackground(renderButtonBG);
+                this.infoButton.setColor(this.list.style.textColor());
+                this.infoButton.setTooltip(Tooltip.create(Component.translatable("ricksportalgun.button.waypoint.info")));
+            }
             if (this.button instanceof PGTextButton textButton) {
                 textButton.setTextColour(this.list.style.textColor());
             }
@@ -124,7 +125,7 @@ public class WaypointListWidget extends ScrollableList<WaypointListWidget.Waypoi
                 this.button.render(graphics, pMouseX, pMouseY, pPartialTick);
                 if (!renderBG) GuiHelper.renderOutline(graphics, button, this.color);
 
-                if (this.showInfo) {
+                if (this.showInfo && infoButton != null) {
                     this.infoButton.setX(pLeft + button.getWidth() + 20);
                     this.infoButton.setY(pTop);
                     if (!renderBG) GuiHelper.renderOutline(graphics, infoButton, this.color);
