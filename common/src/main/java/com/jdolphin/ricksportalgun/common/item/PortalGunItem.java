@@ -43,6 +43,7 @@ import org.joml.Vector3f;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.jdolphin.ricksportalgun.common.init.PGNbtKeys.TAG_UPGRADES;
@@ -228,6 +229,7 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     PortalEntity exPortal = new PortalEntity(serverlevel, destination.above().getCenter(), hitDir, playerDir, size);
 
                                     boolean bootleg = tag.contains(PGNbtKeys.TAG_BOOTLEG) && tag.getBoolean(PGNbtKeys.TAG_BOOTLEG);
+
                                     doForBoth(entity -> {
                                         entity.setLifetime(PGHelper.seconds(age));
                                         entity.setColor(getColor(stack));
@@ -264,7 +266,16 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                                     portal.setHopLocation(dim, destination);
                                     exPortal.setHopLocation(level.dimension().location(), portal.blockPosition());
 
-                                    if (!portal.isFlat()) doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                                    if (!portal.isFlat()) {
+                                        if (tag.contains(PGNbtKeys.TAG_ROTATION)) {
+                                            float exRot = tag.getFloat(PGNbtKeys.TAG_ROTATION);
+                                            float rot = player.getYRot();
+                                            portal.setYRot(rot);
+                                            portal.setTargetRotation(exRot);
+                                            exPortal.setTargetRotation(rot);
+                                            exPortal.setYRot(exRot);
+                                        } else doForBoth(entity -> entity.setYRot(player.getYRot()), portal, exPortal);
+                                    }
 
                                     Color color = new Color(getColor(stack));
                                     Vector3f colorVec = new Vector3f(color.getRed(), color.getGreen(), color.getBlue());
@@ -403,10 +414,11 @@ public class PortalGunItem extends Item implements IWaypointStorage {
         tag.putInt(PGNbtKeys.TAG_COLOR, color);
     }
 
-    public static void setHopLocation(ItemStack stack, ResourceLocation dimension, BlockPos pos) {
+    public static void setHopLocation(ItemStack stack, ResourceLocation dimension, BlockPos pos, Optional<Float> rotation) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putString(PGNbtKeys.TAG_DIMENSION, dimension.toString());
         tag.put(PGNbtKeys.TAG_BPOS, NbtUtils.writeBlockPos(pos));
+        rotation.ifPresentOrElse(f -> tag.putFloat(PGNbtKeys.TAG_ROTATION, f), () -> tag.remove(PGNbtKeys.TAG_ROTATION));
     }
 
     public static ResourceLocation getHopDimension(ItemStack stack) {

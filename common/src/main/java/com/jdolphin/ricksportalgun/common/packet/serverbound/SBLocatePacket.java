@@ -47,7 +47,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                         BlockPos pos = pair.getFirst();
                         if (border.isWithinBounds(pos)) {
                             BlockPos safePos = LevelHelper.getSafePos(pos, level);
-                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                            PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos, Optional.empty());
                             PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
 
                         } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
@@ -66,7 +66,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                     BlockPos pos = targetPlayer.blockPosition().above();
                     BlockPos betterPos = BlockPos.containing(pos.getX() + targetVec.x * 2, pos.getY(), pos.getZ() + targetVec.z * 2);
                     if (border.isWithinBounds(pos)) {
-                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), betterPos);
+                        PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(targetPlayer), betterPos, Optional.empty());
                         PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                     } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));
                 } else
@@ -88,7 +88,7 @@ public record SBLocatePacket(String name, int value) implements PGServerPayload 
                         if (border.isWithinBounds(pos)) {
                             BlockPos safePos = LevelHelper.getSafePos(pos, level);
                             if (safePos != null) {
-                                PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos);
+                                PortalGunItem.setHopLocation(stack, LevelHelper.getPlayerDimensionLocation(player), safePos, Optional.empty());
                                 PGHelper.sendSuccessMsg(player, PGHelper.COORDS_SET);
                             } else PGHelper.sendFailMsg(player, Component.translatable("notice.ricksportalgun.randomizer_find_y.fail"));
                         } else PGHelper.sendFailMsg(player, Component.translatable("error.ricksportalgun.locating.outside_border"));

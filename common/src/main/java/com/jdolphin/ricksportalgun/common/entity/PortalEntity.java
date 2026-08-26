@@ -32,7 +32,6 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +43,7 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MAX_LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> DATA_ROTATION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
 
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
@@ -56,17 +56,18 @@ public class PortalEntity extends Entity {
     public static final String TAG_SIZE = "Size";
     public static final String TAG_ACIDIC = "Bootleg";
     public static final String TAG_COLOR = "Color";
+    public static final String TAG_DEST_ROT = "DestRot";
 
     private BlockPos targetPos;
     private boolean bootleg;
     private boolean exists;
-
 
     private Vec3 pos;
     private Vec3 targetVec;
     private String targetDim;
     private ServerLevel destinationLevel;
     private int delay = 0;
+    private float targetRotation;
 
     public boolean exists() {
         return exists;
@@ -147,6 +148,14 @@ public class PortalEntity extends Entity {
         this.entityData.set(DATA_SIZE, size);
     }
 
+    public void setTargetRotation(float rot) {
+        entityData.set(DATA_ROTATION, rot);
+    }
+
+    public float getTargetRotation() {
+        return entityData.get(DATA_ROTATION);
+    }
+
     public boolean isBootleg() {
         return bootleg;
     }
@@ -211,6 +220,7 @@ public class PortalEntity extends Entity {
         setPortalDirection(Direction.byName(tag.getString(TAG_DIR)));
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
+        setTargetRotation(tag.contains(TAG_DEST_ROT) ? tag.getFloat(TAG_DEST_ROT) : 0);
     }
 
     @Override
@@ -226,6 +236,7 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_DIR, getPortalDirection().getName());
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
+        tag.putFloat(TAG_DEST_ROT, getTargetRotation());
     }
 
     @Override
@@ -288,6 +299,7 @@ public class PortalEntity extends Entity {
         this.entityData.define(DATA_SIZE, 1.0f);
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
         this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
+        this.entityData.define(DATA_ROTATION, 0f);
     }
 
     @Override
@@ -320,7 +332,7 @@ public class PortalEntity extends Entity {
                 }
             }
             if (targetVec == null) {
-                targetVec = Vec3.directionFromRotation(new Vec2(45.0F, this.getYRot() + 180.0F));
+                targetVec = Vec3.directionFromRotation(new Vec2(45.0F, this.getTargetRotation()));
             }
 
             boolean shouldHurt = isBootleg() || LevelHelper.isBlenderDestination(getHopDim());
@@ -331,9 +343,11 @@ public class PortalEntity extends Entity {
                     for (Entity nearby : entityList) {
                         if (colliding(this, nearby) && !nearby.isOnPortalCooldown() && !nearby.isPassenger() && delay == 0) {
                             if (!shouldHurt) {
-                                Set<RelativeMovement> relativeSet = new HashSet<>();
-                                relativeSet.add(RelativeMovement.Y_ROT);
-                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2, relativeSet, nearby.getYRot(), nearby.getXRot());
+                                float entranceRot = this.getYRot();
+                                float diff = entranceRot - nearby.getYRot();
+
+                                nearby.teleportTo(destinationLevel, targetPos.getX() + targetVec.x * 2, targetPos.getY(), targetPos.getZ() + targetVec.z * 2,
+                                        Set.of(RelativeMovement.Y_ROT), getTargetRotation() + diff, nearby.getXRot());
 
                                 nearby.resetFallDistance();
                                 nearby.setPortalCooldown();

@@ -18,6 +18,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 
+import java.util.Optional;
+
 public record SBCoordCheckerPacket(BlockPos pos, String dim) implements PGServerPayload {
 
     public void handle(ServerPlayer player) {
@@ -35,7 +37,7 @@ public record SBCoordCheckerPacket(BlockPos pos, String dim) implements PGServer
 
                 ItemStack stack = player.getItemInHand(PGHelper.getPortalGunHand(player));
 
-                PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos);
+                PortalGunItem.setHopLocation(stack, level.dimension().location(), bPos, Optional.empty());
                 player.sendSystemMessage(Component.translatable("notice.ricksportalgun.randomizer_find_y.success").withStyle(ChatFormatting.GREEN));
             }
         });

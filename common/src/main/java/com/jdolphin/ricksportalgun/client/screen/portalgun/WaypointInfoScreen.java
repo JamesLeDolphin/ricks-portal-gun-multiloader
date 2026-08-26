@@ -56,7 +56,7 @@ public class WaypointInfoScreen extends AbstractBaseScreen {
 
         this.select = this.addRenderableWidget(new PGTextButton(this.width / 2 - 136, this.height / 2 + 64, 128, 20,
                 Component.translatable("ricksportalgun.button.select"), (button) -> {
-            SBSetDestinationPacket packet = new SBSetDestinationPacket(wp.getBlockPos(), wp.getDimension());
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(wp);
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         }, this.font));

@@ -301,7 +301,7 @@ public class CoordTravelScreen extends AbstractBaseScreen {
             ResourceLocation resourceLocation =
                     new ResourceLocation(value.isEmpty() ? LevelHelper.getPlayerDimensionLocation(player).toString() : value);
 
-            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString());
+            SBSetDestinationPacket packet = new SBSetDestinationPacket(getCoords(player), resourceLocation.toString(), Optional.empty());
             PGHelper.sendPacketToServer(packet);
             this.onClose();
         } catch (Exception error) {

@@ -30,6 +30,7 @@ public class PortalFluidItem extends Item {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
             if (!player.isCreative()) {
                 ItemUtils.startUsingInstantly(level, player, player.getUsedItemHand());
+                stack.shrink(1);
                 Optional<Item> remainder = Optional.ofNullable(stack.getItem().getCraftingRemainingItem());
                 remainder.ifPresent(item -> player.addItem(item.getDefaultInstance()));
                 player.awardStat(Stats.ITEM_USED.get(this));
