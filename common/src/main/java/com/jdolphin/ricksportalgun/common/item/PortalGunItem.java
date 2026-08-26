@@ -172,8 +172,9 @@ public class PortalGunItem extends Item implements IWaypointStorage {
                 }
             }
         } else {
-            float x = dir.getAxis().equals(Direction.Axis.X) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
-            float z = dir.getAxis().equals(Direction.Axis.Z) ? dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f : 0;
+            float offset = dir.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 0.1f : -0.1f;
+            float x = dir.getAxis().equals(Direction.Axis.X) ? offset : 0;
+            float z = dir.getAxis().equals(Direction.Axis.Z) ? offset : 0;
             loc = new Vec3(loc.x() + x, bPos.getY(), loc.z() + z);
         }
 
