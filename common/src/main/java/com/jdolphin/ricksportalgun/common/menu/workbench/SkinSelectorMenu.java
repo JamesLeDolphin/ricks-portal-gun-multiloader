@@ -94,6 +94,11 @@ public class SkinSelectorMenu extends AbstractWorkbenchMenu {
             public boolean mayPlace(ItemStack stack) {
                 return stack.is(PGTags.Items.PORTAL_GUNS);
             }
+
+            @Override
+            public int getMaxStackSize() {
+                return 1;
+            }
         });
         this.addSlot(new Slot(container, 8, 55, 73) {
 
