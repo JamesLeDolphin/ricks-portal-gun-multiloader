@@ -207,6 +207,9 @@
   "portaltype.ricksportalgun.default": "Default",
   "portaltype.ricksportalgun.end_portal": "End Portal",
   "portaltype.ricksportalgun.water": "Water",
+  "portaltype.ricksportalgun.stars": "Stars",
+  "portaltype.ricksportalgun.pentagram": "Pentagram",
+  "portaltype.ricksportalgun.spell": "Spell",
 
   "ricksportalgun.shape.square": "Square",
   "ricksportalgun.shape.diamond": "Diamond",

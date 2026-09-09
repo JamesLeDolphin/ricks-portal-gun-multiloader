@@ -9,14 +9,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -60,11 +58,9 @@ public class SpellPortalTypeRenderer extends AbstractPortalTypeRenderer {
         float g = green / 255f;
         float b = blue / 255f;
 
-        Player player = Minecraft.getInstance().player;
-
         graphics.setColor(r, g, b, 1);
         RenderSystem.enableBlend();
-        graphics.blit(getTextureLocation(null), x, y, 0, 0, width * 2, height, width * 2, height);
+        graphics.blit(getTextureLocation(null), x, y, 0, 0, width, height / 2, width, height / 2);
         RenderSystem.disableBlend();
         graphics.setColor(1, 1, 1, 1);
     }

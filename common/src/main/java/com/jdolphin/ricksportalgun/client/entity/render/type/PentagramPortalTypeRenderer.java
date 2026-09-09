@@ -65,7 +65,7 @@ public class PentagramPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
         graphics.setColor(r, g, b, 1);
         RenderSystem.enableBlend();
-        graphics.blit(getTextureLocation(null), x, y, 0, 0, width * 2, height, width * 2, height);
+        graphics.blit(getTextureLocation(null), x, y, 0, 0, width, height / 2, width, height / 2);
         RenderSystem.disableBlend();
         graphics.setColor(1, 1, 1, 1);
     }

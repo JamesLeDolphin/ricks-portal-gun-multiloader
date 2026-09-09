@@ -27,8 +27,8 @@ public class StarsPortalTypeRenderer extends AbstractPortalTypeRenderer {
     @Override
     public void renderInGui(int x, int y, int width, int height, AbstractPortalShapeRenderer shape, ItemStack stack, GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int red, int green, int blue) {
 
-        shape.renderInGui(x, y, 0, width, height, graphics, pMouseX, pMouseY, pPartialTick, red, green, blue, 255,
-                0, 0, 0, 0, RenderType.entitySolid(getTextureLocation(null)), bufferBuilder -> BufferUploader.drawWithShader(bufferBuilder.end()));
+        shape.renderInGui(x, y, 0, width, height / 2, graphics, pMouseX, pMouseY, pPartialTick, red, green, blue, 255,
+                0.1f, 0.1f, 0.4f, 0.4f, RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION), bufferBuilder -> BufferUploader.drawWithShader(bufferBuilder.end()));
 
     }
 
