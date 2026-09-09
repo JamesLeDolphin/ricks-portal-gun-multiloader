@@ -43,20 +43,22 @@ public class EndPortalTypeRenderer extends AbstractPortalTypeRenderer {
 
         RenderType renderType = RenderType.endPortal();
         float progress = entity.tickCount * 0.001F % 1.0F; //Scrolls the image if shaders are enabled, otherwise does visually nothing
-        if (PGHelper.hasIris() && net.irisshaders.iris.Iris.getCurrentPack().isPresent()) {
+        boolean iris = PGHelper.hasIris() && net.irisshaders.iris.Iris.getCurrentPack().isPresent();
+        if (iris) {
             renderType = RenderType.entitySolid(TheEndPortalRenderer.END_PORTAL_LOCATION);
-        } else {
-            //Color overlay - We only render when shaders are disabled, otherwise the portal would just glow that colour
-            VertexConsumer consumer1 = source.getBuffer(RenderType.translucent());
-            shapeRenderer.renderInLevel(stack, -width, -height, width, height, 0.005f, 0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
-            shapeRenderer.renderInLevel(stack, width, -height, -width, height, -0.005f, -0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
         }
-
         //End portal
         VertexConsumer consumer = source.getBuffer(renderType);
         float f = entity.tickCount + partialTick;
         float f1 = (float) Math.abs((Math.cos(f / 10) + 1) / 2);
         shapeRenderer.renderInLevel(stack, -width, -height, width, height, 0, 0, red, green, blue, f1, 0, 0 + progress, 0.5f, 0.2f + progress, consumer);
         shapeRenderer.renderInLevel(stack, width, -height, -width, height, 0, 0, red, green, blue, f1, 0, 0 + progress, 0.5f, 0.2f + progress, consumer);
+
+        if (!iris) {
+            //Color overlay - We only render when shaders are disabled, otherwise the portal would just glow that color
+            VertexConsumer consumer1 = source.getBuffer(RenderType.translucent());
+            shapeRenderer.renderInLevel(stack, -width, -height, width, height, 0.007f, 0.007f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
+            shapeRenderer.renderInLevel(stack, width, -height, -width, height, -0.005f, -0.005f, red, green, blue, 0.45f, 0, 0, 0, 0, consumer1);
+        }
     }
 }
