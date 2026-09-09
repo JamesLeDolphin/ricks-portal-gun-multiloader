@@ -1,5 +1,6 @@
 package com.jdolphin.ricksportalgun.common.util.helper;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -11,10 +12,32 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import java.awt.*;
 
 public class GuiHelper {
+
+    public static void renderVertexes(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer consumer, float x1, float x2, float y1, float y2, float z1, float z2,
+                                      float red, float green, float blue, float alpha,
+                                      float u1, float v1, float u2, float v2,
+                                      int overlay, int light,
+                                      float normalX, float normalY, float normalZ) {
+
+        renderVertex(consumer, matrix4f, matrix3f, x1, y1, z1, red, green, blue, alpha, u1, v2, overlay, light, normalX, normalY, normalZ);
+        renderVertex(consumer, matrix4f, matrix3f, x2, y1, z2, red, green, blue, alpha, u2, v2, overlay, light, normalX, normalY, normalZ);
+        renderVertex(consumer, matrix4f, matrix3f, x2, y2, z1, red, green, blue, alpha, u2, v1, overlay, light, normalX, normalY, normalZ);
+        renderVertex(consumer, matrix4f, matrix3f, x1, y2, z2, red, green, blue, alpha, u1, v1, overlay, light, normalX, normalY, normalZ);
+    }
+
+    public static void renderVertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f,
+                                    float x, float y, float z,
+                                    float red, float green, float blue, float alpha,
+                                    float u, float v, int overlay, int light,
+                                    float normalX, float normalY, float normalZ) {
+        consumer.vertex(matrix4f, x, y, z).color(red, green, blue, alpha).uv(u, v).overlayCoords(overlay).uv2(light).normal(matrix3f, normalX, normalY, normalZ).endVertex();
+    }
 
     public static int opaqueColor(int color) {
         return color | -16777216;

@@ -34,9 +34,9 @@ public record PortalGunStyle(int highlightColor, int bgColor, int textColor) {
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.INT.fieldOf("highlightColor").forGetter(PortalGunStyle::highlightColor),
-                Codec.INT.fieldOf("bgColor").forGetter(PortalGunStyle::bgColor),
-                Codec.INT.fieldOf("textColor").forGetter(PortalGunStyle::textColor))
+                        Codec.INT.fieldOf("highlightColor").forGetter(PortalGunStyle::highlightColor),
+                        Codec.INT.fieldOf("bgColor").forGetter(PortalGunStyle::bgColor),
+                        Codec.INT.fieldOf("textColor").forGetter(PortalGunStyle::textColor))
                 .apply(instance, PortalGunStyle::new));
 
 

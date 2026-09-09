@@ -5,6 +5,8 @@ import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.handler.ClientPacketHandler;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
+import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.config.PGClientConfig;
 import com.jdolphin.ricksportalgun.common.init.PGBlocks;
@@ -46,6 +48,9 @@ public class RicksPortalGunFabricClient implements ClientModInitializer {
         EntityRendererRegistry.register(PGEntities.PORTAL, PortalEntityRenderer::new);
         EntityRendererRegistry.register(PGEntities.EXPLOSIVE_ITEM, ItemEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(PortalEntityModel.LAYER_LOCATION, PortalEntityModel::createBodyLayer);
+
+        PGPortalTypeRenderers.init();
+        PGPortalShapeRenderers.init();
 
         PGMenuScreens.ALL.forEach((type, func) -> {
             MenuScreens.ScreenConstructor constructor = func::apply;

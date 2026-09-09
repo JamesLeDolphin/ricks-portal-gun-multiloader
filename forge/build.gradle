@@ -43,6 +43,16 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -54,6 +64,9 @@ dependencies {
 
     modCompileOnlyApi "dev.emi:emi-forge:${emi_version}:api"
     modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
+
+    modCompileOnly("maven.modrinth:embeddium:0.3.31+mc1.20.1")
+    modCompileOnly("maven.modrinth:oculus:1.20.1-1.8.0")
 }
 
 jar {

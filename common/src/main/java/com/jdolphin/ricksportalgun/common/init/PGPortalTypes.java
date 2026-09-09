@@ -1,21 +1,33 @@
 package com.jdolphin.ricksportalgun.common.init;
 
-import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
-import com.jdolphin.ricksportalgun.common.customization.portaltypes.DefaultPortalType;
-import com.jdolphin.ricksportalgun.common.customization.portaltypes.EndPortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.DefaultPortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
+import com.jdolphin.ricksportalgun.common.customization.type.TypeWithoutShape;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class PGPortalTypes {
-    public static final Map<ResourceLocation, PGPortalType> TYPES = new HashMap<>();
+    public static final Map<ResourceLocation, PortalType> TYPES = new HashMap<>();
 
-    public static final PGPortalType DEFAULT = register("default", new DefaultPortalType());
-    public static final PGPortalType END_PORTAL = register("end_portal", new EndPortalType());
+    public static final PortalType DEFAULT = register("default", DefaultPortalType::new);
+    public static final PortalType END_PORTAL = register("end_portal", PortalType::new);
+    public static final PortalType WATER = register("water", PortalType::new);
+    public static final PortalType STARS = register("stars", PortalType::new);
+    public static final PortalType SPELL = register("spell", TypeWithoutShape::new);
+    public static final PortalType PENTAGRAM = register("pentagram", TypeWithoutShape::new);
 
-    private static PGPortalType register(String name, PGPortalType type) {
+   // public static PortalType DINO_PORTAL = PGHelper.hasImmersivePortals() ? register("dino", TypeWithoutShape::new) : null;
+
+    public static PortalType get(ResourceLocation rl) {
+        return TYPES.get(rl);
+    }
+
+    private static PortalType register(String name, Function<ResourceLocation, PortalType> typeFunction) {
+        PortalType type = typeFunction.apply(PGHelper.id(name));
         TYPES.put(PGHelper.id(name), type);
         return type;
     }

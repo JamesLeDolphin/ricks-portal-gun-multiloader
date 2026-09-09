@@ -24,6 +24,10 @@ dependencies {
     //EMI
     modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
+
+    //Iris & Sodium
+    modCompileOnly "curse.maven:irisshaders-455508:6258195"
+    modCompileOnly "curse.maven:sodium-394468:6260639"
 }
 
 repositories {
@@ -34,6 +38,16 @@ repositories {
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
     }
 }
 

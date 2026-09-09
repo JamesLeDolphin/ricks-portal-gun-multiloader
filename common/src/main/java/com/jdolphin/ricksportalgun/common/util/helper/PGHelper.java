@@ -81,6 +81,14 @@ public class PGHelper {
         return true;
     }
 
+    public static boolean hasIris() {
+        return PGServices.PLATFORM.isModLoaded("iris");
+    }
+
+    public static boolean hasSodium() {
+        return PGServices.PLATFORM.isModLoaded("sodium");
+    }
+
     public static String getEntityAsString(EntityType<?> type) {
         ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         return  rl.toString();

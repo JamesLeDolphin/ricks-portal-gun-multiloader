@@ -1,0 +1,33 @@
+package com.jdolphin.ricksportalgun.client.init;
+
+import com.jdolphin.ricksportalgun.client.entity.render.type.*;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
+import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+public class PGPortalTypeRenderers {
+    public static final Map<PortalType, AbstractPortalTypeRenderer> RENDERER_MAP = new HashMap<>();
+
+    public static void init() {
+        registerPortalTypeRenderer(PGPortalTypes.DEFAULT, DefaultPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.END_PORTAL, EndPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.WATER, WaterPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.STARS, StarsPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.SPELL, SpellPortalTypeRenderer::new);
+        registerPortalTypeRenderer(PGPortalTypes.PENTAGRAM, PentagramPortalTypeRenderer::new);
+      //  if (PGHelper.hasImmersivePortals() && PGPortalTypes.DINO_PORTAL != null) {
+      //      registerPortalTypeRenderer(PGPortalTypes.DINO_PORTAL, DefaultPortalTypeRenderer::new);
+      //  }
+    }
+
+    private static void registerPortalTypeRenderer(PortalType type, Function<PortalType, AbstractPortalTypeRenderer> rendererFunction) {
+        RENDERER_MAP.put(type, rendererFunction.apply(type));
+    }
+
+    public static AbstractPortalTypeRenderer getRenderer(PortalType type) {
+        return RENDERER_MAP.get(type);
+    }
+}

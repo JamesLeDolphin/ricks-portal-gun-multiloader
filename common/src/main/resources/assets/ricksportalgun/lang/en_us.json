@@ -5,6 +5,7 @@
   "item.ricksportalgun.portal_fluid": "Portal Fluid Bottle",
   "item.ricksportalgun.circuitboard": "Circuit Board",
   "item.ricksportalgun.disc_template": "Disc Template",
+  "item.ricksportalgun.admin_key": "Admin Key",
 
   "item.ricksportalgun.alt_portal_gun": "Alternative Portal Gun",
   "item.ricksportalgun.flintlock_portal_gun": "Flintlock Portal Gun",
@@ -24,6 +25,8 @@
   "item.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "item.ricksportalgun.subether_barrier": "Sub-Ether Barrier",
   "item.ricksportalgun.data_card": "Data Card",
+  "item.ricksportalgun.pocket_forcefield": "Pocket Forcefield Generator",
+  "item.ricksportalgun.portal_fluid_bucket": "Portal Fluid Bucket",
 
   "block.ricksportalgun.portal_gun_workbench": "Portal Gun Workbench",
   "block.ricksportalgun.portal_dispenser": "Portal Dispenser",
@@ -60,7 +63,7 @@
   "menu.ricksportalgun.settings": "Settings",
   "menu.ricksportalgun.portal_dispenser": "Portal Dispenser",
   "menu.ricksportalgun.waypoints.info": "Waypoint Info",
-  "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s/%s",
+  "menu.ricksportalgun.portal_dispenser.fuel": "Fuel: %s%%",
   "menu.ricksportalgun.workbench": "Portal Gun Workbench",
   "menu.ricksportalgun.settings.security": "Security Settings",
   "menu.ricksportalgun.settings.customization": "Customization Settings",
@@ -71,6 +74,9 @@
   "menu.ricksportalgun.workbench.waypoint": "Edit Portal Gun Waypoints",
   "menu.ricksportalgun.workbench.craft": "Workbench Crafting",
   "menu.ricksportalgun.settings.upgrades.add": "Add Upgrade",
+  "menu.ricksportalgun.settings.customization.type": "Edit Portal Type",
+  "menu.ricksportalgun.meeseeks": "Meeseeks",
+  "menu.ricksportalgun.portal_dialer": "Portal Dialer",
 
   "ricksportalgun.button.coord": "Coordinate Travel",
   "ricksportalgun.button.waypoint": "Waypoints",
@@ -93,7 +99,7 @@
   "ricksportalgun.button.locator.structure": "Structure Locator",
   "ricksportalgun.button.settings.security": "Security Settings",
   "ricksportalgun.button.settings.customization": "Customization Settings",
-  "ricksportalgun.button.settings.customization.color": "Change Portal Color",
+  "ricksportalgun.button.settings.customization.portal": "Customize Portal",
   "ricksportalgun.button.settings.customization.theme": "Edit Portal Gun Menu Theme",
   "ricksportalgun.button.settings.customization.color.size": "Portal Size:",
   "ricksportalgun.button.portal_size.reset": "Reset Portal Size",
@@ -149,7 +155,7 @@
   "error.ricksportalgun.upgrade.already_applied": "Error 400: Upgrade already installed!",
   "error.ricksportalgun.locating.biome.disabled": "Error 503: Biome locating is disabled on this server!",
   "error.ricksportalgun.locating.structure.disabled": "Error 503: Structure Locating is disabled on this server!",
-  "error.ricksportalgun.locating.outside_border": "Error 404: Target not found inside border!",
+  "error.ricksportalgun.locating.player.unreachable": "Error 401: Player %s is unreachable!",
 
   "ricksportalgun.x": "X: %s",
   "ricksportalgun.y": "Y: %s",
@@ -166,17 +172,20 @@
   "ricksportalgun.g": "G:",
   "ricksportalgun.b": "B:",
   "ricksportalgun.gun_type": "Portal Gun Type: %s",
+  "ricksportalgun.enabled": "Enabled",
+  "ricksportalgun.disabled": "Disabled",
 
   "tooltip.ricksportalgun.waypoints": "Stored Waypoints: %s",
   "tooltip.ricksportalgun.primary_dye": "Primary Dye: %s",
   "tooltip.ricksportalgun.secondary_dye": "Secondary Dye: %s",
   "tooltip.ricksportalgun.upgrade": "Upgrade: ",
-  "tooltip.ricksportalgun.fuel": "Fuel: %s/%s",
+  "tooltip.ricksportalgun.fluid": "Fluid: %s/%s",
   "tooltip.ricksportalgun.button.copy": "Copy waypoint to other device",
   "tooltip.ricksportalgun.button.move": "Move waypoint to other device",
   "tooltip.ricksportalgun.button.delete": "Delete waypoint from this device",
   "tooltip.ricksportalgun.hold_shift": "Hold SHIFT for info",
   "tooltip.ricksportalgun.upgrade.tutorial": "Applied in portal gun settings menu",
+  "tooltip.ricksportalgun.admin_key": "Bypasses portal gun lock if held in hand with the portal gun",
 
   "tooltip.ricksportalgun.upgrade.settings": "Unlocks Security & Customization settings.",
   "tooltip.ricksportalgun.upgrade.waypoints": "Unlocks the ability to store & travel to waypoints.",
@@ -194,6 +203,16 @@
   "tooltip.ricksportalgun.button.portal_code": "Portal code is checked by nearby subether barriers. If the codes does not match, a portal cannot be formed",
   "tooltip.ricksportalgun.button.self_destruct": "Enables self-destruct button on the coordinate selection screen. When pressed, the portal gun is forcibly dropped and can no longer be picked up. After 10 seconds it will detonate and destroy itself in an explosion",
   "tooltip.ricksportalgun.button.portal_lifetime": "Amount of seconds the portal stays open. Min 5s, max 45s. Defaults to 10 seconds",
+
+  "portaltype.ricksportalgun.default": "Default",
+  "portaltype.ricksportalgun.end_portal": "End Portal",
+  "portaltype.ricksportalgun.water": "Water",
+
+  "ricksportalgun.shape.square": "Square",
+  "ricksportalgun.shape.diamond": "Diamond",
+  "ricksportalgun.shape.triangle": "Triangle",
+  "ricksportalgun.shape.octagon": "Octagon",
+  "ricksportalgun.shape.vortex": "Vortex",
 
   "advancement.ricksportalgun.craft_bootleg_fluid": "Guess the math was off...",
   "advancement.ricksportalgun.drink_portal_fluid": "Not a soft drink!",
@@ -213,10 +232,11 @@
   "tag.item.ricksportalgun.portal_guns": "Portal Guns",
   "tag.item.ricksportalgun.upgrades": "Upgrades",
 
-  "key.category.ricksportalgun.portal_menu": "Portal Gun Mod",
-  "key.ricksportalgun.portal_menu": "Open portal gun menu",
+  "key.category.ricksportalgun.portal_menu": "Rick's Portal Gun",
+  "key.ricksportalgun.portal_menu": "Open Portal Gun Menu",
 
   "entity.ricksportalgun.portal": "Portal",
+  "entity.ricksportalgun.meeseeks": "Meeseeks",
 
   "subtitle.item.portal_gun.shoot": "Portal Gun Shoots",
 

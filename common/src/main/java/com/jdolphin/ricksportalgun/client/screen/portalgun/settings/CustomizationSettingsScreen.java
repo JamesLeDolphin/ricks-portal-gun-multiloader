@@ -1,6 +1,7 @@
 package com.jdolphin.ricksportalgun.client.screen.portalgun.settings;
 
 import com.jdolphin.ricksportalgun.client.screen.AbstractBaseScreen;
+import com.jdolphin.ricksportalgun.client.screen.portalgun.PortalEditScreen;
 import com.jdolphin.ricksportalgun.client.screen.portalgun.SettingsScreen;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGImageButton;
 import com.jdolphin.ricksportalgun.client.screen.widget.PGSlider;
@@ -24,7 +25,6 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
     private PGSlider portalSize, portalAge;
     private PGTextButton portalColor, menuTheme, select, cancel;
     private PGImageButton resetSize, resetAge, backButton;
-    private PGTooltipText ageTxt;
 
     public CustomizationSettingsScreen() {
         super("menu.ricksportalgun.settings.customization");
@@ -53,7 +53,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 Component.translatable("ricksportalgun.button.portal_age.reset"), button -> this.portalAge.setValue(10), 16, 16, RESET_LOCATION));
 
         this.portalColor = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 - 16, 256, 18,
-                Component.translatable("ricksportalgun.button.settings.customization.color"), button -> this.minecraft.setScreen(new ColourPickingScreen()), this.font));
+                Component.translatable("ricksportalgun.button.settings.customization.portal"), button -> this.minecraft.setScreen(new PortalEditScreen()), this.font));
 
         this.menuTheme = this.addRenderableWidget(new PGTextButton(this.width / 2 - 128, this.height / 2 + 8, 256, 18,
                 Component.translatable("ricksportalgun.button.settings.customization.theme"), button -> minecraft.setScreen(new ThemeEditScreen()), this.font));
@@ -72,7 +72,7 @@ public class CustomizationSettingsScreen extends AbstractBaseScreen {
                 (button) -> minecraft.setScreen(new SettingsScreen()), 20, 20, BACK_BUTTON_TEXTURE));
 
         PortalGunStyle style = getStyle();
-        this.ageTxt = this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.portalAge.getY() + 4,
+        this.addRenderableWidget(new PGTooltipText(this.width / 2 - 128, this.portalAge.getY() + 4,
                 Component.translatable("ricksportalgun.button.portal_age"), this.font, style.textColor(), Component.translatable("tooltip.ricksportalgun.button.portal_lifetime")));
         this.resetAge.setRenderBackground(false);
         this.resetSize.setRenderBackground(false);

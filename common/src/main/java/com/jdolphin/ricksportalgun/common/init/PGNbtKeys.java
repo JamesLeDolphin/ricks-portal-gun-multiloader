@@ -21,7 +21,8 @@ public class PGNbtKeys {
 
     public static final String PRIMARY_COLOR = "PrimaryColor";
     public static final String SECONDARY_COLOR = "SecondaryColor";
-
+    public static final String PORTAL_TYPE = "PortalType";
+    public static final String PORTAL_SHAPE = "PortalShape";
     public static final String TAG_ROTATION = "Rotation";
 
     //Upgrades -- now only used for migrating from old upgrade system

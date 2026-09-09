@@ -4,6 +4,8 @@ import com.jdolphin.ricksportalgun.PGConstants;
 import com.jdolphin.ricksportalgun.client.entity.model.PortalEntityModel;
 import com.jdolphin.ricksportalgun.client.entity.render.PortalEntityRenderer;
 import com.jdolphin.ricksportalgun.client.init.PGMenuScreens;
+import com.jdolphin.ricksportalgun.client.init.PGPortalShapeRenderers;
+import com.jdolphin.ricksportalgun.client.init.PGPortalTypeRenderers;
 import com.jdolphin.ricksportalgun.client.init.PGTintHandler;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
 import com.jdolphin.ricksportalgun.common.init.PGKeyBinds;
@@ -63,6 +65,8 @@ public class ForgeClientMain {
                 MenuScreens.ScreenConstructor constructor = func::apply;
                 MenuScreens.register(type, constructor);
             }));
+            PGPortalTypeRenderers.init();
+            PGPortalShapeRenderers.init();
         }
 
         @SubscribeEvent

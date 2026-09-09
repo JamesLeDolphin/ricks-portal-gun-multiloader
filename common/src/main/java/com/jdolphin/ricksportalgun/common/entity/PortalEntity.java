@@ -1,10 +1,11 @@
 package com.jdolphin.ricksportalgun.common.entity;
 
-import com.jdolphin.ricksportalgun.common.customization.PGPortalType;
+import com.jdolphin.ricksportalgun.common.customization.shape.PortalShape;
+import com.jdolphin.ricksportalgun.common.customization.type.PortalType;
 import com.jdolphin.ricksportalgun.common.init.PGDamageTypes;
 import com.jdolphin.ricksportalgun.common.init.PGEntities;
+import com.jdolphin.ricksportalgun.common.init.PGPortalShapes;
 import com.jdolphin.ricksportalgun.common.init.PGPortalTypes;
-import com.jdolphin.ricksportalgun.common.init.PGSounds;
 import com.jdolphin.ricksportalgun.common.util.helper.LevelHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGConfigHelper;
 import com.jdolphin.ricksportalgun.common.util.helper.PGHelper;
@@ -44,6 +45,8 @@ public class PortalEntity extends Entity {
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MAX_LIFETIME = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_ROTATION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> SHAPE = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.STRING);
 
     public static final String TAG_DIMENSION = "PortalDimension";
     public static final String TAG_BPOS = "PortalPos";
@@ -90,8 +93,24 @@ public class PortalEntity extends Entity {
         this.pos = pos;
     }
 
-    public PGPortalType getPortalType() {
-        return PGPortalTypes.DEFAULT;
+    public PortalType getPortalType() {
+        String s = entityData.get(TYPE);
+        ResourceLocation rl = new ResourceLocation(s);
+        return PGPortalTypes.TYPES.getOrDefault(rl, PGPortalTypes.DEFAULT);
+    }
+
+    public void setPortalType(PortalType type) {
+        this.entityData.set(TYPE, type.getId().toString());
+    }
+
+    public PortalShape getShape() {
+        String s = entityData.get(SHAPE);
+        ResourceLocation rl = new ResourceLocation(s);
+        return PGPortalShapes.SHAPES.getOrDefault(rl, PGPortalShapes.SQUARE);
+    }
+
+    public void setShape(PortalShape shape) {
+        this.entityData.set(SHAPE, shape.getId().toString());
     }
 
     public void setLifetime(int lifetime) {
@@ -169,11 +188,6 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public void kill() {
-        this.remove(RemovalReason.DISCARDED);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return true;
     }
@@ -221,6 +235,11 @@ public class PortalEntity extends Entity {
         setPortalFacing(Direction.byName(tag.getString(TAG_FACING)));
         setSize(tag.getFloat(TAG_SIZE));
         setTargetRotation(tag.contains(TAG_DEST_ROT) ? tag.getFloat(TAG_DEST_ROT) : 0);
+        this.entityData.set(TYPE, tag.getString("PortalType"));
+        if (tag.contains("Shape")) {
+            String shapeStr = tag.getString("Shape");
+            setShape(PGPortalShapes.SHAPES.get(new ResourceLocation(shapeStr)));
+        }
     }
 
     @Override
@@ -237,6 +256,8 @@ public class PortalEntity extends Entity {
         tag.putString(TAG_FACING, getPortalFacing().getName());
         tag.putFloat(TAG_SIZE, getSize());
         tag.putFloat(TAG_DEST_ROT, getTargetRotation());
+        tag.putString("PortalType", getPortalType().getId().toString());
+        tag.putString("Shape", getShape().getId().toString());
     }
 
     @Override
@@ -300,22 +321,37 @@ public class PortalEntity extends Entity {
         this.entityData.define(LIFETIME, PGHelper.seconds(10));
         this.entityData.define(MAX_LIFETIME, PGHelper.seconds(10));
         this.entityData.define(DATA_ROTATION, 0f);
+        this.entityData.define(TYPE, PGPortalTypes.DEFAULT.getId().toString());
+        this.entityData.define(SHAPE, PGPortalShapes.SQUARE.getId().toString());
+    }
+
+    @Override
+    public void kill() {
+        super.kill();
+        level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
     }
 
     @Override
     public void tick() {
         super.tick();
+
+        PortalType type = getPortalType();
+        if (type != null) {
+            type.tick(this);
+        }
+
         if (!this.level().isClientSide()) {
             if (!exists) {
-                LevelHelper.playSound(this.level(), this.blockPosition(), PGSounds.PORTAL_SHOOT, SoundSource.PLAYERS);
+                LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getOpenSound(), SoundSource.PLAYERS);
                 this.exists = true;
             }
             if (getLifetime() > 0) {
                 lowerLifetime();
+                level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), true);
             }
             if (delay > 0) delay--;
             if (!firstTick && getLifetime() == 0) {
-                level().getChunkSource().updateChunkForced(new ChunkPos(this.blockPosition()), false);
+                LevelHelper.playSound(this.level(), this.blockPosition(), this.getPortalType().getCloseSound(), SoundSource.PLAYERS);
                 this.kill();
                 return;
             }
